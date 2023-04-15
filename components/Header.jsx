@@ -103,7 +103,7 @@ export function Header() {
             <div className="hidden md:block">
               <NavLink href="/login">Войти</NavLink>
             </div>
-            <Button href="/register" color="blue">
+            <Button href="/register" color="lime">
               Создать аккаунт
             </Button>
             <div className="-mr-1 md:hidden">

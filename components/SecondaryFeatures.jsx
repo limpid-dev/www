@@ -104,7 +104,7 @@ function Feature({ feature, isActive, className, ...props }) {
       <div
         className={clsx(
           "w-9 rounded-lg",
-          isActive ? "bg-blue-600" : "bg-zinc-500"
+          isActive ? "bg-lime-600" : "bg-zinc-500"
         )}
       >
         <svg aria-hidden="true" className="h-9 w-9" fill="none">
@@ -114,7 +114,7 @@ function Feature({ feature, isActive, className, ...props }) {
       <h3
         className={clsx(
           "mt-6 text-sm font-medium",
-          isActive ? "text-blue-600" : "text-zinc-600"
+          isActive ? "text-lime-600" : "text-zinc-600"
         )}
       >
         {feature.name}
