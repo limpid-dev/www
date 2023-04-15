@@ -11,7 +11,7 @@ import { Container } from "./Container";
 export function Hero() {
   return (
     <Container className="pb-16 pt-20 text-center lg:pt-32">
-      <h1 className="mx-auto max-w-4xl font-display text-5xl font-medium tracking-tight text-zinc-900 sm:text-7xl">
+      <h1 className="mx-auto max-w-4xl  text-5xl font-medium tracking-tight text-zinc-900 sm:text-7xl">
         Accounting{" "}
         <span className="relative whitespace-nowrap text-blue-600">
           <svg
@@ -46,7 +46,7 @@ export function Hero() {
         </Button>
       </div>
       <div className="mt-36 lg:mt-44">
-        <p className="font-display text-base text-zinc-900">
+        <p className=" text-base text-zinc-900">
           Trusted by these six companies so far
         </p>
         <ul className="mt-8 flex items-center justify-center gap-x-8 sm:flex-col sm:gap-x-0 sm:gap-y-10 xl:flex-row xl:gap-x-12 xl:gap-y-0">

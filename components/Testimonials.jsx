@@ -86,7 +86,7 @@ export function Testimonials() {
     >
       <Container>
         <div className="mx-auto max-w-2xl md:text-center">
-          <h2 className="font-display text-3xl tracking-tight text-zinc-900 sm:text-4xl">
+          <h2 className=" text-3xl tracking-tight text-zinc-900 sm:text-4xl">
             Loved by businesses worldwide.
           </h2>
           <p className="mt-4 text-lg tracking-tight text-zinc-700">
@@ -110,7 +110,7 @@ export function Testimonials() {
                       </blockquote>
                       <figcaption className="relative mt-6 flex items-center justify-between border-t border-zinc-100 pt-6">
                         <div>
-                          <div className="font-display text-base text-zinc-900">
+                          <div className=" text-base text-zinc-900">
                             {testimonial.author.name}
                           </div>
                           <div className="mt-1 text-sm text-zinc-500">
