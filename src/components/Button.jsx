@@ -28,7 +28,7 @@ export function Button({
   variant = "solid",
   color = "slate",
   className,
-  href,
+  href = null,
   ...props
 }) {
   className = clsx(

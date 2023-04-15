@@ -1,18 +1,23 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { FormEvent } from "react";
 import { AuthLayout } from "@/components/AuthLayout";
 import { Button } from "@/components/Button";
 import { TextField } from "@/components/Fields";
+import { Input } from "@/components/Input";
 import { Logo } from "@/components/Logo";
 
 export default function Verification() {
   const { query } = useRouter();
 
-  const onSubmit = (event) => {
+  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const form = new FormData(event.target);
+
+    const form = new FormData(event.currentTarget);
+
     const data = Object.fromEntries(form);
+
     console.log(data);
   };
 
@@ -43,22 +48,19 @@ export default function Verification() {
           </div>
         </div>
         <form onSubmit={onSubmit} className="mt-10 grid grid-cols-1 gap-y-8">
-          <TextField
-            label="Почтовый адрес"
-            id="email"
+          <input
             name="email"
             type="email"
-            defaultValue={query.email}
+            value={query.email}
             readOnly
-            autoComplete="email"
-            required
+            hidden
           />
           <TextField
-            label="Код верфикации"
+            label="Код подтверждения"
             id="token"
             name="token"
             type="text"
-            autocomplete="one-time-code"
+            autoComplete="one-time-code"
             required
           />
           <div>
