@@ -17,7 +17,7 @@ export default function Login() {
           Еще нет аккаунта?{" "}
           <Link
             href="/register"
-            className="font-medium text-blue-600 hover:underline"
+            className="font-medium text-emerald-600 hover:underline"
           >
             Создайте аккаунт
           </Link>{" "}
@@ -33,7 +33,7 @@ export default function Login() {
           required
           className="font-mono"
         />
-        <Button type="submit" variant="solid" color="blue" className="w-full">
+        <Button type="submit" variant="solid" color="emerald" className="w-full">
           Подтвердить
         </Button>
       </form>
