@@ -10,10 +10,10 @@ export default function Login() {
   return (
     <AuthLayout>
       <div className="flex flex-col">
-        <h2 className="text-lg font-semibold text-gray-900">
+        <h2 className="text-lg font-semibold text-zinc-900">
           Подтвердите вашу электронную почту
         </h2>
-        <p className="mt-2 text-sm text-gray-700">
+        <p className="mt-2 text-sm text-zinc-700">
           Еще нет аккаунта?{" "}
           <Link
             href="/register"
