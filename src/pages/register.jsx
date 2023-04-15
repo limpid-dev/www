@@ -1,10 +1,9 @@
-import Head from 'next/head'
-import Link from 'next/link'
-
-import { AuthLayout } from '@/components/AuthLayout'
-import { Button } from '@/components/Button'
-import { SelectField, TextField } from '@/components/Fields'
-import { Logo } from '@/components/Logo'
+import Head from "next/head";
+import Link from "next/link";
+import { AuthLayout } from "@/components/AuthLayout";
+import { Button } from "@/components/Button";
+import { SelectField, TextField } from "@/components/Fields";
+import { Logo } from "@/components/Logo";
 
 export default function Register() {
   return (
@@ -22,13 +21,13 @@ export default function Register() {
               Get started for free
             </h2>
             <p className="mt-2 text-sm text-gray-700">
-              Already registered?{' '}
+              Already registered?{" "}
               <Link
                 href="/login"
                 className="font-medium text-blue-600 hover:underline"
               >
                 Sign in
-              </Link>{' '}
+              </Link>{" "}
               to your account.
             </p>
           </div>
@@ -97,5 +96,5 @@ export default function Register() {
         </form>
       </AuthLayout>
     </>
-  )
+  );
 }

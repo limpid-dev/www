@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint --fix"
   },
   "browserslist": "defaults, not ie <= 11",
   "dependencies": {
@@ -24,8 +24,9 @@
   "devDependencies": {
     "@types/node": "18.15.11",
     "@types/react": "18.0.35",
-    "eslint": "8.26.0",
+    "eslint": "^8.26.0",
     "eslint-config-next": "13.0.2",
+    "eslint-kit": "^7.0.0",
     "prettier": "^2.8.7",
     "prettier-plugin-tailwindcss": "^0.2.6",
     "sharp": "^0.32.0"

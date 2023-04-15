@@ -1,23 +1,21 @@
-import Head from 'next/head'
-import Link from 'next/link'
-
-import { AuthLayout } from '@/components/AuthLayout'
-import { Button } from '@/components/Button'
-import { TextField } from '@/components/Fields'
-import { Logo } from '@/components/Logo'
-
-import { useRouter } from 'next/router'
+import Head from "next/head";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { AuthLayout } from "@/components/AuthLayout";
+import { Button } from "@/components/Button";
+import { TextField } from "@/components/Fields";
+import { Logo } from "@/components/Logo";
 
 export default function Verification() {
-  const { query } = useRouter()
+  const { query } = useRouter();
 
-  const onSubmit = (event) =>{
-    event.preventDefault()
-    const form = new FormData(event.target)
-    const data = Object.fromEntries(form)
-    console.log(data)
-  }
-  
+  const onSubmit = (event) => {
+    event.preventDefault();
+    const form = new FormData(event.target);
+    const data = Object.fromEntries(form);
+    console.log(data);
+  };
+
   return (
     <>
       <Head>
@@ -33,13 +31,13 @@ export default function Verification() {
               Подтвердите свой аккаунт
             </h2>
             <p className="mt-2 text-sm text-gray-700">
-              Еще нет аккаунта?{' '}
+              Еще нет аккаунта?{" "}
               <Link
                 href="/register"
                 className="font-medium text-blue-600 hover:underline"
               >
                 Создайте
-              </Link>{' '}
+              </Link>{" "}
               бесплатно.
             </p>
           </div>
@@ -70,13 +68,11 @@ export default function Verification() {
               color="blue"
               className="w-full"
             >
-              <span>
-                Подтвердить
-              </span>
+              <span>Подтвердить</span>
             </Button>
           </div>
         </form>
       </AuthLayout>
     </>
-  )
+  );
 }
