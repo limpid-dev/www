@@ -14,7 +14,7 @@ export default function Login() {
           Нет аккаунта?{" "}
           <Link
             href="/register"
-            className="font-medium text-emerald-600 hover:underline"
+            className="font-medium text-blue-600 hover:underline"
           >
             Создайте аккаунт
           </Link>{" "}
@@ -24,7 +24,7 @@ export default function Login() {
       <form action="#" className="mt-10 grid grid-cols-1 gap-y-8">
         <TextField label="Электронная почта" type="email" required />
         <TextField label="Пароль" type="password" required />
-        <Button type="submit" variant="solid" color="emerald" className="w-full">
+        <Button type="submit" variant="solid" color="blue" className="w-full">
           Войти
         </Button>
       </form>

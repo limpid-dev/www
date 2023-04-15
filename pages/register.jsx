@@ -14,7 +14,7 @@ export default function Register() {
           Уже зарегистрированы?{" "}
           <Link
             href="/login"
-            className="font-medium text-emerald-600 hover:underline"
+            className="font-medium text-blue-600 hover:underline"
           >
             Войдите
           </Link>{" "}
@@ -42,7 +42,7 @@ export default function Register() {
         <Button
           type="submit"
           variant="solid"
-          color="emerald"
+          color="blue"
           className="col-span-full"
         >
           Создать
