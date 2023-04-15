@@ -1,10 +1,9 @@
-import Head from 'next/head'
-import Link from 'next/link'
-
-import { AuthLayout } from '../components/AuthLayout'
-import { Button } from '../components/Button'
-import { TextField } from '../components/Fields'
-import { Logo } from '../components/Logo'
+import Head from "next/head";
+import Link from "next/link";
+import { AuthLayout } from "../components/AuthLayout";
+import { Button } from "../components/Button";
+import { TextField } from "../components/Fields";
+import { Logo } from "../components/Logo";
 
 export default function Login() {
   return (
@@ -22,13 +21,13 @@ export default function Login() {
               Sign in to your account
             </h2>
             <p className="mt-2 text-sm text-gray-700">
-              Don’t have an account?{' '}
+              Don’t have an account?{" "}
               <Link
                 href="/register"
                 className="font-medium text-blue-600 hover:underline"
               >
                 Sign up
-              </Link>{' '}
+              </Link>{" "}
               for a free trial.
             </p>
           </div>
@@ -65,5 +64,5 @@ export default function Login() {
         </form>
       </AuthLayout>
     </>
-  )
+  );
 }

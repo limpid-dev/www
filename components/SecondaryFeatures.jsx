@@ -1,22 +1,21 @@
-import { useId } from 'react'
-import Image from 'next/image'
-import { Tab } from '@headlessui/react'
-import clsx from 'clsx'
-
-import { Container } from '../components/Container'
-import screenshotContacts from '../images/screenshots/contacts.png'
-import screenshotInventory from '../images/screenshots/inventory.png'
-import screenshotProfitLoss from '../images/screenshots/profit-loss.png'
+import { Tab } from "@headlessui/react";
+import clsx from "clsx";
+import Image from "next/image";
+import { useId } from "react";
+import screenshotContacts from "../images/screenshots/contacts.png";
+import screenshotInventory from "../images/screenshots/inventory.png";
+import screenshotProfitLoss from "../images/screenshots/profit-loss.png";
+import { Container } from "./Container";
 
 const features = [
   {
-    name: 'Reporting',
-    summary: 'Stay on top of things with always up-to-date reporting features.',
+    name: "Reporting",
+    summary: "Stay on top of things with always up-to-date reporting features.",
     description:
-      'We talked about reporting in the section above but we needed three items here, so mentioning it one more time for posterity.',
+      "We talked about reporting in the section above but we needed three items here, so mentioning it one more time for posterity.",
     image: screenshotProfitLoss,
     icon: function ReportingIcon() {
-      let id = useId()
+      const id = useId();
       return (
         <>
           <defs>
@@ -40,15 +39,15 @@ const features = [
             strokeLinejoin="round"
           />
         </>
-      )
+      );
     },
   },
   {
-    name: 'Inventory',
+    name: "Inventory",
     summary:
-      'Never lose track of what’s in stock with accurate inventory tracking.',
+      "Never lose track of what’s in stock with accurate inventory tracking.",
     description:
-      'We don’t offer this as part of our software but that statement is inarguably true. Accurate inventory tracking would help you for sure.',
+      "We don’t offer this as part of our software but that statement is inarguably true. Accurate inventory tracking would help you for sure.",
     image: screenshotInventory,
     icon: function InventoryIcon() {
       return (
@@ -68,15 +67,15 @@ const features = [
             fill="#fff"
           />
         </>
-      )
+      );
     },
   },
   {
-    name: 'Contacts',
+    name: "Contacts",
     summary:
-      'Organize all of your contacts, service providers, and invoices in one place.',
+      "Organize all of your contacts, service providers, and invoices in one place.",
     description:
-      'This also isn’t actually a feature, it’s just some friendly advice. We definitely recommend that you do this, you’ll feel really organized and professional.',
+      "This also isn’t actually a feature, it’s just some friendly advice. We definitely recommend that you do this, you’ll feel really organized and professional.",
     image: screenshotContacts,
     icon: function ContactsIcon() {
       return (
@@ -91,21 +90,21 @@ const features = [
             fill="#fff"
           />
         </>
-      )
+      );
     },
   },
-]
+];
 
 function Feature({ feature, isActive, className, ...props }) {
   return (
     <div
-      className={clsx(className, !isActive && 'opacity-75 hover:opacity-100')}
+      className={clsx(className, !isActive && "opacity-75 hover:opacity-100")}
       {...props}
     >
       <div
         className={clsx(
-          'w-9 rounded-lg',
-          isActive ? 'bg-blue-600' : 'bg-slate-500'
+          "w-9 rounded-lg",
+          isActive ? "bg-blue-600" : "bg-slate-500"
         )}
       >
         <svg aria-hidden="true" className="h-9 w-9" fill="none">
@@ -114,8 +113,8 @@ function Feature({ feature, isActive, className, ...props }) {
       </div>
       <h3
         className={clsx(
-          'mt-6 text-sm font-medium',
-          isActive ? 'text-blue-600' : 'text-slate-600'
+          "mt-6 text-sm font-medium",
+          isActive ? "text-blue-600" : "text-slate-600"
         )}
       >
         {feature.name}
@@ -125,7 +124,7 @@ function Feature({ feature, isActive, className, ...props }) {
       </p>
       <p className="mt-4 text-sm text-slate-600">{feature.description}</p>
     </div>
-  )
+  );
 }
 
 function FeaturesMobile() {
@@ -148,7 +147,7 @@ function FeaturesMobile() {
         </div>
       ))}
     </div>
-  )
+  );
 }
 
 function FeaturesDesktop() {
@@ -178,11 +177,11 @@ function FeaturesDesktop() {
             <div className="-mx-5 flex">
               {features.map((feature, featureIndex) => (
                 <Tab.Panel
-                  static
                   key={feature.name}
+                  static
                   className={clsx(
-                    'px-5 transition duration-500 ease-in-out [&:not(:focus-visible)]:focus:outline-none',
-                    featureIndex !== selectedIndex && 'opacity-60'
+                    "px-5 transition duration-500 ease-in-out [&:not(:focus-visible)]:focus:outline-none",
+                    featureIndex !== selectedIndex && "opacity-60"
                   )}
                   style={{ transform: `translateX(-${selectedIndex * 100}%)` }}
                   aria-hidden={featureIndex !== selectedIndex}
@@ -203,7 +202,7 @@ function FeaturesDesktop() {
         </>
       )}
     </Tab.Group>
-  )
+  );
 }
 
 export function SecondaryFeatures() {
@@ -227,5 +226,5 @@ export function SecondaryFeatures() {
         <FeaturesDesktop />
       </Container>
     </section>
-  )
+  );
 }
