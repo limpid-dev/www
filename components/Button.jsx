@@ -10,23 +10,23 @@ const baseStyles = {
 
 const variantStyles = {
   solid: {
-    slate:
-      "bg-slate-900 text-white hover:bg-slate-700 hover:text-slate-100 active:bg-slate-800 active:text-slate-300 focus-visible:outline-slate-900",
-    blue: "bg-blue-600 text-white hover:text-slate-100 hover:bg-blue-500 active:bg-blue-800 active:text-blue-100 focus-visible:outline-blue-600",
+    zinc:
+      "bg-zinc-900 text-white hover:bg-zinc-700 hover:text-zinc-100 active:bg-zinc-800 active:text-zinc-300 focus-visible:outline-zinc-900",
+    teal: "bg-teal-600 text-white hover:text-zinc-100 hover:bg-teal-500 active:bg-teal-800 active:text-teal-100 focus-visible:outline-teal-600",
     white:
-      "bg-white text-slate-900 hover:bg-blue-50 active:bg-blue-200 active:text-slate-600 focus-visible:outline-white",
+      "bg-white text-zinc-900 hover:bg-teal-50 active:bg-teal-200 active:text-zinc-600 focus-visible:outline-white",
   },
   outline: {
-    slate:
-      "ring-slate-200 text-slate-700 hover:text-slate-900 hover:ring-slate-300 active:bg-slate-100 active:text-slate-600 focus-visible:outline-blue-600 focus-visible:ring-slate-300",
+    zinc:
+      "ring-zinc-200 text-zinc-700 hover:text-zinc-900 hover:ring-zinc-300 active:bg-zinc-100 active:text-zinc-600 focus-visible:outline-teal-600 focus-visible:ring-zinc-300",
     white:
-      "ring-slate-700 text-white hover:ring-slate-500 active:ring-slate-700 active:text-slate-400 focus-visible:outline-white",
+      "ring-zinc-700 text-white hover:ring-zinc-500 active:ring-zinc-700 active:text-zinc-400 focus-visible:outline-white",
   },
 };
 
 export function Button({
   variant = "solid",
-  color = "slate",
+  color = "zinc",
   className,
   href,
   ...props

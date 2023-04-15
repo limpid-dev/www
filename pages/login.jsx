@@ -19,7 +19,7 @@ export default function Login() {
             Don’t have an account?{" "}
             <Link
               href="/register"
-              className="font-medium text-blue-600 hover:underline"
+              className="font-medium text-teal-600 hover:underline"
             >
               Sign up
             </Link>{" "}
@@ -45,7 +45,7 @@ export default function Login() {
           required
         />
         <div>
-          <Button type="submit" variant="solid" color="blue" className="w-full">
+          <Button type="submit" variant="solid" color="teal" className="w-full">
             <span>
               Sign in <span aria-hidden="true">&rarr;</span>
             </span>
