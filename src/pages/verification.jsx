@@ -58,7 +58,6 @@ export default function Verification() {
           <TextField
             label="Код верфикации"
             id="token"
-            pattern
             name="token"
             type="text"
             autocomplete="one-time-code"
