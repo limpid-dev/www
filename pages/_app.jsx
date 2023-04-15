@@ -1,4 +1,3 @@
-import "focus-visible";
 import "../tailwind.css";
 import clsx from "clsx";
 import { Inter } from "next/font/google";
