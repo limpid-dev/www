@@ -2,6 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import api from "../api";
+import * as Errors from "../api/errors";
 import { AuthLayout } from "../components/AuthLayout";
 import { Button } from "../components/Button";
 import { TextField } from "../components/Fields";
@@ -17,17 +18,25 @@ export default function Register() {
 
     const [firstName, lastName] = values.fullName.trim().split(" ");
 
-    const { data } = await api.users.store({
+    const { data, error } = await api.users.store({
       firstName,
       lastName,
       email: values.email,
       password: values.password,
     });
 
-    await router.push({
-      pathname: "/verification",
-      query: { email: data.email },
-    });
+    if (Errors.Validation.is(error)) {
+      alert(error.message);
+    } else {
+      await api.verification.store({
+        email: data.email,
+      });
+
+      await router.push({
+        pathname: "/verification",
+        query: { email: data.email },
+      });
+    }
   };
 
   return (

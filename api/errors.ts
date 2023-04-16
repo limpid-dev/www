@@ -4,8 +4,8 @@ export class Unauthorized extends Error {
     this.name = "UnauthorizedError";
   }
 
-  static is(error: Error): error is Unauthorized {
-    return error.name === "UnauthorizedError";
+  static is(error: unknown): error is Unauthorized {
+    return error instanceof Error && error.name === "UnauthorizedError";
   }
 }
 
@@ -15,8 +15,8 @@ export class Forbidden extends Error {
     this.name = "ForbiddenError";
   }
 
-  static is(error: Error): error is Forbidden {
-    return error.name === "ForbiddenError";
+  static is(error: unknown): error is Forbidden {
+    return error instanceof Error && error.name === "ForbiddenError";
   }
 }
 
@@ -26,8 +26,8 @@ export class Validation extends Error {
     this.name = "ValidationError";
   }
 
-  static is(error: Error): error is Validation {
-    return error.name === "ValidationError";
+  static is(error: unknown): error is Validation {
+    return error instanceof Error && error.name === "ValidationError";
   }
 }
 

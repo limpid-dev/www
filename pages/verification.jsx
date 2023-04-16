@@ -10,13 +10,20 @@ import { Logo } from "../components/Logo";
 export default function Verification() {
   const router = useRouter();
 
+  const sendVerificationEmail = async () => {
+    await api.verification.store({
+      email: router.query.email,
+    });
+  };
+
   const onSubmit = async (event) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const values = Object.fromEntries(form);
 
-    await api.verification.store({
-      email: values.email,
+    await api.verification.update({
+      email: router.query.email,
+      token: values.token,
     });
 
     await router.push({
@@ -48,13 +55,6 @@ export default function Verification() {
           </div>
         </div>
         <form onSubmit={onSubmit} className="mt-10 grid grid-cols-1 gap-y-8">
-          <input
-            name="email"
-            type="email"
-            value={router.query.email}
-            readOnly
-            hidden
-          />
           <TextField
             label="Код подтверждения"
             id="token"
@@ -63,7 +63,16 @@ export default function Verification() {
             autoComplete="one-time-code"
             required
           />
-          <div>
+          <div className="space-y-4">
+            <Button
+              onClick={sendVerificationEmail}
+              variant="outline"
+              color="slate"
+              type="reset"
+              className="w-full"
+            >
+              Отправить заново
+            </Button>
             <Button
               type="submit"
               variant="solid"

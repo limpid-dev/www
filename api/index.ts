@@ -6,7 +6,6 @@ import * as Users from "./users";
 import * as Verification from "./verification";
 
 class Api {
-  private xsrf = "UNDEFINED";
   private json = "application/json";
 
   private parse(cookies: string) {
@@ -21,59 +20,67 @@ class Api {
     return null;
   }
 
-  constructor(private readonly baseUrl: string) {
+  public get xsrf() {
     if (typeof window !== "undefined") {
       const xsrf = this.parse(window.document.cookie);
 
       if (xsrf) {
-        this.xsrf = xsrf;
+        return xsrf;
       }
     }
+
+    return "UNDEFINED";
   }
+
+  constructor(private readonly baseUrl: string) {}
 
   async handle<D>(request: Promise<Response>): Promise<{
     data?: D;
     meta?: Helpers.Meta;
     error?: Error;
   }> {
-    const response = await request;
+    try {
+      const response = await request;
 
-    if (response.status === 200) {
-      const contentType = response.headers.get("Content-Type");
+      if (response.status === 200) {
+        const contentType = response.headers.get("Content-Type");
 
-      if (contentType?.includes(this.json)) {
-        const json = await response.json();
+        if (contentType?.includes(this.json)) {
+          const json = await response.json();
 
-        const data = json.data as D;
+          const data = json.data as D;
 
-        if (Array.isArray(data)) {
-          return {
-            data,
-            meta: json.meta,
-          };
+          if (Array.isArray(data)) {
+            return {
+              data,
+              meta: json.meta,
+            };
+          }
+
+          return { data };
         }
 
-        return { data };
+        return {};
       }
 
-      return {};
-    }
+      if (response.status === 401) {
+        return {
+          error: new Errors.Unauthorized("Unauthorized"),
+        };
+      }
 
-    if (response.status === 401) {
-      return {
-        error: new Errors.Unauthorized("Unauthorized"),
-      };
-    }
+      if (response.status === 403) {
+        return { error: new Errors.Forbidden("Forbidden") };
+      }
 
-    if (response.status === 403) {
-      return { error: new Errors.Forbidden("Forbidden") };
-    }
+      if (response.status === 422) {
+        return { error: new Errors.Validation("Validation") };
+      }
 
-    if (response.status === 422) {
-      return { error: new Errors.Validation("Validation") };
+      return { error: new Error("Unknown") };
+    } catch (error) {
+      return { error: new Error("Unknown") };
     }
-
-    return { error: new Error("Unknown") };
   }
 
   get<D>(input: string) {
@@ -130,12 +137,12 @@ class Api {
     );
   }
 
-  health() {
+  async health() {
     return this.get<Health.Show["Data"]>(`${this.baseUrl}/health`);
   }
 
-  csrf() {
-    return this.get<never>(`${this.baseUrl}/csrf`);
+  async csrf() {
+    await fetch(`${this.baseUrl}/csrf`);
   }
 
   get users() {
