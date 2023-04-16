@@ -5,7 +5,6 @@ import { FormEvent } from "react";
 import { AuthLayout } from "@/components/AuthLayout";
 import { Button } from "@/components/Button";
 import { TextField } from "@/components/Fields";
-import { Input } from "@/components/Input";
 import { Logo } from "@/components/Logo";
 
 export default function Verification() {
