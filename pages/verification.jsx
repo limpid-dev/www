@@ -1,23 +1,28 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FormEvent } from "react";
+import api from "../api";
 import { AuthLayout } from "../components/AuthLayout";
 import { Button } from "../components/Button";
 import { TextField } from "../components/Fields";
 import { Logo } from "../components/Logo";
 
 export default function Verification() {
-  const { query } = useRouter();
+  const router = useRouter();
 
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
-
     const form = new FormData(event.currentTarget);
+    const values = Object.fromEntries(form);
 
-    const data = Object.fromEntries(form);
+    await api.verification.store({
+      email: values.email,
+    });
 
-    console.log(data);
+    await router.push({
+      pathname: "/login",
+      query: { email: values.email },
+    });
   };
 
   return (
@@ -35,14 +40,10 @@ export default function Verification() {
               Подтвердите свой аккаунт
             </h2>
             <p className="mt-2 text-sm text-gray-700">
-              Еще нет аккаунта?{" "}
-              <Link
-                href="/register"
-                className="font-medium text-blue-600 hover:underline"
-              >
-                Создайте
-              </Link>{" "}
-              бесплатно.
+              Мы отправили вам письмо с кодом подтверждения на{" "}
+              <span className="text-sm font-semibold text-gray-700">
+                {router.query.email}
+              </span>
             </p>
           </div>
         </div>
@@ -50,7 +51,7 @@ export default function Verification() {
           <input
             name="email"
             type="email"
-            value={query.email}
+            value={router.query.email}
             readOnly
             hidden
           />
@@ -69,7 +70,7 @@ export default function Verification() {
               color="blue"
               className="w-full"
             >
-              <span>Подтвердить</span>
+              Подтвердить
             </Button>
           </div>
         </form>

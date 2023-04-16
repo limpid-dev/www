@@ -13,5 +13,4 @@ export interface Show {
       }
     >;
   };
-  Payload: never;
 }

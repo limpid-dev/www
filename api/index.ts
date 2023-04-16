@@ -1,50 +1,19 @@
-import * as Csrf from "./csrf";
 import * as Errors from "./errors";
 import * as Health from "./health";
+import * as Helpers from "./helpers";
+import * as Session from "./session";
 import * as Users from "./users";
+import * as Verification from "./verification";
 
-export class Api {
-  private _xsrf?: string;
+class Api {
+  private xsrf = "UNDEFINED";
+  private json = "application/json";
 
-  get xsrf() {
-    if (this._xsrf) {
-      return this._xsrf;
-    }
-
-    if (typeof window !== "undefined") {
-      const xsrf = this.parse(window.document.cookie, "XSRF-TOKEN");
-
-      if (xsrf) {
-        this._xsrf = xsrf;
-        return xsrf;
-      }
-
-      this.csrf().then(([_, response]) => {
-        const cookies = response.headers.get("set-cookie");
-
-        if (cookies) {
-          const xsrf = this.parse(cookies, "XSRF-TOKEN");
-          if (xsrf) {
-            this._xsrf = xsrf;
-          }
-        }
-      });
-    }
-
-    return "";
-  }
-
-  private headers = {
-    "Content-Type": "application/json",
-    Accept: "application/json",
-    "X-XSRF-TOKEN": this.xsrf,
-  };
-
-  private parse(cookies: string, find: string) {
+  private parse(cookies: string) {
     for (const cookie of cookies.split(";")) {
       const [key, value] = cookie.split("=");
 
-      if (key.trim() === find) {
+      if (key.trim() === "XSRF-TOKEN") {
         return value;
       }
     }
@@ -52,77 +21,121 @@ export class Api {
     return null;
   }
 
-  constructor(private readonly baseUrl: string) {}
+  constructor(private readonly baseUrl: string) {
+    if (typeof window !== "undefined") {
+      const xsrf = this.parse(window.document.cookie);
 
-  async handle<T>(response: Response) {
-    const json = await response.json();
+      if (xsrf) {
+        this.xsrf = xsrf;
+      }
+    }
+  }
 
-    if (!response.ok) {
-      if (Errors.isBadCsrfToken(json)) {
-        const [_, response] = await this.csrf();
+  async handle<D>(request: Promise<Response>): Promise<{
+    data?: D;
+    meta?: Helpers.Meta;
+    error?: Error;
+  }> {
+    const response = await request;
 
-        const cookies = response.headers.get("set-cookie");
+    if (response.status === 200) {
+      const contentType = response.headers.get("Content-Type");
 
-        if (cookies) {
-          const xsrf = this.parse(cookies, "XSRF-TOKEN");
-          if (xsrf) {
-            this._xsrf = xsrf;
-          }
+      if (contentType?.includes(this.json)) {
+        const json = await response.json();
+
+        const data = json.data as D;
+
+        if (Array.isArray(data)) {
+          return {
+            data,
+            meta: json.meta,
+          };
         }
+
+        return { data };
       }
 
-      throw new Error(json);
+      return {};
     }
 
-    return [json as T, response] as const;
+    if (response.status === 401) {
+      return {
+        error: new Errors.Unauthorized("Unauthorized"),
+      };
+    }
+
+    if (response.status === 403) {
+      return { error: new Errors.Forbidden("Forbidden") };
+    }
+
+    if (response.status === 422) {
+      return { error: new Errors.Validation("Validation") };
+    }
+
+    return { error: new Error("Unknown") };
   }
 
-  async get<T>(url: string) {
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-      },
-    });
-
-    return this.handle<T>(response);
+  get<D>(input: string) {
+    return this.handle<D>(
+      fetch(input, {
+        method: "GET",
+        headers: {
+          Accept: this.json,
+        },
+        credentials: "include",
+      })
+    );
   }
 
-  async post<T, P>(url: string, body: P) {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: this.headers,
-      body: JSON.stringify(body),
-    });
-
-    return this.handle<T>(response);
+  post<D, P>(input: string, payload: P) {
+    return this.handle<D>(
+      fetch(input, {
+        method: "POST",
+        headers: {
+          Accept: this.json,
+          "Content-Type": this.json,
+          "X-XSRF-TOKEN": this.xsrf,
+        },
+        body: JSON.stringify(payload),
+        credentials: "include",
+      })
+    );
   }
 
-  async patch<T, P>(url: string, body: P) {
-    const response = await fetch(url, {
-      method: "PATCH",
-      headers: this.headers,
-      body: JSON.stringify(body),
-    });
-
-    return this.handle<T>(response);
+  async patch<D, P>(input: string, payload: P) {
+    return this.handle<D>(
+      fetch(input, {
+        method: "PATCH",
+        headers: {
+          Accept: this.json,
+          "Content-Type": this.json,
+          "X-XSRF-TOKEN": this.xsrf,
+        },
+        body: JSON.stringify(payload),
+        credentials: "include",
+      })
+    );
   }
 
-  async delete<T>(url: string) {
-    const response = await fetch(url, {
-      method: "DELETE",
-      headers: this.headers,
-    });
-
-    return this.handle<T>(response);
+  async delete(input: string) {
+    return this.handle(
+      fetch(input, {
+        method: "DELETE",
+        headers: {
+          "X-XSRF-TOKEN": this.xsrf,
+        },
+        credentials: "include",
+      })
+    );
   }
 
-  async health() {
+  health() {
     return this.get<Health.Show["Data"]>(`${this.baseUrl}/health`);
   }
 
-  async csrf() {
-    return this.get<Csrf.Show["Data"]>(`${this.baseUrl}/csrf`);
+  csrf() {
+    return this.get<never>(`${this.baseUrl}/csrf`);
   }
 
   get users() {
@@ -130,9 +143,42 @@ export class Api {
       show: (id: number) =>
         this.get<Users.Show["Data"]>(`${this.baseUrl}/users/${id}`),
       store: (payload: Users.Store["Payload"]) =>
-        this.post(`${this.baseUrl}/users`, payload),
+        this.post<Users.Store["Data"], Users.Store["Payload"]>(
+          `${this.baseUrl}/users`,
+          payload
+        ),
       update: (id: number, payload: Users.Update["Payload"]) =>
-        this.patch(`${this.baseUrl}/users/${id}`, payload),
+        this.patch<Users.Update["Data"], Users.Update["Payload"]>(
+          `${this.baseUrl}/users/${id}`,
+          payload
+        ),
+    };
+  }
+
+  get verification() {
+    return {
+      store: (payload: Verification.Store["Payload"]) =>
+        this.post<never, Verification.Store["Payload"]>(
+          `${this.baseUrl}/verification`,
+          payload
+        ),
+      update: (payload: Verification.Update["Payload"]) =>
+        this.patch<never, Verification.Update["Payload"]>(
+          `${this.baseUrl}/verification`,
+          payload
+        ),
+    };
+  }
+
+  get session() {
+    return {
+      show: () => this.get<Session.Show["Data"]>(`${this.baseUrl}/session`),
+      store: <M extends "api" | "web">(payload: Session.Store<M>["Payload"]) =>
+        this.post<Session.Store<M>["Data"], Session.Store<M>["Payload"]>(
+          `${this.baseUrl}/session`,
+          payload
+        ),
+      destroy: () => this.delete(`${this.baseUrl}/session`),
     };
   }
 }

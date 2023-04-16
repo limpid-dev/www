@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import api from "../api";
 import { AuthLayout } from "../components/AuthLayout";
 import { Button } from "../components/Button";
@@ -7,14 +8,26 @@ import { TextField } from "../components/Fields";
 import { Logo } from "../components/Logo";
 
 export default function Register() {
-  const onSubmit = (event) => {
+  const router = useRouter();
+
+  const onSubmit = async (event) => {
     event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const values = Object.fromEntries(form.entries());
 
-    const form = event.currentTarget;
-    const data = new FormData(form);
-    const values = Object.fromEntries(data.entries());
+    const [firstName, lastName] = values.fullName.trim().split(" ");
 
-    api.users.store(values);
+    const { data } = await api.users.store({
+      firstName,
+      lastName,
+      email: values.email,
+      password: values.password,
+    });
+
+    await router.push({
+      pathname: "/verification",
+      query: { email: data.email },
+    });
   };
 
   return (
@@ -29,17 +42,17 @@ export default function Register() {
           </Link>
           <div className="mt-20">
             <h2 className="text-lg font-semibold text-gray-900">
-              Get started for free
+              Начните бесплатно
             </h2>
             <p className="mt-2 text-sm text-gray-700">
-              Already registered?{" "}
+              Уже есть аккаунт?{" "}
               <Link
                 href="/login"
                 className="font-medium text-blue-600 hover:underline"
               >
-                Sign in
+                Войдите
               </Link>{" "}
-              to your account.
+              в ваш аккаунт.
             </p>
           </div>
         </div>
@@ -48,24 +61,17 @@ export default function Register() {
           className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2"
         >
           <TextField
-            label="First name"
-            id="first_name"
-            name="firstName"
+            className="col-span-full"
+            label="Полное имя"
+            name="fullName"
             type="text"
-            autoComplete="given-name"
-            required
-          />
-          <TextField
-            label="Last name"
-            id="last_name"
-            name="lastName"
-            type="text"
-            autoComplete="family-name"
+            pattern="^[a-zA-Z]+ [a-zA-Z]+$"
+            autoComplete="name"
             required
           />
           <TextField
             className="col-span-full"
-            label="Email address"
+            label="Электронная почта"
             id="email"
             name="email"
             type="email"
@@ -74,7 +80,7 @@ export default function Register() {
           />
           <TextField
             className="col-span-full"
-            label="Password"
+            label="Пароль"
             id="password"
             name="password"
             type="password"
@@ -88,9 +94,7 @@ export default function Register() {
               color="blue"
               className="w-full"
             >
-              <span>
-                Sign up <span aria-hidden="true">&rarr;</span>
-              </span>
+              Зарегистрироваться
             </Button>
           </div>
         </form>

@@ -1,31 +1,26 @@
-import { CamelCasedProperties } from "type-fest";
-
-interface User {
+export interface Entity {
   id: number;
   email: string;
-  first_name: string;
-  last_name: string;
-  created_at: string;
-  updated_at: string;
-  verified_at: null;
+  password: string;
+  firstName: string;
+  lastName: string;
+  createdAt: string;
+  updatedAt: string;
+  verifiedAt: null;
 }
 
 export interface Show {
-  Data: User;
-  Payload: never;
+  Data: Omit<Entity, "password">;
 }
 
 export interface Store {
-  Data: User;
-  Payload: {
-    email: string;
-    password: string;
-    firstName: string;
-    lastName: string;
-  };
+  Data: Omit<Entity, "password">;
+  Payload: Pick<Entity, "email" | "firstName" | "lastName" | "password">;
 }
 
 export interface Update {
-  Data: User;
-  Payload: Partial<CamelCasedProperties<Omit<User, "verified_at">>>;
+  Data: Omit<Entity, "password">;
+  Payload: Partial<
+    Pick<Entity, "email" | "firstName" | "lastName" | "password">
+  >;
 }
