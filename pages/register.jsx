@@ -1,10 +1,10 @@
 import Head from "next/head";
 import Link from "next/link";
-import api from "@/api";
-import { AuthLayout } from "@/components/AuthLayout";
-import { Button } from "@/components/Button";
-import { TextField } from "@/components/Fields";
-import { Logo } from "@/components/Logo";
+import api from "../api";
+import { AuthLayout } from "../components/AuthLayout";
+import { Button } from "../components/Button";
+import { TextField } from "../components/Fields";
+import { Logo } from "../components/Logo";
 
 export default function Register() {
   const onSubmit = (event) => {

@@ -2,12 +2,12 @@ import { Tab } from "@headlessui/react";
 import clsx from "clsx";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Container } from "@/components/Container";
-import backgroundImage from "@/images/background-features.jpg";
-import screenshotExpenses from "@/images/screenshots/expenses.png";
-import screenshotPayroll from "@/images/screenshots/payroll.png";
-import screenshotReporting from "@/images/screenshots/reporting.png";
-import screenshotVatReturns from "@/images/screenshots/vat-returns.png";
+import { Container } from "../components/Container";
+import backgroundImage from "../images/background-features.jpg";
+import screenshotExpenses from "../images/screenshots/expenses.png";
+import screenshotPayroll from "../images/screenshots/payroll.png";
+import screenshotReporting from "../images/screenshots/reporting.png";
+import screenshotVatReturns from "../images/screenshots/vat-returns.png";
 
 const features = [
   {

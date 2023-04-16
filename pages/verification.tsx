@@ -2,10 +2,10 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent } from "react";
-import { AuthLayout } from "@/components/AuthLayout";
-import { Button } from "@/components/Button";
-import { TextField } from "@/components/Fields";
-import { Logo } from "@/components/Logo";
+import { AuthLayout } from "../components/AuthLayout";
+import { Button } from "../components/Button";
+import { TextField } from "../components/Fields";
+import { Logo } from "../components/Logo";
 
 export default function Verification() {
   const { query } = useRouter();
