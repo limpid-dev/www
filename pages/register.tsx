@@ -21,11 +21,9 @@ export default function Register() {
     const form = new FormData(event.currentTarget);
     const values = Object.fromEntries(form.entries()) as Record<string, string>;
 
-    const [firstName, lastName] = values.fullName.trim().split(" ");
-
     const { data, error } = await api.users.store({
-      firstName,
-      lastName,
+      firstName: values.firstName,
+      lastName: values.lastName,
       email: values.email,
       password: values.password,
     });
@@ -60,18 +58,21 @@ export default function Register() {
         в ваш аккаунт.
       </p>
       <Form onSubmit={onSubmit} className="mt-10">
-        <Field name="fullName">
-          <Label>Полное имя</Label>
-          <Input
-            type="text"
-            pattern="^[a-zA-Z]+ [a-zA-Z]+$"
-            autoComplete="name"
-            required
-          />
+        <Field name="firstName">
+          <Label>Имя</Label>
+          <Input type="text" autoComplete="name" required />
+          <Message match="valueMissing">Введите ваше имя</Message>
+        </Field>
+        <Field name="lastName">
+          <Label>Фамилия</Label>
+          <Input type="text" autoComplete="lastName" required />
+          <Message match="valueMissing">Введите вашу фамилию</Message>
         </Field>
         <Field name="email">
           <Label>Электронная почта</Label>
           <Input type="email" autoComplete="email" required />
+          <Message match="valueMissing">Введите пожалуйста вашу почту</Message>
+          <Message match="typeMismatch">Введите валидную почту</Message>
           <Message match="badInput" forceMatch={errors.email}>
             Адрес уже используется
           </Message>
@@ -82,10 +83,16 @@ export default function Register() {
             type="password"
             pattern="(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+"
             autoComplete="new-password"
+            minLength={8}
             required
           />
+          <Message match="valueMissing">Введите пожалуйста ваш пароль</Message>
+          <Message match="tooShort">
+            Пароль должен содержать минимум 8 символов
+          </Message>
           <Message match="patternMismatch">
             Пароль должен содержать как минимум одну цифру, одну букву и один
+            спецсимвол
           </Message>
         </Field>
         <Submit>Зарегистрироваться</Submit>
