@@ -1,25 +1,31 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { FormEvent } from "react";
 import api from "../api";
 import { AuthLayout } from "../components/AuthLayout";
-import { Button } from "../components/Button";
+import { Button } from "../components/btn";
 import { TextField } from "../components/Fields";
+import { Field, Form, Input, Label } from "../components/Form";
 import { Logo } from "../components/Logo";
 
 export default function Verification() {
   const router = useRouter();
 
   const sendVerificationEmail = async () => {
+    if (typeof router.query.email !== "string") return;
+
     await api.verification.store({
       email: router.query.email,
     });
   };
 
-  const onSubmit = async (event) => {
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    const values = Object.fromEntries(form);
+    const values = Object.fromEntries(form) as Record<string, string>;
+
+    if (typeof router.query.email !== "string") return;
 
     await api.verification.update({
       email: router.query.email,
@@ -28,7 +34,7 @@ export default function Verification() {
 
     await router.push({
       pathname: "/login",
-      query: { email: values.email },
+      query: { email: router.query.email },
     });
   };
 
@@ -54,15 +60,16 @@ export default function Verification() {
             </p>
           </div>
         </div>
-        <form onSubmit={onSubmit} className="mt-10 grid grid-cols-1 gap-y-8">
-          <TextField
-            label="Код подтверждения"
-            id="token"
-            name="token"
-            type="text"
-            autoComplete="one-time-code"
-            required
-          />
+        <Form onSubmit={onSubmit} className="mt-10">
+          <Field name="token">
+            <Label>Код подтверждения</Label>
+            <Input
+              name="token"
+              type="text"
+              autoComplete="one-time-code"
+              required
+            />
+          </Field>
           <div className="space-y-4">
             <Button
               onClick={sendVerificationEmail}
@@ -82,7 +89,7 @@ export default function Verification() {
               Подтвердить
             </Button>
           </div>
-        </form>
+        </Form>
       </AuthLayout>
     </>
   );
