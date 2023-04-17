@@ -4,10 +4,10 @@ import { useRouter } from "next/router";
 import { FormEvent } from "react";
 import api from "../api";
 import { AuthLayout } from "../components/AuthLayout";
-import { Button } from "../components/btn";
 import { TextField } from "../components/Fields";
-import { Field, Form, Input, Label } from "../components/Form";
 import { Logo } from "../components/Logo";
+import { Button } from "../components/Primitives/Button";
+import { Field, Form, Input, Label } from "../components/Primitives/Form";
 
 export default function Verification() {
   const router = useRouter();

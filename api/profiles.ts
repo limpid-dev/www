@@ -8,6 +8,8 @@ export interface Entity {
   verifiedAt: string | null;
   createdAt: string;
   updatedAt: string;
+  ownedIntellectualResources: string;
+  ownedMaterialResources: string;
 }
 
 export interface Index {
@@ -20,12 +22,28 @@ export interface Show {
 
 export interface Store {
   Data: Entity;
-  Payload: Pick<Entity, "title" | "description" | "location" | "industry">;
+  Payload: Pick<
+    Entity,
+    | "title"
+    | "description"
+    | "location"
+    | "industry"
+    | "ownedIntellectualResources"
+    | "ownedMaterialResources"
+  >;
 }
 
 export interface Update {
   Data: Entity;
   Payload: Partial<
-    Pick<Entity, "title" | "description" | "location" | "industry">
+    Pick<
+      Entity,
+      | "title"
+      | "description"
+      | "location"
+      | "industry"
+      | "ownedIntellectualResources"
+      | "ownedMaterialResources"
+    >
   >;
 }

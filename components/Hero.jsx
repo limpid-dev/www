@@ -1,8 +1,5 @@
-import Image from "next/image";
-import logoClubbie from "../images/logos/clubbie.svg";
-import logoNJF from "../images/logos/njf.svg";
-import { Button } from "./Button";
 import { Container } from "./Container";
+import { Button } from "./Primitives/Button";
 
 export function Hero() {
   return (
@@ -42,31 +39,6 @@ export function Hero() {
           <span className="ml-3">Открыть видео</span>
         </Button>
       </div>
-      {/* <div className="mt-36 lg:mt-44">
-        <p className=" text-base text-zinc-900">Нас поддерживают</p>
-        <ul
-          role="list"
-          className="mt-8 flex items-center justify-center gap-x-8 sm:flex-col sm:gap-x-0 sm:gap-y-10 xl:flex-row xl:gap-x-12 xl:gap-y-0"
-        >
-          {[
-            [{ name: "NJForce", logo: logoNJF }],
-            [{ name: "Clubbie", logo: logoClubbie }],
-          ].map((group, groupIndex) => (
-            <li key={groupIndex}>
-              <ul
-                role="list"
-                className="flex flex-col items-center gap-y-8 sm:flex-row sm:gap-x-12 sm:gap-y-0"
-              >
-                {group.map((company) => (
-                  <li key={company.name} className="flex">
-                    <Image src={company.logo} alt={company.name} unoptimized />
-                  </li>
-                ))}
-              </ul>
-            </li>
-          ))}
-        </ul>
-      </div> */}
     </Container>
   );
 }

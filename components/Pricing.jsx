@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import Link from "next/link";
-import { Button } from "./Button";
+import { Button } from "./Primitives/Button";
 import { Container } from "./Container";
 
 function SwirlyDoodle({ className }) {
@@ -67,7 +67,6 @@ function Plan({ name, price, description, href, features, featured = false }) {
         {price}
       </p>
       <ul
-        role="list"
         className={clsx(
           "order-last mt-10 flex flex-col gap-y-3 text-sm",
           featured ? "text-white" : "text-zinc-200"

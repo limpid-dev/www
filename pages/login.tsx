@@ -4,7 +4,14 @@ import { FormEvent, useState } from "react";
 import api from "../api";
 import { BadRequest, Validation } from "../api/errors";
 import { AuthLayout } from "../components/AuthLayout";
-import { Field, Form, Input, Label, Message, Submit } from "../components/Form";
+import {
+  Message,
+  Field,
+  Form,
+  Input,
+  Label,
+  Submit,
+} from "../components/Primitives/Form";
 
 export default function Login() {
   const [errors, setErrors] = useState({
@@ -84,8 +91,6 @@ export default function Login() {
             defaultValue={router.query.email}
             required
           />
-          <Message match="valueMissing">Введите пожалуйста вашу почту</Message>
-          <Message match="typeMismatch">Введите валидную почту</Message>
           <Message match="badInput" forceMatch={errors.email}>
             Адрес не найден или не верифицирован
           </Message>
@@ -99,10 +104,6 @@ export default function Login() {
             pattern="(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+"
             required
           />
-          <Message match="valueMissing">Введите пожалуйста ваш пароль</Message>
-          <Message match="tooShort">
-            Пароль должен содержать минимум 8 символов
-          </Message>
           <Message match="patternMismatch">
             Пароль должен содержать как минимум одну цифру, одну букву и один
             спецсимвол

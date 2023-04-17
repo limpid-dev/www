@@ -216,7 +216,7 @@ export function SecondaryFeatures() {
             LIM - ты не один !
           </h2>
           <p className="mt-4 text-lg tracking-tight text-zinc-700">
-          Наша платформа позволяет открыть свой бизнес совместными усилиями 
+            Наша платформа позволяет открыть свой бизнес совместными усилиями
           </p>
         </div>
         <FeaturesMobile />

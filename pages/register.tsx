@@ -5,10 +5,17 @@ import { FormEvent, useState } from "react";
 import api from "../api";
 import * as Errors from "../api/errors";
 import { AuthLayout } from "../components/AuthLayout";
-import { Button } from "../components/Button";
 import { TextField } from "../components/Fields";
-import { Field, Form, Input, Label, Message, Submit } from "../components/Form";
 import { Logo } from "../components/Logo";
+import { Button } from "../components/Primitives/Button";
+import {
+  Message,
+  Field,
+  Form,
+  Input,
+  Label,
+  Submit,
+} from "../components/Primitives/Form";
 
 export default function Register() {
   const router = useRouter();
@@ -71,8 +78,6 @@ export default function Register() {
         <Field name="email">
           <Label>Электронная почта</Label>
           <Input type="email" autoComplete="email" required />
-          <Message match="valueMissing">Введите пожалуйста вашу почту</Message>
-          <Message match="typeMismatch">Введите валидную почту</Message>
           <Message match="badInput" forceMatch={errors.email}>
             Адрес уже используется
           </Message>
@@ -86,13 +91,8 @@ export default function Register() {
             minLength={8}
             required
           />
-          <Message match="valueMissing">Введите пожалуйста ваш пароль</Message>
-          <Message match="tooShort">
-            Пароль должен содержать минимум 8 символов
-          </Message>
           <Message match="patternMismatch">
             Пароль должен содержать как минимум одну цифру, одну букву и один
-            спецсимвол
           </Message>
         </Field>
         <Submit>Зарегистрироваться</Submit>

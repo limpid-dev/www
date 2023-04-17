@@ -1,7 +1,7 @@
 import Image from "next/image";
 import backgroundImage from "../images/background-call-to-action.jpg";
-import { Button } from "./btn";
 import { Container } from "./Container";
+import { Button } from "./Primitives/Button";
 
 export function CallToAction() {
   return (
@@ -25,7 +25,7 @@ export function CallToAction() {
           <p className="mt-4 text-lg tracking-tight text-white">
             Возможность запустить бизнес-проекты без инвестиций
           </p>
-          <Button href="/register" color="white" className="mt-10">
+          <Button href="/register" className="mt-10">
             Попробовать
           </Button>
         </div>

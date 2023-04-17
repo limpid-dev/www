@@ -1,5 +1,5 @@
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bell, List, X } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { Fragment } from "react";
 import { Logo } from "./Logo";
@@ -57,9 +57,9 @@ export function Navigation() {
                 <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-zinc-900">
                   <span className="sr-only">Open menu</span>
                   {open ? (
-                    <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+                    <X className="block h-6 w-6" aria-hidden="true" />
                   ) : (
-                    <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
+                    <List className="block h-6 w-6" aria-hidden="true" />
                   )}
                 </Disclosure.Button>
               </div>
@@ -69,7 +69,7 @@ export function Navigation() {
                   className="flex-shrink-0 rounded-full bg-white p-1 text-zinc-400 hover:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2"
                 >
                   <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
+                  <Bell className="h-6 w-6" aria-hidden="true" />
                 </button>
 
                 {/* Profile dropdown */}

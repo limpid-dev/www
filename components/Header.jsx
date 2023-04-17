@@ -2,10 +2,10 @@ import { Popover, Transition } from "@headlessui/react";
 import clsx from "clsx";
 import Link from "next/link";
 import { Fragment } from "react";
-import { Button } from "./Button";
 import { Container } from "./Container";
 import { Logo } from "./Logo";
 import { NavLink } from "./NavLink";
+import { Button } from "./Primitives/Button";
 
 function MobileNavLink({ href, children }) {
   return (
@@ -109,7 +109,8 @@ export function Header() {
             </div>
             <Button href="/register" color="lime">
               <span>
-                Зарегистрируйтесь <span className="hidden lg:inline">сегодня</span>
+                Зарегистрируйтесь{" "}
+                <span className="hidden lg:inline">сегодня</span>
               </span>
             </Button>
             <div className="-mr-1 md:hidden">
