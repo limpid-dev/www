@@ -83,7 +83,8 @@ class Api {
     }
   }
 
-  get<D>(input: string) {
+  async get<D>(input: string) {
+    await this.csrf()
     return this.handle<D>(
       fetch(input, {
         method: "GET",
@@ -95,7 +96,8 @@ class Api {
     );
   }
 
-  post<D, P>(input: string, payload: P) {
+  async post<D, P>(input: string, payload: P) {
+    await this.csrf()
     return this.handle<D>(
       fetch(input, {
         method: "POST",
@@ -111,6 +113,7 @@ class Api {
   }
 
   async patch<D, P>(input: string, payload: P) {
+    await this.csrf()
     return this.handle<D>(
       fetch(input, {
         method: "PATCH",
@@ -126,6 +129,7 @@ class Api {
   }
 
   async delete(input: string) {
+    await this.csrf()
     return this.handle(
       fetch(input, {
         method: "DELETE",
@@ -190,6 +194,6 @@ class Api {
   }
 }
 
-const api = new Api("http://localhost:3333");
+const api = new Api("http://localhost:3003");
 
 export default api;
