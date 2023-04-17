@@ -90,12 +90,12 @@ export const Submit = forwardRef<
     ButtonProps
 >(
   (
-    { className, variant = "solid", tone: color = "lime", children, ...props },
+    { className, variant = "solid", color = "lime", children, ...props },
     ref
   ) => {
     return (
       <Primitives.Submit {...props} ref={ref} asChild>
-        <Button variant={variant} tone={color} className={clsx(className)}>
+        <Button variant={variant} color={color} className={clsx(className)}>
           {children}
         </Button>
       </Primitives.Submit>
