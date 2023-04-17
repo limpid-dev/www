@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import Link from "next/link";
 import { Button } from "./Button";
 import { Container } from "./Container";
 
@@ -79,15 +80,17 @@ function Plan({ name, price, description, href, features, featured = false }) {
           </li>
         ))}
       </ul>
-      <Button
-        href={href}
-        variant={featured ? "solid" : "outline"}
-        color="white"
-        className="mt-8"
-        aria-label={`Get started with the ${name} plan for ${price}`}
-      >
-        Начни сейчас
-      </Button>
+      <Link href="/register">
+        <Button
+          href={href}
+          variant={featured ? "solid" : "outline"}
+          color="white"
+          className="mt-8"
+          aria-label={`Get started with the ${name} plan for ${price}`}
+        >
+          Начни сейчас
+        </Button>
+      </Link>
     </section>
   );
 }

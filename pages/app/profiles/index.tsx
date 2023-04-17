@@ -11,8 +11,17 @@ import { Button } from "../../../components/Button";
 import { Navigation } from "../../../components/Navigation";
 import testAva from "../../../images/avatars/avatar-1.jpg";
 
+const tabs = [
+  { name: "Все профили", href: "/app/profiles/", current: true },
+  { name: "Мои профили", href: "/app/profiles/my", current: false },
+];
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
 export default function All() {
   const [search, setSearch] = useState("");
+  const [current, setCurrent] = useState(true);
 
   return (
     <div>
@@ -20,20 +29,57 @@ export default function All() {
       <div className="h-screen bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
           <p className=" text-sm text-slate-300">Профили</p>
-          <div className="my-5 flex flex-col items-end justify-end gap-4 md:mb-12 md:flex-row md:items-baseline md:justify-end">
-            <div className="flex flex-wrap items-center gap-3">
+          <div className="my-5 flex flex-col items-end justify-end gap-4 md:mb-12 md:flex-row md:items-baseline md:justify-between">
+            <div>
+              <div className="sm:hidden">
+                <label htmlFor="tabs" className="sr-only">
+                  Select a tab
+                </label>
+                {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
+                <select
+                  id="tabs"
+                  name="tabs"
+                  className="block w-full rounded-md border-gray-300 focus:border-lime-500 focus:ring-lime-500"
+                  defaultValue={tabs.find((tab) => tab.current).name}
+                >
+                  {tabs.map((tab) => (
+                    <option key={tab.name}>{tab.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="hidden sm:block">
+                <nav className="flex space-x-4" aria-label="Tabs">
+                  {tabs.map((tab) => (
+                    <a
+                      key={tab.name}
+                      href={tab.href}
+                      className={classNames(
+                        tab.current
+                          ? "bg-lime-100 text-lime-700"
+                          : "text-gray-500 hover:text-gray-700",
+                        "rounded-md px-3 py-2 text-sm font-medium"
+                      )}
+                      aria-current={tab.current ? "page" : undefined}
+                    >
+                      {tab.name}
+                    </a>
+                  ))}
+                </nav>
+              </div>
+            </div>
+            <div className="flex flex-wrap items-end justify-end gap-3">
               <div className="flex rounded-lg border">
                 <input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   type="search"
-                  placeholder="Искать по закупкам"
+                  placeholder="Искать по профилям"
                   className="rounded-lg border-none"
                 />
                 <Button
                   type="submit"
                   variant="outline"
-                  className="ring-transparent"
+                  className="ring-0 ring-transparent"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -51,12 +97,14 @@ export default function All() {
                   </svg>
                 </Button>
               </div>
-              <Button variant="outline">
-                <AdjustmentsVerticalIcon className="h-6 w-6" />
-              </Button>
-              <Button variant="outline">
-                <Squares2X2Icon className="h-6 w-6" />
-              </Button>
+              <div className="flex gap-4">
+                <Button variant="outline">
+                  <AdjustmentsVerticalIcon className="h-6 w-6" />
+                </Button>
+                <Button variant="outline">
+                  <Squares2X2Icon className="h-6 w-6" />
+                </Button>
+              </div>
             </div>
           </div>
 
@@ -71,13 +119,13 @@ export default function All() {
                       className=" h-32 w-32 rounded-lg"
                     />
                   </div>
-                  <div className="col-span-6 flex flex-col gap-1">
+                  <div className="col-span-6 flex flex-col gap-1 pl-3">
                     <p>Алмаз Нургали</p>
 
                     <p className="text-xs text-slate-400">Веб разработка</p>
                     <p className="text-sm text-slate-400">Астана</p>
 
-                    <p className="line-clamp-3 w-44 text-xs">
+                    <p className="line-clamp-3 w-auto text-xs">
                       Как веб-разработчик, я приверженец постоянного
                       профессионального роста и самосовершенствования. Я владею
                       широким спектром технологий и языков программирования,

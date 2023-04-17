@@ -1,0 +1,93 @@
+import {
+  AdjustmentsVerticalIcon,
+  BriefcaseIcon,
+  DocumentMagnifyingGlassIcon,
+  MagnifyingGlassCircleIcon,
+  PlusCircleIcon,
+  PlusIcon,
+  Squares2X2Icon,
+} from "@heroicons/react/24/outline";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+import { Button } from "../../../components/Button";
+import { Navigation } from "../../../components/Navigation";
+import testAva from "../../../images/avatars/avatar-1.jpg";
+
+const tabs = [
+  { name: "Все профили", href: "/app/profiles/", current: false },
+  { name: "Мои профили", href: "/app/profiles/my", current: true },
+];
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
+export default function All() {
+  const [search, setSearch] = useState("");
+  const [current, setCurrent] = useState(true);
+
+  return (
+    <div>
+      <Navigation />
+      <div className="h-screen bg-slate-50">
+        <div className="mx-auto max-w-screen-xl px-5 pt-8">
+          <p className=" text-sm text-slate-300">Профили</p>
+          <div className="my-5 flex flex-col items-end justify-end gap-4 md:mb-12 md:flex-row md:items-baseline md:justify-between">
+            <div>
+              <div className="sm:hidden">
+                <label htmlFor="tabs" className="sr-only">
+                  Select a tab
+                </label>
+                {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
+                <select
+                  id="tabs"
+                  name="tabs"
+                  className="block w-full rounded-md border-gray-300 focus:border-lime-500 focus:ring-lime-500"
+                  defaultValue={tabs.find((tab) => tab.current).name}
+                >
+                  {tabs.map((tab) => (
+                    <option key={tab.name}>{tab.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="hidden sm:block">
+                <nav className="flex space-x-4" aria-label="Tabs">
+                  {tabs.map((tab) => (
+                    <a
+                      key={tab.name}
+                      href={tab.href}
+                      className={classNames(
+                        tab.current
+                          ? "bg-lime-100 text-lime-700"
+                          : "text-gray-500 hover:text-gray-700",
+                        "rounded-md px-3 py-2 text-sm font-medium"
+                      )}
+                      aria-current={tab.current ? "page" : undefined}
+                    >
+                      {tab.name}
+                    </a>
+                  ))}
+                </nav>
+              </div>
+            </div>
+            <Button className=" flex gap-3 rounded-lg bg-black text-xs hover:bg-slate-700 sm:text-sm">
+              <PlusIcon className="h-6 w-6" />
+              Создать профиль
+            </Button>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+            <Link className="block sm:max-w-[400px] " href="./user/1">
+              <div className="flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-9 font-semibold hover:border-slate-700">
+                <BriefcaseIcon className="h-6 w-6" />
+                <p className="w-[203px] text-center text-base sm:text-xl ">
+                  Консультационные услуги
+                </p>
+              </div>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
