@@ -1,48 +1,28 @@
 import Image from "next/image";
-import avatarImage1 from "../images/avatars/avatar-1.png";
-import avatarImage2 from "../images/avatars/avatar-2.png";
-import avatarImage3 from "../images/avatars/avatar-3.png";
-import avatarImage4 from "../images/avatars/avatar-4.png";
-import avatarImage5 from "../images/avatars/avatar-5.png";
+import avatarImage1 from "../images/avatars/avatar-1.jpg";
+import avatarImage2 from "../images/avatars/avatar-2.jpg";
+import avatarImage3 from "../images/avatars/avatar-3.jpg";
 import { Container } from "./Container";
 
 const testimonials = [
   [
     {
       content:
-        "TaxPal is so easy to use I can’t help but wonder if it’s really doing the things the government expects me to do.",
+        "Limpid - это настоящий прорыв для меня в создании моего бизнеса, благодаря возможности создания проектов и формирования сообщества. Интуитивный интерфейс и мощные функции платформы позволили мне эффективно управлять своими инициативами, налаживать контакты и обмениваться идеями с единомышленниками. Благодаря Limpid моя бизнес-идея стала реальностью!",
       author: {
-        name: "Sheryl Berge",
-        role: "CEO at Lynch LLC",
+        name: "Абзал Игиссин",
+        role: "CEO KZGBKR",
         image: avatarImage1,
-      },
-    },
-    {
-      content:
-        "I’m trying to get a hold of someone in support, I’m in a lot of trouble right now and they are saying it has something to do with my books. Please get back to me right away.",
-      author: {
-        name: "Amy Hahn",
-        role: "Director at Velocity Industries",
-        image: avatarImage4,
       },
     },
   ],
   [
     {
       content:
-        "The best part about TaxPal is every time I pay my employees, my bank balance doesn’t go down like it used to. Looking forward to spending this extra cash when I figure out why my card is being declined.",
+        "Я искренне благодарен Limpid за поддержку в создании и управлении проектами и сообществом для моего бизнеса. Инструменты управления проектами и функции формирования сообщества платформы позволили мне находиться на одной волне с другими предпринимателями, обмениваться идеями и получать обратную связь, чтобы совершенствовать мою бизнес-концепцию. Limpid действительно помог мне воплотить свою мечту в жизнь!",
       author: {
-        name: "Leland Kiehn",
-        role: "Founder of Kiehn and Sons",
-        image: avatarImage5,
-      },
-    },
-    {
-      content:
-        "There are so many things I had to do with my old software that I just don’t do at all with TaxPal. Suspicious but I can’t say I don’t love it.",
-      author: {
-        name: "Erin Powlowski",
-        role: "COO at Armstrong Inc",
+        name: "Нұрбақыт Жүсіпәлиев",
+        role: "Director SMART INVESTOR",
         image: avatarImage2,
       },
     },
@@ -50,20 +30,11 @@ const testimonials = [
   [
     {
       content:
-        "I used to have to remit tax to the EU and with TaxPal I somehow don’t have to do that anymore. Nervous to travel there now though.",
+        "Limpid - это незаменимая платформа для меня в создании и развитии моих бизнес-проектов и сообщества. Простой в использовании интерфейс и мощные функции платформы позволяют мне эффективно планировать и воплощать свои инициативы, а также налаживать контакты с другими предпринимателями. Я искренне благодарен Limpid за его влияние на мой предпринимательский путь.",
       author: {
-        name: "Peter Renolds",
-        role: "Founder of West Inc",
+        name: "Куаныш Асембай",
+        role: "Director Design Sensei",
         image: avatarImage3,
-      },
-    },
-    {
-      content:
-        "This is the fourth email I’ve sent to your support team. I am literally being held in jail for tax fraud. Please answer your damn emails, this is important.",
-      author: {
-        name: "Amy Hahn",
-        role: "Director at Velocity Industries",
-        image: avatarImage4,
       },
     },
   ],
@@ -87,12 +58,12 @@ export function Testimonials() {
       <Container>
         <div className="mx-auto max-w-2xl md:text-center">
           <h2 className=" text-3xl tracking-tight text-slate-900 sm:text-4xl">
-            Loved by businesses worldwide.
+            Любимый людьми по всей стране.
           </h2>
           <p className="mt-4 text-lg tracking-tight text-slate-700">
-            Our software is so simple that people can’t help but fall in love
-            with it. Simplicity is easy when you just skip tons of
-            mission-critical features.
+            Наше программное обеспечение настолько простое, что люди не могут не
+            влюбиться в него. Простота — это легко, когда вы просто пропускаете
+            множество критически важных функций.
           </p>
         </div>
         <ul

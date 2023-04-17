@@ -86,7 +86,7 @@ function Plan({ name, price, description, href, features, featured = false }) {
         className="mt-8"
         aria-label={`Get started with the ${name} plan for ${price}`}
       >
-        Get started
+        Начни сейчас
       </Button>
     </section>
   );
@@ -104,56 +104,61 @@ export function Pricing() {
           <h2 className=" text-3xl tracking-tight text-white sm:text-4xl">
             <span className="relative whitespace-nowrap">
               <SwirlyDoodle className="absolute left-0 top-1/2 h-[1em] w-full fill-blue-400" />
-              <span className="relative">Simple pricing,</span>
+              <span className="relative">Простая цена,</span>
             </span>{" "}
-            for everyone.
+            для всех.
           </h2>
           <p className="mt-4 text-lg text-slate-400">
-            It doesn’t matter what size your business is, our software won’t
-            work well for you.
+            Гарантия справедливого и прозрачного партнёрства
           </p>
         </div>
-        <div className="-mx-4 mt-16 grid max-w-2xl grid-cols-1 gap-y-10 sm:mx-auto lg:-mx-8 lg:max-w-none lg:grid-cols-3 xl:mx-0 xl:gap-x-8">
+        <div className="-mx-4 mt-16 grid max-w-2xl grid-cols-1 gap-y-10 sm:mx-auto lg:-mx-8 lg:max-w-none lg:grid-cols-4 xl:mx-0 xl:gap-x-8">
           <Plan
-            name="Starter"
-            price="$9"
-            description="Good for anyone who is self-employed and just getting started."
+            name="START"
+            price=""
+            description="Подходит для всех, кто работает на себя и только начинает работу."
             href="/register"
             features={[
-              "Send 10 quotes and invoices",
-              "Connect up to 2 bank accounts",
-              "Track up to 15 expenses per month",
-              "Manual payroll support",
-              "Export up to 3 reports",
+              "Просмотр контента",
+              "Создание портфолио",
+              "Создание 1 проекта",
+            ]}
+          />
+          <Plan
+            name="LIGHT"
+            price="2699₸"
+            description="Начинающим"
+            href="/register"
+            features={[
+              "Просмотр контента",
+              "Создание портфолио",
+              "Создание 3-х проектов",
             ]}
           />
           <Plan
             featured
-            name="Small business"
-            price="$15"
-            description="Perfect for small / medium sized businesses."
+            name="STANDART"
+            price="4499₸"
+            description="На пути к богатству"
             href="/register"
             features={[
-              "Send 25 quotes and invoices",
-              "Connect up to 5 bank accounts",
-              "Track up to 50 expenses per month",
-              "Automated payroll support",
-              "Export up to 12 reports",
-              "Bulk reconcile transactions",
-              "Track in multiple currencies",
+              "Просмотр контента",
+              "Создание портфолио",
+              "Настройка видимости порфолио",
+              "Создание 5-ти проектов",
             ]}
           />
           <Plan
-            name="Enterprise"
-            price="$39"
-            description="For even the biggest enterprise companies."
+            name="PREMIUM"
+            price="9499₸"
+            description="Пакет без границ"
             href="/register"
             features={[
-              "Send unlimited quotes and invoices",
-              "Connect up to 15 bank accounts",
-              "Track up to 200 expenses per month",
-              "Automated payroll support",
-              "Export up to 25 reports, including TPS",
+              "Просмотр контента",
+              "Создание портфолио",
+              "Настройка видимости порфолио",
+              "Создание неограниченного количества проектов",
+              "Персональный менеджер",
             ]}
           />
         </div>
