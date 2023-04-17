@@ -48,8 +48,8 @@ export default function Register() {
 
   return (
     <AuthLayout>
-      <h2 className="text-lg font-semibold text-gray-900">Начните бесплатно</h2>
-      <p className="mt-2 text-sm text-gray-700">
+      <h2 className="text-lg font-semibold text-zinc-900">Начните бесплатно</h2>
+      <p className="mt-2 text-sm text-zinc-700">
         Уже есть аккаунт?{" "}
         <Link
           href="/login"

@@ -57,7 +57,7 @@ function Plan({ name, price, description, href, features, featured = false }) {
       <p
         className={clsx(
           "mt-2 text-base",
-          featured ? "text-white" : "text-slate-400"
+          featured ? "text-white" : "text-zinc-400"
         )}
       >
         {description}
@@ -69,12 +69,12 @@ function Plan({ name, price, description, href, features, featured = false }) {
         role="list"
         className={clsx(
           "order-last mt-10 flex flex-col gap-y-3 text-sm",
-          featured ? "text-white" : "text-slate-200"
+          featured ? "text-white" : "text-zinc-200"
         )}
       >
         {features.map((feature) => (
           <li key={feature} className="flex">
-            <CheckIcon className={featured ? "text-white" : "text-slate-400"} />
+            <CheckIcon className={featured ? "text-white" : "text-zinc-400"} />
             <span className="ml-4">{feature}</span>
           </li>
         ))}
@@ -97,7 +97,7 @@ export function Pricing() {
     <section
       id="pricing"
       aria-label="Pricing"
-      className="bg-slate-900 py-20 sm:py-32"
+      className="bg-zinc-900 py-20 sm:py-32"
     >
       <Container>
         <div className="md:text-center">
@@ -108,7 +108,7 @@ export function Pricing() {
             </span>{" "}
             для всех.
           </h2>
-          <p className="mt-4 text-lg text-slate-400">
+          <p className="mt-4 text-lg text-zinc-400">
             Гарантия справедливого и прозрачного партнёрства
           </p>
         </div>

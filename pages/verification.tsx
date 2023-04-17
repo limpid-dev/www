@@ -44,12 +44,12 @@ export default function Verification() {
         <title>Подтверждение аккаунта</title>
       </Head>
       <AuthLayout>
-        <h2 className="text-lg font-semibold text-gray-900">
+        <h2 className="text-lg font-semibold text-zinc-900">
           Подтвердите свой аккаунт
         </h2>
-        <p className="mt-2 text-sm text-gray-700">
+        <p className="mt-2 text-sm text-zinc-700">
           Мы отправили вам письмо с кодом подтверждения на{" "}
-          <span className="text-sm font-semibold text-gray-700">
+          <span className="text-sm font-semibold text-zinc-700">
             {router.query.email}
           </span>
         </p>
@@ -67,7 +67,7 @@ export default function Verification() {
             <Button
               onClick={sendVerificationEmail}
               variant="outline"
-              color="slate"
+              color="zinc"
               type="reset"
               className="w-full"
             >

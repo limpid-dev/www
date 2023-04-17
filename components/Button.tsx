@@ -10,24 +10,24 @@ const baseStyles = {
 
 const variantStyles = {
   solid: {
-    slate:
-      "bg-slate-900 text-white hover:bg-slate-700 hover:text-slate-100 active:bg-slate-800 active:text-slate-300 focus-visible:outline-slate-900",
-    lime: "bg-lime-600 text-white hover:text-slate-100 hover:bg-lime-500 active:bg-lime-800 active:text-lime-100 focus-visible:outline-lime-600",
+    zinc:
+      "bg-zinc-900 text-white hover:bg-zinc-700 hover:text-zinc-100 active:bg-zinc-800 active:text-zinc-300 focus-visible:outline-zinc-900",
+    lime: "bg-lime-600 text-white hover:text-zinc-100 hover:bg-lime-500 active:bg-lime-800 active:text-lime-100 focus-visible:outline-lime-600",
     white:
-      "bg-white text-slate-900 hover:bg-lime-50 active:bg-lime-200 active:text-slate-600 focus-visible:outline-white",
+      "bg-white text-zinc-900 hover:bg-lime-50 active:bg-lime-200 active:text-zinc-600 focus-visible:outline-white",
   },
   outline: {
-    slate:
-      "ring-slate-200 text-slate-700 hover:text-slate-900 hover:ring-slate-300 active:bg-slate-100 active:text-slate-600 focus-visible:outline-lime-600 focus-visible:ring-slate-300",
-    lime: "ring-slate-200 text-slate-700 hover:text-slate-900 hover:ring-slate-300 active:bg-slate-100 active:text-slate-600 focus-visible:outline-lime-600 focus-visible:ring-slate-300",
+    zinc:
+      "ring-zinc-200 text-zinc-700 hover:text-zinc-900 hover:ring-zinc-300 active:bg-zinc-100 active:text-zinc-600 focus-visible:outline-lime-600 focus-visible:ring-zinc-300",
+    lime: "ring-zinc-200 text-zinc-700 hover:text-zinc-900 hover:ring-zinc-300 active:bg-zinc-100 active:text-zinc-600 focus-visible:outline-lime-600 focus-visible:ring-zinc-300",
     white:
-      "ring-slate-700 text-white hover:ring-slate-500 active:ring-slate-700 active:text-slate-400 focus-visible:outline-white",
+      "ring-zinc-700 text-white hover:ring-zinc-500 active:ring-zinc-700 active:text-zinc-400 focus-visible:outline-white",
   },
 };
 
 export interface ButtonProps extends ComponentPropsWithoutRef<"button"> {
   variant?: "solid" | "outline";
-  color?: "lime" | "slate" | "white";
+  color?: "lime" | "zinc" | "white";
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(

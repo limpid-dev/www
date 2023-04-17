@@ -7,7 +7,7 @@ import { Container } from "./Container";
 export function Hero() {
   return (
     <Container className="pb-20 pt-20 text-center lg:pb-32 lg:pt-32">
-      <h1 className="mx-auto max-w-4xl text-4xl font-medium tracking-tight text-slate-900 sm:text-6xl">
+      <h1 className="mx-auto max-w-4xl text-4xl font-medium tracking-tight text-zinc-900 sm:text-6xl">
         Найди{" "}
         <span className="relative whitespace-nowrap text-lime-600">
           <svg
@@ -22,11 +22,11 @@ export function Hero() {
         </span>{" "}
         и начни свой бизнес
       </h1>
-      <p className="mx-auto mt-6 max-w-2xl text-lg tracking-tight text-slate-700">
+      <p className="mx-auto mt-6 max-w-2xl text-lg tracking-tight text-zinc-700">
         Инструмент для предпринимателей по поиску и работе с партнёрами
       </p>
       <div className="mt-10 flex justify-center gap-x-6">
-        <Button href="/register" variant="solid" color="slate">
+        <Button href="/register" variant="solid" color="zinc">
           Начать бесплатно
         </Button>
         <Button
@@ -43,7 +43,7 @@ export function Hero() {
         </Button>
       </div>
       {/* <div className="mt-36 lg:mt-44">
-        <p className=" text-base text-slate-900">Нас поддерживают</p>
+        <p className=" text-base text-zinc-900">Нас поддерживают</p>
         <ul
           role="list"
           className="mt-8 flex items-center justify-center gap-x-8 sm:flex-col sm:gap-x-0 sm:gap-y-10 xl:flex-row xl:gap-x-12 xl:gap-y-0"
