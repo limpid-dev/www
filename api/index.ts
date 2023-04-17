@@ -63,6 +63,10 @@ class Api {
         return {};
       }
 
+      if (response.status === 400) {
+        return { error: new Errors.BadRequest("Bad Request") };
+      }
+
       if (response.status === 401) {
         return {
           error: new Errors.Unauthorized("Unauthorized"),
@@ -84,7 +88,7 @@ class Api {
   }
 
   async get<D>(input: string) {
-    await this.csrf()
+    await this.csrf();
     return this.handle<D>(
       fetch(input, {
         method: "GET",
@@ -97,7 +101,7 @@ class Api {
   }
 
   async post<D, P>(input: string, payload: P) {
-    await this.csrf()
+    await this.csrf();
     return this.handle<D>(
       fetch(input, {
         method: "POST",
@@ -113,7 +117,7 @@ class Api {
   }
 
   async patch<D, P>(input: string, payload: P) {
-    await this.csrf()
+    await this.csrf();
     return this.handle<D>(
       fetch(input, {
         method: "PATCH",
@@ -129,7 +133,7 @@ class Api {
   }
 
   async delete(input: string) {
-    await this.csrf()
+    await this.csrf();
     return this.handle(
       fetch(input, {
         method: "DELETE",
@@ -194,6 +198,6 @@ class Api {
   }
 }
 
-const api = new Api("http://localhost:3001");
+const api = new Api("http://localhost:3333");
 
 export default api;

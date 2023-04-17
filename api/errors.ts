@@ -1,3 +1,14 @@
+export class BadRequest extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "BadRequestError";
+  }
+
+  static is(error: unknown): error is BadRequest {
+    return error instanceof Error && error.name === "BadRequestError";
+  }
+}
+
 export class Unauthorized extends Error {
   constructor(message: string) {
     super(message);
@@ -32,6 +43,7 @@ export class Validation extends Error {
 }
 
 export const Codes = {
+  400: BadRequest,
   401: Unauthorized,
   403: Forbidden,
   422: Validation,

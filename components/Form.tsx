@@ -1,14 +1,28 @@
 import * as Primitives from "@radix-ui/react-form";
 import clsx from "clsx";
 import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
+import { Button, ButtonProps } from "./Button";
 
-export const Form = Primitives.Root;
+export const Form = forwardRef<
+  ElementRef<typeof Primitives.Root>,
+  ComponentPropsWithoutRef<typeof Primitives.Root>
+>(({ className, ...props }, ref) => {
+  return (
+    <Primitives.Root
+      {...props}
+      ref={ref}
+      className={clsx("grid gap-x-6 gap-y-8", className)}
+    />
+  );
+});
 
 export const Field = forwardRef<
   ElementRef<typeof Primitives.Field>,
   ComponentPropsWithoutRef<typeof Primitives.Field>
->((props, ref) => {
-  return <Primitives.Field {...props} ref={ref} className="mt-6" />;
+>(({ className, ...props }, ref) => {
+  return (
+    <Primitives.Field {...props} ref={ref} className={clsx("grid gap-y-3")} />
+  );
 });
 
 export const Label = forwardRef<
@@ -19,10 +33,7 @@ export const Label = forwardRef<
     <Primitives.Label
       {...props}
       ref={ref}
-      className={clsx(
-        "block text-sm font-medium leading-6 text-zinc-900",
-        className
-      )}
+      className={clsx("block text-sm font-medium text-zinc-700", className)}
     />
   );
 });
@@ -36,7 +47,7 @@ export const Input = forwardRef<
       {...props}
       ref={ref}
       className={clsx(
-        "block w-full rounded-md border-0 py-1.5 text-zinc-900 shadow-sm ring-1 ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 disabled:cursor-not-allowed disabled:bg-zinc-50 disabled:text-zinc-500 disabled:ring-zinc-200 sm:text-sm sm:leading-6"
+        "block w-full appearance-none rounded-md border border-zinc-200 bg-zinc-50 px-3 py-2 text-zinc-900 placeholder-zinc-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 sm:text-sm"
       )}
     />
   );
@@ -50,7 +61,26 @@ export const Message = forwardRef<
     <Primitives.Message
       {...props}
       ref={ref}
-      className={clsx("text-sm text-zinc-500", className)}
+      className={clsx("text-sm text-red-600", className)}
     />
   );
 });
+
+export const Submit = forwardRef<
+  ElementRef<typeof Primitives.Submit>,
+  Omit<ComponentPropsWithoutRef<typeof Primitives.Submit>, "asChild"> &
+    ButtonProps
+>(
+  (
+    { className, variant = "solid", color = "blue", children, ...props },
+    ref
+  ) => {
+    return (
+      <Primitives.Submit {...props} ref={ref} asChild>
+        <Button variant={variant} color={color} className={clsx(className)}>
+          {children}
+        </Button>
+      </Primitives.Submit>
+    );
+  }
+);
