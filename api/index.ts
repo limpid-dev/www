@@ -194,6 +194,6 @@ class Api {
   }
 }
 
-const api = new Api("http://localhost:3003");
+const api = new Api("http://localhost:3001");
 
 export default api;

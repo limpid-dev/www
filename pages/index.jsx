@@ -13,10 +13,10 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>TaxPal - Accounting made simple for small businesses</title>
+        <title>Limpid - Найди единомышленников и начни свой бизнес</title>
         <meta
           name="description"
-          content="Most bookkeeping software is accurate, but hard to use. We make the opposite trade-off, and hope you don’t get audited."
+          content="Инструмент для предпринимателей по поиску и работе с партнёрами ."
         />
       </Head>
       <Header />
