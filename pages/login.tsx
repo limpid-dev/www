@@ -5,11 +5,11 @@ import api from "../api";
 import { BadRequest, Validation } from "../api/errors";
 import { AuthLayout } from "../components/AuthLayout";
 import {
-  Message,
   Field,
   Form,
   Input,
   Label,
+  Message,
   Submit,
 } from "../components/Primitives/Form";
 
