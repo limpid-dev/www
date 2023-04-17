@@ -1,6 +1,7 @@
 import * as Errors from "./errors";
 import * as Health from "./health";
 import * as Helpers from "./helpers";
+import * as Profiles from "./profiles";
 import * as Session from "./session";
 import * as Users from "./users";
 import * as Verification from "./verification";
@@ -194,6 +195,25 @@ class Api {
           payload
         ),
       destroy: () => this.delete(`${this.baseUrl}/session`),
+    };
+  }
+
+  get profiles() {
+    return {
+      index: () => this.get<Profiles.Index["Data"]>(`${this.baseUrl}/profiles`),
+      show: (id: number) =>
+        this.get<Profiles.Show["Data"]>(`${this.baseUrl}/profiles/${id}`),
+      store: (payload: Profiles.Store["Payload"]) =>
+        this.post<Profiles.Store["Data"], Profiles.Store["Payload"]>(
+          `${this.baseUrl}/profiles`,
+          payload
+        ),
+      update: (id: number, payload: Profiles.Update["Payload"]) =>
+        this.patch<Profiles.Update["Data"], Profiles.Update["Payload"]>(
+          `${this.baseUrl}/profiles/${id}`,
+          payload
+        ),
+      destroy: (id: number) => this.delete(`${this.baseUrl}/profiles/${id}`),
     };
   }
 }
