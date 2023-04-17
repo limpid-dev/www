@@ -44,22 +44,15 @@ export default function Verification() {
         <title>Подтверждение аккаунта</title>
       </Head>
       <AuthLayout>
-        <div className="flex flex-col">
-          <Link href="/" aria-label="Home">
-            <Logo className="h-10 w-auto" />
-          </Link>
-          <div className="mt-20">
-            <h2 className="text-lg font-semibold text-gray-900">
-              Подтвердите свой аккаунт
-            </h2>
-            <p className="mt-2 text-sm text-gray-700">
-              Мы отправили вам письмо с кодом подтверждения на{" "}
-              <span className="text-sm font-semibold text-gray-700">
-                {router.query.email}
-              </span>
-            </p>
-          </div>
-        </div>
+        <h2 className="text-lg font-semibold text-gray-900">
+          Подтвердите свой аккаунт
+        </h2>
+        <p className="mt-2 text-sm text-gray-700">
+          Мы отправили вам письмо с кодом подтверждения на{" "}
+          <span className="text-sm font-semibold text-gray-700">
+            {router.query.email}
+          </span>
+        </p>
         <Form onSubmit={onSubmit} className="mt-10">
           <Field name="token">
             <Label>Код подтверждения</Label>
@@ -83,7 +76,7 @@ export default function Verification() {
             <Button
               type="submit"
               variant="solid"
-              color="blue"
+              color="lime"
               className="w-full"
             >
               Подтвердить

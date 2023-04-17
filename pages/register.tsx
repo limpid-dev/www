@@ -53,7 +53,7 @@ export default function Register() {
         Уже есть аккаунт?{" "}
         <Link
           href="/login"
-          className="font-medium text-blue-600 hover:underline"
+          className="font-medium text-lime-600 hover:underline"
         >
           Войдите
         </Link>{" "}

@@ -65,7 +65,7 @@ export default function Login() {
         Еще нет аккаунта?{" "}
         <Link
           href="/register"
-          className="font-medium text-blue-600 hover:underline"
+          className="font-medium text-lime-600 hover:underline"
         >
           Зарегистрируйтесь
         </Link>{" "}
