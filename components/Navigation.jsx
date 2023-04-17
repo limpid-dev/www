@@ -2,6 +2,7 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import { Fragment } from "react";
+import { Logo } from "./Logo";
 
 const user = {
   name: "Debbie Lewis",
@@ -12,16 +13,16 @@ const user = {
 };
 
 const navigation = [
-  { name: "Dashboard", href: "#" },
-  { name: "Jobs", href: "#" },
-  { name: "Applicants", href: "#" },
-  { name: "Company", href: "#" },
+  { name: "Проекты", href: "#" },
+  { name: "Профили", href: "#" },
+  { name: "Аукционы", href: "#" },
+  { name: "Тендеры", href: "#" },
 ];
 
 const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
+  // { name: "Your Profile", href: "#" },
+  // { name: "Settings", href: "#" },
+  { name: "Выйти", href: "#" },
 ];
 
 export function Navigation() {
@@ -33,11 +34,7 @@ export function Navigation() {
             <div className="relative flex h-16 justify-between">
               <div className="relative z-10 flex px-2 lg:px-0">
                 <div className="flex flex-shrink-0 items-center">
-                  <img
-                    className="block h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=lime&shade=500"
-                    alt="Your Company"
-                  />
+                  <Logo />
                 </div>
               </div>
 

@@ -6,16 +6,14 @@ import { BadRequest, Validation } from "../api/errors";
 import { AuthLayout } from "../components/AuthLayout";
 import { Field, Form, Input, Label, Message, Submit } from "../components/Form";
 
-export default function Login() {
+export default function Recovery() {
   const [errors, setErrors] = useState({
     email: false,
-    password: false,
   });
 
   const clearErrors = () => {
     setErrors({
       email: false,
-      password: false,
     });
   };
 
@@ -26,13 +24,10 @@ export default function Login() {
     const form = new FormData(event.currentTarget);
     const values = Object.fromEntries(form.entries()) as {
       email: string;
-      password: string;
     };
 
-    const { error } = await api.session.store({
+    const { error } = await api.recovery.store({
       email: values.email,
-      password: values.password,
-      mode: "web",
     });
 
     if (Validation.is(error)) {
@@ -52,25 +47,15 @@ export default function Login() {
     }
 
     await router.push({
-      pathname: "/",
+      pathname: "/recoveryPass",
     });
   };
 
   return (
     <AuthLayout>
       <h2 className="text-lg font-semibold text-zinc-900">
-        Войдите в свой аккаунт
+        Восстановление пароля
       </h2>
-      <p className="mt-2 text-sm text-zinc-700">
-        Еще нет аккаунта?{" "}
-        <Link
-          href="/register"
-          className="font-medium text-lime-600 hover:underline"
-        >
-          Зарегистрируйтесь
-        </Link>{" "}
-        сейчас.
-      </p>
       <Form
         onSubmit={onSubmit}
         className="mt-10"
@@ -78,44 +63,14 @@ export default function Login() {
       >
         <Field name="email">
           <Label>Электронная почта</Label>
-          <Input
-            type="email"
-            autoComplete="email"
-            defaultValue={router.query.email}
-            required
-          />
+          <Input type="email" autoComplete="email" required />
           <Message match="valueMissing">Введите пожалуйста вашу почту</Message>
           <Message match="typeMismatch">Введите валидную почту</Message>
           <Message match="badInput" forceMatch={errors.email}>
             Адрес не найден или не верифицирован
           </Message>
         </Field>
-        <Field name="password">
-          <Label>Пароль</Label>
-          <Input
-            type="password"
-            minLength={8}
-            autoComplete="current-password"
-            pattern="(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+"
-            required
-          />
-          <Message match="valueMissing">Введите пожалуйста ваш пароль</Message>
-          <Message match="tooShort">
-            Пароль должен содержать минимум 8 символов
-          </Message>
-          <Message match="patternMismatch">
-            Пароль должен содержать как минимум одну цифру, одну букву и один
-            спецсимвол
-          </Message>
-          <Message
-            onChange={clearErrors}
-            match="badInput"
-            forceMatch={errors.password}
-          >
-            Неверный пароль
-          </Message>
-        </Field>
-        <Submit>Войти</Submit>
+        <Submit>Отправить запрос</Submit>
       </Form>
     </AuthLayout>
   );

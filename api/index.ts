@@ -1,6 +1,7 @@
 import * as Errors from "./errors";
 import * as Health from "./health";
 import * as Helpers from "./helpers";
+import * as Recovery from "./recovery";
 import * as Session from "./session";
 import * as Users from "./users";
 import * as Verification from "./verification";
@@ -196,8 +197,23 @@ class Api {
       destroy: () => this.delete(`${this.baseUrl}/session`),
     };
   }
+
+  get recovery() {
+    return {
+      store: (payload: Recovery.Store["Payload"]) =>
+        this.post<never, Recovery.Store["Payload"]>(
+          `${this.baseUrl}/recovery`,
+          payload
+        ),
+      update: (payload: Recovery.Update["Payload"]) =>
+        this.patch<never, Recovery.Update["Payload"]>(
+          `${this.baseUrl}/recovery`,
+          payload
+        ),
+    };
+  }
 }
 
-const api = new Api("http://localhost:3333");
+const api = new Api("http://localhost:3001");
 
 export default api;
