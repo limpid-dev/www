@@ -115,7 +115,7 @@ export function Pricing() {
         <div className="-mx-4 mt-16 grid max-w-2xl grid-cols-1 gap-y-10 sm:mx-auto lg:-mx-8 lg:max-w-none lg:grid-cols-4 xl:mx-0 xl:gap-x-8">
           <Plan
             name="START"
-            price=""
+            price="0₸"
             description="Подходит для всех, кто работает на себя и только начинает работу."
             href="/register"
             features={[
