@@ -1,6 +1,8 @@
 import {
+  AdjustmentsVerticalIcon,
   DocumentMagnifyingGlassIcon,
   MagnifyingGlassCircleIcon,
+  Squares2X2Icon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,10 +20,7 @@ export default function All() {
       <div className="h-screen bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
           <p className=" text-sm text-slate-300">Профили</p>
-          <div className="my-5 flex flex-col items-end justify-end gap-4 md:mb-12 md:flex-row md:items-baseline md:justify-between">
-            <h1 className="hidden pt-7 text-5xl font-extrabold md:flex	">
-              Профили
-            </h1>
+          <div className="my-5 flex flex-col items-end justify-end gap-4 md:mb-12 md:flex-row md:items-baseline md:justify-end">
             <div className="flex flex-wrap items-center gap-3">
               <div className="flex rounded-lg border">
                 <input
@@ -29,9 +28,13 @@ export default function All() {
                   onChange={(e) => setSearch(e.target.value)}
                   type="search"
                   placeholder="Искать по закупкам"
-                  className="rounded-xl border-none focus:ring-0 focus:ring-offset-0"
+                  className="rounded-lg border-none"
                 />
-                <Button type="submit" variant="outline" className=" ring-0">
+                <Button
+                  type="submit"
+                  variant="outline"
+                  className="ring-transparent"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -48,8 +51,12 @@ export default function All() {
                   </svg>
                 </Button>
               </div>
-              <Button variant="outline">some</Button>
-              <Button variant="outline">some </Button>
+              <Button variant="outline">
+                <AdjustmentsVerticalIcon className="h-6 w-6" />
+              </Button>
+              <Button variant="outline">
+                <Squares2X2Icon className="h-6 w-6" />
+              </Button>
             </div>
           </div>
 
