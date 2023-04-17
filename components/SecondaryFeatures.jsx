@@ -2,10 +2,10 @@ import { Tab } from "@headlessui/react";
 import clsx from "clsx";
 import Image from "next/image";
 import { useId } from "react";
-import { Container } from "../components/Container";
 import screenshotContacts from "../images/screenshots/contacts.png";
 import screenshotInventory from "../images/screenshots/inventory.png";
 import screenshotProfitLoss from "../images/screenshots/profit-loss.png";
+import { Container } from "./Container";
 
 const features = [
   {
@@ -119,9 +119,7 @@ function Feature({ feature, isActive, className, ...props }) {
       >
         {feature.name}
       </h3>
-      <p className="mt-2  text-xl text-slate-900">
-        {feature.summary}
-      </p>
+      <p className="mt-2  text-xl text-slate-900">{feature.summary}</p>
       <p className="mt-4 text-sm text-slate-600">{feature.description}</p>
     </div>
   );
