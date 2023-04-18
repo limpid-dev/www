@@ -1,17 +1,9 @@
-import {
-  AdjustmentsVerticalIcon,
-  BriefcaseIcon,
-  DocumentMagnifyingGlassIcon,
-  MagnifyingGlassCircleIcon,
-  PlusCircleIcon,
-  PlusIcon,
-  Squares2X2Icon,
-} from "@heroicons/react/24/outline";
+import { Briefcase, Plus } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Button } from "../../../components/Button";
 import { Navigation } from "../../../components/Navigation";
+import { Button } from "../../../components/Primitives/Button";
 import testAva from "../../../images/avatars/avatar-1.jpg";
 
 const tabs = [
@@ -32,12 +24,9 @@ export default function All() {
       <div className="h-screen bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
           <p className=" text-sm text-slate-300">Профили</p>
-          <div className="my-5 flex flex-col items-end justify-end gap-4 md:mb-12 md:flex-row md:items-baseline md:justify-between">
+          <div className="my-5 flex flex-col items-center justify-end gap-4 md:mb-12 md:flex-row  md:justify-between">
             <div>
               <div className="sm:hidden">
-                <label htmlFor="tabs" className="sr-only">
-                  Select a tab
-                </label>
                 {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
                 <select
                   id="tabs"
@@ -71,7 +60,7 @@ export default function All() {
               </div>
             </div>
             <Button className=" flex gap-3 rounded-lg bg-black text-xs hover:bg-slate-700 sm:text-sm">
-              <PlusIcon className="h-6 w-6" />
+              <Plus className="h-6 w-6" />
               Создать профиль
             </Button>
           </div>
@@ -79,7 +68,7 @@ export default function All() {
           <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
             <Link className="block sm:max-w-[400px] " href="./user/1">
               <div className="flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-9 font-semibold hover:border-slate-700">
-                <BriefcaseIcon className="h-6 w-6" />
+                <Briefcase className="h-6 w-6" />
                 <p className="w-[203px] text-center text-base sm:text-xl ">
                   Консультационные услуги
                 </p>

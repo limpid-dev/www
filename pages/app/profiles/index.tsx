@@ -1,14 +1,9 @@
-import {
-  AdjustmentsVerticalIcon,
-  DocumentMagnifyingGlassIcon,
-  MagnifyingGlassCircleIcon,
-  Squares2X2Icon,
-} from "@heroicons/react/24/outline";
+import { Faders, SquaresFour } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Button } from "../../../components/Button";
 import { Navigation } from "../../../components/Navigation";
+import { Button } from "../../../components/Primitives/Button";
 import testAva from "../../../images/avatars/avatar-1.jpg";
 
 const tabs = [
@@ -29,7 +24,7 @@ export default function All() {
       <div className="h-screen bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
           <p className=" text-sm text-slate-300">Профили</p>
-          <div className="my-5 flex flex-col items-end justify-end gap-4 md:mb-12 md:flex-row md:items-baseline md:justify-between">
+          <div className="my-5 flex flex-col items-center justify-end gap-4 md:mb-12 md:flex-row  md:justify-between">
             <div>
               <div className="sm:hidden">
                 <label htmlFor="tabs" className="sr-only">
@@ -99,10 +94,10 @@ export default function All() {
               </div>
               <div className="flex gap-4">
                 <Button variant="outline">
-                  <AdjustmentsVerticalIcon className="h-6 w-6" />
+                  <Faders className="h-6 w-6" />
                 </Button>
                 <Button variant="outline">
-                  <Squares2X2Icon className="h-6 w-6" />
+                  <SquaresFour className="h-6 w-6" />
                 </Button>
               </div>
             </div>
