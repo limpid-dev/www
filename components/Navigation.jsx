@@ -151,7 +151,7 @@ export function Navigation() {
                   className="ml-auto flex-shrink-0 rounded-full bg-white p-1 text-zinc-400 hover:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2"
                 >
                   <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
+                  <Bell className="h-6 w-6" aria-hidden="true" />
                 </button>
               </div>
               <div className="mt-3 space-y-1 px-2">
