@@ -1,32 +1,19 @@
-import {
-  AdjustmentsVerticalIcon,
-  BriefcaseIcon,
-  DocumentMagnifyingGlassIcon,
-  MagnifyingGlassCircleIcon,
-  PlusCircleIcon,
-  PlusIcon,
-  Squares2X2Icon,
-} from "@heroicons/react/24/outline";
 import { Briefcase, Plus } from "@phosphor-icons/react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-} from "@radix-ui/react-dialog";
 import { Field, Form, Label, Message } from "@radix-ui/react-form";
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { Navigation } from "../../../components/Navigation";
 import { Button } from "../../../components/Primitives/Button";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "../../../components/Primitives/Dialog";
 import { Input, Textarea } from "../../../components/Primitives/Form";
-import testAva from "../../../images/avatars/avatar-1.jpg";
 
 const tabs = [
   { name: "Все профили", href: "/app/profiles/", current: false },
@@ -36,6 +23,7 @@ const tabs = [
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
+
 export default function All() {
   const [search, setSearch] = useState("");
   const [current, setCurrent] = useState(true);
@@ -83,10 +71,10 @@ export default function All() {
             </div>
             <Dialog>
               <DialogTrigger>
-                <Button className=" flex gap-3 rounded-lg bg-black text-xs hover:bg-slate-700 sm:text-sm">
-                  <PlusIcon className="h-6 w-6" />
+                <div className="flex items-center gap-2 rounded-lg bg-zinc-900 p-2 text-sm text-white">
+                  <Plus className="h-6 w-6" />
                   Создать профиль
-                </Button>
+                </div>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
