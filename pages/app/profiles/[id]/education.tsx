@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Navigation } from "../../../components/Navigation";
-import { Button } from "../../../components/Primitives/Button";
-import { MainInfo } from "./mainInfo";
+import { Navigation } from "../../../../components/Navigation";
+import { Button } from "../../../../components/Primitives/Button";
+import { MainInfo } from "../../../../components/Profiles/General";
 
 const tabs = [
   { name: "Опыт работы", href: "./jobExperience", current: false },

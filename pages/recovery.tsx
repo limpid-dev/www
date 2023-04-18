@@ -47,7 +47,7 @@ export default function Recovery() {
     }
 
     await router.push({
-      pathname: "/recoveryPass",
+      pathname: "/recovery-pass",
     });
   };
 
