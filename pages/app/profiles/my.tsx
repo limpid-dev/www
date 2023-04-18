@@ -1,9 +1,31 @@
+import {
+  AdjustmentsVerticalIcon,
+  BriefcaseIcon,
+  DocumentMagnifyingGlassIcon,
+  MagnifyingGlassCircleIcon,
+  PlusCircleIcon,
+  PlusIcon,
+  Squares2X2Icon,
+} from "@heroicons/react/24/outline";
 import { Briefcase, Plus } from "@phosphor-icons/react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "@radix-ui/react-dialog";
+import { Field, Form, Label, Message } from "@radix-ui/react-form";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { Navigation } from "../../../components/Navigation";
 import { Button } from "../../../components/Primitives/Button";
+import {
+  DialogFooter,
+  DialogHeader,
+} from "../../../components/Primitives/Dialog";
+import { Input, Textarea } from "../../../components/Primitives/Form";
 import testAva from "../../../images/avatars/avatar-1.jpg";
 
 const tabs = [
@@ -59,10 +81,100 @@ export default function All() {
                 </nav>
               </div>
             </div>
-            <Button className=" flex gap-3 rounded-lg bg-black text-xs hover:bg-slate-700 sm:text-sm">
-              <Plus className="h-6 w-6" />
-              Создать профиль
-            </Button>
+            <Dialog>
+              <DialogTrigger>
+                <Button className=" flex gap-3 rounded-lg bg-black text-xs hover:bg-slate-700 sm:text-sm">
+                  <PlusIcon className="h-6 w-6" />
+                  Создать профиль
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Создать профиль</DialogTitle>
+                  <DialogDescription>
+                    Заполните форму, чтобы создать профиль.
+                  </DialogDescription>
+                </DialogHeader>
+                <Form>
+                  <Field name="title">
+                    <Label>Название</Label>
+                    <Input
+                      placeholder="Web-Разработчик..."
+                      required
+                      minLength={1}
+                      maxLength={255}
+                    />
+                    <Message match="tooShort">
+                      Название профиля должно быть не менее 1 символа
+                    </Message>
+                    <Message match="tooLong">
+                      Название профиля должно быть не более 255 символов
+                    </Message>
+                    <Message match="valueMissing">
+                      Название профиля обязательно
+                    </Message>
+                  </Field>
+                  <Field name="location">
+                    <Label>Локация</Label>
+                    <Input
+                      placeholder="Астана, Казахстан..."
+                      required
+                      minLength={1}
+                      maxLength={255}
+                    />
+                    <Message match="tooShort">
+                      Локация профиля должна быть не менее 1 символа
+                    </Message>
+                    <Message match="tooLong">
+                      Локация профиля должна быть не более 255 символов
+                    </Message>
+                    <Message match="valueMissing">
+                      Локация профиля обязательна
+                    </Message>
+                  </Field>
+                  <Field name="industry">
+                    <Label>Сфера деятельности</Label>
+                    <Input
+                      placeholder="Информационные технологии..."
+                      required
+                      minLength={1}
+                      maxLength={255}
+                    />
+                    <Message match="tooShort">
+                      Сфера деятельности профиля должна быть не менее 1 символа
+                    </Message>
+                    <Message match="tooLong">
+                      Сфера деятельности профиля должна быть не более 255
+                      символов
+                    </Message>
+                    <Message match="valueMissing">
+                      Сфера деятельности профиля обязательна
+                    </Message>
+                  </Field>
+                  <Field name="description">
+                    <Label>Описание</Label>
+                    <Textarea
+                      placeholder="Кратко опишите себя..."
+                      required
+                      minLength={1}
+                      maxLength={1024}
+                    />
+                    <Message match="tooShort">
+                      Описание профиля должна быть не менее 1 символа
+                    </Message>
+                    <Message match="tooLong">
+                      Описание профиля должна быть не более 1024 символов
+                    </Message>
+                    <Message match="valueMissing">
+                      Описание профиля обязательна
+                    </Message>
+                  </Field>
+                  <DialogFooter>
+                    <Button type="submit">Создать профиль</Button>
+                  </DialogFooter>
+                </Form>
+              </DialogContent>
+            </Dialog>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
