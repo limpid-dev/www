@@ -1,55 +1,50 @@
-import { Power } from "@phosphor-icons/react";
-import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
 import { MainInfo } from "../../../../components/Profiles/General";
-import Badge from "../../../../images/badge.svg";
 
 const tabs = [
-  { name: "Опыт работы", href: "/app/profiles/[id]/", current: false },
+  { name: "О проекте", href: "/app/projects/[id]/", current: false },
   {
-    name: "Образование",
-    href: "/app/profiles/[id]/education",
-    current: false,
-  },
-  {
-    name: "Сертификаты",
-    href: "/app/profiles/[id]/certification",
+    name: "Ресурсы",
+    href: "/app/projects/[id]/resources",
     current: true,
   },
   {
-    name: "Проекты",
-    href: "/app/profiles/[id]/profileProjects",
+    name: "Рентабельность",
+    href: "/app/projects/[id]/value",
     current: false,
   },
-  { name: "Ресурсы", href: "/app/profiles/[id]/resources", current: false },
+  {
+    name: "Фото и видео",
+    href: "/app/projects/[id]/media",
+    curent: false,
+  },
 ];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 export default function One() {
-  const [isAuthor, seisAuthor] = useState(true);
+  const [isAuthor, seisAuthor] = useState(false);
   return (
     <div>
       <Navigation />
 
-      <div className=" min-h-[90vh] bg-slate-50">
+      <div className="min-h-[90vh] bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
           <h1 className="text-sm">
             <span className="text-slate-300">Профиль / </span>
-            Консультационные услуги
+            Гостиница для животных
           </h1>
 
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
             {isAuthor ? (
               <div className="flex gap-5">
-                <Button className="rounded-md bg-slate-700 hover:bg-black">
+                <Button className="bg-slate-700 hover:bg-black">
                   Редактировать
                 </Button>
-                <Button className=" rounded-md bg-red-600">Удалить</Button>
+                <Button>Удалить</Button>
               </div>
             ) : (
               <div className="flex gap-5">
@@ -116,36 +111,33 @@ export default function One() {
                 </div>
               </div>
               <div className="p-6">
-                <div>
-                  <p className="mb-6 text-xl font-semibold text-slate-400">
-                    Сертефикаты
-                  </p>
-                  <div className="w-full rounded-xl bg-slate-100 pb-6 pt-4">
-                    <div className="flex flex-col items-center justify-center p-3 sm:p-0">
-                      <Image src={Badge} alt="Sertificate" className="m-auto" />
-                      <p className="text-center text-base font-semibold sm:text-xl">
-                        Онлайн-курс менеджера по туризму от «Поехали с нами»
-                      </p>
-                      <p className="text-center text-xs  font-normal sm:text-sm">
-                        За успешное завершение онлайн-курса "Менеджер по
-                        туризму"
-                      </p>
-                      <Link href="/">
-                        <p className="text-sm font-medium text-sky-500">
-                          Смотреть сертификат
-                        </p>
-                      </Link>
-                    </div>
+                <div className="flex flex-col gap-6">
+                  <div className="flex flex-col gap-3">
+                    <p className=" text-xl font-semibold text-slate-400">
+                      Материальный ресурс
+                    </p>
+                    <p className="text-sm">
+                      Ультрасовременная гостиница для кошек и с собак с
+                      раздельным содержанием самцов и самок. В гостинице будут
+                      предусмотрены номера Люкс и Стандарт класса. Перед
+                      заселением необходимо будет пройти профилактический осмотр
+                      ветеринара и предоставить ветеринарный паспорт с
+                      поставленными прививками
+                    </p>
                   </div>
-                  <p className="mt-12 text-xl font-semibold text-slate-400">
-                    Навыки
-                  </p>
-
-                  <div className="mt-8 flex">
-                    <div className="flex items-center gap-3 rounded-xl bg-slate-100 px-6 py-4">
-                      <Power />
-                      <p> Работа с Битрикс24</p>
-                    </div>
+                  <div />
+                  <div className="flex flex-col gap-3">
+                    <p className=" text-xl font-semibold text-slate-400">
+                      Интеллектуальный ресурс
+                    </p>
+                    <p className="text-sm">
+                      Ультрасовременная гостиница для кошек и с собак с
+                      раздельным содержанием самцов и самок. В гостинице будут
+                      предусмотрены номера Люкс и Стандарт класса. Перед
+                      заселением необходимо будет пройти профилактический осмотр
+                      ветеринара и предоставить ветеринарный паспорт с
+                      поставленными прививками
+                    </p>
                   </div>
                 </div>
               </div>

@@ -4,7 +4,7 @@ import {
   YoutubeLogo,
 } from "@phosphor-icons/react";
 import Image from "next/image";
-import Test from "../../../images/avatars/avatar-1.jpg";
+import Test from "../../images/avatars/avatar-1.jpg";
 
 export function MainInfo() {
   return (

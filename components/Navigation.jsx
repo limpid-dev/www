@@ -13,8 +13,8 @@ const user = {
 };
 
 const navigation = [
-  { name: "Проекты", href: "#" },
-  { name: "Профили", href: "#" },
+  { name: "Проекты", href: "/app/projects" },
+  { name: "Профили", href: "/app/profiles" },
   { name: "Аукционы", href: "#" },
   { name: "Тендеры", href: "#" },
 ];

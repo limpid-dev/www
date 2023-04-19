@@ -4,11 +4,23 @@ import { Button } from "../../../../components/Primitives/Button";
 import { MainInfo } from "../../../../components/Profiles/General";
 
 const tabs = [
-  { name: "Опыт работы", href: "./jobExperience", current: false },
-  { name: "Образование", href: "./education", current: true },
-  { name: "Сертификаты", href: "./certification", current: false },
-  { name: "Проекты", href: "#", current: false },
-  { name: "Ресурсы", href: "#", current: false },
+  { name: "Опыт работы", href: "/app/profiles/[id]/", current: false },
+  {
+    name: "Образование",
+    href: "/app/profiles/[id]/education",
+    current: true,
+  },
+  {
+    name: "Сертификаты",
+    href: "/app/profiles/[id]/certification",
+    current: false,
+  },
+  {
+    name: "Проекты",
+    href: "/app/profiles/[id]/profileProjects",
+    current: false,
+  },
+  { name: "Ресурсы", href: "/app/profiles/[id]/resources", current: false },
 ];
 
 function classNames(...classes) {

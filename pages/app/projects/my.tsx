@@ -2,9 +2,11 @@ import {
   Chat,
   Eye,
   Faders,
+  Pen,
   SquaresFour,
   Star,
   TagChevron,
+  Trash,
 } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,8 +16,8 @@ import { Button } from "../../../components/Primitives/Button";
 import testAva from "../../../images/avatars/avatar-1.jpg";
 
 const tabs = [
-  { name: "Все проекты", href: "/app/projects/", current: true },
-  { name: "Мои проекты", href: "/app/projects/my", current: false },
+  { name: "Все проекты", href: "/app/projects/", current: false },
+  { name: "Мои проекты", href: "/app/projects/my", current: true },
 ];
 
 function classNames(...classes) {
@@ -110,45 +112,22 @@ export default function All() {
             </div>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2">
-            <Link href="/app/projects/[id]">
-              <div className=" rounded-2xl border border-slate-200 bg-white hover:border-black">
-                <div className="p-4">
-                  <div className="grid w-full grid-cols-10 gap-4">
-                    <div className="col-span-2">
-                      <Image src={testAva} alt="test" className="rounded-lg" />
-                    </div>
-                    <div className="col-span-8 flex flex-col gap-1">
-                      <div className="flex justify-between">
-                        <p className="text-xs font-semibold sm:text-base">
-                          Техно пространство
-                        </p>
-                      </div>
-                      <div className="flex justify-between">
-                        <p className="max-w-[300px] text-xs sm:text-sm">
-                          производство одежды, текстильных изделий, обуви
-                        </p>
-                        <p className="flex items-center rounded-2xl bg-lime-500 px-2 py-1 text-[9px] font-bold text-slate-100 sm:text-xs">
-                          в ТОПе
-                        </p>
-                      </div>
-                      <div className="mt-2 flex gap-4 text-xs">
-                        <div className="flex w-fit items-center gap-4 rounded-lg bg-slate-100 p-2">
-                          <Image
-                            src={testAva}
-                            alt="test"
-                            width={20}
-                            height={20}
-                            className="rounded-lg"
-                          />
-                          <p className="text-xs sm:text-sm">Сара Алтыбекова</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+            <div className="grid items-center justify-center gap-4 rounded-lg border py-6 pl-6 pr-4 sm:grid-cols-10">
+              <div className="sm:col-span-4 ">
+                <Image
+                  src={testAva}
+                  className="m-auto w-[126px] rounded-lg"
+                  alt="test"
+                />
+              </div>
+              <div className="sm:col-span-6">
+                <div className="flex flex-col gap-1">
+                  <h1 className=" text-lg font-semibold">Кофейня-библиотека</h1>
+                  <p className=" text-sm">рестораны, кафе, бары и т.д.</p>
                 </div>
               </div>
-            </Link>
+            </div>
           </div>
         </div>
       </div>

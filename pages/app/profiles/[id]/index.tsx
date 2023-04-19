@@ -1,14 +1,26 @@
 import { useState } from "react";
-import { Navigation } from "../../../components/Navigation";
-import { Button } from "../../../components/Primitives/Button";
-import { MainInfo } from "./mainInfo";
+import { Navigation } from "../../../../components/Navigation";
+import { Button } from "../../../../components/Primitives/Button";
+import { MainInfo } from "../../../../components/Profiles/General";
 
 const tabs = [
-  { name: "Опыт работы", href: "./some", current: true },
-  { name: "Образование", href: "./education", current: false },
-  { name: "Сертификаты", href: "#", current: false },
-  { name: "Проекты", href: "#", current: false },
-  { name: "Ресурсы", href: "#", current: false },
+  { name: "Опыт работы", href: "/app/profiles/[id]/", current: true },
+  {
+    name: "Образование",
+    href: "/app/profiles/[id]/education",
+    current: false,
+  },
+  {
+    name: "Сертификаты",
+    href: "/app/profiles/[id]/certification",
+    current: false,
+  },
+  {
+    name: "Проекты",
+    href: "/app/profiles/[id]/profileProjects",
+    current: false,
+  },
+  { name: "Ресурсы", href: "/app/profiles/[id]/resources", current: false },
 ];
 
 function classNames(...classes) {

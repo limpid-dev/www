@@ -1,4 +1,12 @@
-import { Power } from "@phosphor-icons/react";
+import {
+  CaretRight,
+  Chat,
+  Eye,
+  PencilLine,
+  Power,
+  Star,
+  Trash,
+} from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -17,21 +25,20 @@ const tabs = [
   {
     name: "Сертификаты",
     href: "/app/profiles/[id]/certification",
-    current: true,
+    current: false,
   },
   {
     name: "Проекты",
     href: "/app/profiles/[id]/profileProjects",
     current: false,
   },
-  { name: "Ресурсы", href: "/app/profiles/[id]/resources", current: false },
+  { name: "Ресурсы", href: "/app/profiles/[id]/resources", current: true },
 ];
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 export default function One() {
-  const [isAuthor, seisAuthor] = useState(true);
+  const [isAuthor, seisAuthor] = useState(false);
   return (
     <div>
       <Navigation />
@@ -115,38 +122,31 @@ export default function One() {
                   </nav>
                 </div>
               </div>
-              <div className="p-6">
-                <div>
-                  <p className="mb-6 text-xl font-semibold text-slate-400">
-                    Сертефикаты
+              <div className="flex flex-col gap-6 p-6">
+                <div className="flex flex-col gap-3">
+                  <p className=" text-xl font-semibold text-slate-400">
+                    Материальный ресурс
                   </p>
-                  <div className="w-full rounded-xl bg-slate-100 pb-6 pt-4">
-                    <div className="flex flex-col items-center justify-center p-3 sm:p-0">
-                      <Image src={Badge} alt="Sertificate" className="m-auto" />
-                      <p className="text-center text-base font-semibold sm:text-xl">
-                        Онлайн-курс менеджера по туризму от «Поехали с нами»
-                      </p>
-                      <p className="text-center text-xs  font-normal sm:text-sm">
-                        За успешное завершение онлайн-курса "Менеджер по
-                        туризму"
-                      </p>
-                      <Link href="/">
-                        <p className="text-sm font-medium text-sky-500">
-                          Смотреть сертификат
-                        </p>
-                      </Link>
-                    </div>
-                  </div>
-                  <p className="mt-12 text-xl font-semibold text-slate-400">
-                    Навыки
+                  <p className="text-sm">
+                    Ультрасовременная гостиница для кошек и с собак с раздельным
+                    содержанием самцов и самок. В гостинице будут предусмотрены
+                    номера Люкс и Стандарт класса. Перед заселением необходимо
+                    будет пройти профилактический осмотр ветеринара и
+                    предоставить ветеринарный паспорт с поставленными прививками
                   </p>
-
-                  <div className="mt-8 flex">
-                    <div className="flex items-center gap-3 rounded-xl bg-slate-100 px-6 py-4">
-                      <Power />
-                      <p> Работа с Битрикс24</p>
-                    </div>
-                  </div>
+                </div>
+                <div />
+                <div className="flex flex-col gap-3">
+                  <p className=" text-xl font-semibold text-slate-400">
+                    Материальный ресурс
+                  </p>
+                  <p className="text-sm">
+                    Ультрасовременная гостиница для кошек и с собак с раздельным
+                    содержанием самцов и самок. В гостинице будут предусмотрены
+                    номера Люкс и Стандарт класса. Перед заселением необходимо
+                    будет пройти профилактический осмотр ветеринара и
+                    предоставить ветеринарный паспорт с поставленными прививками
+                  </p>
                 </div>
               </div>
             </div>

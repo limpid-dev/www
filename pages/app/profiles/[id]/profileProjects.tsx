@@ -1,4 +1,12 @@
-import { Power } from "@phosphor-icons/react";
+import {
+  CaretRight,
+  Chat,
+  Eye,
+  PencilLine,
+  Power,
+  Star,
+  Trash,
+} from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -17,12 +25,12 @@ const tabs = [
   {
     name: "Сертификаты",
     href: "/app/profiles/[id]/certification",
-    current: true,
+    current: false,
   },
   {
     name: "Проекты",
     href: "/app/profiles/[id]/profileProjects",
-    current: false,
+    current: true,
   },
   { name: "Ресурсы", href: "/app/profiles/[id]/resources", current: false },
 ];
@@ -31,7 +39,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 export default function One() {
-  const [isAuthor, seisAuthor] = useState(true);
+  const [isAuthor, seisAuthor] = useState(false);
   return (
     <div>
       <Navigation />
@@ -116,37 +124,31 @@ export default function One() {
                 </div>
               </div>
               <div className="p-6">
-                <div>
-                  <p className="mb-6 text-xl font-semibold text-slate-400">
-                    Сертефикаты
-                  </p>
-                  <div className="w-full rounded-xl bg-slate-100 pb-6 pt-4">
-                    <div className="flex flex-col items-center justify-center p-3 sm:p-0">
-                      <Image src={Badge} alt="Sertificate" className="m-auto" />
-                      <p className="text-center text-base font-semibold sm:text-xl">
-                        Онлайн-курс менеджера по туризму от «Поехали с нами»
-                      </p>
-                      <p className="text-center text-xs  font-normal sm:text-sm">
-                        За успешное завершение онлайн-курса "Менеджер по
-                        туризму"
-                      </p>
-                      <Link href="/">
-                        <p className="text-sm font-medium text-sky-500">
-                          Смотреть сертификат
-                        </p>
-                      </Link>
+                <div className="grid gap-5 md:grid-cols-2">
+                  <Link href="/login">
+                    <div className="grid items-center justify-center gap-4 rounded-lg border py-6 pl-6 pr-4 hover:border-black sm:grid-cols-10">
+                      <div className="sm:col-span-4 ">
+                        <Image
+                          src={Badge}
+                          className="m-auto w-[126px]"
+                          alt="test"
+                        />
+                      </div>
+                      <div className="sm:col-span-6">
+                        <div className="flex flex-col gap-1">
+                          <h1 className=" text-lg font-semibold">
+                            Кофейня-библиотека
+                          </h1>
+                          <p className=" text-sm">
+                            рестораны, кафе, бары и т.д.
+                          </p>
+                          <div className="flex items-center gap-4 text-sm text-slate-400">
+                            <p>26.06.2023</p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <p className="mt-12 text-xl font-semibold text-slate-400">
-                    Навыки
-                  </p>
-
-                  <div className="mt-8 flex">
-                    <div className="flex items-center gap-3 rounded-xl bg-slate-100 px-6 py-4">
-                      <Power />
-                      <p> Работа с Битрикс24</p>
-                    </div>
-                  </div>
+                  </Link>
                 </div>
               </div>
             </div>
