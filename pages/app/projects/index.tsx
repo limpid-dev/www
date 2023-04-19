@@ -30,7 +30,7 @@ export default function All() {
       <Navigation />
       <div className="h-screen bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
-          <p className=" text-sm text-slate-300">Профили</p>
+          <p className=" text-sm text-slate-300">Проекты</p>
           <div className="my-5 flex flex-col items-center justify-end gap-4 md:mb-12 md:flex-row  md:justify-between">
             <div>
               <div className="sm:hidden">
@@ -80,15 +80,14 @@ export default function All() {
                 />
                 <Button
                   type="submit"
-                  variant="outline"
-                  className="ring-0 ring-transparent"
+                  className="rounded-md bg-transparent ring-0 ring-transparent hover:bg-slate-100 active:bg-slate-200"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
-                    stroke="currentColor"
+                    stroke="black"
                     className="h-6 w-6"
                   >
                     <path

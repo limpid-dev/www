@@ -49,7 +49,7 @@ export default function One() {
                 <Button className="rounded-md bg-slate-700 hover:bg-black">
                   Редактировать
                 </Button>
-                <Button className=" rounded-md bg-red-600">Удалить</Button>
+                <Button className="rounded-md bg-red-600">Удалить</Button>
               </div>
             ) : (
               <div className="flex gap-5">

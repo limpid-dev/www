@@ -1,31 +1,45 @@
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bell, List, X } from "@phosphor-icons/react";
 import clsx from "clsx";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { Fragment } from "react";
+import api from "../api";
+import testAva from "../images/avatars/avatar-1.jpg";
 import { Logo } from "./Logo";
+import { Button } from "./Primitives/Button";
 
 const user = {
   name: "Debbie Lewis",
   handle: "deblewis",
   email: "debbielewis@example.com",
-  imageUrl:
-    "https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=320&h=320&q=80",
+  imageUrl: "",
 };
 
 const navigation = [
   { name: "Проекты", href: "/app/projects" },
   { name: "Профили", href: "/app/profiles" },
-  { name: "Аукционы", href: "#" },
-  { name: "Тендеры", href: "#" },
+  // { name: "Аукционы", href: "#" },
+  // { name: "Тендеры", href: "#" },
 ];
 
 const userNavigation = [
   // { name: "Your Profile", href: "#" },
   // { name: "Settings", href: "#" },
-  { name: "Выйти", href: "#" },
+  // { name: "Выйти", href: "#" },
 ];
 
 export function Navigation() {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await api.session.destroy();
+
+    await router.push({
+      pathname: "/",
+    });
+  };
   return (
     <Disclosure as="header" className="border-b bg-white">
       {({ open }) => (
@@ -77,9 +91,11 @@ export function Navigation() {
                   <div>
                     <Menu.Button className="flex rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2">
                       <span className="sr-only">Open user menu</span>
-                      <img
+                      <Image
                         className="h-8 w-8 rounded-full"
-                        src={user.imageUrl}
+                        width={8}
+                        height={8}
+                        src={testAva}
                         alt=""
                       />
                     </Menu.Button>
@@ -97,7 +113,7 @@ export function Navigation() {
                       {userNavigation.map((item) => (
                         <Menu.Item key={item.name}>
                           {({ active }) => (
-                            <a
+                            <Link
                               href={item.href}
                               className={clsx(
                                 active ? "bg-zinc-100" : "",
@@ -105,10 +121,18 @@ export function Navigation() {
                               )}
                             >
                               {item.name}
-                            </a>
+                            </Link>
                           )}
                         </Menu.Item>
                       ))}
+                      <Button
+                        onClick={handleLogout}
+                        className="flex w-full items-start justify-start rounded-none px-4 py-2 text-left text-sm text-zinc-700 hover:bg-zinc-100"
+                        color="white"
+                        href="/"
+                      >
+                        Выйти
+                      </Button>
                     </Menu.Items>
                   </Transition>
                 </Menu>
@@ -132,9 +156,11 @@ export function Navigation() {
             <div className="border-t border-zinc-200 pb-3 pt-4">
               <div className="flex items-center px-4">
                 <div className="flex-shrink-0">
-                  <img
+                  <Image
                     className="h-10 w-10 rounded-full"
-                    src={user.imageUrl}
+                    width={10}
+                    height={10}
+                    src={testAva}
                     alt=""
                   />
                 </div>
@@ -165,6 +191,14 @@ export function Navigation() {
                     {item.name}
                   </Disclosure.Button>
                 ))}
+                <Button
+                  onClick={handleLogout}
+                  className="flex w-full items-start justify-start rounded-none px-4 py-2 text-left text-sm text-zinc-700 hover:bg-zinc-100"
+                  color="white"
+                  href="/"
+                >
+                  Выйти
+                </Button>
               </div>
             </div>
           </Disclosure.Panel>

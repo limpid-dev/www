@@ -1,18 +1,26 @@
-import {
-  Chat,
-  Eye,
-  Faders,
-  Pen,
-  SquaresFour,
-  Star,
-  TagChevron,
-  Trash,
-} from "@phosphor-icons/react";
+import { Plus } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { Navigation } from "../../../components/Navigation";
 import { Button } from "../../../components/Primitives/Button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../../../components/Primitives/Dialog";
+import {
+  Field,
+  Form,
+  Input,
+  Label,
+  Message,
+  Textarea,
+} from "../../../components/Primitives/Form";
 import testAva from "../../../images/avatars/avatar-1.jpg";
 
 const tabs = [
@@ -32,13 +40,10 @@ export default function All() {
       <Navigation />
       <div className="h-screen bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
-          <p className=" text-sm text-slate-300">Профили</p>
+          <p className=" text-sm text-slate-300">Мои проекты</p>
           <div className="my-5 flex flex-col items-center justify-end gap-4 md:mb-12 md:flex-row  md:justify-between">
             <div>
               <div className="sm:hidden">
-                <label htmlFor="tabs" className="sr-only">
-                  Select a tab
-                </label>
                 {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
                 <select
                   id="tabs"
@@ -71,45 +76,102 @@ export default function All() {
                 </nav>
               </div>
             </div>
-            <div className="flex flex-wrap items-end justify-end gap-3">
-              <div className="flex rounded-lg border">
-                <input
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  type="search"
-                  placeholder="Искать по профилям"
-                  className="rounded-lg border-none"
-                />
-                <Button
-                  type="submit"
-                  variant="outline"
-                  className="ring-0 ring-transparent"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="h-6 w-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+            <Dialog>
+              <DialogTrigger>
+                <div className="flex items-center gap-2 rounded-lg bg-zinc-900 p-2 text-sm text-white">
+                  <Plus className="h-6 w-6" />
+                  Создать проект
+                </div>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Создать проект</DialogTitle>
+                  <DialogDescription>
+                    Заполните форму, чтобы создать проект.
+                  </DialogDescription>
+                </DialogHeader>
+                <Form>
+                  <Field name="title">
+                    <Label>Название</Label>
+                    <Input
+                      placeholder="Web-Разработчик..."
+                      required
+                      minLength={1}
+                      maxLength={255}
                     />
-                  </svg>
-                </Button>
-              </div>
-              <div className="flex gap-4">
-                <Button variant="outline">
-                  <Faders className="h-6 w-6" />
-                </Button>
-                <Button variant="outline">
-                  <SquaresFour className="h-6 w-6" />
-                </Button>
-              </div>
-            </div>
+                    <Message match="tooShort">
+                      Название профиля должно быть не менее 1 символа
+                    </Message>
+                    <Message match="tooLong">
+                      Название профиля должно быть не более 255 символов
+                    </Message>
+                    <Message match="valueMissing">
+                      Название профиля обязательно
+                    </Message>
+                  </Field>
+                  <Field name="location">
+                    <Label>Локация</Label>
+                    <Input
+                      placeholder="Астана, Казахстан..."
+                      required
+                      minLength={1}
+                      maxLength={255}
+                    />
+                    <Message match="tooShort">
+                      Локация профиля должна быть не менее 1 символа
+                    </Message>
+                    <Message match="tooLong">
+                      Локация профиля должна быть не более 255 символов
+                    </Message>
+                    <Message match="valueMissing">
+                      Локация профиля обязательна
+                    </Message>
+                  </Field>
+                  <Field name="industry">
+                    <Label>Сфера деятельности</Label>
+                    <Input
+                      placeholder="Информационные технологии..."
+                      required
+                      minLength={1}
+                      maxLength={255}
+                    />
+                    <Message match="tooShort">
+                      Сфера деятельности профиля должна быть не менее 1 символа
+                    </Message>
+                    <Message match="tooLong">
+                      Сфера деятельности профиля должна быть не более 255
+                      символов
+                    </Message>
+                    <Message match="valueMissing">
+                      Сфера деятельности профиля обязательна
+                    </Message>
+                  </Field>
+                  <Field name="description">
+                    <Label>Описание</Label>
+                    <Textarea
+                      placeholder="Кратко опишите себя..."
+                      required
+                      minLength={1}
+                      maxLength={1024}
+                    />
+                    <Message match="tooShort">
+                      Описание профиля должна быть не менее 1 символа
+                    </Message>
+                    <Message match="tooLong">
+                      Описание профиля должна быть не более 1024 символов
+                    </Message>
+                    <Message match="valueMissing">
+                      Описание профиля обязательна
+                    </Message>
+                  </Field>
+                  <DialogFooter>
+                    <Button className="rounded-md" type="submit">
+                      Создать профиль
+                    </Button>
+                  </DialogFooter>
+                </Form>
+              </DialogContent>
+            </Dialog>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">

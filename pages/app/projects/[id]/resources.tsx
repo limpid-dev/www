@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
 import { MainInfo } from "../../../../components/Profiles/General";
+import General from "../../../../components/Projects/General";
 
 const tabs = [
   { name: "О проекте", href: "/app/projects/[id]/", current: false },
@@ -41,10 +42,10 @@ export default function One() {
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
             {isAuthor ? (
               <div className="flex gap-5">
-                <Button className="bg-slate-700 hover:bg-black">
+                <Button className="rounded-md bg-slate-700 hover:bg-black">
                   Редактировать
                 </Button>
-                <Button>Удалить</Button>
+                <Button className=" rounded-md bg-red-600">Удалить</Button>
               </div>
             ) : (
               <div className="flex gap-5">
@@ -57,7 +58,7 @@ export default function One() {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-10 ">
             <div className="rounded-lg border sm:col-span-3">
-              <MainInfo />
+              <General />
             </div>
 
             <div className="rounded-lg border bg-white sm:col-span-7">

@@ -27,7 +27,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 export default function One() {
-  const [isAuthor, seisAuthor] = useState(false);
+  const [isAuthor, seisAuthor] = useState(true);
   return (
     <div>
       <Navigation />
@@ -42,14 +42,14 @@ export default function One() {
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
             {isAuthor ? (
               <div className="flex gap-5">
-                <Button className="bg-slate-700 hover:bg-black">
+                <Button className="rounded-md bg-slate-700 hover:bg-black">
                   Редактировать
                 </Button>
-                <Button>Удалить</Button>
+                <Button className=" rounded-md bg-red-600">Удалить</Button>
               </div>
             ) : (
               <div className="flex gap-5">
-                <Button className="bg-black hover:bg-slate-600">
+                <Button className="rounded-md bg-black hover:bg-slate-600">
                   Написать в чате
                 </Button>
               </div>

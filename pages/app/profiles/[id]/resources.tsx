@@ -38,7 +38,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 export default function One() {
-  const [isAuthor, seisAuthor] = useState(false);
+  const [isAuthor, seisAuthor] = useState(true);
   return (
     <div>
       <Navigation />

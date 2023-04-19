@@ -73,15 +73,14 @@ export default function All() {
                 />
                 <Button
                   type="submit"
-                  variant="outline"
-                  className="ring-0 ring-transparent"
+                  className="rounded-md bg-transparent ring-0 ring-transparent hover:bg-slate-100 active:bg-slate-200"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
-                    stroke="currentColor"
+                    stroke="black"
                     className="h-6 w-6"
                   >
                     <path
@@ -104,7 +103,7 @@ export default function All() {
           </div>
 
           <div className="grid gap-6 sm:grid-cols-3">
-            <Link href="profiles/user/1">
+            <Link href="profiles/[id]">
               <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
                 <div className="grid grid-cols-10">
                   <div className="col-span-4">

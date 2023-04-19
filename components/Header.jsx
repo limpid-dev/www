@@ -107,7 +107,7 @@ export function Header() {
             <div className="hidden md:block">
               <NavLink href="/login">Войти</NavLink>
             </div>
-            <Button href="/register" color="lime">
+            <Button href="/register" color="lime" className="rounded-lg">
               <span>
                 Зарегистрируйтесь{" "}
                 <span className="hidden lg:inline">сегодня</span>

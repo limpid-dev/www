@@ -1,7 +1,8 @@
 import { Briefcase, Plus } from "@phosphor-icons/react";
-import { Field, Form, Label, Message } from "@radix-ui/react-form";
 import Link from "next/link";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
+import api from "../../../api";
+import { BadRequest, Validation } from "../../../api/errors";
 import { Navigation } from "../../../components/Navigation";
 import { Button } from "../../../components/Primitives/Button";
 import {
@@ -13,7 +14,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../../../components/Primitives/Dialog";
-import { Input, Textarea } from "../../../components/Primitives/Form";
+import {
+  Field,
+  Form,
+  Input,
+  Label,
+  Message,
+  Textarea,
+} from "../../../components/Primitives/Form";
 
 const tabs = [
   { name: "Все профили", href: "/app/profiles/", current: false },
@@ -27,6 +35,41 @@ function classNames(...classes) {
 export default function All() {
   const [search, setSearch] = useState("");
   const [current, setCurrent] = useState(true);
+
+  const handleProfileCreate = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const values = Object.fromEntries(form.entries()) as {
+      email: string;
+      password: string;
+    };
+
+    const { error } = await api.session.store({
+      email: values.email,
+      password: values.password,
+      mode: "web",
+    });
+
+    if (Validation.is(error)) {
+      setErrors((prev) => ({
+        ...prev,
+        email: true,
+      }));
+      return;
+    }
+
+    if (BadRequest.is(error)) {
+      setErrors((prev) => ({
+        ...prev,
+        password: true,
+      }));
+      return;
+    }
+
+    await router.push({
+      pathname: "/",
+    });
+  };
 
   return (
     <div>
