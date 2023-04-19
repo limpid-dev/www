@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
@@ -23,11 +24,18 @@ const tabs = [
   },
 ];
 
-function classNames(...classes) {
+function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 export default function One() {
   const [isAuthor, seisAuthor] = useState(false);
+  const router = useRouter();
+
+  const handleSelectChange = (event: any) => {
+    const selectedPage = event.target.value;
+    router.push(selectedPage);
+  };
+
   return (
     <div>
       <Navigation />
@@ -49,7 +57,7 @@ export default function One() {
               </div>
             ) : (
               <div className="flex gap-5">
-                <Button className="bg-black hover:bg-slate-600">
+                <Button className="rounded-md bg-black hover:bg-slate-600">
                   Написать в чате
                 </Button>
               </div>
@@ -67,15 +75,17 @@ export default function One() {
                   <label htmlFor="tabs" className="sr-only">
                     Select a tab
                   </label>
-                  {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
                   <select
+                    onChange={handleSelectChange}
                     id="tabs"
                     name="tabs"
-                    className="block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-                    defaultValue={tabs.find((tab) => tab.current).name}
+                    className="block w-full rounded-md border-gray-300 focus:border-lime-500 focus:ring-lime-500"
+                    defaultValue={tabs.find((tab) => tab.current)?.name}
                   >
                     {tabs.map((tab) => (
-                      <option key={tab.name}>{tab.name}</option>
+                      <option key={tab.name} value={tab.href}>
+                        {tab.name}
+                      </option>
                     ))}
                   </select>
                 </div>

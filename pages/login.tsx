@@ -59,7 +59,7 @@ export default function Login() {
     }
 
     await router.push({
-      pathname: "/",
+      pathname: "/app/projects",
     });
   };
 

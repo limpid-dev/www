@@ -8,6 +8,7 @@ import {
 } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { Navigation } from "../../../components/Navigation";
 import { Button } from "../../../components/Primitives/Button";
@@ -18,34 +19,41 @@ const tabs = [
   { name: "Мои проекты", href: "/app/projects/my", current: false },
 ];
 
-function classNames(...classes) {
+function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 export default function All() {
   const [search, setSearch] = useState("");
   const [current, setCurrent] = useState(true);
+  const router = useRouter();
 
+  const handleSelectChange = (event: any) => {
+    const selectedPage = event.target.value;
+    router.push(selectedPage);
+  };
   return (
     <div>
       <Navigation />
       <div className="h-screen bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
           <p className=" text-sm text-slate-300">Проекты</p>
-          <div className="my-5 flex flex-col items-center justify-end gap-4 md:mb-12 md:flex-row  md:justify-between">
+          <div className="my-5 flex flex-col items-end  justify-end gap-4 md:mb-12 md:flex-row md:items-center  md:justify-between">
             <div>
               <div className="sm:hidden">
                 <label htmlFor="tabs" className="sr-only">
-                  Select a tab
+                  Выберите таб
                 </label>
-                {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
                 <select
+                  onChange={handleSelectChange}
                   id="tabs"
                   name="tabs"
                   className="block w-full rounded-md border-gray-300 focus:border-lime-500 focus:ring-lime-500"
-                  defaultValue={tabs.find((tab) => tab.current).name}
+                  defaultValue={tabs.find((tab) => tab.current)?.name}
                 >
                   {tabs.map((tab) => (
-                    <option key={tab.name}>{tab.name}</option>
+                    <option key={tab.name} value={tab.href}>
+                      {tab.name}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -75,7 +83,7 @@ export default function All() {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   type="search"
-                  placeholder="Искать по профилям"
+                  placeholder="Искать по проектам"
                   className="rounded-lg border-none"
                 />
                 <Button

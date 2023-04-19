@@ -11,7 +11,7 @@ const tabs = [
   { name: "Мои профили", href: "/app/profiles/my", current: false },
 ];
 
-function classNames(...classes) {
+function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 export default function All() {
@@ -35,7 +35,7 @@ export default function All() {
                   id="tabs"
                   name="tabs"
                   className="block w-full rounded-md border-gray-300 focus:border-lime-500 focus:ring-lime-500"
-                  defaultValue={tabs.find((tab) => tab.current).name}
+                  defaultValue={tabs.find((tab) => tab.current)?.name}
                 >
                   {tabs.map((tab) => (
                     <option key={tab.name}>{tab.name}</option>

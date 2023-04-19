@@ -35,11 +35,12 @@ const tabs = [
   { name: "Ресурсы", href: "/app/profiles/[id]/resources", current: false },
 ];
 
-function classNames(...classes) {
+function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 export default function One() {
-  const [isAuthor, seisAuthor] = useState(true);
+  const [isAuthor, setIsAuthor] = useState(false);
+
   return (
     <div>
       <Navigation />
@@ -61,7 +62,11 @@ export default function One() {
               </div>
             ) : (
               <div className="flex gap-5">
-                <Button className="bg-black hover:bg-slate-600">
+                <Button
+                  className="rounded-md bg-black hover:bg-slate-600"
+                  variant="outline"
+                  color="white"
+                >
                   Написать в чате
                 </Button>
               </div>
@@ -84,7 +89,7 @@ export default function One() {
                     id="tabs"
                     name="tabs"
                     className="block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-                    defaultValue={tabs.find((tab) => tab.current).name}
+                    defaultValue={tabs.find((tab) => tab.current)?.name}
                   >
                     {tabs.map((tab) => (
                       <option key={tab.name}>{tab.name}</option>

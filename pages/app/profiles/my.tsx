@@ -1,5 +1,6 @@
 import { Briefcase, Plus } from "@phosphor-icons/react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 import api from "../../../api";
 import { BadRequest, Validation } from "../../../api/errors";
@@ -28,47 +29,51 @@ const tabs = [
   { name: "Мои профили", href: "/app/profiles/my", current: true },
 ];
 
-function classNames(...classes) {
+function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function All() {
   const [search, setSearch] = useState("");
-  const [current, setCurrent] = useState(true);
+
+  const [errors, setErrors] = useState({
+    title: false,
+    description: false,
+    location: false,
+    industry: false,
+    ownedIntellectualResources: false,
+    ownedMaterialResources: false,
+  });
+  const router = useRouter();
 
   const handleProfileCreate = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const values = Object.fromEntries(form.entries()) as {
-      email: string;
-      password: string;
+      title: string;
+      description: string;
+      location: string;
+      industry: string;
+      ownedIntellectualResources: string;
+      ownedMaterialResources: string;
     };
 
-    const { error } = await api.session.store({
-      email: values.email,
-      password: values.password,
-      mode: "web",
+    const { error } = await api.profiles.store({
+      title: values.title,
+      location: values.location,
+      description: values.description,
+      industry: values.industry,
+      ownedIntellectualResources: values.ownedIntellectualResources,
+      ownedMaterialResources: values.ownedMaterialResources,
     });
 
-    if (Validation.is(error)) {
-      setErrors((prev) => ({
-        ...prev,
-        email: true,
-      }));
-      return;
-    }
-
-    if (BadRequest.is(error)) {
-      setErrors((prev) => ({
-        ...prev,
-        password: true,
-      }));
-      return;
-    }
-
-    await router.push({
-      pathname: "/",
-    });
+    // if (Validation.is(error)) {
+    //   setErrors((prev) => ({
+    //     ...prev,
+    //     email: true,
+    //   }));
+    //   return;
+    // }
   };
 
   return (
@@ -85,7 +90,7 @@ export default function All() {
                   id="tabs"
                   name="tabs"
                   className="block w-full rounded-md border-gray-300 focus:border-lime-500 focus:ring-lime-500"
-                  defaultValue={tabs.find((tab) => tab.current).name}
+                  defaultValue={tabs.find((tab) => tab.current)?.name}
                 >
                   {tabs.map((tab) => (
                     <option key={tab.name}>{tab.name}</option>
@@ -126,7 +131,7 @@ export default function All() {
                     Заполните форму, чтобы создать профиль.
                   </DialogDescription>
                 </DialogHeader>
-                <Form>
+                <Form onSubmit={handleProfileCreate}>
                   <Field name="title">
                     <Label>Название</Label>
                     <Input
@@ -200,8 +205,27 @@ export default function All() {
                       Описание профиля обязательна
                     </Message>
                   </Field>
+                  <Field name="ownedMaterialResources">
+                    <Textarea
+                      placeholder="Кратко опишите себя..."
+                      required
+                      minLength={1}
+                      maxLength={1024}
+                    />
+                  </Field>
+                  <Field name="ownedIntellectualResources">
+                    <Textarea
+                      placeholder="Кратко опишите себя..."
+                      required
+                      minLength={1}
+                      maxLength={1024}
+                    />
+                  </Field>
+
                   <DialogFooter>
-                    <Button type="submit">Создать профиль</Button>
+                    <Button type="submit" className="rounded-lg">
+                      Создать профиль
+                    </Button>
                   </DialogFooter>
                 </Form>
               </DialogContent>
