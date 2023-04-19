@@ -40,6 +40,8 @@ export function MainInfo() {
         <p className=" mb-4 text-lg font-semibold"> Социальные сети</p>
         <div className="flex gap-6 pb-5">
           <LinkedinLogo />
+          <YoutubeLogo />
+          <InstagramLogo />
         </div>
       </div>
     </div>

@@ -56,7 +56,11 @@ export default function One() {
               </div>
             ) : (
               <div className="flex gap-5">
-                <Button className="rounded-md bg-black hover:bg-slate-600">
+                <Button
+                  className="rounded-md bg-black hover:bg-slate-600"
+                  variant="outline"
+                  color="white"
+                >
                   Написать в чате
                 </Button>
               </div>

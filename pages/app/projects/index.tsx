@@ -1,11 +1,4 @@
-import {
-  Chat,
-  Eye,
-  Faders,
-  SquaresFour,
-  Star,
-  TagChevron,
-} from "@phosphor-icons/react";
+import { Faders, SquaresFour } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -24,7 +17,6 @@ function classNames(...classes: any) {
 }
 export default function All() {
   const [search, setSearch] = useState("");
-  const [current, setCurrent] = useState(true);
   const router = useRouter();
 
   const handleSelectChange = (event: any) => {

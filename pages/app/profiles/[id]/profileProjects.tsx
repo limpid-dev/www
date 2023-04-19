@@ -1,12 +1,3 @@
-import {
-  CaretRight,
-  Chat,
-  Eye,
-  PencilLine,
-  Power,
-  Star,
-  Trash,
-} from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";

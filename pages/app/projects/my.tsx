@@ -1,6 +1,5 @@
 import { Plus } from "@phosphor-icons/react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { Navigation } from "../../../components/Navigation";
@@ -34,7 +33,6 @@ function classNames(...classes: any) {
 }
 export default function All() {
   const [search, setSearch] = useState("");
-  const [current, setCurrent] = useState(true);
   const router = useRouter();
 
   const handleSelectChange = (event: any) => {

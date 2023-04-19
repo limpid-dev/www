@@ -4,7 +4,7 @@ import testAva from "../../images/avatars/avatar-1.jpg";
 import { Button } from "../Primitives/Button";
 
 export default function General() {
-  const handleClick = (event) => {};
+  const handleClick = (event: any) => {};
 
   return (
     <div className="h-full bg-white px-6 pb-6">

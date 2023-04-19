@@ -1,19 +1,7 @@
-import {
-  CaretRight,
-  Chat,
-  Eye,
-  PencilLine,
-  Power,
-  Star,
-  Trash,
-} from "@phosphor-icons/react";
-import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
 import { MainInfo } from "../../../../components/Profiles/General";
-import Badge from "../../../../images/badge.svg";
 
 const tabs = [
   { name: "Опыт работы", href: "/app/profiles/[id]/", current: false },

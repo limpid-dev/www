@@ -16,7 +16,6 @@ function classNames(...classes: any) {
 }
 export default function All() {
   const [search, setSearch] = useState("");
-  const [current, setCurrent] = useState(true);
 
   return (
     <div>

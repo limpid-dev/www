@@ -2,7 +2,6 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
-import { MainInfo } from "../../../../components/Profiles/General";
 import General from "../../../../components/Projects/General";
 
 const tabs = [
@@ -56,7 +55,11 @@ export default function One() {
               </div>
             ) : (
               <div className="flex gap-5">
-                <Button className="rounded-md bg-black hover:bg-slate-600">
+                <Button
+                  className="rounded-md bg-black hover:bg-slate-600"
+                  variant="outline"
+                  color="white"
+                >
                   Написать в чате
                 </Button>
               </div>

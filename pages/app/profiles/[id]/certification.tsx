@@ -32,7 +32,7 @@ function classNames(...classes: any) {
 }
 export default function One() {
   const [isAuthor, setIsAuthor] = useState(false);
-  
+
   return (
     <div>
       <Navigation />
