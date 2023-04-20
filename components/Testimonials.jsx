@@ -66,13 +66,10 @@ export function Testimonials() {
             множество критически важных функций.
           </p>
         </div>
-        <ul
-          role="list"
-          className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-6 sm:gap-8 lg:mt-20 lg:max-w-none lg:grid-cols-3"
-        >
+        <ul className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-6 sm:gap-8 lg:mt-20 lg:max-w-none lg:grid-cols-3">
           {testimonials.map((column, columnIndex) => (
             <li key={columnIndex}>
-              <ul role="list" className="flex flex-col gap-y-6 sm:gap-y-8">
+              <ul className="flex flex-col gap-y-6 sm:gap-y-8">
                 {column.map((testimonial, testimonialIndex) => (
                   <li key={testimonialIndex}>
                     <figure className="relative rounded-2xl bg-white p-6 shadow-xl shadow-zinc-900/10">
