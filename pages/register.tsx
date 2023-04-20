@@ -115,7 +115,7 @@ export default function Register() {
             Пароль должен содержать как минимум одну цифру, одну букву и один
           </Message>
         </Field>
-        <p className="text-xs">
+        <div className="text-xs">
           Регистрируясь в Limpid, вы соглашаетесь с{" "}
           <Sheet>
             <SheetTrigger asChild>
@@ -147,7 +147,7 @@ export default function Register() {
             </SheetContent>
           </Sheet>{" "}
           Limpid.
-        </p>
+        </div>
         <Submit>Зарегистрироваться</Submit>
       </Form>
     </AuthLayout>
