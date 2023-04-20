@@ -4,8 +4,9 @@ import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import api from "../api";
+import { Entity } from "../api/profiles";
 import testAva from "../images/avatars/avatar-1.jpg";
 import { Logo } from "./Logo";
 import { Button } from "./Primitives/Button";
@@ -32,6 +33,21 @@ const userNavigation = [
 
 export function Navigation() {
   const router = useRouter();
+  const [sessionData, setSessionData]
+  const [profilesData, setProfilesData] = useState<Entity[]>([]);
+
+  useEffect(() => {
+    async function fetchProfiles() {
+      const data1 = await api.session.show();
+      const userId = data1.data?.id;
+      const { data } = await api.profiles.index(userId || 0);
+
+      if (data) {
+        setProfilesData(data);
+      }
+    }
+    fetchProfiles();
+  }, []);
 
   const handleLogout = async () => {
     await api.session.destroy();
@@ -40,6 +56,8 @@ export function Navigation() {
       pathname: "/",
     });
   };
+
+  console.log(profilesData);
   return (
     <Disclosure as="header" className="border-b bg-white">
       {({ open }) => (
@@ -78,6 +96,7 @@ export function Navigation() {
                 </Disclosure.Button>
               </div>
               <div className="hidden lg:relative lg:z-10 lg:ml-4 lg:flex lg:items-center">
+
                 <button
                   type="button"
                   className="flex-shrink-0 rounded-full bg-white p-1 text-zinc-400 hover:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2"
@@ -110,18 +129,17 @@ export function Navigation() {
                     leaveTo="transform opacity-0 scale-95"
                   >
                     <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right  bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      {userNavigation.map((item) => (
-                        <Menu.Item key={item.name}>
+                      {profilesData.map((item) => (
+                        <Menu.Item key={item.id}>
                           {({ active }) => (
-                            <Link
-                              href={item.href}
+                            <p
                               className={clsx(
                                 active ? "bg-zinc-100" : "",
                                 "block px-4 py-2 text-sm text-zinc-700"
                               )}
                             >
-                              {item.name}
-                            </Link>
+                              {item.title}
+                            </p>
                           )}
                         </Menu.Item>
                       ))}
@@ -193,7 +211,7 @@ export function Navigation() {
                 ))}
                 <Button
                   onClick={handleLogout}
-                  className="flex w-full items-start justify-start rounded-none px-4 py-2 text-left text-sm text-zinc-700 hover:bg-zinc-100"
+                  className="flex w-full rounded-none px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-100"
                   color="white"
                   href="/"
                 >

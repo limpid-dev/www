@@ -35,15 +35,7 @@ function classNames(...classes: any) {
 }
 
 export default function All() {
-  const [search, setSearch] = useState("");
-  const [errors, setErrors] = useState({
-    title: false,
-    description: false,
-    location: false,
-    industry: false,
-    ownedIntellectualResources: false,
-    ownedMaterialResources: false,
-  });
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
   const [profilesData, setProfilesData] = useState<Entity[]>([]);
 
@@ -57,7 +49,6 @@ export default function All() {
         setProfilesData(data);
       }
     }
-
     fetchProfiles();
   }, []);
 
@@ -226,14 +217,16 @@ export default function All() {
                     </Message>
                   </Field>
                   <Field name="ownedMaterialResources">
+                    <Label>Материальные ресурсы</Label>
                     <Textarea
-                      placeholder="Кратко опишите себя..."
+                      placeholder="Кратко опишите что вы можете предложить.."
                       required
                       minLength={1}
                       maxLength={1024}
                     />
                   </Field>
                   <Field name="ownedIntellectualResources">
+                    <Label>Интеллектуальные ресурсы</Label>
                     <Textarea
                       placeholder="Кратко опишите себя..."
                       required

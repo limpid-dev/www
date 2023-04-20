@@ -11,7 +11,7 @@ export const Form = forwardRef<
     <Primitives.Root
       {...props}
       ref={ref}
-      className={clsx("grid gap-x-4 gap-y-8", className)}
+      className={clsx("grid gap-x-4 gap-y-5", className)}
     />
   );
 });
@@ -47,7 +47,7 @@ export const Input = forwardRef<
       {...props}
       ref={ref}
       className={clsx(
-        "block w-full appearance-none  border border-zinc-200 bg-zinc-50 px-3 py-2 text-zinc-900 placeholder-zinc-400 focus:border-lime-500 focus:bg-white focus:outline-none focus:ring-lime-500 sm:text-sm"
+        "block w-full appearance-none rounded-md  border border-zinc-200 bg-zinc-50 px-3 py-2 text-zinc-900 placeholder-zinc-400 focus:border-lime-500 focus:bg-white focus:outline-none focus:ring-lime-500 sm:text-sm"
       )}
     />
   );
@@ -62,7 +62,7 @@ export const Textarea = forwardRef<
       <textarea
         rows={4}
         className={clsx(
-          "block w-full appearance-none  border border-zinc-200 bg-zinc-50 px-3 py-2 text-zinc-900 placeholder-zinc-400 focus:border-lime-500 focus:bg-white focus:outline-none focus:ring-lime-500 sm:text-sm",
+          "block w-full rounded-md appearance-none  border border-zinc-200 bg-zinc-50 px-3 py-2 text-zinc-900 placeholder-zinc-400 focus:border-lime-500 focus:bg-white focus:outline-none focus:ring-lime-500 sm:text-sm",
           "resize-none",
           className
         )}

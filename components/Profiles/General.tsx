@@ -33,7 +33,7 @@ export function MainInfo() {
       <div className="mb-6 mt-4" />
       <div className="">
         <p className=" text-lg font-semibold">Обо мне</p>
-        <p className="pt-3  text-sm">Some dalbayeb</p>
+        <p className="pt-3  text-sm">some</p>
       </div>
       <div className="mb-5 mt-3" />
       <div>
