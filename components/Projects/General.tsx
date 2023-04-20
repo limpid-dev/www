@@ -12,7 +12,7 @@ export default function General() {
         <Image
           src={testAva}
           alt="Photo by Alvaro Pinot"
-          className="mb-6 h-[106px] w-auto rounded-md object-cover"
+          className="mb-6 h-[106px] w-auto  object-cover"
         />
         <p className=" text-2xl font-semibold">Almaz Nurgali</p>
         <p className=" text-sm">Гостиница для животных</p>

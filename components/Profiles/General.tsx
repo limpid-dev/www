@@ -13,7 +13,7 @@ export function MainInfo() {
         <Image
           src={Test}
           alt="Photo by Alvaro Pinot"
-          className="mb-3 h-[106px] w-auto rounded-md object-cover"
+          className="mb-3 h-[106px] w-auto  object-cover"
         />
         <p className=" text-2xl font-semibold">Almaz</p>
         <p className=" text-sm">Web developer</p>

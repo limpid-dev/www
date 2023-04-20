@@ -3,35 +3,31 @@ import clsx from "clsx";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import backgroundImage from "../images/background-features.jpg";
-import screenshotPayroll from "../images/screenshots/desktop.png";
-import screenshotExpenses from "../images/screenshots/expenses.png";
-import screenshotReporting from "../images/screenshots/reporting.png";
-import screenshotVatReturns from "../images/screenshots/vat-returns.png";
+import screenshotVatReturns from "../images/screenshots/allAuctions.png";
+import screenshotPayroll from "../images/screenshots/allProfiles.png";
+import screenshotExpenses from "../images/screenshots/allProjects.png";
+import screenshotReporting from "../images/screenshots/allTenders.png";
 import { Container } from "./Container";
 
 const features = [
   {
-    title: "Payroll",
-    description:
-      "Keep track of everyone's salaries and whether or not they've been paid. Direct deposit not supported.",
+    title: "Профили",
+    description: "Создавайте свой профиль и будьте частью бизнес-комьюнити",
     image: screenshotPayroll,
   },
   {
-    title: "Claim expenses",
-    description:
-      "All of your receipts organized into one place, as long as you don't mind typing in the data by hand.",
+    title: "Создайте проект!",
+    description: "Имеете идею? Поделитесь ей с тысячями по всему миру",
     image: screenshotExpenses,
   },
   {
-    title: "VAT handling",
-    description:
-      "We only sell our software to companies who don't deal with VAT at all, so technically we do all the VAT stuff they need.",
+    title: "Участвуйте в аукционах!",
+    description: "Аукционы неотямлемая часть любого бизнеса",
     image: screenshotVatReturns,
   },
   {
-    title: "Reporting",
-    description:
-      "Easily export your data into an Excel spreadsheet where you can do whatever the hell you want with it.",
+    title: "Тендеры",
+    description: "Создавайте тендера и найдите лучшее предложение",
     image: screenshotReporting,
   },
 ];

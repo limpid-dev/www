@@ -46,15 +46,15 @@ export default function One() {
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
             {isAuthor ? (
               <div className="flex gap-5">
-                <Button className="rounded-md bg-slate-700 hover:bg-black">
+                <Button className=" bg-slate-700 hover:bg-black">
                   Редактировать
                 </Button>
-                <Button className=" rounded-md bg-red-600">Удалить</Button>
+                <Button className="  bg-red-600">Удалить</Button>
               </div>
             ) : (
               <div className="flex gap-5">
                 <Button
-                  className="rounded-md bg-black hover:bg-slate-600"
+                  className=" bg-black hover:bg-slate-600"
                   variant="outline"
                   color="white"
                 >
@@ -79,7 +79,7 @@ export default function One() {
                   <select
                     id="tabs"
                     name="tabs"
-                    className="block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                    className="block w-full  border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
                     defaultValue={tabs.find((tab) => tab.current)?.name}
                   >
                     {tabs.map((tab) => (

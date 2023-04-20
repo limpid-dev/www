@@ -2,17 +2,17 @@ import { Tab } from "@headlessui/react";
 import clsx from "clsx";
 import Image from "next/image";
 import { useId } from "react";
-import screenshotContacts from "../images/screenshots/contacts.png";
-import screenshotInventory from "../images/screenshots/inventory.png";
-import screenshotProfitLoss from "../images/screenshots/profit-loss.png";
+import screenshotInventory from "../images/screenshots/chat.png";
+import screenshotContacts from "../images/screenshots/invoice.png";
+import screenshotProfitLoss from "../images/screenshots/myProjects.png";
 import { Container } from "./Container";
 
 const features = [
   {
-    name: "Reporting",
-    summary: "Stay on top of things with always up-to-date reporting features.",
+    name: "Множества проектов",
+    summary: "Воплащайте свои мечты в 1 клик",
     description:
-      "We talked about reporting in the section above but we needed three items here, so mentioning it one more time for posterity.",
+      "Вы можете воплатить свою идею в жизнь! Найдите партнеров, и начните действовать",
     image: screenshotProfitLoss,
     icon: function ReportingIcon() {
       const id = useId();
@@ -43,11 +43,10 @@ const features = [
     },
   },
   {
-    name: "Inventory",
-    summary:
-      "Never lose track of what’s in stock with accurate inventory tracking.",
+    name: "Коммуникация ключ к успеху",
+    summary: "Каждый проект имеет личное обсуждение",
     description:
-      "We don’t offer this as part of our software but that statement is inarguably true. Accurate inventory tracking would help you for sure.",
+      "В обсуждении проекта могут принять неограниченное количество пользователей",
     image: screenshotInventory,
     icon: function InventoryIcon() {
       return (
@@ -71,11 +70,9 @@ const features = [
     },
   },
   {
-    name: "Contacts",
-    summary:
-      "Organize all of your contacts, service providers, and invoices in one place.",
-    description:
-      "This also isn’t actually a feature, it’s just some friendly advice. We definitely recommend that you do this, you’ll feel really organized and professional.",
+    name: "Делитесь вашим опытом, либо ресурсами",
+    summary: "Создавайте объявления",
+    description: "Наша платформа поддерживает все возможные пути заработка",
     image: screenshotContacts,
     icon: function ContactsIcon() {
       return (

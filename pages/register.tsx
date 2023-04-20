@@ -9,6 +9,14 @@ import { TextField } from "../components/Fields";
 import { Logo } from "../components/Logo";
 import { Button } from "../components/Primitives/Button";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../components/Primitives/Dialog";
+import {
   Field,
   Form,
   Input,
@@ -16,6 +24,18 @@ import {
   Message,
   Submit,
 } from "../components/Primitives/Form";
+import { ScrollArea } from "../components/Primitives/Scroll-area";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../components/Primitives/Sheet";
+import { PrivacyPolicy } from "../components/PrivacyPolicy";
+import { Proposal } from "../components/Proposal";
 
 export default function Register() {
   const router = useRouter();
@@ -95,6 +115,39 @@ export default function Register() {
             Пароль должен содержать как минимум одну цифру, одну букву и один
           </Message>
         </Field>
+        <p className="text-xs">
+          Регистрируясь в Limpid, вы соглашаетесь с{" "}
+          <Sheet>
+            <SheetTrigger asChild>
+              <p className="focus inline-block w-fit cursor-pointer font-semibold text-lime-600 hover:underline">
+                Условиями предоставления услуг
+              </p>
+            </SheetTrigger>
+            <SheetContent
+              position="right"
+              size="full"
+              className=" overflow-auto"
+            >
+              <Proposal />
+            </SheetContent>
+          </Sheet>{" "}
+          и{" "}
+          <Sheet>
+            <SheetTrigger asChild>
+              <p className="inline-block w-fit cursor-pointer font-semibold text-lime-600 hover:underline">
+                Политикой конфиденциальности
+              </p>
+            </SheetTrigger>
+            <SheetContent
+              position="right"
+              size="full"
+              className=" overflow-auto"
+            >
+              <PrivacyPolicy />
+            </SheetContent>
+          </Sheet>{" "}
+          Limpid.
+        </p>
         <Submit>Зарегистрироваться</Submit>
       </Form>
     </AuthLayout>
