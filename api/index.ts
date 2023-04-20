@@ -201,7 +201,12 @@ class Api {
 
   get profiles() {
     return {
-      index: () => this.get<Profiles.Index["Data"]>(`${this.baseUrl}/profiles`),
+      index: (id?: number) =>
+        this.get<Profiles.Index["Data"]>(
+          `${this.baseUrl}/profiles?page=1&perPage=100${
+            id ? `&filter[userId]=${id}` : ""
+          }`
+        ),
       show: (id: number) =>
         this.get<Profiles.Show["Data"]>(`${this.baseUrl}/profiles/${id}`),
       store: (payload: Profiles.Store["Payload"]) =>

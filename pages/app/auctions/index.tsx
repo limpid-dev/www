@@ -1,17 +1,15 @@
-import { Faders, SquaresFour } from "@phosphor-icons/react";
+import { CaretRight, Faders, SquaresFour, Star } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import api from "../../../api";
-import { Entity } from "../../../api/profiles";
+import { useState } from "react";
 import { Navigation } from "../../../components/Navigation";
 import { Button } from "../../../components/Primitives/Button";
 import testAva from "../../../images/avatars/avatar-1.jpg";
 
 const tabs = [
-  { name: "Все профили", href: "/app/profiles/", current: true },
-  { name: "Мои профили", href: "/app/profiles/my", current: false },
+  { name: "Все аукционы", href: "/app/auctions/", current: true },
+  { name: "Мои аукционы", href: "/app/auctions/my", current: false },
 ];
 
 function classNames(...classes: any) {
@@ -19,27 +17,12 @@ function classNames(...classes: any) {
 }
 export default function All() {
   const [search, setSearch] = useState("");
-  const [profilesData, setProfilesData] = useState<Entity[]>([]);
-  const [sessionData, setSessionData] = useState({});
-
   const router = useRouter();
 
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
   };
-
-  useEffect(() => {
-    async function fetchProfiles() {
-      const { data } = await api.profiles.index();
-      if (data) {
-        setProfilesData(data);
-      }
-    }
-
-    fetchProfiles();
-  }, []);
-
   return (
     <div>
       <Navigation />
@@ -127,34 +110,50 @@ export default function All() {
             </div>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-3">
-            {profilesData.map((profile, profileIndex) => (
-              <Link key={profileIndex} href={`./profiles/${profile.id}`}>
-                <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
-                  <div className="grid grid-cols-10">
-                    <div className="col-span-4">
-                      <Image
-                        src={testAva}
-                        alt="test"
-                        className=" h-32 w-32 rounded-lg"
-                      />
+          <div className="grid justify-center gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="min-w-[300px] rounded-2xl border border-slate-200 bg-white md:w-auto">
+              <div className="p-4">
+                <div className="flex flex-col gap-4">
+                  <div className="mb-2.5 flex flex-row justify-between">
+                    <div className="flex gap-2">
+                      <p className="text-sm">#121</p>
+                      <p className="text-base text-slate-400">Поехали с нами</p>
                     </div>
-                    <div className="col-span-6 flex flex-col gap-1 pl-3">
-                      <p>Full name</p>
-
-                      <p className="text-xs text-slate-400">{}</p>
-                      <p className="text-sm text-slate-400">
-                        {profile.location}
-                      </p>
-
-                      <p className="line-clamp-3 w-auto text-xs">
-                        {profile.description}
-                      </p>
-                    </div>
+                    <p className=" text-sm text-slate-400">02.01.2023</p>
+                  </div>
+                  <div className="mb-2.5 flex flex-row justify-between">
+                    <p className="text-base font-semibold">
+                      Менеджер по туризму
+                    </p>
+                    <p className="rounded-2xl bg-lime-500 px-2 py-1 text-xs font-bold text-slate-100">
+                      в ТОПе
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-y-2.5">
+                    <p className="text-sm text-slate-400">Заявки</p>
+                    <p className="w-fit items-center justify-center rounded-2xl bg-sky-50 px-2 pt-0.5 text-center text-xs text-sky-500">
+                      5
+                    </p>
+                    <p className="text-sm text-slate-400">Статус</p>
+                    <p className="w-fit items-center justify-center rounded-2xl bg-sky-50 px-2 pt-0.5 text-center text-xs text-sky-500">
+                      опубликован
+                    </p>
+                    <p className="text-sm text-slate-400">Прием заявок</p>
+                    <p className="w-fit items-center justify-center rounded-2xl bg-sky-50 px-2 pt-0.5 text-center text-xs text-sky-500">
+                      до 24.01.2023, 14:00
+                    </p>
                   </div>
                 </div>
-              </Link>
-            ))}
+                <div className="my-6" />
+                <div className="flex items-center justify-end">
+                  <Link href="/auctions/user/create">
+                    <Button className="rounded-full bg-slate-300 px-2 py-1.5 hover:bg-black">
+                      <CaretRight />
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

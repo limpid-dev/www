@@ -20,8 +20,8 @@ const user = {
 const navigation = [
   { name: "Проекты", href: "/app/projects" },
   { name: "Профили", href: "/app/profiles" },
-  // { name: "Аукционы", href: "#" },
-  // { name: "Тендеры", href: "#" },
+  { name: "Аукционы", href: "/app/auctions" },
+  { name: "Тендеры", href: "#/app/tenders" },
 ];
 
 const userNavigation = [

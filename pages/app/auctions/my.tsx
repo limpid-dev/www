@@ -1,10 +1,9 @@
-import { Briefcase, Plus } from "@phosphor-icons/react";
+import { Briefcase, CaretRight, Plus } from "@phosphor-icons/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import api from "../../../api";
 import { BadRequest, Validation } from "../../../api/errors";
-import { Entity } from "../../../api/profiles";
 import { Navigation } from "../../../components/Navigation";
 import { Button } from "../../../components/Primitives/Button";
 import {
@@ -36,6 +35,9 @@ function classNames(...classes: any) {
 
 export default function All() {
   const [search, setSearch] = useState("");
+
+  const router = useRouter();
+
   const [errors, setErrors] = useState({
     title: false,
     description: false,
@@ -44,23 +46,6 @@ export default function All() {
     ownedIntellectualResources: false,
     ownedMaterialResources: false,
   });
-  const router = useRouter();
-  const [profilesData, setProfilesData] = useState<Entity[]>([]);
-
-  useEffect(() => {
-    async function fetchProfiles() {
-      const data1 = await api.session.show();
-      const userId = data1.data?.id;
-      const { data } = await api.profiles.index(userId || 0);
-
-      if (data) {
-        setProfilesData(data);
-      }
-    }
-
-    fetchProfiles();
-  }, []);
-
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
@@ -78,7 +63,7 @@ export default function All() {
       ownedMaterialResources: string;
     };
 
-    const { data, error } = await api.profiles.store({
+    const { error } = await api.profiles.store({
       title: values.title,
       location: values.location,
       description: values.description,
@@ -87,11 +72,13 @@ export default function All() {
       ownedMaterialResources: values.ownedMaterialResources,
     });
 
-    if (data) {
-      await router.push({
-        pathname: "/app/profiles/" + data.id,
-      });
-    }
+    // if (Validation.is(error)) {
+    //   setErrors((prev) => ({
+    //     ...prev,
+    //     email: true,
+    //   }));
+    //   return;
+    // }
   };
 
   return (
@@ -252,21 +239,48 @@ export default function All() {
             </Dialog>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-            {profilesData.map((profile, profileIndex) => (
-              <Link
-                key={profileIndex}
-                className="block sm:max-w-[400px] "
-                href={`./${profile.id}`}
-              >
-                <div className="flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-9 font-semibold hover:border-slate-700">
-                  <Briefcase className="h-6 w-6" />
-                  <p className="w-[203px] text-center text-base sm:text-xl ">
-                    {profile.title}
-                  </p>
+          <div className="grid justify-center gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="min-w-[300px] rounded-2xl border border-slate-200 bg-white md:w-auto">
+              <div className="p-4">
+                <div className="flex flex-col gap-4">
+                  <div className="mb-2.5 flex flex-row justify-between">
+                    <div className="flex gap-2">
+                      <p className="text-sm">#120</p>
+                      <p className="text-base text-slate-400">Поехали с нами</p>
+                    </div>
+                    <p className=" text-sm text-slate-400">02.01.2023</p>
+                  </div>
+                  <div className="mb-2.5 flex flex-row justify-between">
+                    <p className="text-base font-semibold">
+                      Менеджер по туризму
+                    </p>
+                    <p className="rounded-2xl bg-lime-500 px-2 py-1 text-xs font-bold text-slate-100">
+                      в ТОПе
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-y-2.5">
+                    <p className="text-sm text-slate-400">Заявки</p>
+                    <p className="w-fit items-center justify-center rounded-2xl bg-sky-50 px-2 pt-0.5 text-center text-xs text-sky-500">
+                      5
+                    </p>
+                    <p className="text-sm text-slate-400">Статус</p>
+                    <p className="w-fit items-center justify-center rounded-2xl bg-sky-50 px-2 pt-0.5 text-center text-xs text-sky-500">
+                      опубликован
+                    </p>
+                    <p className="text-sm text-slate-400">Прием заявок</p>
+                    <p className="w-fit items-center justify-center rounded-2xl bg-sky-50 px-2 pt-0.5 text-center text-xs text-sky-500">
+                      до 24.01.2023, 14:00
+                    </p>
+                  </div>
                 </div>
-              </Link>
-            ))}
+                <div className="my-6" />
+                <div className="flex items-center justify-end">
+                  <Button className="rounded-full bg-slate-300 px-2 py-1.5 hover:bg-black">
+                    <CaretRight />
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

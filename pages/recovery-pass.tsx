@@ -4,7 +4,14 @@ import { FormEvent, useState } from "react";
 import api from "../api";
 import { BadRequest, Validation } from "../api/errors";
 import { AuthLayout } from "../components/AuthLayout";
-import { Field, Form, Input, Label, Message, Submit } from "../components/Form";
+import {
+  Field,
+  Form,
+  Input,
+  Label,
+  Message,
+  Submit,
+} from "../components/Primitives/Form";
 
 export default function Recovery() {
   const [errors, setErrors] = useState({
