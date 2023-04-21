@@ -56,7 +56,7 @@ export function Footer() {
           </div>
           <p className="mt-6 text-sm text-zinc-500 sm:mt-0">
             Copyright &copy; {new Date().getFullYear()} Limpid. Все права
-            защищены. <br /> г.Астана, мкр.Самал 12, бц "Astana Tower
+            защищены. <br /> Республика Казахстан, город Астана, улица Шолпан Иманбаева, 5В
             <br />
             Бин: 210740020835
           </p>
