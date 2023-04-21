@@ -142,7 +142,10 @@ export default function All() {
                     <div className="col-span-6 flex flex-col gap-1 pl-3">
                       <p>Full name</p>
 
-                      <p className="text-xs text-slate-400">{}</p>
+                      <p className="text-xs text-slate-400">
+                        {profile.industry}
+                      </p>
+                      <p className="text-xs text-slate-400">{profile.title}</p>
                       <p className="text-sm text-slate-400">
                         {profile.location}
                       </p>

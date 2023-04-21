@@ -33,8 +33,9 @@ const userNavigation = [
 
 export function Navigation() {
   const router = useRouter();
-  const [sessionData, setSessionData]
+  const [sessionData, setSessionData] = useState({});
   const [profilesData, setProfilesData] = useState<Entity[]>([]);
+  const [profession, setProfession] = useState("");
 
   useEffect(() => {
     async function fetchProfiles() {
@@ -43,7 +44,9 @@ export function Navigation() {
       const { data } = await api.profiles.index(userId || 0);
 
       if (data) {
+        localStorage.setItem("portfolioId", JSON.stringify(data[0].id));
         setProfilesData(data);
+        setSessionData(data1);
       }
     }
     fetchProfiles();
@@ -57,7 +60,6 @@ export function Navigation() {
     });
   };
 
-  console.log(profilesData);
   return (
     <Disclosure as="header" className="border-b bg-white">
       {({ open }) => (
@@ -96,7 +98,13 @@ export function Navigation() {
                 </Disclosure.Button>
               </div>
               <div className="hidden lg:relative lg:z-10 lg:ml-4 lg:flex lg:items-center">
-
+                {profession ? (
+                  <p className="mr-3 rounded-md bg-lime-400 p-2 text-sm">
+                    {profession}
+                  </p>
+                ) : (
+                  ""
+                )}
                 <button
                   type="button"
                   className="flex-shrink-0 rounded-full bg-white p-1 text-zinc-400 hover:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2"
@@ -132,14 +140,21 @@ export function Navigation() {
                       {profilesData.map((item) => (
                         <Menu.Item key={item.id}>
                           {({ active }) => (
-                            <p
+                            <button
                               className={clsx(
                                 active ? "bg-zinc-100" : "",
                                 "block px-4 py-2 text-sm text-zinc-700"
                               )}
+                              onClick={() => {
+                                localStorage.setItem(
+                                  "portfolioId",
+                                  JSON.stringify(item.id)
+                                );
+                                setProfession(item.title);
+                              }}
                             >
                               {item.title}
-                            </p>
+                            </button>
                           )}
                         </Menu.Item>
                       ))}
@@ -147,7 +162,6 @@ export function Navigation() {
                         onClick={handleLogout}
                         className="flex w-full items-start justify-start rounded-none px-4 py-2 text-left text-sm text-zinc-700 hover:bg-zinc-100"
                         color="white"
-                        href="/"
                       >
                         Выйти
                       </Button>
@@ -213,7 +227,6 @@ export function Navigation() {
                   onClick={handleLogout}
                   className="flex w-full rounded-none px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-100"
                   color="white"
-                  href="/"
                 >
                   Выйти
                 </Button>
