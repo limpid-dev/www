@@ -250,7 +250,7 @@ export default function All() {
               <Link
                 key={profileIndex}
                 className="block sm:max-w-[400px] "
-                href={`./${profile.id}`}
+                href={`/app/profiles/${profile.id}`}
               >
                 <div className="flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-9 font-semibold hover:border-slate-700">
                   <Briefcase className="h-6 w-6" />

@@ -2,10 +2,12 @@ import { Faders, SquaresFour } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import api from "../../../api";
+import { Entity } from "../../../api/projects";
 import { Navigation } from "../../../components/Navigation";
 import { Button } from "../../../components/Primitives/Button";
-import testAva from "../../../images/avatars/avatar-1.jpg";
+import testAva from "../../../images/avatars/projectDefault.svg";
 
 const tabs = [
   { name: "Все проекты", href: "/app/projects/", current: true },
@@ -18,11 +20,23 @@ function classNames(...classes: any) {
 export default function All() {
   const [search, setSearch] = useState("");
   const router = useRouter();
+  const [projectsData, setProjectsData] = useState<Entity[]>([]);
 
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
   };
+
+  useEffect(() => {
+    async function fetchProfiles() {
+      const { data } = await api.projects.index();
+      if (data) {
+        setProjectsData(data);
+      }
+    }
+
+    fetchProfiles();
+  }, []);
   return (
     <div>
       <Navigation />
@@ -110,44 +124,55 @@ export default function All() {
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2">
-            <Link href="/app/projects/[id]">
-              <div className=" rounded-2xl border border-slate-200 bg-white hover:border-black">
-                <div className="p-4">
-                  <div className="grid w-full grid-cols-10 gap-4">
-                    <div className="col-span-2">
-                      <Image src={testAva} alt="test" className="rounded-lg" />
-                    </div>
-                    <div className="col-span-8 flex flex-col gap-1">
-                      <div className="flex justify-between">
-                        <p className="text-xs font-semibold sm:text-base">
-                          Техно пространство
-                        </p>
+            {projectsData.map((project, projectIndex) => (
+              <Link key={projectIndex} href={`/app/projects/${project.id}`}>
+                <div className=" rounded-2xl border border-slate-200 bg-white hover:border-black">
+                  <div className="p-4">
+                    <div className="grid w-full grid-cols-10 gap-4">
+                      <div className="col-span-2">
+                        <Image
+                          src={testAva}
+                          alt="test"
+                          className="rounded-lg"
+                        />
                       </div>
-                      <div className="flex justify-between">
-                        <p className="max-w-[300px] text-xs sm:text-sm">
-                          производство одежды, текстильных изделий, обуви
-                        </p>
-                        <p className="flex items-center rounded-2xl bg-lime-500 px-2 py-1 text-[9px] font-bold text-slate-100 sm:text-xs">
-                          в ТОПе
-                        </p>
-                      </div>
-                      <div className="mt-2 flex gap-4 text-xs">
-                        <div className="flex w-fit items-center gap-4 rounded-lg bg-slate-100 p-2">
-                          <Image
-                            src={testAva}
-                            alt="test"
-                            width={20}
-                            height={20}
-                            className="rounded-lg"
-                          />
-                          <p className="text-xs sm:text-sm">Сара Алтыбекова</p>
+                      <div className="col-span-8 flex flex-col gap-1">
+                        <div className="flex justify-between">
+                          <p className="text-xs font-semibold sm:text-base">
+                            {project.title}
+                          </p>
                         </div>
+                        <div className="flex justify-between">
+                          <p className="max-w-[300px] text-xs sm:text-sm">
+                            {project.industry}
+                          </p>
+                          <p className="flex items-center rounded-2xl bg-lime-500 px-2 py-1 text-[9px] font-bold text-slate-100 sm:text-xs">
+                            в ТОПе
+                          </p>
+                        </div>
+                        <p className="line-clamp-3 w-auto text-xs">
+                          {project.description}
+                        </p>
+                        {/* <div className="mt-2 flex gap-4 text-xs">
+                          <div className="flex w-fit items-center gap-4 rounded-lg bg-slate-100 p-2">
+                            <Image
+                              src={testAva}
+                              alt="test"
+                              width={20}
+                              height={20}
+                              className="rounded-lg"
+                            />
+                            <p className="text-xs sm:text-sm">
+                              Сара Алтыбекова
+                            </p>
+                          </div>
+                        </div> */}
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </Link>
+              </Link>
+            ))}
           </div>
         </div>
       </div>

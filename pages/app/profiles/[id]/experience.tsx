@@ -1,32 +1,66 @@
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import api from "../../../../api";
+import { Entity } from "../../../../api/profilesExperience";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
-import { MainInfo } from "../../../../components/Profiles/General";
+import { General } from "../../../../components/Profiles/General";
 
-const tabs = [
-  { name: "Опыт работы", href: "/app/profiles/[id]/", current: false },
-  {
-    name: "Образование",
-    href: "/app/profiles/[id]/education",
-    current: false,
-  },
-  {
-    name: "Сертификаты",
-    href: "/app/profiles/[id]/certification",
-    current: false,
-  },
-  {
-    name: "Проекты",
-    href: "/app/profiles/[id]/profileProjects",
-    current: false,
-  },
-  { name: "Ресурсы", href: "/app/profiles/[id]/resources", current: true },
-];
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 export default function One() {
   const [isAuthor, setIsAuthor] = useState(false);
+
+  const router = useRouter();
+  const { id } = router.query;
+  const parsedId = Number.parseInt(id as string, 10) as number;
+
+  const tabs = [
+    { name: "Ресурсы", href: `/app/profiles/${id}/`, current: false },
+    {
+      name: "Образование",
+      href: `/app/profiles/${id}/education`,
+      current: false,
+    },
+    {
+      name: "Сертификаты",
+      href: `/app/profiles/${id}/certification`,
+      current: false,
+    },
+    {
+      name: "Проекты",
+      href: `/app/profiles/${id}/profileProjects`,
+      current: false,
+    },
+    {
+      name: "Опыт работы",
+      href: `/app/profiles/${id}/experience`,
+      current: true,
+    },
+  ];
+  const [data, setData] = useState<Entity[]>([]);
+
+  useEffect(() => {
+    async function fetchProfiles() {
+      const { data } = await api.experiences.index(parsedId);
+      const updatedItems = data?.map((item: any) => {
+        const dateFormatter = (arg: any) => {
+          return new Date(arg).getFullYear();
+        };
+        return {
+          ...item,
+          startedAt: dateFormatter(item.startedAt),
+          finishedAt: dateFormatter(item.finishedAt),
+        };
+      });
+      console.log(data);
+      if (data) {
+        setData(updatedItems);
+      }
+    }
+    fetchProfiles();
+  }, [parsedId]);
 
   return (
     <div>
@@ -62,7 +96,7 @@ export default function One() {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-10 ">
             <div className="rounded-lg border sm:col-span-3">
-              <MainInfo />
+              <General />
             </div>
 
             <div className="rounded-lg border bg-white sm:col-span-7">
@@ -115,31 +149,30 @@ export default function One() {
                   </nav>
                 </div>
               </div>
-              <div className="flex flex-col gap-6 p-6">
-                <div className="flex flex-col gap-3">
-                  <p className=" text-xl font-semibold text-slate-400">
-                    Материальный ресурс
-                  </p>
-                  <p className="text-sm">
-                    Ультрасовременная гостиница для кошек и с собак с раздельным
-                    содержанием самцов и самок. В гостинице будут предусмотрены
-                    номера Люкс и Стандарт класса. Перед заселением необходимо
-                    будет пройти профилактический осмотр ветеринара и
-                    предоставить ветеринарный паспорт с поставленными прививками
-                  </p>
+              <div className="mb-6 grid gap-8 p-6 sm:grid-cols-10">
+                <div className="sm:col-span-2">
+                  <div className="flex flex-col gap-1.5">
+                    <p className=" text-lg font-semibold">
+                      Апрель, 2022 - по настоящее время
+                    </p>
+                    <p className="text-sm text-slate-400">11 месяцев</p>
+                  </div>
                 </div>
-                <div />
-                <div className="flex flex-col gap-3">
-                  <p className=" text-xl font-semibold text-slate-400">
-                    Материальный ресурс
-                  </p>
-                  <p className="text-sm">
-                    Ультрасовременная гостиница для кошек и с собак с раздельным
-                    содержанием самцов и самок. В гостинице будут предусмотрены
-                    номера Люкс и Стандарт класса. Перед заселением необходимо
-                    будет пройти профилактический осмотр ветеринара и
-                    предоставить ветеринарный паспорт с поставленными прививками
-                  </p>
+                <div className="sm:col-span-8">
+                  <div>
+                    <p className=" text-lg font-semibold">ht.kz</p>
+                    <p className=" mb-3 text-sm font-normal">Astana</p>
+                    <p className=" mb-2 text-sm font-semibold">
+                      Менеджер по туризму
+                    </p>
+                    <p className="text-sm font-normal">
+                      Консультирование клиентов и продажа туристических услуг.
+                      Выполнение плана продаж. Ведение отчетности по выполненной
+                      работе. Бронирование авиабилетов/туристических
+                      пакетов/оформление виз/холодные звонки с клиентами/ведение
+                      базы туристов. Переговоры с потенциальными партнёрами
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

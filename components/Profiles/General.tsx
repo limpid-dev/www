@@ -4,9 +4,24 @@ import {
   YoutubeLogo,
 } from "@phosphor-icons/react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import api from "../../api";
+import { Entity } from "../../api/profiles";
 import Test from "../../images/avatars/avatar-1.jpg";
 
-export function MainInfo() {
+export function General({ portfolioId }: any) {
+  const [data, setData] = useState<Entity>();
+
+  useEffect(() => {
+    async function fetchProfiles() {
+      const { data } = await api.profiles.show(portfolioId);
+      if (data) {
+        setData(data);
+      }
+    }
+    fetchProfiles();
+  }, [portfolioId]);
+
   return (
     <div className="h-full bg-white px-6">
       <div className="flex flex-col items-center justify-center pt-12">
@@ -16,24 +31,24 @@ export function MainInfo() {
           className="mb-3 h-[106px] w-auto  object-cover"
         />
         <p className=" text-2xl font-semibold">Almaz</p>
-        <p className=" text-sm">Web developer</p>
+        <p className=" text-sm">{data?.industry}</p>
         {/* <p className=" text-sm text-sky-500">Отзывы (5)</p> */}
       </div>
       <div className="mb-6 mt-3" />
       <div className="grid grid-cols-2 gap-y-4">
         <div>
           <p className=" text-sm text-slate-400"> Локация</p>
-          <p className="text-sm">Astana</p>
+          <p className="text-sm">{data?.location}</p>
         </div>
         <div>
           <p className=" text-sm text-slate-400">Профессия</p>
-          <p className="text-sm">Fron-end</p>
+          <p className="text-sm">{data?.title}</p>
         </div>
       </div>
       <div className="mb-6 mt-4" />
       <div className="">
         <p className=" text-lg font-semibold">Обо мне</p>
-        <p className="pt-3  text-sm">some</p>
+        <p className="pt-3  text-sm">{data?.description}</p>
       </div>
       <div className="mb-5 mt-3" />
       <div>

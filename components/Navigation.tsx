@@ -44,7 +44,9 @@ export function Navigation() {
       const { data } = await api.profiles.index(userId || 0);
 
       if (data) {
-        localStorage.setItem("portfolioId", JSON.stringify(data[0].id));
+        if (data.id) {
+          localStorage.setItem("portfolioId", JSON.stringify(data[0].id));
+        }
         setProfilesData(data);
         setSessionData(data1);
       }

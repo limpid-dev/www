@@ -2,6 +2,10 @@ import * as Errors from "./errors";
 import * as Health from "./health";
 import * as Helpers from "./helpers";
 import * as Profiles from "./profiles";
+import * as ProfileSertifications from "./profilesCertifiations";
+import * as ProfilesEducations from "./profilesEducation";
+import * as ProfilesExperiences from "./profilesExperience";
+import * as Projects from "./projects";
 import * as Recovery from "./recovery";
 import * as Session from "./session";
 import * as Users from "./users";
@@ -102,7 +106,7 @@ class Api {
     );
   }
 
-  async post<D, P>(input: string, payload: P) {
+  async post<D, P>(input: string, payload?: P) {
     await this.csrf();
     return this.handle<D>(
       fetch(input, {
@@ -223,6 +227,76 @@ class Api {
     };
   }
 
+  get educations() {
+    return {
+      index: (portfolioId: number) =>
+        this.get<ProfilesEducations.Index["Data"]>(
+          `${this.baseUrl}/profiles/${portfolioId}/educations?page=1&perPage=20`
+        ),
+      store: (
+        payload: ProfilesEducations.Store["Payload"],
+        portfolioId: number
+      ) =>
+        this.post<
+          ProfilesEducations.Store["Data"],
+          ProfilesEducations.Store["Payload"]
+        >(`${this.baseUrl}/profiles/${portfolioId}/educations`, payload),
+    };
+  }
+
+  get experiences() {
+    return {
+      index: (portfolioId: number) =>
+        this.get<ProfilesExperiences.Index["Data"]>(
+          `${this.baseUrl}/profiles/${portfolioId}/educations?page=1&perPage=20`
+        ),
+      store: (
+        payload: ProfilesExperiences.Store["Payload"],
+        portfolioId: number
+      ) =>
+        this.post<
+          ProfilesExperiences.Store["Data"],
+          ProfilesExperiences.Store["Payload"]
+        >(`${this.baseUrl}/profiles/${portfolioId}/educations`, payload),
+    };
+  }
+
+  get certifications() {
+    return {
+      index: (portfolioId: number) =>
+        this.get<ProfileSertifications.Index["Data"]>(
+          `${this.baseUrl}/profiles/${portfolioId}/educations?page=1&perPage=20`
+        ),
+      store: (
+        payload: ProfileSertifications.Store["Payload"],
+        portfolioId: number
+      ) =>
+        this.post<
+          ProfileSertifications.Store["Data"],
+          ProfileSertifications.Store["Payload"]
+        >(`${this.baseUrl}/profiles/${portfolioId}/educations`, payload),
+    };
+  }
+
+  get projects() {
+    return {
+      index: (id?: number) =>
+        this.get<Projects.Index["Data"]>(
+          `${this.baseUrl}/projects?page=1&perPage=100${
+            id ? `&filter[userId]=${id}` : ""
+          }`
+        ),
+      show: (id: number) =>
+        this.get<Projects.Show["Data"]>(`${this.baseUrl}/profiles/${id}`),
+      store: (payload: Profiles.Store["Payload"]) =>
+        this.post<Profiles.Store["Data"], Profiles.Store["Payload"]>(
+          `${this.baseUrl}/projects`,
+          payload
+        ),
+      destroy: (id: number) => this.delete(`${this.baseUrl}/profiles/${id}`),
+    };
+  }
+
   get recovery() {
     return {
       store: (payload: Recovery.Store["Payload"]) =>
@@ -239,6 +313,6 @@ class Api {
   }
 }
 
-const api = new Api("https://api.limpid.kz/");
+const api = new Api("http://localhost:3001");
 
 export default api;

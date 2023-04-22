@@ -1,34 +1,53 @@
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import api from "../../../../api";
+import { Entity } from "../../../../api/profiles";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
-import { MainInfo } from "../../../../components/Profiles/General";
-
-const tabs = [
-  { name: "Опыт работы", href: "/app/profiles/[id]/", current: true },
-  {
-    name: "Образование",
-    href: "/app/profiles/[id]/education",
-    current: false,
-  },
-  {
-    name: "Сертификаты",
-    href: "/app/profiles/[id]/certification",
-    current: false,
-  },
-  {
-    name: "Проекты",
-    href: "/app/profiles/[id]/profileProjects",
-    current: false,
-  },
-  { name: "Ресурсы", href: "/app/profiles/[id]/resources", current: false },
-];
+import { General } from "../../../../components/Profiles/General";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 export default function One() {
-  const [isAuthor, setIsAuthor] = useState(false);
+  const [isAuthor, setIsAuthor] = useState(true);
+  const router = useRouter();
+  const { id } = router.query;
+  const [data, setData] = useState<Entity>();
 
+  useEffect(() => {
+    async function fetchProfiles() {
+      const { data } = await api.profiles.show(id);
+      if (data) {
+        setData(data);
+      }
+    }
+    fetchProfiles();
+  }, [id]);
+
+  const tabs = [
+    { name: "Ресурсы", href: `/app/profiles/${id}/`, current: true },
+    {
+      name: "Образование",
+      href: `/app/profiles/${id}/education`,
+      current: false,
+    },
+    {
+      name: "Сертификаты",
+      href: `/app/profiles/${id}/certification`,
+      current: false,
+    },
+    {
+      name: "Проекты",
+      href: `/app/profiles/${id}/profileProjects`,
+      current: false,
+    },
+    {
+      name: "Опыт работы",
+      href: `/app/profiles/${id}/experience`,
+      current: false,
+    },
+  ];
   return (
     <div>
       <Navigation />
@@ -63,7 +82,7 @@ export default function One() {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-10 ">
             <div className="rounded-lg border sm:col-span-3">
-              <MainInfo />
+              <General portfolioId={id} />
             </div>
 
             <div className="rounded-lg border bg-white sm:col-span-7">
@@ -117,31 +136,21 @@ export default function One() {
                 </div>
               </div>
               <div className="p-6">
-                <div className="mb-6 grid gap-8 sm:grid-cols-10">
-                  <div className="sm:col-span-2">
-                    <div className="flex flex-col gap-1.5">
-                      <p className=" text-lg font-semibold">
-                        Апрель, 2022 - по настоящее время
-                      </p>
-                      <p className="text-sm text-slate-400">11 месяцев</p>
-                    </div>
+                <div className="flex flex-col gap-6 p-6">
+                  <div className="flex flex-col gap-3">
+                    <p className=" text-xl font-semibold text-slate-400">
+                      Материальный ресурс
+                    </p>
+                    <p className="text-sm">{data?.ownedMaterialResources}</p>
                   </div>
-                  <div className="sm:col-span-8">
-                    <div>
-                      <p className=" text-lg font-semibold">ht.kz</p>
-                      <p className=" mb-3 text-sm font-normal">Astana</p>
-                      <p className=" mb-2 text-sm font-semibold">
-                        Менеджер по туризму
-                      </p>
-                      <p className="text-sm font-normal">
-                        Консультирование клиентов и продажа туристических услуг.
-                        Выполнение плана продаж. Ведение отчетности по
-                        выполненной работе. Бронирование
-                        авиабилетов/туристических пакетов/оформление
-                        виз/холодные звонки с клиентами/ведение базы туристов.
-                        Переговоры с потенциальными партнёрами
-                      </p>
-                    </div>
+                  <div />
+                  <div className="flex flex-col gap-3">
+                    <p className=" text-xl font-semibold text-slate-400">
+                      Материальный ресурс
+                    </p>
+                    <p className="text-sm">
+                      {data?.ownedIntellectualResources}
+                    </p>
                   </div>
                 </div>
                 <div className="relative">

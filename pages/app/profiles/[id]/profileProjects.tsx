@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
-import { MainInfo } from "../../../../components/Profiles/General";
+import { General } from "../../../../components/Profiles/General";
 import Badge from "../../../../images/badge.svg";
 
 const tabs = [
@@ -66,7 +66,7 @@ export default function One() {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-10 ">
             <div className="rounded-lg border sm:col-span-3">
-              <MainInfo />
+              <General />
             </div>
 
             <div className="rounded-lg border bg-white sm:col-span-7">

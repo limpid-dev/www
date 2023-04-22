@@ -1,33 +1,74 @@
-import { useState } from "react";
+import { Plus } from "@phosphor-icons/react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import api from "../../../../api";
+import { Entity } from "../../../../api/profilesEducation";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
-import { MainInfo } from "../../../../components/Profiles/General";
-
-const tabs = [
-  { name: "Опыт работы", href: "/app/profiles/[id]/", current: false },
-  {
-    name: "Образование",
-    href: "/app/profiles/[id]/education",
-    current: true,
-  },
-  {
-    name: "Сертификаты",
-    href: "/app/profiles/[id]/certification",
-    current: false,
-  },
-  {
-    name: "Проекты",
-    href: "/app/profiles/[id]/profileProjects",
-    current: false,
-  },
-  { name: "Ресурсы", href: "/app/profiles/[id]/resources", current: false },
-];
+import { General } from "../../../../components/Profiles/General";
+import { EducationCreate } from "../create/education";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
-export default function One() {
+export default function Education() {
   const [isAuthor, setIsAuthor] = useState(false);
+
+  const router = useRouter();
+  const { id } = router.query;
+  const parsedId = Number.parseInt(id as string, 10) as number;
+
+  const tabs = [
+    { name: "Ресурсы", href: `/app/profiles/${id}`, current: false },
+    {
+      name: "Образование",
+      href: `/app/profiles/${id}/education`,
+      current: true,
+    },
+    {
+      name: "Сертификаты",
+      href: `/app/profiles/${id}/certification`,
+      current: false,
+    },
+    {
+      name: "Проекты",
+      href: `/app/profiles/${id}/profileProjects`,
+      current: false,
+    },
+    {
+      name: "Опыт работы",
+      href: `/app/profiles/${id}/experience`,
+      current: false,
+    },
+  ];
+
+  const [data, setData] = useState<Entity[]>([]);
+  const [isAdd, setIsAdd] = useState(true);
+
+  const isAddHandler = () => {
+    setIsAdd((current: boolean) => !current);
+  };
+
+  useEffect(() => {
+    async function fetchProfiles() {
+      const { data } = await api.educations.index(parsedId);
+      const updatedItems = data?.map((item: any) => {
+        const dateFormatter = (arg: any) => {
+          return new Date(arg).getFullYear();
+        };
+        return {
+          ...item,
+          startedAt: dateFormatter(item.startedAt),
+          finishedAt: dateFormatter(item.finishedAt),
+        };
+      });
+      if (data) {
+        setData(updatedItems);
+      }
+    }
+    fetchProfiles();
+  }, [parsedId]);
 
   return (
     <div>
@@ -63,7 +104,7 @@ export default function One() {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-10 ">
             <div className="rounded-lg border sm:col-span-3">
-              <MainInfo />
+              <General portfolioId={id} />
             </div>
 
             <div className="rounded-lg border bg-white sm:col-span-7">
@@ -118,47 +159,57 @@ export default function One() {
               </div>
               <div className="p-6">
                 <p className=" pb-4 text-xl font-semibold text-slate-400">
-                  Высшее образование
+                  Образование
                 </p>
-                <div className="grid grid-cols-10 gap-4">
-                  <div className="col-span-4">
-                    <div className=" text-lg font-semibold">2022</div>
-                  </div>
-                  <div className="col-span-6">
-                    <p className=" text-lg font-semibold">
-                      Казахская Академия Спорта и Туризма
-                    </p>
-                    <p className=" pb-3 text-sm font-normal"> Алматы</p>
-                    <p className=" text-sm font-semibold">
-                      Туризм (Магистр туризма)
-                    </p>
-                  </div>
-                </div>
-                <div className="relative py-6">
-                  <div
-                    className="absolute inset-0 flex items-center"
-                    aria-hidden="true"
-                  >
-                    <div className="w-full border-t border-gray-300" />
-                  </div>
-                </div>
-                <p className=" pb-4 text-xl font-semibold text-slate-400">
-                  Повышение квалификации
-                </p>
-                <div className="grid grid-cols-10 gap-4">
-                  <div className="col-span-4">
-                    <div className=" text-lg font-semibold">2022</div>
-                  </div>
-                  <div className="col-span-6">
-                    <p className=" text-lg font-semibold">
-                      Казахская Академия Спорта и Туризма
-                    </p>
-                    <p className=" pb-3 text-sm font-normal"> Алматы</p>
-                    <p className=" text-sm font-semibold">
-                      Туризм (Магистр туризма)
-                    </p>
-                  </div>
-                </div>
+                {isAdd ? (
+                  <>
+                    {data.map((item) => (
+                      <div key={item.id}>
+                        <div className="grid grid-cols-10 gap-4">
+                          <div className="col-span-4 flex flex-row gap-5">
+                            <div className=" text-lg font-semibold">
+                              {item.startedAt}
+                            </div>
+                            <>-</>
+                            <div className=" text-lg font-semibold">
+                              {item.finishedAt}
+                            </div>
+                          </div>
+                          <div className="col-span-6">
+                            <p className=" text-lg font-semibold">
+                              {item.institution}
+                            </p>
+                            <p className=" text-sm font-semibold">
+                              {item.title}
+                            </p>
+                            <p className=" text-sm">{item.description}</p>
+                          </div>
+                        </div>
+                        <div className="relative py-6">
+                          <div
+                            className="absolute inset-0 flex items-center"
+                            aria-hidden="true"
+                          >
+                            <div className="w-full border-t border-gray-300" />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    <div className="flex items-center justify-end text-sm text-sky-500 underline">
+                      <Plus />
+                      <button onClick={() => setIsAdd(false)}>
+                        Добавить образоватие
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <EducationCreate
+                      portfolioId={parsedId}
+                      isAddHandler={isAddHandler}
+                    />
+                  </>
+                )}
               </div>
             </div>
           </div>

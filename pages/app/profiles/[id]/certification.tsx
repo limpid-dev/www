@@ -1,38 +1,49 @@
-import { Power } from "@phosphor-icons/react";
+import { Plus, Power } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
-import { MainInfo } from "../../../../components/Profiles/General";
+import { General } from "../../../../components/Profiles/General";
 import Badge from "../../../../images/badge.svg";
-
-const tabs = [
-  { name: "Опыт работы", href: "/app/profiles/[id]/", current: false },
-  {
-    name: "Образование",
-    href: "/app/profiles/[id]/education",
-    current: false,
-  },
-  {
-    name: "Сертификаты",
-    href: "/app/profiles/[id]/certification",
-    current: true,
-  },
-  {
-    name: "Проекты",
-    href: "/app/profiles/[id]/profileProjects",
-    current: false,
-  },
-  { name: "Ресурсы", href: "/app/profiles/[id]/resources", current: false },
-];
+import { CertificationCreate } from "../create/certification";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 export default function One() {
-  const [isAuthor, setIsAuthor] = useState(false);
+  const router = useRouter();
+  const { id } = router.query;
+  const [isAdd, setIsAdd] = useState(true);
 
+  const isAddHandler = () => {
+    setIsAdd((current: boolean) => !current);
+  };
+  const [isAuthor, setIsAuthor] = useState(false);
+  const tabs = [
+    { name: "Ресурсы", href: `/app/profiles/${id}/`, current: false },
+    {
+      name: "Образование",
+      href: `/app/profiles/${id}/education`,
+      current: false,
+    },
+    {
+      name: "Сертификаты",
+      href: `/app/profiles/${id}/certification`,
+      current: true,
+    },
+    {
+      name: "Проекты",
+      href: `/app/profiles/${id}/profileProjects`,
+      current: false,
+    },
+    {
+      name: "Опыт работы",
+      href: `/app/profiles/${id}/experience`,
+      current: false,
+    },
+  ];
   return (
     <div>
       <Navigation />
@@ -67,7 +78,7 @@ export default function One() {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-10 ">
             <div className="rounded-lg border sm:col-span-3">
-              <MainInfo />
+              <General />
             </div>
 
             <div className="rounded-lg border bg-white sm:col-span-7">
@@ -76,7 +87,6 @@ export default function One() {
                   <label htmlFor="tabs" className="sr-only">
                     Select a tab
                   </label>
-                  {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
                   <select
                     id="tabs"
                     name="tabs"
@@ -121,38 +131,59 @@ export default function One() {
                 </div>
               </div>
               <div className="p-6">
-                <div>
-                  <p className="mb-6 text-xl font-semibold text-slate-400">
-                    Сертефикаты
-                  </p>
-                  <div className="w-full rounded-xl bg-slate-100 pb-6 pt-4">
-                    <div className="flex flex-col items-center justify-center p-3 sm:p-0">
-                      <Image src={Badge} alt="Sertificate" className="m-auto" />
-                      <p className="text-center text-base font-semibold sm:text-xl">
-                        Онлайн-курс менеджера по туризму от «Поехали с нами»
+                {isAdd ? (
+                  <>
+                    <div>
+                      <p className="mb-6 text-xl font-semibold text-slate-400">
+                        Сертефикаты
                       </p>
-                      <p className="text-center text-xs  font-normal sm:text-sm">
-                        За успешное завершение онлайн-курса "Менеджер по
-                        туризму"
+                      <div className="w-full rounded-xl bg-slate-100 pb-6 pt-4">
+                        <div className="flex flex-col items-center justify-center p-3 sm:p-0">
+                          <Image
+                            src={Badge}
+                            alt="Sertificate"
+                            className="m-auto"
+                          />
+                          <p className="text-center text-base font-semibold sm:text-xl">
+                            Онлайн-курс менеджера по туризму от «Поехали с нами»
+                          </p>
+                          <p className="text-center text-xs  font-normal sm:text-sm">
+                            За успешное завершение онлайн-курса "Менеджер по
+                            туризму"
+                          </p>
+                          <Link href="/">
+                            <p className="text-sm font-medium text-sky-500">
+                              Смотреть сертификат
+                            </p>
+                          </Link>
+                        </div>
+                      </div>
+                      <p className="mt-12 text-xl font-semibold text-slate-400">
+                        Навыки
                       </p>
-                      <Link href="/">
-                        <p className="text-sm font-medium text-sky-500">
-                          Смотреть сертификат
-                        </p>
-                      </Link>
-                    </div>
-                  </div>
-                  <p className="mt-12 text-xl font-semibold text-slate-400">
-                    Навыки
-                  </p>
 
-                  <div className="mt-8 flex">
-                    <div className="flex items-center gap-3 rounded-xl bg-slate-100 px-6 py-4">
-                      <Power />
-                      <p> Работа с Битрикс24</p>
+                      <div className="mt-8 flex">
+                        <div className="flex items-center gap-3 rounded-xl bg-slate-100 px-6 py-4">
+                          <Power />
+                          <p> Работа с Битрикс24</p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
+                    <div className="flex items-center justify-end text-sm text-sky-500 underline">
+                      <Plus />
+                      <button onClick={() => setIsAdd(false)}>
+                        Добавить образоватие
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <CertificationCreate
+                      portfolioId={id}
+                      isAddHandler={isAddHandler}
+                    />
+                  </>
+                )}
               </div>
             </div>
           </div>

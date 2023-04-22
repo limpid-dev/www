@@ -23,6 +23,7 @@ export default function All() {
   const [sessionData, setSessionData] = useState({});
 
   const router = useRouter();
+  const { id } = router.query;
 
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
@@ -129,7 +130,7 @@ export default function All() {
 
           <div className="grid gap-6 sm:grid-cols-3">
             {profilesData.map((profile, profileIndex) => (
-              <Link key={profileIndex} href={`./profiles/${profile.id}`}>
+              <Link key={profileIndex} href={`/app/profiles/${profile.id}`}>
                 <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
                   <div className="grid grid-cols-10">
                     <div className="col-span-4">
