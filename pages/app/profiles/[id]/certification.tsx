@@ -3,11 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { CertificationCreate } from "../../../../components/create/certification";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
 import { General } from "../../../../components/Profiles/General";
 import Badge from "../../../../images/badge.svg";
-import { CertificationCreate } from "../create/certification";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");

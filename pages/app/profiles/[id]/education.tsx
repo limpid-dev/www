@@ -4,10 +4,10 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import api from "../../../../api";
 import { Entity } from "../../../../api/profilesEducation";
+import { EducationCreate } from "../../../../components/create/education";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
 import { General } from "../../../../components/Profiles/General";
-import { EducationCreate } from "../create/education";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
