@@ -1,7 +1,7 @@
 import { Paperclip, Plus } from "@phosphor-icons/react";
 import React, { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { Button } from "../../../../components/Primitives/Button";
+import { Button } from "../Primitives/Button";
 
 interface CertificationValues {
   certification: {

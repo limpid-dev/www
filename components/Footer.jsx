@@ -44,19 +44,20 @@ export function Footer() {
               className="group"
               aria-label="TaxPal on GitHub"
             >
-              <InstagramLogo className="h-8 w-8"  />
+              <InstagramLogo className="h-8 w-8" />
             </Link>
             <Link
               href="https://www.youtube.com/@limeurasian2409"
               className="group"
               aria-label="TaxPal on GitHub"
             >
-              <YoutubeLogo className="h-8 w-8"  />
+              <YoutubeLogo className="h-8 w-8" />
             </Link>
           </div>
           <p className="mt-6 text-sm text-zinc-500 sm:mt-0">
             Copyright &copy; {new Date().getFullYear()} Limpid. Все права
-            защищены. <br /> Республика Казахстан, город Астана, улица Шолпан Иманбаева, 5В
+            защищены. <br /> Республика Казахстан, город Астана, улица Шолпан
+            Иманбаева, 5В
             <br />
             Бин: 210740020835
           </p>

@@ -1,8 +1,8 @@
 import { Plus } from "@phosphor-icons/react";
 import React, { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import api from "../../../../api";
-import { Button } from "../../../../components/Primitives/Button";
+import api from "../../api";
+import { Button } from "../Primitives/Button";
 
 interface FormValues {
   education: {
