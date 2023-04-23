@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import api from "../../../api";
 import { Navigation } from "../../../components/Navigation";
 import { Button } from "../../../components/Primitives/Button";
+import { Input } from "../../../components/Primitives/Input";
+import { TextArea } from "../../../components/Primitives/TextArea";
 
 interface FormValues {
   title: string;
@@ -71,11 +73,7 @@ export default function Create() {
                   <div className="mb-5 text-lg font-semibold sm:text-2xl">
                     Название проекта
                   </div>
-                  <input
-                    placeholder="Название"
-                    className="rounded-lg border p-1"
-                    {...register("title")}
-                  />
+                  <Input placeholder="Название" {...register("title")} />
                 </div>
                 <div className="relative py-6">
                   <div
@@ -90,21 +88,12 @@ export default function Create() {
                     Основная информация о проекте
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <input
-                      className="rounded-lg border p-1"
-                      placeholder="Локация"
-                      {...register("location")}
-                    />
-                    <input
-                      className="rounded-lg border p-1"
+                    <Input placeholder="Локация" {...register("location")} />
+                    <Input
                       placeholder="Стадия проекта"
                       {...register("stage")}
                     />
-                    <input
-                      placeholder="Категория"
-                      className="rounded-lg border p-1"
-                      {...register("industry")}
-                    />
+                    <Input placeholder="Категория" {...register("industry")} />
                   </div>
                 </div>
                 <div className="relative py-6">
@@ -120,18 +109,16 @@ export default function Create() {
                     Финансовые данные
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <input
+                    <Input
                       placeholder="Требуемая сумма"
-                      className="rounded-lg border p-1"
                       {...register("requiredMoneyAmount", {
                         setValueAs(value) {
                           return value ? Number(value) : 0;
                         },
                       })}
                     />
-                    <input
+                    <Input
                       placeholder="Сумма в собственности"
-                      className="rounded-lg border p-1"
                       {...register("ownedMoneyAmount", {
                         setValueAs(value) {
                           return value ? Number(value) : 0;
@@ -152,9 +139,9 @@ export default function Create() {
                   <div className=" mb-5 text-lg font-semibold sm:text-2xl ">
                     О проекте
                   </div>
-                  <textarea
+                  <TextArea
                     {...register("description")}
-                    className="w-full rounded-md bg-slate-100"
+                    className="bg-slate-100"
                     placeholder="Что будущему партнеру стоит знать о проекте? Опишите ваши цели, идеи и т.д."
                   />
                 </div>
@@ -176,8 +163,8 @@ export default function Create() {
                         <p className="mb-2 text-lg font-semibold">
                           Материальный ресурс
                         </p>
-                        <textarea
-                          className="w-full rounded-md bg-slate-100"
+                        <TextArea
+                          className="bg-slate-100"
                           {...register("ownedMaterialResources")}
                           placeholder="Укажите какие материальные ресурсы у вас уже имеются"
                         />
@@ -186,8 +173,8 @@ export default function Create() {
                         <p className="mb-2 text-lg font-semibold">
                           Интеллектуальный ресурс
                         </p>
-                        <textarea
-                          className="w-full rounded-md bg-slate-100"
+                        <TextArea
+                          className="bg-slate-100"
                           {...register("ownedIntellectualResources")}
                           placeholder="Укажите какие интеллектуальные ресурсы у вас уже имеются"
                         />
@@ -211,8 +198,8 @@ export default function Create() {
                         <p className="mb-6  text-lg font-semibold">
                           Материальный ресурс
                         </p>
-                        <textarea
-                          className="w-full rounded-md bg-slate-100"
+                        <TextArea
+                          className="bg-slate-100"
                           placeholder="Укажите какие материальные ресурсы вам нужны"
                           {...register("requiredMaterialResources")}
                         />
@@ -221,8 +208,8 @@ export default function Create() {
                         <p className="mb-6  text-lg font-semibold">
                           Интеллектуальный ресурс
                         </p>
-                        <textarea
-                          className="w-full rounded-md bg-slate-100"
+                        <TextArea
+                          className="bg-slate-100"
                           placeholder="Укажите какие интеллектуальные ресурсы вам нужны"
                           {...register("requiredIntellectualResources")}
                         />
@@ -242,9 +229,9 @@ export default function Create() {
                   <p className=" mb-6 text-2xl font-semibold">
                     Ожидаемая рентабельность
                   </p>
-                  <textarea
+                  <TextArea
                     placeholder="Опишите ожидаемую рентабельность"
-                    className="w-full rounded-md bg-slate-100"
+                    className="bg-slate-100"
                     {...register("profitability")}
                   />
                 </div>
