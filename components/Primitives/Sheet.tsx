@@ -1,3 +1,5 @@
+"use client"
+
 import { X } from "@phosphor-icons/react";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { cva, VariantProps } from "class-variance-authority";

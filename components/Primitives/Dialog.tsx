@@ -1,3 +1,5 @@
+"use client";
+
 import { X } from "@phosphor-icons/react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import clsx from "clsx";

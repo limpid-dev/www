@@ -7,23 +7,6 @@ import api from "../../../api";
 import { Entity } from "../../../api/projects";
 import { Navigation } from "../../../components/Navigation";
 import { Button } from "../../../components/Primitives/Button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../../../components/Primitives/Dialog";
-import {
-  Field,
-  Form,
-  Input,
-  Label,
-  Message,
-  Textarea,
-} from "../../../components/Primitives/Form";
 import testAva from "../../../images/avatars/projectDefault.svg";
 
 const tabs = [

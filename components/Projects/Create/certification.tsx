@@ -1,7 +1,9 @@
 import { Paperclip, Plus } from "@phosphor-icons/react";
 import React, { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { Button } from "../Primitives/Button";
+import { Button } from "../../Primitives/Button";
+import { Input } from "../../Primitives/Input";
+import { TextArea } from "../../Primitives/TextArea";
 
 interface CertificationValues {
   certification: {
@@ -13,7 +15,7 @@ interface CertificationValues {
   }[];
 }
 
-export function CertificationCreate({ isAddHandler, portfolioId }: any) {
+export function CertificationCreate({ certificateAdd, portfolioId }: any) {
   const [error, setError] = useState("");
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [fileId, setFileId] = useState(1);
@@ -96,29 +98,28 @@ export function CertificationCreate({ isAddHandler, portfolioId }: any) {
   };
 
   return (
-    <div className=" m-auto min-h-[500px] border-none sm:w-3/4">
+    <div className=" m-auto border-none sm:w-3/4">
       <div className="m-auto flex  flex-col gap-5">
-        <div className=" mb-5  text-2xl font-semibold">Сертификаты</div>
         <form onSubmit={handleSubmit(onSubmit)}>
           {fields.map((field, index) => {
             return (
               <div key={field.id} className="flex flex-col gap-5">
                 <div className="flex gap-5">
-                  <input
+                  <Input
                     placeholder="Название сертификата"
                     {...register(`certification.${index}.title`)}
                   />
-                  <input
+                  <Input
                     placeholder="Название сертификата"
                     {...register(`certification.${index}.institution`)}
                   />
                 </div>
 
-                <input id="fileInput" type="file" />
+                <Input id="fileInput" type="file" />
                 <div className="flex w-fit flex-col justify-center gap-5 md:flex-row">
                   <div className="flex items-center justify-between gap-3">
                     <p>Начало</p>
-                    <input
+                    <Input
                       className="rounded-lg border p-1"
                       placeholder="начало"
                       type="date"
@@ -142,7 +143,7 @@ export function CertificationCreate({ isAddHandler, portfolioId }: any) {
                     />
                   </div>
                 </div>
-                <textarea
+                <TextArea
                   className="bg-slate-100"
                   placeholder="За что получен сертификат? За какое достижение получена награда?"
                   {...register(`certification.${index}.description`)}
@@ -150,23 +151,25 @@ export function CertificationCreate({ isAddHandler, portfolioId }: any) {
               </div>
             );
           })}
-          <Button
-            type="button"
-            onClick={() => {
-              append({
-                institution: "",
-                title: "",
-                description: "",
-                issuedAt: "",
-                expiredAt: "",
-              });
-            }}
-            variant="outline"
-          >
-            <Plus /> Добавить сертификат
-          </Button>
+          <div className="mt-4 flex flex-col gap-4">
+            <Button
+              type="button"
+              onClick={() => {
+                append({
+                  institution: "",
+                  title: "",
+                  description: "",
+                  issuedAt: "",
+                  expiredAt: "",
+                });
+              }}
+              variant="outline"
+            >
+              <Plus /> Добавить сертификат
+            </Button>
+          </div>
           <div className="mt-5 flex justify-end gap-3 pt-4">
-            <Button>Отмена</Button>
+            <Button onClick={certificateAdd}>Отмена</Button>
             <Button type="submit">Сохранить</Button>
           </div>
         </form>

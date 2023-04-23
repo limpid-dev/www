@@ -4,10 +4,10 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import api from "../../../../api";
 import { Entity } from "../../../../api/profilesEducation";
-import { EducationCreate } from "../../../../components/create/education";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
 import { General } from "../../../../components/Profiles/General";
+import { EducationCreate } from "../../../../components/Projects/Create/education";
 
 const dateFormatter = (arg: string) => {
   return new Date(arg).getFullYear().toString();
@@ -56,6 +56,7 @@ export default function Education() {
   useEffect(() => {
     async function fetchProfiles() {
       const { data } = await api.educations.index(parsedId);
+      console.log(data);
       if (data) {
         const updatedItems = data.map((item) => {
           return {
@@ -198,7 +199,7 @@ export default function Education() {
                     <div className="flex items-center justify-end text-sm text-sky-500 underline">
                       <Plus />
                       <button onClick={() => setIsAdd(false)}>
-                        Добавить образоватие
+                        Добавить образование
                       </button>
                     </div>
                   </>

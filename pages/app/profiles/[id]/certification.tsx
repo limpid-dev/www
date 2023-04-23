@@ -3,10 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { CertificationCreate } from "../../../../components/create/certification";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
 import { General } from "../../../../components/Profiles/General";
+import { CertificationCreate } from "../../../../components/Projects/Create/certification";
+import SkillsCreate from "../../../../components/Projects/Create/skills";
 import Badge from "../../../../images/badge.svg";
 
 function classNames(...classes: any) {
@@ -15,11 +16,17 @@ function classNames(...classes: any) {
 export default function One() {
   const router = useRouter();
   const { id } = router.query;
-  const [isAdd, setIsAdd] = useState(true);
+  const [certificate, setCertificate] = useState(true);
+  const [skill, setSkill] = useState(true);
 
-  const isAddHandler = () => {
-    setIsAdd((current: boolean) => !current);
+  const skillAdd = () => {
+    setSkill((current: boolean) => !current);
   };
+
+  const certificateAdd = () => {
+    setCertificate((current: boolean) => !current);
+  };
+
   const [isAuthor, setIsAuthor] = useState(false);
 
   const tabs = [
@@ -45,8 +52,6 @@ export default function One() {
       current: false,
     },
   ];
-
-  console.log(tabs);
 
   return (
     <div>
@@ -135,12 +140,12 @@ export default function One() {
                 </div>
               </div>
               <div className="p-6">
-                {isAdd ? (
+                <p className="mb-6 text-xl font-semibold text-slate-400">
+                  Сертефикаты
+                </p>
+                {certificate ? (
                   <>
                     <div>
-                      <p className="mb-6 text-xl font-semibold text-slate-400">
-                        Сертефикаты
-                      </p>
                       <div className="w-full rounded-xl bg-slate-100 pb-6 pt-4">
                         <div className="flex flex-col items-center justify-center p-3 sm:p-0">
                           <Image
@@ -162,21 +167,11 @@ export default function One() {
                           </Link>
                         </div>
                       </div>
-                      <p className="mt-12 text-xl font-semibold text-slate-400">
-                        Навыки
-                      </p>
-
-                      <div className="mt-8 flex">
-                        <div className="flex items-center gap-3 rounded-xl bg-slate-100 px-6 py-4">
-                          <Power />
-                          <p> Работа с Битрикс24</p>
-                        </div>
-                      </div>
                     </div>
-                    <div className="flex items-center justify-end text-sm text-sky-500 underline">
+                    <div className="mt-7 flex items-center justify-end text-sm text-sky-500 underline">
                       <Plus />
-                      <button onClick={() => setIsAdd(false)}>
-                        Добавить образоватие
+                      <button onClick={certificateAdd}>
+                        Добавить сертификат
                       </button>
                     </div>
                   </>
@@ -184,8 +179,29 @@ export default function One() {
                   <>
                     <CertificationCreate
                       portfolioId={id}
-                      isAddHandler={isAddHandler}
+                      certificateAdd={certificateAdd}
                     />
+                  </>
+                )}
+                <p className="mt-9 text-xl font-semibold text-slate-400">
+                  Навыки
+                </p>
+                {skill ? (
+                  <>
+                    <div className="mt-8 flex">
+                      <div className="flex items-center gap-3 rounded-xl bg-slate-100 px-6 py-4">
+                        <Power />
+                        <p> Работа с Битрикс24</p>
+                      </div>
+                    </div>
+                    <div className="mt-7 flex items-center justify-end text-sm text-sky-500 underline">
+                      <Plus />
+                      <button onClick={skillAdd}>Добавить навык</button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <SkillsCreate portfolioId={id} skillAdd={skillAdd} />
                   </>
                 )}
               </div>
