@@ -1,6 +1,7 @@
 import * as Errors from "./errors";
 import * as Health from "./health";
 import * as Helpers from "./helpers";
+import { QueryParams } from "./helpers";
 import * as Profiles from "./profiles";
 import * as ProfileSertifications from "./profilesCertifiations";
 import * as ProfilesEducations from "./profilesEducation";
@@ -9,6 +10,7 @@ import * as ProfilesSkills from "./profilesSkills";
 import * as Projects from "./projects";
 import * as Recovery from "./recovery";
 import * as Session from "./session";
+import * as Tenders from "./tenders";
 import * as Users from "./users";
 import * as Verification from "./verification";
 
@@ -95,7 +97,6 @@ class Api {
   }
 
   async get<D>(input: string) {
-    await this.csrf();
     return this.handle<D>(
       fetch(input, {
         method: "GET",
@@ -322,8 +323,54 @@ class Api {
         ),
     };
   }
+
+  get tenders() {
+    return {
+      index: ({
+        page,
+        perPage,
+        filters,
+        search,
+        sort,
+      }: QueryParams<Tenders.Entity>) => {
+        const url = new URL(`${this.baseUrl}/tenders`);
+
+        url.searchParams.append("page", page.toString());
+        url.searchParams.append("perPage", perPage.toString());
+
+        if (filters) {
+          Object.entries(filters).forEach(([key, value]) => {
+            url.searchParams.append(`filter[${key}]`, value.toString());
+          });
+        }
+
+        if (sort) {
+          Object.entries(sort).forEach(([key, value]) => {
+            url.searchParams.append(
+              `sort[]`,
+              value === "asc" ? key : `-${key}`
+            );
+          });
+        }
+
+        if (search) {
+          url.searchParams.append("search", search);
+        }
+
+        return this.get<Tenders.Index["Data"]>(url.toString());
+      },
+      show: (id: number) =>
+        this.get<Tenders.Show["Data"]>(`${this.baseUrl}/tenders/${id}`),
+      store: (payload: Tenders.Store["Payload"]) =>
+        this.post<Tenders.Store["Data"], Tenders.Store["Payload"]>(
+          `${this.baseUrl}/tenders`,
+          payload
+        ),
+      destroy: (id: number) => this.delete(`${this.baseUrl}/tenders/${id}`),
+    };
+  }
 }
 
-const api = new Api("http://localhost:3001");
+const api = new Api("http://localhost:3333");
 
 export default api;
