@@ -9,3 +9,11 @@ export interface Meta {
   nextPageUrl: string | null;
   previousPageUrl: string | null;
 }
+
+export interface QueryParams<E> {
+  page: number;
+  perPage: number;
+  filters?: Record<keyof E, string>;
+  sort?: Record<keyof E, "asc" | "desc">;
+  search?: string;
+}
