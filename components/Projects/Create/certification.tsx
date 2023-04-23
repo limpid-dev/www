@@ -1,6 +1,7 @@
-import { Paperclip, Plus } from "@phosphor-icons/react";
+import { Plus } from "@phosphor-icons/react";
 import React, { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import api from "../../../api";
 import { Button } from "../../Primitives/Button";
 import { Input } from "../../Primitives/Input";
 import { TextArea } from "../../Primitives/TextArea";
@@ -17,7 +18,6 @@ interface CertificationValues {
 
 export function CertificationCreate({ certificateAdd, portfolioId }: any) {
   const [error, setError] = useState("");
-  const [isUploading, setIsUploading] = useState<boolean>(false);
   const [fileId, setFileId] = useState(1);
 
   const {
@@ -29,9 +29,9 @@ export function CertificationCreate({ certificateAdd, portfolioId }: any) {
     defaultValues: {
       certification: [
         {
-          institution: "Компания",
-          title: "Должность",
-          description: "desc",
+          institution: "",
+          title: "",
+          description: "",
           issuedAt: "",
           expiredAt: "",
         },
@@ -45,11 +45,9 @@ export function CertificationCreate({ certificateAdd, portfolioId }: any) {
   });
 
   const onSubmitFile = async (fileId: any) => {
-    setIsUploading(true);
     const inputFile = document.querySelector("#fileInput") as HTMLInputElement;
 
     const formData = new FormData();
-    // formData.append("file", inputFile.files?.item(0) as File);
 
     for (const f of inputFile.files as any) {
       formData.set("file", f);
@@ -65,32 +63,19 @@ export function CertificationCreate({ certificateAdd, portfolioId }: any) {
         body: formData,
       }
     );
-    setIsUploading(false);
   };
 
   const onSubmit = async (data: CertificationValues) => {
     try {
       data.certification.forEach(async (post) => {
-        const response = await fetch(
-          `/api/profiles/${portfolioId}/certificates`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
-            body: JSON.stringify({ ...post }),
-          }
-        ).then(async (response) => {
-          if (response.ok) {
-            const json = await response.json();
-            const finalId = json.data?.profile_id;
-            setFileId(finalId);
-            onSubmitFile(fileId);
-          } else {
-            throw new Error("Network response was not ok.");
-          }
-        });
+        const { data } = await api.certifications.store(post, portfolioId);
+        if (data) {
+          const fileId = data.profileId;
+          setFileId(fileId);
+          onSubmitFile(fileId);
+        } else {
+          throw new Error("Network response was not ok.");
+        }
       });
     } catch (error) {
       setError("Что то пошло не так, попробуйте позже");
@@ -98,7 +83,7 @@ export function CertificationCreate({ certificateAdd, portfolioId }: any) {
   };
 
   return (
-    <div className=" m-auto border-none sm:w-3/4">
+    <div className=" m-auto border-none sm:w-4/6">
       <div className="m-auto flex  flex-col gap-5">
         <form onSubmit={handleSubmit(onSubmit)}>
           {fields.map((field, index) => {
@@ -116,31 +101,48 @@ export function CertificationCreate({ certificateAdd, portfolioId }: any) {
                 </div>
 
                 <Input id="fileInput" type="file" />
-                <div className="flex w-fit flex-col justify-center gap-5 md:flex-row">
+                <div className="flex flex-col justify-around gap-5 md:flex-row">
                   <div className="flex items-center justify-between gap-3">
                     <p>Начало</p>
-                    <Input
-                      className="rounded-lg border p-1"
-                      placeholder="начало"
-                      type="date"
-                      id="birthday"
-                      {...register(`certification.${index}.issuedAt`, {
-                        setValueAs: (value: string | undefined) =>
-                          value ? new Date(value).toISOString() : undefined,
-                      })}
-                    />
+                    <div>
+                      <input
+                        className="rounded-lg border p-1"
+                        placeholder="начало"
+                        type="date"
+                        id="birthday"
+                        {...register(`certification.${index}.issuedAt`, {
+                          required: "Please enter your first name.",
+                          setValueAs: (value: string | undefined) =>
+                            value ? new Date(value).toISOString() : undefined,
+                        })}
+                      />
+                      {errors.certification?.[index]?.issuedAt && (
+                        <p className="ml-2 text-sm text-red-500">
+                          Выберите дату
+                        </p>
+                      )}
+                    </div>
                   </div>
                   <div className="flex items-center justify-between gap-3">
                     <p>Конец</p>
-                    <input
-                      className="rounded-lg border p-1"
-                      type="date"
-                      id="birthday"
-                      {...register(`certification.${index}.expiredAt`, {
-                        setValueAs: (value: string | undefined) =>
-                          value ? new Date(value).toISOString() : undefined,
-                      })}
-                    />
+                    <div>
+                      <input
+                        className="rounded-lg border p-1"
+                        placeholder="начало"
+                        type="date"
+                        id="birthday"
+                        {...register(`certification.${index}.expiredAt`, {
+                          required: "Please enter your first name.",
+                          setValueAs: (value: string | undefined) =>
+                            value ? new Date(value).toISOString() : undefined,
+                        })}
+                      />
+                      {errors.certification?.[index]?.expiredAt && (
+                        <p className="ml-2 text-sm text-red-500">
+                          Выберите дату
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
                 <TextArea

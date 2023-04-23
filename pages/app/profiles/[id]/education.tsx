@@ -56,7 +56,6 @@ export default function Education() {
   useEffect(() => {
     async function fetchProfiles() {
       const { data } = await api.educations.index(parsedId);
-      console.log(data);
       if (data) {
         const updatedItems = data.map((item) => {
           return {

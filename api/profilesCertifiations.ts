@@ -3,6 +3,7 @@ export interface Entity {
   description: string;
   institution: string;
   issuedAt: string;
+  expiredAt: string;
   profileId: number;
   createdAt: string;
   updatedAt: string;
@@ -19,12 +20,18 @@ export interface Show {
 
 export interface Store {
   Data: Entity;
-  Payload: Pick<Entity, "title" | "description" | "institution" | "issuedAt">;
+  Payload: Pick<
+    Entity,
+    "title" | "description" | "institution" | "issuedAt" | "expiredAt"
+  >;
 }
 
 export interface Update {
   Data: Entity;
   Payload: Partial<
-    Pick<Entity, "title" | "description" | "institution" | "issuedAt">
+    Pick<
+      Entity,
+      "title" | "description" | "institution" | "issuedAt" | "expiredAt"
+    >
   >;
 }

@@ -5,6 +5,7 @@ import * as Profiles from "./profiles";
 import * as ProfileSertifications from "./profilesCertifiations";
 import * as ProfilesEducations from "./profilesEducation";
 import * as ProfilesExperiences from "./profilesExperience";
+import * as ProfilesSkills from "./profilesSkills";
 import * as Projects from "./projects";
 import * as Recovery from "./recovery";
 import * as Session from "./session";
@@ -265,7 +266,7 @@ class Api {
     return {
       index: (portfolioId: number) =>
         this.get<ProfileSertifications.Index["Data"]>(
-          `${this.baseUrl}/profiles/${portfolioId}/educations?page=1&perPage=20`
+          `${this.baseUrl}/profiles/${portfolioId}/certificates?page=1&perPage=20`
         ),
       store: (
         payload: ProfileSertifications.Store["Payload"],
@@ -274,7 +275,17 @@ class Api {
         this.post<
           ProfileSertifications.Store["Data"],
           ProfileSertifications.Store["Payload"]
-        >(`${this.baseUrl}/profiles/${portfolioId}/educations`, payload),
+        >(`${this.baseUrl}/profiles/${portfolioId}/certificates`, payload),
+    };
+  }
+
+  get skills() {
+    return {
+      store: (payload: ProfilesSkills.Store["Payload"], portfolioId: number) =>
+        this.post<
+          ProfilesSkills.Store["Data"],
+          ProfilesSkills.Store["Payload"]
+        >(`${this.baseUrl}/profiles/${portfolioId}/skills`, payload),
     };
   }
 

@@ -48,7 +48,7 @@ export function EducationCreate({ portfolioId, isAddHandler }: any) {
   };
 
   return (
-    <div className="m-auto border-none  sm:w-4/6">
+    <div className="m-auto border-none sm:w-4/6">
       <div className="m-auto flex flex-col gap-5">
         <form onSubmit={handleSubmit(onSubmit)}>
           {fields.map((field, index) => {
@@ -117,7 +117,6 @@ export function EducationCreate({ portfolioId, isAddHandler }: any) {
                       />
                       {errors.education?.[index]?.startedAt && (
                         <p className="ml-2 text-sm text-red-500">
-                          {" "}
                           Выберите дату
                         </p>
                       )}

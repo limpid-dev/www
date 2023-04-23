@@ -2,7 +2,9 @@ import { Plus, Power } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import api from "../../../../api";
+import { Entity } from "../../../../api/profilesCertifiations";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
 import { General } from "../../../../components/Profiles/General";
@@ -10,14 +12,21 @@ import { CertificationCreate } from "../../../../components/Projects/Create/cert
 import SkillsCreate from "../../../../components/Projects/Create/skills";
 import Badge from "../../../../images/badge.svg";
 
+const dateFormatter = (arg: string) => {
+  return new Date(arg).getFullYear().toString();
+};
+
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
+
 export default function One() {
   const router = useRouter();
   const { id } = router.query;
   const [certificate, setCertificate] = useState(true);
   const [skill, setSkill] = useState(true);
+  const parsedId = Number.parseInt(id as string, 10) as number;
+  const [data, setData] = useState<Entity[]>([]);
 
   const skillAdd = () => {
     setSkill((current: boolean) => !current);
@@ -52,6 +61,23 @@ export default function One() {
       current: false,
     },
   ];
+
+  useEffect(() => {
+    async function fetchCertifications() {
+      const { data } = await api.certifications.index(parsedId);
+      if (data) {
+        const updatedItems = data.map((item) => {
+          return {
+            ...item,
+            startedAt: dateFormatter(item.issuedAt),
+            finishedAt: dateFormatter(item.expiredAt),
+          };
+        });
+        setData(updatedItems);
+      }
+    }
+    fetchCertifications();
+  }, [parsedId]);
 
   return (
     <div>
@@ -145,29 +171,30 @@ export default function One() {
                 </p>
                 {certificate ? (
                   <>
-                    <div>
-                      <div className="w-full rounded-xl bg-slate-100 pb-6 pt-4">
-                        <div className="flex flex-col items-center justify-center p-3 sm:p-0">
-                          <Image
-                            src={Badge}
-                            alt="Sertificate"
-                            className="m-auto"
-                          />
-                          <p className="text-center text-base font-semibold sm:text-xl">
-                            Онлайн-курс менеджера по туризму от «Поехали с нами»
-                          </p>
-                          <p className="text-center text-xs  font-normal sm:text-sm">
-                            За успешное завершение онлайн-курса "Менеджер по
-                            туризму"
-                          </p>
-                          <Link href="/">
-                            <p className="text-sm font-medium text-sky-500">
-                              Смотреть сертификат
+                    {data.map((certificate, certificateIndex) => (
+                      <div key={certificateIndex} className="mb-7">
+                        <div className="w-full rounded-xl bg-slate-100 pb-6 pt-4">
+                          <div className="flex flex-col items-center justify-center p-3 sm:p-0">
+                            <Image
+                              src={Badge}
+                              alt="Sertificate"
+                              className="m-auto"
+                            />
+                            <p className="text-center text-base font-semibold sm:text-xl">
+                              {certificate.title}
                             </p>
-                          </Link>
+                            <p className="text-center text-xs  font-normal sm:text-sm">
+                              {certificate.description}
+                            </p>
+                            <Link href="/">
+                              <p className="text-sm font-medium text-sky-500">
+                                Смотреть сертификат
+                              </p>
+                            </Link>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    ))}
                     <div className="mt-7 flex items-center justify-end text-sm text-sky-500 underline">
                       <Plus />
                       <button onClick={certificateAdd}>
@@ -183,7 +210,7 @@ export default function One() {
                     />
                   </>
                 )}
-                <p className="mt-9 text-xl font-semibold text-slate-400">
+                <p className="my-7 text-xl font-semibold text-slate-400">
                   Навыки
                 </p>
                 {skill ? (
