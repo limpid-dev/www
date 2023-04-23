@@ -29,6 +29,7 @@ function classNames(...classes: any) {
 export default function One() {
   const [isAuthor, seisAuthor] = useState(false);
   const router = useRouter();
+  const { id } = router.query;
 
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
@@ -69,7 +70,7 @@ export default function One() {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-10 ">
             <div className="rounded-lg border sm:col-span-3">
-              <General />
+              <General projectId={id} />
             </div>
 
             <div className="rounded-lg border bg-white sm:col-span-7">

@@ -1,4 +1,5 @@
 import { Paperclip, Plus } from "@phosphor-icons/react";
+import Router, { useRouter } from "next/router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import api from "../../../api";
@@ -23,6 +24,7 @@ interface FormValues {
 export default function Create() {
   const [error, setError] = useState("");
   const [tab, setTab] = useState("general");
+  const router = useRouter();
 
   const {
     register,
@@ -38,6 +40,11 @@ export default function Create() {
         profileId,
       };
       const { data } = await api.projects.store(fullObject);
+      if (data) {
+        router.push({
+          pathname: "/app/projects/" + data.id,
+        });
+      }
     } catch (error) {
       setError("Что то пошло не так, попробуйте позже");
     }

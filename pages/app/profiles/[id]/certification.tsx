@@ -3,11 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { CertificationCreate } from "../../../../components/create/certification";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
 import { General } from "../../../../components/Profiles/General";
 import Badge from "../../../../images/badge.svg";
-import { CertificationCreate } from "../create/certification";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
@@ -21,6 +21,7 @@ export default function One() {
     setIsAdd((current: boolean) => !current);
   };
   const [isAuthor, setIsAuthor] = useState(false);
+
   const tabs = [
     { name: "Ресурсы", href: `/app/profiles/${id}/`, current: false },
     {
@@ -44,6 +45,9 @@ export default function One() {
       current: false,
     },
   ];
+
+  console.log(tabs);
+
   return (
     <div>
       <Navigation />
@@ -78,7 +82,7 @@ export default function One() {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-10 ">
             <div className="rounded-lg border sm:col-span-3">
-              <General />
+              <General portfolioId={id} />
             </div>
 
             <div className="rounded-lg border bg-white sm:col-span-7">
@@ -104,7 +108,7 @@ export default function One() {
                     aria-label="Tabs"
                   >
                     {tabs.map((tab, tabIdx) => (
-                      <a
+                      <Link
                         key={tab.name}
                         href={tab.href}
                         className={classNames(
@@ -125,7 +129,7 @@ export default function One() {
                             "absolute inset-x-0 bottom-0 h-0.5"
                           )}
                         />
-                      </a>
+                      </Link>
                     ))}
                   </nav>
                 </div>

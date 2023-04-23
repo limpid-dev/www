@@ -247,12 +247,8 @@ export default function All() {
 
           <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
             {profilesData.map((profile, profileIndex) => (
-              <Link
-                key={profileIndex}
-                className="block sm:max-w-[400px] "
-                href={`/app/profiles/${profile.id}`}
-              >
-                <div className="flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-9 font-semibold hover:border-slate-700">
+              <Link key={profileIndex} href={`/app/profiles/${profile.id}`}>
+                <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-9 font-semibold hover:border-slate-700 sm:max-w-[400px]">
                   <Briefcase className="h-6 w-6" />
                   <p className="w-[203px] text-center text-base sm:text-xl ">
                     {profile.title}

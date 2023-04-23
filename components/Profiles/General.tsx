@@ -51,14 +51,14 @@ export function General({ portfolioId }: any) {
         <p className="pt-3  text-sm">{data?.description}</p>
       </div>
       <div className="mb-5 mt-3" />
-      <div>
+      {/* <div>
         <p className=" mb-4 text-lg font-semibold"> Социальные сети</p>
         <div className="flex gap-6 pb-5">
           <LinkedinLogo />
           <YoutubeLogo />
           <InstagramLogo />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

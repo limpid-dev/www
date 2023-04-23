@@ -6,9 +6,14 @@ import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
 import { General } from "../../../../components/Profiles/General";
 
+const dateFormatter = (arg: string) => {
+  return new Date(arg).getFullYear().toString();
+};
+
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
+
 export default function One() {
   const [isAuthor, setIsAuthor] = useState(false);
 
@@ -44,18 +49,14 @@ export default function One() {
   useEffect(() => {
     async function fetchProfiles() {
       const { data } = await api.experiences.index(parsedId);
-      const updatedItems = data?.map((item: any) => {
-        const dateFormatter = (arg: any) => {
-          return new Date(arg).getFullYear();
-        };
-        return {
-          ...item,
-          startedAt: dateFormatter(item.startedAt),
-          finishedAt: dateFormatter(item.finishedAt),
-        };
-      });
-      console.log(data);
       if (data) {
+        const updatedItems = data.map((item) => {
+          return {
+            ...item,
+            startedAt: dateFormatter(item.startedAt),
+            finishedAt: dateFormatter(item.finishedAt),
+          };
+        });
         setData(updatedItems);
       }
     }

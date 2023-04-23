@@ -4,11 +4,14 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import api from "../../../../api";
 import { Entity } from "../../../../api/profilesEducation";
+import { EducationCreate } from "../../../../components/create/education";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
 import { General } from "../../../../components/Profiles/General";
-import { EducationCreate } from "../create/education";
 
+const dateFormatter = (arg: string) => {
+  return new Date(arg).getFullYear().toString();
+};
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
@@ -53,17 +56,14 @@ export default function Education() {
   useEffect(() => {
     async function fetchProfiles() {
       const { data } = await api.educations.index(parsedId);
-      const updatedItems = data?.map((item: any) => {
-        const dateFormatter = (arg: any) => {
-          return new Date(arg).getFullYear();
-        };
-        return {
-          ...item,
-          startedAt: dateFormatter(item.startedAt),
-          finishedAt: dateFormatter(item.finishedAt),
-        };
-      });
       if (data) {
+        const updatedItems = data.map((item) => {
+          return {
+            ...item,
+            startedAt: dateFormatter(item.startedAt),
+            finishedAt: dateFormatter(item.finishedAt),
+          };
+        });
         setData(updatedItems);
       }
     }
@@ -131,7 +131,7 @@ export default function Education() {
                     aria-label="Tabs"
                   >
                     {tabs.map((tab, tabIdx) => (
-                      <a
+                      <Link
                         key={tab.name}
                         href={tab.href}
                         className={classNames(
@@ -152,7 +152,7 @@ export default function Education() {
                             "absolute inset-x-0 bottom-0 h-0.5"
                           )}
                         />
-                      </a>
+                      </Link>
                     ))}
                   </nav>
                 </div>

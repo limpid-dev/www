@@ -1,10 +1,23 @@
 import { CaretRight, ChatCircle, FileVideo } from "@phosphor-icons/react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import api from "../../api";
+import { Entity } from "../../api/projects";
 import testAva from "../../images/avatars/avatar-1.jpg";
 import { Button } from "../Primitives/Button";
 
-export default function General() {
-  const handleClick = (event: any) => {};
+  export default function General({projectId}: any) {
+  const [project, setProject] = useState<Entity>();
+  console.log(projectId);
+  useEffect(() => {
+    async function fetchProfiles() {
+      const { data } = await api.projects.show(projectId);
+      if (data) {
+        setProject(data);
+      }
+    }
+    fetchProfiles();
+  }, [projectId]);
 
   return (
     <div className="h-full bg-white px-6 pb-6">
@@ -15,10 +28,10 @@ export default function General() {
           className="mb-6 h-[106px] w-auto  object-cover"
         />
         <p className=" text-2xl font-semibold">Almaz Nurgali</p>
-        <p className=" text-sm">Гостиница для животных</p>
+        <p className=" text-sm">{project?.industry}</p>
       </div>
       <div className="mb-6 mt-3" />
-      <div className="grid gap-3">
+      {/* <div className="grid gap-3">
         <Button className="w-full rounded-lg" variant="solid" color="white">
           <div className="flex w-full items-center gap-3 text-sm font-semibold">
             <FileVideo /> Бизнес-план
@@ -36,7 +49,7 @@ export default function General() {
           </div>
           <CaretRight />
         </Button>
-      </div>
+      </div> */}
       <div className="mb-6 mt-4" />
       <div className="flex flex-col gap-4">
         <p className="w-fit rounded-lg bg-slate-100 px-3 py-2 text-sm">

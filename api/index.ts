@@ -313,6 +313,6 @@ class Api {
   }
 }
 
-const api = new Api("https://api.limpid.kz");
+const api = new Api("http://localhost:3001");
 
 export default api;

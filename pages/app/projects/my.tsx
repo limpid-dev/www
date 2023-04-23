@@ -1,7 +1,10 @@
 import { Plus } from "@phosphor-icons/react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import api from "../../../api";
+import { Entity } from "../../../api/projects";
 import { Navigation } from "../../../components/Navigation";
 import { Button } from "../../../components/Primitives/Button";
 import {
@@ -21,7 +24,7 @@ import {
   Message,
   Textarea,
 } from "../../../components/Primitives/Form";
-import testAva from "../../../images/avatars/avatar-1.jpg";
+import testAva from "../../../images/avatars/projectDefault.svg";
 
 const tabs = [
   { name: "Все проекты", href: "/app/projects/", current: false },
@@ -33,8 +36,20 @@ function classNames(...classes: any) {
 }
 export default function All() {
   const [search, setSearch] = useState("");
+  const [projectsData, setProjectsData] = useState<Entity[]>([]);
   const router = useRouter();
+  useEffect(() => {
+    async function fetchProfiles() {
+      const data1 = await api.session.show();
+      const userId = data1.data?.id;
+      const { data } = await api.projects.index(userId || 0);
 
+      if (data) {
+        setProjectsData(data);
+      }
+    }
+    fetchProfiles();
+  }, []);
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
@@ -82,120 +97,36 @@ export default function All() {
                 </nav>
               </div>
             </div>
-            <Dialog>
-              <DialogTrigger>
-                <div className="flex items-center gap-2 rounded-lg bg-zinc-900 p-2 text-sm text-white">
-                  <Plus className="h-6 w-6" />
-                  Создать проект
-                </div>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Создать проект</DialogTitle>
-                  <DialogDescription>
-                    Заполните форму, чтобы создать проект.
-                  </DialogDescription>
-                </DialogHeader>
-                <Form>
-                  <Field name="title">
-                    <Label>Название</Label>
-                    <Input
-                      placeholder="Web-Разработчик..."
-                      required
-                      minLength={1}
-                      maxLength={255}
-                    />
-                    <Message match="tooShort">
-                      Название профиля должно быть не менее 1 символа
-                    </Message>
-                    <Message match="tooLong">
-                      Название профиля должно быть не более 255 символов
-                    </Message>
-                    <Message match="valueMissing">
-                      Название профиля обязательно
-                    </Message>
-                  </Field>
-                  <Field name="location">
-                    <Label>Локация</Label>
-                    <Input
-                      placeholder="Астана, Казахстан..."
-                      required
-                      minLength={1}
-                      maxLength={255}
-                    />
-                    <Message match="tooShort">
-                      Локация профиля должна быть не менее 1 символа
-                    </Message>
-                    <Message match="tooLong">
-                      Локация профиля должна быть не более 255 символов
-                    </Message>
-                    <Message match="valueMissing">
-                      Локация профиля обязательна
-                    </Message>
-                  </Field>
-                  <Field name="industry">
-                    <Label>Сфера деятельности</Label>
-                    <Input
-                      placeholder="Информационные технологии..."
-                      required
-                      minLength={1}
-                      maxLength={255}
-                    />
-                    <Message match="tooShort">
-                      Сфера деятельности профиля должна быть не менее 1 символа
-                    </Message>
-                    <Message match="tooLong">
-                      Сфера деятельности профиля должна быть не более 255
-                      символов
-                    </Message>
-                    <Message match="valueMissing">
-                      Сфера деятельности профиля обязательна
-                    </Message>
-                  </Field>
-                  <Field name="description">
-                    <Label>Описание</Label>
-                    <Textarea
-                      placeholder="Кратко опишите себя..."
-                      required
-                      minLength={1}
-                      maxLength={1024}
-                    />
-                    <Message match="tooShort">
-                      Описание профиля должна быть не менее 1 символа
-                    </Message>
-                    <Message match="tooLong">
-                      Описание профиля должна быть не более 1024 символов
-                    </Message>
-                    <Message match="valueMissing">
-                      Описание профиля обязательна
-                    </Message>
-                  </Field>
-                  <DialogFooter>
-                    <Button className="" type="submit">
-                      Создать профиль
-                    </Button>
-                  </DialogFooter>
-                </Form>
-              </DialogContent>
-            </Dialog>
+            <Link href="/app/projects/create">
+              <Button>
+                <Plus className="h-6 w-6" />
+                Создать проект
+              </Button>
+            </Link>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-            <div className="grid items-center justify-center gap-4 rounded-lg border py-6 pl-6 pr-4 sm:grid-cols-10">
-              <div className="sm:col-span-4 ">
-                <Image
-                  src={testAva}
-                  className="m-auto w-[126px] rounded-lg"
-                  alt="test"
-                />
-              </div>
-              <div className="sm:col-span-6">
-                <div className="flex flex-col gap-1">
-                  <h1 className=" text-lg font-semibold">Кофейня-библиотека</h1>
-                  <p className=" text-sm">рестораны, кафе, бары и т.д.</p>
+            {projectsData.map((project, projectIndex) => (
+              <Link key={projectIndex} href={`/app/projects/${project.id}`}>
+                <div className="grid items-center justify-center gap-4 rounded-lg border py-6 pl-6 pr-4 hover:border-black sm:grid-cols-10">
+                  <div className="sm:col-span-4 ">
+                    <Image
+                      src={testAva}
+                      className="m-auto w-[126px] rounded-lg"
+                      alt="test"
+                    />
+                  </div>
+                  <div className="sm:col-span-6">
+                    <div className="flex flex-col gap-1">
+                      <h1 className=" text-lg font-semibold">
+                        {project.title}
+                      </h1>
+                      <p className=" text-sm">{project.industry}</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+              </Link>
+            ))}
           </div>
         </div>
       </div>

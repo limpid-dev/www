@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import api from "../../../../api";
@@ -12,12 +13,14 @@ function classNames(...classes: any) {
 export default function One() {
   const [isAuthor, setIsAuthor] = useState(true);
   const router = useRouter();
-  const { id } = router.query;
+  const { id } = router.query as {
+    id: string;
+  };
   const [data, setData] = useState<Entity>();
 
   useEffect(() => {
     async function fetchProfiles() {
-      const { data } = await api.profiles.show(id);
+      const { data } = await api.profiles.show(Number.parseInt(id, 10));
       if (data) {
         setData(data);
       }
@@ -109,7 +112,7 @@ export default function One() {
                     aria-label="Tabs"
                   >
                     {tabs.map((tab, tabIdx) => (
-                      <a
+                      <Link
                         key={tab.name}
                         href={tab.href}
                         className={classNames(
@@ -130,7 +133,7 @@ export default function One() {
                             "absolute inset-x-0 bottom-0 h-0.5"
                           )}
                         />
-                      </a>
+                      </Link>
                     ))}
                   </nav>
                 </div>
@@ -146,7 +149,7 @@ export default function One() {
                   <div />
                   <div className="flex flex-col gap-3">
                     <p className=" text-xl font-semibold text-slate-400">
-                      Материальный ресурс
+                      Интеллектуальный ресурс
                     </p>
                     <p className="text-sm">
                       {data?.ownedIntellectualResources}

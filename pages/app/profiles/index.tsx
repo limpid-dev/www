@@ -7,7 +7,7 @@ import api from "../../../api";
 import { Entity } from "../../../api/profiles";
 import { Navigation } from "../../../components/Navigation";
 import { Button } from "../../../components/Primitives/Button";
-import testAva from "../../../images/avatars/avatar-1.jpg";
+import testAva from "../../../images/avatars/defaultProfile.svg";
 
 const tabs = [
   { name: "Все профили", href: "/app/profiles/", current: true },
