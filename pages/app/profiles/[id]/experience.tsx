@@ -17,13 +17,35 @@ function classNames(...classes: any) {
 }
 
 export default function One() {
-  const [isAuthor, setIsAuthor] = useState(false);
-  const [data, setData] = useState<Entity[]>([]);
-  const [experience, setExperience] = useState(true);
-
   const router = useRouter();
   const { id } = router.query;
   const parsedId = Number.parseInt(id as string, 10) as number;
+
+  const [first, setfirst] = useState(1);
+  const [second, setsecond] = useState(1);
+  useEffect(() => {
+    async function fetchProfiles() {
+      const { data } = await api.profiles.show(parsedId);
+      if (data) {
+        setsecond(data.userId);
+      }
+    }
+    fetchProfiles();
+  }, [parsedId]);
+
+  useEffect(() => {
+    async function getSession() {
+      const { data } = await api.session.show();
+      if (data) {
+        setfirst(data.id);
+      }
+    }
+    getSession();
+  }, [id]);
+
+  const isAuthor = first && second && first === second;
+  const [data, setData] = useState<Entity[]>([]);
+  const [experience, setExperience] = useState(true);
 
   const tabs = [
     { name: "Ресурсы", href: `/app/profiles/${id}/`, current: false },
@@ -84,20 +106,20 @@ export default function One() {
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
             {isAuthor ? (
               <div className="flex gap-5">
-                <Button className=" bg-slate-700 hover:bg-black">
+                {/* <Button className=" bg-slate-700 hover:bg-black">
                   Редактировать
-                </Button>
+                </Button> */}
                 <Button className="  bg-red-600">Удалить</Button>
               </div>
             ) : (
               <div className="flex gap-5">
-                <Button
+                {/* <Button
                   className=" bg-black hover:bg-slate-600"
                   variant="outline"
                   color="white"
                 >
                   Написать в чате
-                </Button>
+                </Button> */}
               </div>
             )}
           </div>
@@ -165,7 +187,8 @@ export default function One() {
                           <div className="sm:col-span-2">
                             <div className="flex flex-col gap-1.5">
                               <p className=" text-lg font-semibold">
-                                {experiences.startedAt} - {experiences.finishedAt}
+                                {experiences.startedAt} -{" "}
+                                {experiences.finishedAt}
                               </p>
                             </div>
                           </div>

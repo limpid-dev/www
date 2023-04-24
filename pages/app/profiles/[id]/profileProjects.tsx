@@ -1,36 +1,69 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import api from "../../../../api";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
 import { General } from "../../../../components/Profiles/General";
 import Badge from "../../../../images/badge.svg";
 
-const tabs = [
-  { name: "Опыт работы", href: "/app/profiles/[id]/", current: false },
-  {
-    name: "Образование",
-    href: "/app/profiles/[id]/education",
-    current: false,
-  },
-  {
-    name: "Сертификаты",
-    href: "/app/profiles/[id]/certification",
-    current: false,
-  },
-  {
-    name: "Проекты",
-    href: "/app/profiles/[id]/profileProjects",
-    current: true,
-  },
-  { name: "Ресурсы", href: "/app/profiles/[id]/resources", current: false },
-];
-
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 export default function One() {
-  const [isAuthor, setIsAuthor] = useState(false);
+  const [first, setfirst] = useState(1);
+  const [second, setsecond] = useState(1);
+
+  const router = useRouter();
+  const { id } = router.query;
+  const parsedId = Number.parseInt(id as string, 10) as number;
+
+  useEffect(() => {
+    async function fetchProfiles() {
+      const { data } = await api.profiles.show(parsedId);
+      if (data) {
+        setsecond(data.userId);
+      }
+    }
+    fetchProfiles();
+  }, [id]);
+
+  useEffect(() => {
+    async function getSession() {
+      const { data } = await api.session.show();
+      if (data) {
+        setfirst(data.id);
+      }
+    }
+    getSession();
+  }, [id]);
+
+  const isAuthor = first && second && first === second;
+
+  const tabs = [
+    { name: "Ресурсы", href: `/app/profiles/${id}`, current: false },
+    {
+      name: "Образование",
+      href: `/app/profiles/${id}/education`,
+      current: false,
+    },
+    {
+      name: "Сертификаты",
+      href: `/app/profiles/${id}/certification`,
+      current: false,
+    },
+    {
+      name: "Проекты",
+      href: `/app/profiles/${id}/profileProjects`,
+      current: true,
+    },
+    {
+      name: "Опыт работы",
+      href: `/app/profiles/${id}/experience`,
+      current: false,
+    },
+  ];
 
   return (
     <div>
@@ -46,20 +79,20 @@ export default function One() {
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
             {isAuthor ? (
               <div className="flex gap-5">
-                <Button className=" bg-slate-700 hover:bg-black">
+                {/* <Button className=" bg-slate-700 hover:bg-black">
                   Редактировать
-                </Button>
+                </Button> */}
                 <Button className="  bg-red-600">Удалить</Button>
               </div>
             ) : (
               <div className="flex gap-5">
-                <Button
+                {/* <Button
                   className=" bg-black hover:bg-slate-600"
                   variant="outline"
                   color="white"
                 >
                   Написать в чате
-                </Button>
+                </Button> */}
               </div>
             )}
           </div>

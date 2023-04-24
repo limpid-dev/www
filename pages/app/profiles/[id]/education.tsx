@@ -16,11 +16,32 @@ function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 export default function Education() {
-  const [isAuthor, setIsAuthor] = useState(false);
-
+  const [first, setfirst] = useState(1);
+  const [second, setsecond] = useState(1);
   const router = useRouter();
   const { id } = router.query;
   const parsedId = Number.parseInt(id as string, 10) as number;
+  useEffect(() => {
+    async function fetchProfiles() {
+      const { data } = await api.profiles.show(parsedId);
+      if (data) {
+        setsecond(data.userId);
+      }
+    }
+    fetchProfiles();
+  }, [parsedId]);
+
+  useEffect(() => {
+    async function getSession() {
+      const { data } = await api.session.show();
+      if (data) {
+        setfirst(data.id);
+      }
+    }
+    getSession();
+  }, [id]);
+
+  const isAuthor = first && second && first === second;
 
   const tabs = [
     { name: "Ресурсы", href: `/app/profiles/${id}`, current: false },
@@ -77,28 +98,23 @@ export default function Education() {
 
       <div className=" min-h-[90vh] bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
-          <h1 className="text-sm">
-            <span className="text-slate-300">Профиль / </span>
-            Консультационные услуги
-          </h1>
-
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
             {isAuthor ? (
               <div className="flex gap-5">
-                <Button className=" bg-slate-700 hover:bg-black">
+                {/* <Button className=" bg-slate-700 hover:bg-black">
                   Редактировать
-                </Button>
+                </Button> */}
                 <Button className="  bg-red-600">Удалить</Button>
               </div>
             ) : (
               <div className="flex gap-5">
-                <Button
+                {/* <Button
                   className=" bg-black hover:bg-slate-600"
                   variant="outline"
                   color="white"
                 >
                   Написать в чате
-                </Button>
+                </Button> */}
               </div>
             )}
           </div>

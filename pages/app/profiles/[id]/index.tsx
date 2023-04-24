@@ -24,7 +24,6 @@ export default function One() {
     async function fetchProfiles() {
       const { data } = await api.profiles.show(Number.parseInt(id, 10));
       if (data) {
-        console.log(data.userId)
         setsecond(data.userId);
         setData(data);
       }
@@ -36,7 +35,6 @@ export default function One() {
     async function getSession() {
       const { data } = await api.session.show();
       if (data) {
-        console.log(data.id)
         setfirst(data.id);
       }
     }
@@ -44,7 +42,7 @@ export default function One() {
   }, [id]);
 
   const isAuthor = first && second && first === second;
-  console.log(isAuthor);
+
   const tabs = [
     { name: "Ресурсы", href: `/app/profiles/${id}/`, current: true },
     {
@@ -74,11 +72,6 @@ export default function One() {
 
       <div className="min-h-[90vh] bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
-          <h1 className="text-sm">
-            <span className="text-slate-300">Профиль / </span>
-            Консультационные услуги
-          </h1>
-
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
             {isAuthor ? (
               <div className="flex gap-5">
