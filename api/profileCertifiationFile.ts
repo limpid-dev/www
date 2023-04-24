@@ -19,7 +19,7 @@ export interface Show {
 
 export interface Store {
   Data: Entity;
-  Payload: Pick<Entity, "name" | "certificateId" | "mimeType">;
+  Payload: File
 }
 
 export interface Update {

@@ -1,7 +1,6 @@
 export interface Entity {
   name: string;
   profileId: number;
-  expiredAt: string;
   createdAt: string;
   updatedAt: string;
   id: number;

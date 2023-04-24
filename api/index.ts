@@ -2,6 +2,7 @@ import * as Errors from "./errors";
 import * as Health from "./health";
 import * as Helpers from "./helpers";
 import { QueryParams } from "./helpers";
+import * as ProfileSertificationFile from "./profileCertifiationFile";
 import * as Profiles from "./profiles";
 import * as ProfileSertifications from "./profilesCertifiations";
 import * as ProfilesEducations from "./profilesEducation";
@@ -280,8 +281,29 @@ class Api {
     };
   }
 
+  get certificateFile() {
+    return {
+      store: (
+        payload: ProfileSertificationFile.Store["Payload"],
+        portfolioId: number,
+        fileId: number
+      ) =>
+        this.post<
+          ProfileSertificationFile.Store["Data"],
+          ProfileSertificationFile.Store["Payload"]
+        >(
+          `${this.baseUrl}/profiles/${portfolioId}/certificates/${fileId}/files`,
+          payload
+        ),
+    };
+  }
+
   get skills() {
     return {
+      index: (portfolioId: number) =>
+        this.get<ProfileSertifications.Index["Data"]>(
+          `${this.baseUrl}/profiles/${portfolioId}/skills?page=1&perPage=20`
+        ),
       store: (payload: ProfilesSkills.Store["Payload"], portfolioId: number) =>
         this.post<
           ProfilesSkills.Store["Data"],

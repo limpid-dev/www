@@ -1,15 +1,22 @@
 import { Plus } from "@phosphor-icons/react";
+import router from "next/router";
+import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import api from "../../../api";
+import { Entity } from "../../../api/profilesSkills";
 import { Button } from "../../Primitives/Button";
 import { Input } from "../../Primitives/Input";
 
 interface SkillValues {
-  skill: {
+  skills: {
     name: string;
   }[];
 }
 
 export default function SkillsCreate({ skillAdd, portfolioId }: any) {
+  const [skillData, setSkillData] = useState<Entity[]>([]);
+  const [error, setError] = useState("");
+
   const {
     register,
     handleSubmit,
@@ -17,7 +24,7 @@ export default function SkillsCreate({ skillAdd, portfolioId }: any) {
     control,
   } = useForm<SkillValues>({
     defaultValues: {
-      skill: [
+      skills: [
         {
           name: "",
         },
@@ -26,40 +33,42 @@ export default function SkillsCreate({ skillAdd, portfolioId }: any) {
   });
 
   const { fields, append, remove } = useFieldArray({
-    name: "skill",
+    name: "skills",
     control,
   });
 
   const onSubmit = async (data: SkillValues) => {
-    // try {
-    //   data.certification.forEach(async (post) => {
-    //     const { data } = await api.certifications.store(post, portfolioId);
-    //     if (data) {
-    //       const fileId = data.profileId;
-    //       setFileId(fileId);
-    //       onSubmitFile(fileId);
-    //     } else {
-    //       throw new Error("Network response was not ok.");
-    //     }
-    //   });
-    // } catch (error) {
-    //   setError("Что то пошло не так, попробуйте позже");
-    // }
+    try {
+      data.skills.forEach(async (post) => {
+        const { data } = await api.skills.store(post, portfolioId);
+        if (data) {
+          router.reload();
+        } else {
+          throw new Error("Network response was not ok.");
+        }
+      });
+    } catch (error) {
+      setError("Что то пошло не так, попробуйте позже");
+    }
   };
+
   return (
-    <div>
-      <div className="flex flex-col gap-5">
-        {fields.map((field, index) => {
-          return (
-            <div key={field.id}>
-              <Input
-                placeholder="Навык"
-                className="w-fit"
-                {...register(`skill.${index}.name`)}
-              />
-            </div>
-          );
-        })}
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-row flex-wrap gap-5"
+    >
+      {fields.map((field, index) => {
+        return (
+          <div key={field.id}>
+            <Input
+              placeholder="Навык"
+              className="w-fit"
+              {...register(`skills.${index}.name`)}
+            />
+          </div>
+        );
+      })}
+      <div className="flex w-full justify-end gap-4">
         <Button
           variant="outline"
           type="button"
@@ -72,6 +81,10 @@ export default function SkillsCreate({ skillAdd, portfolioId }: any) {
           <Plus /> Добавить навык
         </Button>
       </div>
-    </div>
+      <div className="mt-5 flex w-full justify-end gap-3 pt-4">
+        <Button onClick={skillAdd}>Отмена</Button>
+        <Button type="submit">Сохранить</Button>
+      </div>
+    </form>
   );
 }

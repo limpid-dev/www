@@ -79,6 +79,23 @@ export default function One() {
     fetchCertifications();
   }, [parsedId]);
 
+  useEffect(() => {
+    async function fetchSkills() {
+      const { data } = await api.skills.index(parsedId);
+      if (data) {
+        const updatedItems = data.map((item) => {
+          return {
+            ...item,
+            startedAt: dateFormatter(item.issuedAt),
+            finishedAt: dateFormatter(item.expiredAt),
+          };
+        });
+        setData(updatedItems);
+      }
+    }
+    fetchSkills();
+  }, [parsedId]);
+
   return (
     <div>
       <Navigation />

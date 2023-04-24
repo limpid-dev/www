@@ -1,4 +1,5 @@
 import { Briefcase, Plus } from "@phosphor-icons/react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
@@ -24,6 +25,8 @@ import {
   Message,
   Textarea,
 } from "../../../components/Primitives/Form";
+import { Skeleton } from "../../../components/Primitives/Skeleton";
+import NoProfiles from "../../../images/noProfiles.svg";
 
 const tabs = [
   { name: "Все профили", href: "/app/profiles/", current: false },
@@ -35,9 +38,9 @@ function classNames(...classes: any) {
 }
 
 export default function All() {
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
   const [profilesData, setProfilesData] = useState<Entity[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchProfiles() {
@@ -47,6 +50,7 @@ export default function All() {
 
       if (data) {
         setProfilesData(data);
+        setLoading(false);
       }
     }
     fetchProfiles();
@@ -244,19 +248,37 @@ export default function All() {
               </DialogContent>
             </Dialog>
           </div>
-
-          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-            {profilesData.map((profile, profileIndex) => (
-              <Link key={profileIndex} href={`/app/profiles/${profile.id}`}>
-                <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-9 font-semibold hover:border-slate-700 sm:max-w-[400px]">
-                  <Briefcase className="h-6 w-6" />
-                  <p className="w-[203px] text-center text-base sm:text-xl ">
-                    {profile.title}
-                  </p>
+          {loading ? (
+            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+              <Skeleton className="h-[127px] w-[400px] rounded-md" />
+            </div>
+          ) : (
+            <>
+              {profilesData.length > 0 ? (
+                <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+                  {profilesData.map((profile, profileIndex) => (
+                    <Link
+                      key={profileIndex}
+                      href={`/app/profiles/${profile.id}`}
+                    >
+                      <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-9 font-semibold hover:border-slate-700 sm:max-w-[400px]">
+                        <Briefcase className="h-6 w-6" />
+                        <p className="w-[203px] text-center text-base sm:text-xl ">
+                          {profile.title}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
-              </Link>
-            ))}
-          </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center gap-8">
+                  <Image src={NoProfiles} alt="Нет профилей" />
+                  <p className=" text-2xl font-semibold">У вас нет профиля</p>
+                </div>
+              )}
+            </>
+          )}
+          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3" />
         </div>
       </div>
     </div>

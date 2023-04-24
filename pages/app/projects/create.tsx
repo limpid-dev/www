@@ -195,7 +195,7 @@ export default function Create() {
                     </p>
                     <div className="grid gap-6 sm:grid-cols-2">
                       <div>
-                        <p className="mb-6  text-lg font-semibold">
+                        <p className="mb-2  text-lg font-semibold">
                           Материальный ресурс
                         </p>
                         <TextArea
@@ -205,7 +205,7 @@ export default function Create() {
                         />
                       </div>
                       <div>
-                        <p className="mb-6  text-lg font-semibold">
+                        <p className="mb-2  text-lg font-semibold">
                           Интеллектуальный ресурс
                         </p>
                         <TextArea

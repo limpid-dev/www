@@ -8,6 +8,8 @@ import { Entity } from "../../../api/projects";
 import { Navigation } from "../../../components/Navigation";
 import { Button } from "../../../components/Primitives/Button";
 import testAva from "../../../images/avatars/projectDefault.svg";
+import NoProjects from "../../../images/noProjects.svg";
+import { Skeleton } from "../../../components/Primitives/Skeleton";
 
 const tabs = [
   { name: "Все проекты", href: "/app/projects/", current: false },
@@ -18,9 +20,10 @@ function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 export default function All() {
-  const [search, setSearch] = useState("");
   const [projectsData, setProjectsData] = useState<Entity[]>([]);
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     async function fetchProfiles() {
       const data1 = await api.session.show();
@@ -29,10 +32,12 @@ export default function All() {
 
       if (data) {
         setProjectsData(data);
+        setLoading(false);
       }
     }
     fetchProfiles();
   }, []);
+
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
@@ -88,29 +93,47 @@ export default function All() {
             </Link>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-            {projectsData.map((project, projectIndex) => (
-              <Link key={projectIndex} href={`/app/projects/${project.id}`}>
-                <div className="grid items-center justify-center gap-4 rounded-lg border py-6 pl-6 pr-4 hover:border-black sm:grid-cols-10">
-                  <div className="sm:col-span-4 ">
-                    <Image
-                      src={testAva}
-                      className="m-auto w-[126px] rounded-lg"
-                      alt="test"
-                    />
-                  </div>
-                  <div className="sm:col-span-6">
-                    <div className="flex flex-col gap-1">
-                      <h1 className=" text-lg font-semibold">
-                        {project.title}
-                      </h1>
-                      <p className=" text-sm">{project.industry}</p>
-                    </div>
-                  </div>
+          {loading ? (
+            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+              <Skeleton className="h-[127px] w-[400px] rounded-md" />
+            </div>
+          ) : (
+            <>
+              {projectsData.length > 0 ? (
+                <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+                  {projectsData.map((project, projectIndex) => (
+                    <Link
+                      key={projectIndex}
+                      href={`/app/projects/${project.id}`}
+                    >
+                      <div className="grid items-center justify-center gap-4 rounded-lg border py-6 pl-6 pr-4 hover:border-black sm:grid-cols-10">
+                        <div className="sm:col-span-4 ">
+                          <Image
+                            src={testAva}
+                            className="m-auto w-[126px] rounded-lg"
+                            alt="test"
+                          />
+                        </div>
+                        <div className="sm:col-span-6">
+                          <div className="flex flex-col gap-1">
+                            <h1 className=" text-lg font-semibold">
+                              {project.title}
+                            </h1>
+                            <p className=" text-sm">{project.industry}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
-              </Link>
-            ))}
-          </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center gap-8">
+                  <Image src={NoProjects} alt="Нет проектов" />
+                  <p className=" text-2xl font-semibold">У вас нет проектов</p>
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
     </div>

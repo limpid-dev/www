@@ -46,22 +46,15 @@ export function CertificationCreate({ certificateAdd, portfolioId }: any) {
 
   const onSubmitFile = async (fileId: any) => {
     const inputFile = document.querySelector("#fileInput") as HTMLInputElement;
-
     const formData = new FormData();
-
-    for (const f of inputFile.files as any) {
+    for (const f of inputFile.files as FileList) {
       formData.set("file", f);
     }
 
-    const result = await fetch(
-      `/api/profiles/${portfolioId}/certificates/${fileId}/files`,
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-        },
-        body: formData,
-      }
+    const { data } = await api.certificateFile.store(
+      formData,
+      portfolioId,
+      fileId
     );
   };
 

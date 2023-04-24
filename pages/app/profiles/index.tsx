@@ -7,6 +7,7 @@ import api from "../../../api";
 import { Entity } from "../../../api/profiles";
 import { Navigation } from "../../../components/Navigation";
 import { Button } from "../../../components/Primitives/Button";
+import { Skeleton } from "../../../components/Primitives/Skeleton";
 import testAva from "../../../images/avatars/defaultProfile.svg";
 
 const tabs = [
@@ -20,7 +21,7 @@ function classNames(...classes: any) {
 export default function All() {
   const [search, setSearch] = useState("");
   const [profilesData, setProfilesData] = useState<Entity[]>([]);
-  const [sessionData, setSessionData] = useState({});
+  const [loading, setLoading] = useState(true);
 
   const router = useRouter();
   const { id } = router.query;
@@ -35,6 +36,7 @@ export default function All() {
       const { data } = await api.profiles.index();
       if (data) {
         setProfilesData(data);
+        setLoading(false);
       }
     }
 
@@ -129,36 +131,46 @@ export default function All() {
           </div>
 
           <div className="grid gap-6 sm:grid-cols-3">
-            {profilesData.map((profile, profileIndex) => (
-              <Link key={profileIndex} href={`/app/profiles/${profile.id}`}>
-                <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
-                  <div className="grid grid-cols-10">
-                    <div className="col-span-4">
-                      <Image
-                        src={testAva}
-                        alt="test"
-                        className=" h-32 w-32 rounded-lg"
-                      />
-                    </div>
-                    <div className="col-span-6 flex flex-col gap-1 pl-3">
-                      <p>Full name</p>
+            {loading ? (
+              <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+                <Skeleton className="h-[127px] w-[400px] rounded-md" />
+              </div>
+            ) : (
+              <>
+                {profilesData.map((profile, profileIndex) => (
+                  <Link key={profileIndex} href={`/app/profiles/${profile.id}`}>
+                    <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
+                      <div className="grid grid-cols-10">
+                        <div className="col-span-4">
+                          <Image
+                            src={testAva}
+                            alt="test"
+                            className=" h-32 w-32 rounded-lg"
+                          />
+                        </div>
+                        <div className="col-span-6 flex flex-col gap-1 pl-3">
+                          <p>Full name</p>
 
-                      <p className="text-xs text-slate-400">
-                        {profile.industry}
-                      </p>
-                      <p className="text-xs text-slate-400">{profile.title}</p>
-                      <p className="text-sm text-slate-400">
-                        {profile.location}
-                      </p>
+                          <p className="text-xs text-slate-400">
+                            {profile.industry}
+                          </p>
+                          <p className="text-xs text-slate-400">
+                            {profile.title}
+                          </p>
+                          <p className="text-sm text-slate-400">
+                            {profile.location}
+                          </p>
 
-                      <p className="line-clamp-3 w-auto text-xs">
-                        {profile.description}
-                      </p>
+                          <p className="line-clamp-3 w-auto text-xs">
+                            {profile.description}
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </Link>
-            ))}
+                  </Link>
+                ))}
+              </>
+            )}
           </div>
         </div>
       </div>
