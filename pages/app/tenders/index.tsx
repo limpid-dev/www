@@ -1,6 +1,6 @@
 import { Check, Faders, SquaresFour } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { InferGetStaticPropsType } from "next";
+import { InferGetServerSidePropsType, InferGetStaticPropsType } from "next";
 import Link from "next/link";
 import api from "../../../api";
 import { Navigation } from "../../../components/Navigation";
@@ -26,7 +26,7 @@ const calcTime = (date: string) => {
   return hours > 0 ? hours : 0;
 };
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const { data, meta } = await api.tenders.index({
     page: 1,
     perPage: 100,
@@ -41,7 +41,7 @@ export async function getStaticProps() {
   };
 }
 
-type Props = InferGetStaticPropsType<typeof getStaticProps>;
+type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 const tabs = [
   { name: "Все тендеры", href: "/app/tenders", current: true },
