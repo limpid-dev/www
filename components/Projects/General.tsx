@@ -6,7 +6,7 @@ import { Entity } from "../../api/projects";
 import testAva from "../../images/avatars/avatar-1.jpg";
 import { Button } from "../Primitives/Button";
 
-  export default function General({projectId}: any) {
+export default function General({ projectId }: any) {
   const [project, setProject] = useState<Entity>();
   console.log(projectId);
   useEffect(() => {

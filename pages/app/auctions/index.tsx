@@ -1,11 +1,9 @@
-import { CaretRight, Faders, SquaresFour, Star } from "@phosphor-icons/react";
-import Image from "next/image";
+import { CaretRight, Faders, SquaresFour } from "@phosphor-icons/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { Navigation } from "../../../components/Navigation";
 import { Button } from "../../../components/Primitives/Button";
-import testAva from "../../../images/avatars/avatar-1.jpg";
 
 const tabs = [
   { name: "Все аукционы", href: "/app/auctions/", current: true },

@@ -7,9 +7,9 @@ import api from "../../../api";
 import { Entity } from "../../../api/projects";
 import { Navigation } from "../../../components/Navigation";
 import { Button } from "../../../components/Primitives/Button";
+import { Skeleton } from "../../../components/Primitives/Skeleton";
 import testAva from "../../../images/avatars/projectDefault.svg";
 import NoProjects from "../../../images/noProjects.svg";
-import { Skeleton } from "../../../components/Primitives/Skeleton";
 
 const tabs = [
   { name: "Все проекты", href: "/app/projects/", current: false },
