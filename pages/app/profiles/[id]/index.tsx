@@ -11,8 +11,10 @@ function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 export default function One() {
-  const [isAuthor, setIsAuthor] = useState(true);
   const router = useRouter();
+  const [first, setfirst] = useState(1);
+  const [second, setsecond] = useState(1);
+
   const { id } = router.query as {
     id: string;
   };
@@ -22,12 +24,27 @@ export default function One() {
     async function fetchProfiles() {
       const { data } = await api.profiles.show(Number.parseInt(id, 10));
       if (data) {
+        console.log(data.userId)
+        setsecond(data.userId);
         setData(data);
       }
     }
     fetchProfiles();
   }, [id]);
 
+  useEffect(() => {
+    async function getSession() {
+      const { data } = await api.session.show();
+      if (data) {
+        console.log(data.id)
+        setfirst(data.id);
+      }
+    }
+    getSession();
+  }, [id]);
+
+  const isAuthor = first && second && first === second;
+  console.log(isAuthor);
   const tabs = [
     { name: "Ресурсы", href: `/app/profiles/${id}/`, current: true },
     {
@@ -65,20 +82,20 @@ export default function One() {
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
             {isAuthor ? (
               <div className="flex gap-5">
-                <Button className=" bg-slate-700 hover:bg-black">
+                {/* <Button className=" bg-slate-700 hover:bg-black">
                   Редактировать
-                </Button>
+                </Button> */}
                 <Button className="  bg-red-600">Удалить</Button>
               </div>
             ) : (
               <div className="flex gap-5">
-                <Button
+                {/* <Button
                   className=" bg-black hover:bg-slate-600"
                   variant="outline"
                   color="white"
                 >
                   Написать в чате
-                </Button>
+                </Button> */}
               </div>
             )}
           </div>

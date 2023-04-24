@@ -1,9 +1,11 @@
+import { Plus } from "@phosphor-icons/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import api from "../../../../api";
 import { Entity } from "../../../../api/profilesExperience";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
+import { ExperienceCreate } from "../../../../components/Profiles/Create/experience";
 import { General } from "../../../../components/Profiles/General";
 
 const dateFormatter = (arg: string) => {
@@ -16,6 +18,8 @@ function classNames(...classes: any) {
 
 export default function One() {
   const [isAuthor, setIsAuthor] = useState(false);
+  const [data, setData] = useState<Entity[]>([]);
+  const [experience, setExperience] = useState(true);
 
   const router = useRouter();
   const { id } = router.query;
@@ -44,7 +48,10 @@ export default function One() {
       current: true,
     },
   ];
-  const [data, setData] = useState<Entity[]>([]);
+
+  const experienceAdd = () => {
+    setExperience((current: boolean) => !current);
+  };
 
   useEffect(() => {
     async function fetchProfiles() {
@@ -97,7 +104,7 @@ export default function One() {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-10 ">
             <div className="rounded-lg border sm:col-span-3">
-              <General />
+              <General portfolioId={id} />
             </div>
 
             <div className="rounded-lg border bg-white sm:col-span-7">
@@ -106,7 +113,6 @@ export default function One() {
                   <label htmlFor="tabs" className="sr-only">
                     Select a tab
                   </label>
-                  {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
                   <select
                     id="tabs"
                     name="tabs"
@@ -150,31 +156,56 @@ export default function One() {
                   </nav>
                 </div>
               </div>
-              <div className="mb-6 grid gap-8 p-6 sm:grid-cols-10">
-                <div className="sm:col-span-2">
-                  <div className="flex flex-col gap-1.5">
-                    <p className=" text-lg font-semibold">
-                      Апрель, 2022 - по настоящее время
-                    </p>
-                    <p className="text-sm text-slate-400">11 месяцев</p>
-                  </div>
-                </div>
-                <div className="sm:col-span-8">
-                  <div>
-                    <p className=" text-lg font-semibold">ht.kz</p>
-                    <p className=" mb-3 text-sm font-normal">Astana</p>
-                    <p className=" mb-2 text-sm font-semibold">
-                      Менеджер по туризму
-                    </p>
-                    <p className="text-sm font-normal">
-                      Консультирование клиентов и продажа туристических услуг.
-                      Выполнение плана продаж. Ведение отчетности по выполненной
-                      работе. Бронирование авиабилетов/туристических
-                      пакетов/оформление виз/холодные звонки с клиентами/ведение
-                      базы туристов. Переговоры с потенциальными партнёрами
-                    </p>
-                  </div>
-                </div>
+              <div className="p-6">
+                {experience ? (
+                  <>
+                    {data.map((experiences, experienceIndex) => (
+                      <div key={experienceIndex}>
+                        <div className="grid gap-8 sm:grid-cols-10">
+                          <div className="sm:col-span-2">
+                            <div className="flex flex-col gap-1.5">
+                              <p className=" text-lg font-semibold">
+                                {experiences.startedAt} - {experiences.finishedAt}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="sm:col-span-8">
+                            <div>
+                              <p className=" text-lg font-semibold">
+                                {experiences.title}
+                              </p>
+                              <p className=" mb-3 text-sm font-normal">
+                                {experiences.organization}
+                              </p>
+                              <p className="text-sm font-normal">
+                                {experiences.description}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="relative py-6">
+                          <div
+                            className="absolute inset-0 flex items-center"
+                            aria-hidden="true"
+                          >
+                            <div className="w-full border-t border-gray-300" />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    <div className="mt-7 flex items-center justify-end text-sm text-sky-500 underline">
+                      <Plus />
+                      <button onClick={experienceAdd}>
+                        Добавить опыт работы
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <ExperienceCreate
+                    portfolioId={id}
+                    experienceAdd={experienceAdd}
+                  />
+                )}
               </div>
             </div>
           </div>

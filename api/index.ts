@@ -251,7 +251,7 @@ class Api {
     return {
       index: (portfolioId: number) =>
         this.get<ProfilesExperiences.Index["Data"]>(
-          `${this.baseUrl}/profiles/${portfolioId}/educations?page=1&perPage=20`
+          `${this.baseUrl}/profiles/${portfolioId}/experiences?page=1&perPage=20`
         ),
       store: (
         payload: ProfilesExperiences.Store["Payload"],
@@ -260,7 +260,7 @@ class Api {
         this.post<
           ProfilesExperiences.Store["Data"],
           ProfilesExperiences.Store["Payload"]
-        >(`${this.baseUrl}/profiles/${portfolioId}/educations`, payload),
+        >(`${this.baseUrl}/profiles/${portfolioId}/experiences`, payload),
     };
   }
 

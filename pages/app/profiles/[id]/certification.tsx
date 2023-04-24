@@ -8,9 +8,9 @@ import { Entity as CertificateEntity } from "../../../../api/profilesCertifiatio
 import { Entity as SkillsEntity } from "../../../../api/profilesSkills";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
+import { CertificationCreate } from "../../../../components/Profiles/Create/certification";
+import SkillsCreate from "../../../../components/Profiles/Create/skills";
 import { General } from "../../../../components/Profiles/General";
-import { CertificationCreate } from "../../../../components/Projects/Create/certification";
-import SkillsCreate from "../../../../components/Projects/Create/skills";
 import Badge from "../../../../images/badge.svg";
 
 const dateFormatter = (arg: string) => {

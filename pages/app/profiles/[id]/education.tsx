@@ -6,8 +6,8 @@ import api from "../../../../api";
 import { Entity } from "../../../../api/profilesEducation";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
+import { EducationCreate } from "../../../../components/Profiles/Create/education";
 import { General } from "../../../../components/Profiles/General";
-import { EducationCreate } from "../../../../components/Projects/Create/education";
 
 const dateFormatter = (arg: string) => {
   return new Date(arg).getFullYear().toString();
