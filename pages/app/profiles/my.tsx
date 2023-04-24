@@ -1,10 +1,13 @@
+import "@uppy/core/dist/style.min.css";
+import "@uppy/drag-drop/dist/style.min.css";
 import { Briefcase, Plus } from "@phosphor-icons/react";
+import Uppy from "@uppy/core";
+import { DragDrop } from "@uppy/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 import api from "../../../api";
-import { BadRequest, Validation } from "../../../api/errors";
 import { Entity } from "../../../api/profiles";
 import { Navigation } from "../../../components/Navigation";
 import { Button } from "../../../components/Primitives/Button";
@@ -46,7 +49,13 @@ export default function All() {
     async function fetchProfiles() {
       const data1 = await api.session.show();
       const userId = data1.data?.id;
-      const { data } = await api.profiles.index(userId || 0);
+      const { data } = await api.profiles.index({
+        page: 1,
+        perPage: 100,
+        filters: {
+          userId: userId || 0,
+        },
+      });
 
       if (data) {
         setProfilesData(data);

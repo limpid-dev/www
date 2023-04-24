@@ -14,34 +14,45 @@ import {
   CardTitle,
 } from "../../../components/Primitives/Card";
 
-export async function getStaticProps() {
-  const { data, meta, error } = await api.tenders.index({
-    page: 1,
-    perPage: 9,
-  });
+const calcTime = (date: string) => {
+  const now = new Date();
 
-  console.log(data, meta, error);
+  const finish = new Date(date);
+
+  const diff = finish.getTime() - now.getTime();
+
+  const hours = Math.floor(diff / 1000 / 60 / 60);
+
+  return hours > 0 ? hours : 0;
+};
+
+export async function getStaticProps() {
+  const { data, meta } = await api.tenders.index({
+    page: 1,
+    perPage: 100,
+  });
 
   return {
     props: {
       data: data!,
       meta: meta!,
     },
+    revalidate: 10,
   };
 }
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>;
 
 const tabs = [
-  { name: "Все проекты", href: "/app/projects/", current: true },
-  { name: "Мои проекты", href: "/app/projects/my", current: false },
+  { name: "Все тендеры", href: "/app/tenders", current: true },
+  { name: "Мои тендеры", href: "/app/tenders/my", current: false },
 ];
 
 export default function Tenders({ data, meta }: Props) {
   return (
     <div className="min-h-screen bg-slate-50">
       <Navigation />
-      <div className="mx-auto max-w-screen-xl px-5 pt-8">
+      <div className="mx-auto max-w-screen-xl px-5 py-8">
         <p className=" text-sm text-slate-300">Тендеры</p>
         <div className="my-5 flex flex-col items-end  justify-end gap-4 md:mb-12 md:flex-row md:items-center  md:justify-between">
           <div>
@@ -119,51 +130,56 @@ export default function Tenders({ data, meta }: Props) {
             </div>
           </div>
         </div>
-        <ul className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          <li>
-            <Card>
-              <CardHeader>
-                <CardTitle>#120 Менеджер по туризму</CardTitle>
-                <CardDescription>ТОО Поехали с нами</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between gap-2 text-sm font-medium">
-                    <span>Статус:</span>
-                    <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
-                      В процессе
-                    </span>
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {data.map((tender) => (
+            <Link key={tender.id} href={`/app/tenders/${tender.id}`}>
+              <Card>
+                <CardHeader>
+                  <CardTitle>
+                    #{tender.id} {tender.title}
+                  </CardTitle>
+                  <CardDescription>{tender.description}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between gap-2 text-sm font-medium">
+                      <span>Статус:</span>
+                      <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
+                        {tender.finishedAt &&
+                          new Date(tender.finishedAt).getTime() > Date.now() &&
+                          "Идет"}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between gap-2 text-sm font-medium">
+                      <span>Осталось часов:</span>
+                      <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
+                        {tender.finishedAt && calcTime(tender.finishedAt)}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between gap-2 text-sm font-medium">
+                      <span>Стартовая сумма:</span>
+                      <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
+                        {tender.startingPrice
+                          ? new Intl.NumberFormat("kz-KZ", {
+                              style: "currency",
+                              currency: "KZT",
+                            }).format(tender.startingPrice)
+                          : "---"}{" "}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex items-center justify-between gap-2 text-sm font-medium">
-                    <span>Осталось:</span>
-                    <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
-                      9 часов
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between gap-2 text-sm font-medium">
-                    <span>Участников:</span>
-                    <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
-                      3
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between gap-2 text-sm font-medium">
-                    <span>Стартовая сумма:</span>
-                    <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
-                      440 000 KZT
-                    </span>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Link href="#" className="w-full">
-                  <Button variant="outline" className="w-full">
-                    Принять участие
-                  </Button>
-                </Link>
-              </CardFooter>
-            </Card>
-          </li>
-        </ul>
+                </CardContent>
+                <CardFooter>
+                  <Link href="#" className="w-full">
+                    <Button variant="outline" className="w-full">
+                      Принять участие
+                    </Button>
+                  </Link>
+                </CardFooter>
+              </Card>
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );

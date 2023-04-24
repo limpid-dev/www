@@ -41,10 +41,16 @@ export function Navigation() {
     async function fetchProfiles() {
       const data1 = await api.session.show();
       const userId = data1.data?.id;
-      const { data } = await api.profiles.index(userId || 0);
+      const { data } = await api.profiles.index({
+        page: 1,
+        perPage: 100,
+        filters: {
+          userId: userId || 0,
+        },
+      });
 
       if (data) {
-        if (data.id) {
+        if (data[0].id) {
           localStorage.setItem("portfolioId", JSON.stringify(data[0].id));
         }
         setProfilesData(data);

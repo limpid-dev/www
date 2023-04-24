@@ -55,6 +55,7 @@ export default function Education() {
 
   useEffect(() => {
     async function fetchProfiles() {
+      if (Number.isNaN(parsedId)) return;
       const { data } = await api.educations.index(parsedId);
       if (data) {
         const updatedItems = data.map((item) => {

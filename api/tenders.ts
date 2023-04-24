@@ -4,11 +4,11 @@ export interface Entity {
   title: string;
   description: string;
   duration: number;
-  startingPrice: number | null;
+  startingPrice?: number;
   createdAt: string;
   updatedAt: string;
-  verifiedAt: string | null;
-  finishedAt: string | null;
+  verifiedAt?: string;
+  finishedAt?: string;
 }
 
 export interface Index {

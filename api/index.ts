@@ -11,6 +11,7 @@ import * as ProfilesSkills from "./profilesSkills";
 import * as Projects from "./projects";
 import * as Recovery from "./recovery";
 import * as Session from "./session";
+import * as TenderFiles from "./tender-file";
 import * as Tenders from "./tenders";
 import * as Users from "./users";
 import * as Verification from "./verification";
@@ -97,7 +98,7 @@ class Api {
     }
   }
 
-  async get<D>(input: string) {
+  async get<D>(input: string, init?: Helpers.FetchRequestInit) {
     return this.handle<D>(
       fetch(input, {
         method: "GET",
@@ -105,11 +106,16 @@ class Api {
           Accept: this.json,
         },
         credentials: "include",
+        ...init,
       })
     );
   }
 
-  async post<D, P>(input: string, payload?: P) {
+  async post<D, P>(
+    input: string,
+    payload?: P,
+    init?: Helpers.FetchRequestInit
+  ) {
     await this.csrf();
     return this.handle<D>(
       fetch(input, {
@@ -121,11 +127,16 @@ class Api {
         },
         body: JSON.stringify(payload),
         credentials: "include",
+        ...init,
       })
     );
   }
 
-  async patch<D, P>(input: string, payload: P) {
+  async patch<D, P>(
+    input: string,
+    payload: P,
+    init?: Helpers.FetchRequestInit
+  ) {
     await this.csrf();
     return this.handle<D>(
       fetch(input, {
@@ -137,11 +148,12 @@ class Api {
         },
         body: JSON.stringify(payload),
         credentials: "include",
+        ...init,
       })
     );
   }
 
-  async delete(input: string) {
+  async delete(input: string, init?: Helpers.FetchRequestInit) {
     await this.csrf();
     return this.handle(
       fetch(input, {
@@ -150,6 +162,7 @@ class Api {
           "X-XSRF-TOKEN": this.xsrf,
         },
         credentials: "include",
+        ...init,
       })
     );
   }
@@ -196,24 +209,32 @@ class Api {
 
   get session() {
     return {
-      show: () => this.get<Session.Show["Data"]>(`${this.baseUrl}/session`),
-      store: <M extends "api" | "web">(payload: Session.Store<M>["Payload"]) =>
+      show: (init?: Helpers.FetchRequestInit) =>
+        this.get<Session.Show["Data"]>(`${this.baseUrl}/session`, init),
+      store: <M extends "api" | "web">(
+        payload: Session.Store<M>["Payload"],
+        init?: Helpers.FetchRequestInit
+      ) =>
         this.post<Session.Store<M>["Data"], Session.Store<M>["Payload"]>(
           `${this.baseUrl}/session`,
-          payload
+          payload,
+          init
         ),
-      destroy: () => this.delete(`${this.baseUrl}/session`),
+      destroy: (init?: Helpers.FetchRequestInit) =>
+        this.delete(`${this.baseUrl}/session`, init),
     };
   }
 
   get profiles() {
     return {
-      index: (id?: number) =>
-        this.get<Profiles.Index["Data"]>(
-          `${this.baseUrl}/profiles?page=1&perPage=100${
-            id ? `&filter[userId]=${id}` : ""
-          }`
-        ),
+      index: (
+        qp: QueryParams<Profiles.Entity>,
+        init?: Helpers.FetchRequestInit
+      ) => {
+        const url = Helpers.buildQueryParamsUrl(`${this.baseUrl}/profiles`, qp);
+
+        return this.get<Profiles.Index["Data"]>(url.toString(), init);
+      },
       show: (id: number) =>
         this.get<Profiles.Show["Data"]>(`${this.baseUrl}/profiles/${id}`),
       store: (payload: Profiles.Store["Payload"]) =>
@@ -348,47 +369,65 @@ class Api {
 
   get tenders() {
     return {
-      index: ({
-        page,
-        perPage,
-        filters,
-        search,
-        sort,
-      }: QueryParams<Tenders.Entity>) => {
-        const url = new URL(`${this.baseUrl}/tenders`);
+      index: (
+        qp: QueryParams<Tenders.Entity>,
+        init?: Helpers.FetchRequestInit
+      ) => {
+        const url = Helpers.buildQueryParamsUrl(`${this.baseUrl}/tenders`, qp);
 
-        url.searchParams.append("page", page.toString());
-        url.searchParams.append("perPage", perPage.toString());
-
-        if (filters) {
-          Object.entries(filters).forEach(([key, value]) => {
-            url.searchParams.append(`filter[${key}]`, value.toString());
-          });
-        }
-
-        if (sort) {
-          Object.entries(sort).forEach(([key, value]) => {
-            url.searchParams.append(
-              `sort[]`,
-              value === "asc" ? key : `-${key}`
-            );
-          });
-        }
-
-        if (search) {
-          url.searchParams.append("search", search);
-        }
-
-        return this.get<Tenders.Index["Data"]>(url.toString());
+        return this.get<Tenders.Index["Data"]>(url.toString(), init);
       },
-      show: (id: number) =>
-        this.get<Tenders.Show["Data"]>(`${this.baseUrl}/tenders/${id}`),
-      store: (payload: Tenders.Store["Payload"]) =>
+      show: (id: number, init?: Helpers.FetchRequestInit) =>
+        this.get<Tenders.Show["Data"]>(`${this.baseUrl}/tenders/${id}`, init),
+      store: (
+        payload: Tenders.Store["Payload"],
+        init?: Helpers.FetchRequestInit
+      ) =>
         this.post<Tenders.Store["Data"], Tenders.Store["Payload"]>(
           `${this.baseUrl}/tenders`,
-          payload
+          payload,
+          init
         ),
-      destroy: (id: number) => this.delete(`${this.baseUrl}/tenders/${id}`),
+      destroy: (id: number, init?: Helpers.FetchRequestInit) =>
+        this.delete(`${this.baseUrl}/tenders/${id}`, init),
+
+      files: (tenderId: number) => {
+        return {
+          index: (
+            qp: Pick<QueryParams<TenderFiles.Entity>, "page" | "perPage">,
+            init?: Helpers.FetchRequestInit
+          ) => {
+            const url = Helpers.buildQueryParamsUrl(
+              `${this.baseUrl}/tenders/${tenderId}/files`,
+              qp
+            );
+
+            return this.get<TenderFiles.Index["Data"]>(url.toString(), init);
+          },
+          store: (
+            payload: TenderFiles.Store["Payload"],
+            init?: Helpers.FetchRequestInit
+          ) =>
+            this.post<TenderFiles.Store["Data"], TenderFiles.Store["Payload"]>(
+              `${this.baseUrl}/tenders/${tenderId}/files`,
+              payload,
+              {
+                headers: {
+                  ContentType: "multipart/form-data",
+                  Accept: "application/json",
+                },
+                body: payload,
+                credentials: "include",
+                ...init,
+              }
+            ),
+          delete: (id: number, init?: Helpers.FetchRequestInit) =>
+            this.delete(
+              `${this.baseUrl}/tenders/${tenderId}/files/${id}`,
+              init
+            ),
+        };
+      },
     };
   }
 }

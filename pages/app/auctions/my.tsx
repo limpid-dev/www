@@ -1,9 +1,7 @@
-import { Briefcase, CaretRight, Plus } from "@phosphor-icons/react";
-import Link from "next/link";
+import { CaretRight, Plus } from "@phosphor-icons/react";
 import { useRouter } from "next/router";
-import { FormEvent, useState } from "react";
+import { FormEvent } from "react";
 import api from "../../../api";
-import { BadRequest, Validation } from "../../../api/errors";
 import { Navigation } from "../../../components/Navigation";
 import { Button } from "../../../components/Primitives/Button";
 import {
@@ -34,18 +32,8 @@ function classNames(...classes: any) {
 }
 
 export default function All() {
-  const [search, setSearch] = useState("");
-
   const router = useRouter();
 
-  const [errors, setErrors] = useState({
-    title: false,
-    description: false,
-    location: false,
-    industry: false,
-    ownedIntellectualResources: false,
-    ownedMaterialResources: false,
-  });
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
@@ -63,7 +51,7 @@ export default function All() {
       ownedMaterialResources: string;
     };
 
-    const { error } = await api.profiles.store({
+    await api.profiles.store({
       title: values.title,
       location: values.location,
       description: values.description,

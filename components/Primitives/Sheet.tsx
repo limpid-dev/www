@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { X } from "@phosphor-icons/react";
 import * as SheetPrimitive from "@radix-ui/react-dialog";

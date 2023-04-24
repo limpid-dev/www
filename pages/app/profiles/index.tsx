@@ -33,7 +33,10 @@ export default function All() {
 
   useEffect(() => {
     async function fetchProfiles() {
-      const { data } = await api.profiles.index();
+      const { data } = await api.profiles.index({
+        page: 1,
+        perPage: 100,
+      });
       if (data) {
         setProfilesData(data);
         setLoading(false);
