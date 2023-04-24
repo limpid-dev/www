@@ -301,7 +301,7 @@ class Api {
   get skills() {
     return {
       index: (portfolioId: number) =>
-        this.get<ProfileSertifications.Index["Data"]>(
+        this.get<ProfilesSkills.Index["Data"]>(
           `${this.baseUrl}/profiles/${portfolioId}/skills?page=1&perPage=20`
         ),
       store: (payload: ProfilesSkills.Store["Payload"], portfolioId: number) =>

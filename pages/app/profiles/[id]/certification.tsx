@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import api from "../../../../api";
-import { Entity } from "../../../../api/profilesCertifiations";
+import { Entity as CertificateEntity } from "../../../../api/profilesCertifiations";
+import { Entity as SkillsEntity } from "../../../../api/profilesSkills";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
 import { General } from "../../../../components/Profiles/General";
@@ -26,7 +27,10 @@ export default function One() {
   const [certificate, setCertificate] = useState(true);
   const [skill, setSkill] = useState(true);
   const parsedId = Number.parseInt(id as string, 10) as number;
-  const [data, setData] = useState<Entity[]>([]);
+  const [certificateData, setCertificateData] = useState<CertificateEntity[]>(
+    []
+  );
+  const [skillsData, setSkillsData] = useState<SkillsEntity[]>([]);
 
   const skillAdd = () => {
     setSkill((current: boolean) => !current);
@@ -73,7 +77,7 @@ export default function One() {
             finishedAt: dateFormatter(item.expiredAt),
           };
         });
-        setData(updatedItems);
+        setCertificateData(updatedItems);
       }
     }
     fetchCertifications();
@@ -83,14 +87,7 @@ export default function One() {
     async function fetchSkills() {
       const { data } = await api.skills.index(parsedId);
       if (data) {
-        const updatedItems = data.map((item) => {
-          return {
-            ...item,
-            startedAt: dateFormatter(item.issuedAt),
-            finishedAt: dateFormatter(item.expiredAt),
-          };
-        });
-        setData(updatedItems);
+        setSkillsData(data);
       }
     }
     fetchSkills();
@@ -188,7 +185,7 @@ export default function One() {
                 </p>
                 {certificate ? (
                   <>
-                    {data.map((certificate, certificateIndex) => (
+                    {certificateData.map((certificate, certificateIndex) => (
                       <div key={certificateIndex} className="mb-7">
                         <div className="w-full rounded-xl bg-slate-100 pb-6 pt-4">
                           <div className="flex flex-col items-center justify-center p-3 sm:p-0">
@@ -232,11 +229,16 @@ export default function One() {
                 </p>
                 {skill ? (
                   <>
-                    <div className="mt-8 flex">
-                      <div className="flex items-center gap-3 rounded-xl bg-slate-100 px-6 py-4">
-                        <Power />
-                        <p> Работа с Битрикс24</p>
-                      </div>
+                    <div className="mt-8 flex flex-wrap gap-7">
+                      {skillsData.map((skill, skillIndex) => (
+                        <div
+                          key={skillIndex}
+                          className="flex items-center gap-3 rounded-md bg-slate-100 px-4 py-3 text-sm"
+                        >
+                          <Power />
+                          <p>{skill.name}</p>
+                        </div>
+                      ))}
                     </div>
                     <div className="mt-7 flex items-center justify-end text-sm text-sky-500 underline">
                       <Plus />
