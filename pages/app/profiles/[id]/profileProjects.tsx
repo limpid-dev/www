@@ -99,7 +99,7 @@ export default function One() {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-10 ">
             <div className="rounded-lg border sm:col-span-3">
-              <General />
+              <General portfolioId={id} />
             </div>
 
             <div className="rounded-lg border bg-white sm:col-span-7">
