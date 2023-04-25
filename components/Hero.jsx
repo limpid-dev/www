@@ -29,7 +29,7 @@ export function Hero() {
             Начать бесплатно
           </Button>
         </Link>
-        <a target="_blank" href="https://www.youtube.com/watch?v=u-efsaxUkYI">
+        <a target="_blank" href="https://youtu.be/fPko2SHDnv8">
           <Button variant="outline">
             <svg
               aria-hidden="true"

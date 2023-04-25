@@ -18,9 +18,7 @@ export function General({ portfolioId }: any) {
       if (data) {
         setData(data);
       }
-      const { data: user } = await api.users.show(
-        Number.parseInt(localStorage.getItem("portfolioId") as string, 10)
-      );
+      const { data: user } = await api.users.show(portfolioId);
       if (user) {
         setUserData(user);
       }
