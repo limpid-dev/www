@@ -50,7 +50,7 @@ export function Navigation() {
       });
 
       if (data) {
-        if (data[0].id) {
+        if (data.at(0)?.id) {
           localStorage.setItem("portfolioId", JSON.stringify(data[0].id));
         }
         setProfilesData(data);

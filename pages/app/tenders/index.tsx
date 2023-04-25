@@ -2,6 +2,7 @@ import { Check, Faders, SquaresFour } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { InferGetServerSidePropsType, InferGetStaticPropsType } from "next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import api from "../../../api";
 import { Navigation } from "../../../components/Navigation";
 import { Button } from "../../../components/Primitives/Button";
@@ -37,7 +38,6 @@ export async function getServerSideProps() {
       data: data!,
       meta: meta!,
     },
-    revalidate: 10,
   };
 }
 
@@ -49,6 +49,7 @@ const tabs = [
 ];
 
 export default function Tenders({ data, meta }: Props) {
+  const router = useRouter();
   return (
     <div className="min-h-screen bg-slate-50">
       <Navigation />
@@ -132,52 +133,56 @@ export default function Tenders({ data, meta }: Props) {
         </div>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {data.map((tender) => (
-            <Link key={tender.id} href={`/app/tenders/${tender.id}`}>
-              <Card>
-                <CardHeader>
-                  <CardTitle>
-                    #{tender.id} {tender.title}
-                  </CardTitle>
-                  <CardDescription>{tender.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between gap-2 text-sm font-medium">
-                      <span>Статус:</span>
-                      <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
-                        {tender.finishedAt &&
-                          new Date(tender.finishedAt).getTime() > Date.now() &&
-                          "Идет"}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between gap-2 text-sm font-medium">
-                      <span>Осталось часов:</span>
-                      <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
-                        {tender.finishedAt && calcTime(tender.finishedAt)}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between gap-2 text-sm font-medium">
-                      <span>Стартовая сумма:</span>
-                      <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
-                        {tender.startingPrice
-                          ? new Intl.NumberFormat("kz-KZ", {
-                              style: "currency",
-                              currency: "KZT",
-                            }).format(tender.startingPrice)
-                          : "---"}{" "}
-                      </span>
-                    </div>
+            <Card
+              key={tender.id}
+              onClick={() => {
+                router.push(`/app/tenders/${tender.id}`);
+              }}
+            >
+              <CardHeader>
+                <CardTitle>
+                  #{tender.id} {tender.title}
+                </CardTitle>
+                <CardDescription>{tender.description}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between gap-2 text-sm font-medium">
+                    <span>Статус:</span>
+                    <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
+                      {tender.finishedAt &&
+                        new Date(tender.finishedAt).getTime() > Date.now() &&
+                        "Идет"}
+                      {!tender.finishedAt && "На модерации"}
+                    </span>
                   </div>
-                </CardContent>
-                <CardFooter>
-                  <Link href="#" className="w-full">
-                    <Button variant="outline" className="w-full">
-                      Принять участие
-                    </Button>
-                  </Link>
-                </CardFooter>
-              </Card>
-            </Link>
+                  <div className="flex items-center justify-between gap-2 text-sm font-medium">
+                    <span>Осталось часов:</span>
+                    <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
+                      {tender.finishedAt ? calcTime(tender.finishedAt) : "---"}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between gap-2 text-sm font-medium">
+                    <span>Стартовая сумма:</span>
+                    <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
+                      {tender.startingPrice
+                        ? new Intl.NumberFormat("kz-KZ", {
+                            style: "currency",
+                            currency: "KZT",
+                          }).format(tender.startingPrice)
+                        : "---"}{" "}
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Link href="#" className="w-full">
+                  <Button variant="outline" className="w-full">
+                    Принять участие
+                  </Button>
+                </Link>
+              </CardFooter>
+            </Card>
           ))}
         </div>
       </div>
