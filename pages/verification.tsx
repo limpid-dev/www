@@ -65,6 +65,14 @@ export default function Verification() {
           </Field>
           <div className="space-y-4">
             <Button
+              type="submit"
+              variant="solid"
+              color="lime"
+              className="w-full"
+            >
+              Подтвердить
+            </Button>
+            <Button
               onClick={sendVerificationEmail}
               variant="outline"
               color="zinc"
@@ -72,14 +80,6 @@ export default function Verification() {
               className="w-full"
             >
               Отправить заново
-            </Button>
-            <Button
-              type="submit"
-              variant="solid"
-              color="lime"
-              className="w-full"
-            >
-              Подтвердить
             </Button>
           </div>
         </Form>

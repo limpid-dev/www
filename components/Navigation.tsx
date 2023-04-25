@@ -33,14 +33,13 @@ const userNavigation = [
 
 export function Navigation() {
   const router = useRouter();
-  const [sessionData, setSessionData] = useState({});
   const [profilesData, setProfilesData] = useState<Entity[]>([]);
   const [profession, setProfession] = useState("");
 
   useEffect(() => {
     async function fetchProfiles() {
-      const data1 = await api.session.show();
-      const userId = data1.data?.id;
+      const sessionData = await api.session.show();
+      const userId = sessionData.data?.id;
       const { data } = await api.profiles.index({
         page: 1,
         perPage: 100,
@@ -54,7 +53,6 @@ export function Navigation() {
           localStorage.setItem("portfolioId", JSON.stringify(data[0].id));
         }
         setProfilesData(data);
-        setSessionData(data1);
       }
     }
     fetchProfiles();
@@ -151,7 +149,7 @@ export function Navigation() {
                             <button
                               className={clsx(
                                 active ? "bg-zinc-100" : "",
-                                "block px-4 py-2 text-sm text-zinc-700"
+                                "block w-full px-4 py-2 text-sm text-zinc-700"
                               )}
                               onClick={() => {
                                 localStorage.setItem(
