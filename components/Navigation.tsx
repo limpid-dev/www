@@ -65,6 +65,7 @@ export function Navigation() {
           Number.parseInt(localStorage.getItem("portfolioId"), 10)
         );
         setProfession(myObject.title);
+        console.log(profilesData)
         setProfilesData(data);
       }
     }

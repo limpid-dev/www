@@ -86,7 +86,7 @@ export default function All() {
               </div>
             </div>
             <Link href="/app/projects/create">
-              <Button>
+              <Button className="bg-zinc-900 p-2 text-sm text-white">
                 <Plus className="h-6 w-6" />
                 Создать проект
               </Button>

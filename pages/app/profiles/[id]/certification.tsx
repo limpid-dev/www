@@ -202,7 +202,7 @@ export default function One() {
               </div>
               <div className="p-6">
                 <p className="mb-6 text-xl font-semibold text-slate-400">
-                  Сертефикаты
+                  Сертификаты
                 </p>
                 {certificate ? (
                   <>
