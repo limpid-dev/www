@@ -12,7 +12,7 @@ import { Container } from "./Container";
 const features = [
   {
     title: "Профили",
-    description: "Создавайте свой профиль и будьте частью бизнес-комьюнити",
+    description: "Создавайте свой профиль и будьте частью бизнес-сообщества",
     image: screenshotPayroll,
   },
   {
@@ -22,7 +22,7 @@ const features = [
   },
   {
     title: "Участвуйте в аукционах!",
-    description: "Аукционы неотямлемая часть любого бизнеса",
+    description: "Аукционы неотъемлемая часть любого бизнеса",
     image: screenshotVatReturns,
   },
   {
