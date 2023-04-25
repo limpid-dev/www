@@ -136,7 +136,7 @@ export default function TendersMy({ data }: Props) {
 
       const t = await Promise.allSettled(files);
 
-      router.push(`/app/tenders/${data.id}/edit`);
+      router.push(`/app/tenders/${data.id}`);
     }
   };
 
@@ -262,53 +262,52 @@ export default function TendersMy({ data }: Props) {
           </div>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {data.map((tender) => (
-              <Link key={tender.id} href={`/app/tenders/${tender.id}`}>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>
-                      #{tender.id} {tender.title}
-                    </CardTitle>
-                    <CardDescription>{tender.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between gap-2 text-sm font-medium">
-                        <span>Статус:</span>
-                        <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
-                          {tender.finishedAt &&
-                            new Date(tender.finishedAt).getTime() >
-                              Date.now() &&
-                            "Идет"}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between gap-2 text-sm font-medium">
-                        <span>Осталось часов:</span>
-                        <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
-                          {tender.finishedAt && calcTime(tender.finishedAt)}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between gap-2 text-sm font-medium">
-                        <span>Стартовая сумма:</span>
-                        <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
-                          {tender.startingPrice
-                            ? new Intl.NumberFormat("kz-KZ", {
-                                style: "currency",
-                                currency: "KZT",
-                              }).format(tender.startingPrice)
-                            : "---"}{" "}
-                        </span>
-                      </div>
+              <Card
+                key={tender.id}
+                onClick={() => {
+                  router.push(`/app/tenders/${tender.id}`);
+                }}
+                className="cursor-pointer"
+              >
+                <CardHeader>
+                  <CardTitle>
+                    #{tender.id} {tender.title}
+                  </CardTitle>
+                  <CardDescription>{tender.description}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between gap-2 text-sm font-medium">
+                      <span>Статус:</span>
+                      <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
+                        {tender.finishedAt &&
+                          new Date(tender.finishedAt).getTime() > Date.now() &&
+                          "Идет"}
+                        {!tender.finishedAt && "На модерации"}
+                      </span>
                     </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Link href="#" className="w-full">
-                      <Button variant="outline" className="w-full">
-                        Принять участие
-                      </Button>
-                    </Link>
-                  </CardFooter>
-                </Card>
-              </Link>
+                    <div className="flex items-center justify-between gap-2 text-sm font-medium">
+                      <span>Осталось часов:</span>
+                      <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
+                        {tender.finishedAt
+                          ? calcTime(tender.finishedAt)
+                          : "---"}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between gap-2 text-sm font-medium">
+                      <span>Стартовая сумма:</span>
+                      <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
+                        {tender.startingPrice
+                          ? new Intl.NumberFormat("kz-KZ", {
+                              style: "currency",
+                              currency: "KZT",
+                            }).format(tender.startingPrice)
+                          : "---"}{" "}
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>

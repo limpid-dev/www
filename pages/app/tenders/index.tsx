@@ -138,6 +138,7 @@ export default function Tenders({ data, meta }: Props) {
               onClick={() => {
                 router.push(`/app/tenders/${tender.id}`);
               }}
+              className="cursor-pointer"
             >
               <CardHeader>
                 <CardTitle>
@@ -175,13 +176,6 @@ export default function Tenders({ data, meta }: Props) {
                   </div>
                 </div>
               </CardContent>
-              <CardFooter>
-                <Link href="#" className="w-full">
-                  <Button variant="outline" className="w-full">
-                    Принять участие
-                  </Button>
-                </Link>
-              </CardFooter>
             </Card>
           ))}
         </div>
