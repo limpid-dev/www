@@ -6,6 +6,18 @@ import api from "../../../../api";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
 
+const calcTime = (date: string) => {
+  const now = new Date();
+
+  const finish = new Date(date);
+
+  const diff = finish.getTime() - now.getTime();
+
+  const hours = Math.floor(diff / 1000 / 60 / 60);
+
+  return hours > 0 ? hours : 0;
+};
+
 export const getServerSideProps = async (
   context: GetStaticPropsContext<{
     id: string;
@@ -60,8 +72,20 @@ export default function Tender({ data }: Props) {
               {data.user.firstName} {data.user.lastName}
             </p>
           </div>
-          <div className="grid grid-cols-4 gap-2">
-            <div className="rounded-lg bg-slate-100 px-3 py-2">
+          <div className="mt-8 flex gap-4">
+            <div className="flex-1 rounded-lg bg-slate-100 px-3 pb-2 pt-8">
+              <span className="text-lg font-medium text-black">
+                {data.finishedAt ? "На модерации" : "В процессе"}
+              </span>
+              <p className="text-sm text-slate-900">Статус</p>
+            </div>
+            <div className="flex-1 rounded-lg bg-slate-100 px-3 pb-2 pt-8">
+              <span className="text-lg font-medium text-black">
+                {data.finishedAt ? `${calcTime(data.finishedAt)} часов` : "---"}
+              </span>
+              <p className="text-sm text-slate-900">Осталось</p>
+            </div>
+            <div className="flex-1 rounded-lg bg-slate-100 px-3 pb-2 pt-8">
               <span className="text-lg font-medium text-black">
                 {data.startingPrice
                   ? new Intl.NumberFormat("kz-KZ", {
@@ -70,7 +94,7 @@ export default function Tender({ data }: Props) {
                     }).format(data.startingPrice)
                   : "---"}{" "}
               </span>
-              <p className="text-sm text-slate-900">Стартовая сумма:</p>
+              <p className="text-sm text-slate-900">Стартовая сумма</p>
             </div>
           </div>
           <hr className="mt-8 border-slate-200" />
@@ -92,7 +116,13 @@ export default function Tender({ data }: Props) {
           </div>
           <div className="pt-4" />
           <div className="w-full border-t border-slate-200 pt-4">
-            <Button className="w-full">Принять участие</Button>
+            <Button
+              variant="outline"
+              className="w-full disabled:cursor-not-allowed disabled:opacity-60"
+              disabled
+            >
+              Принять участие
+            </Button>
           </div>
         </div>
       </main>
