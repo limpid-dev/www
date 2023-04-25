@@ -38,8 +38,8 @@ export function Navigation() {
 
   useEffect(() => {
     async function fetchProfiles() {
-      const data1 = await api.session.show();
-      const userId = data1.data?.id;
+      const sessionData = await api.session.show();
+      const userId = sessionData.data?.id;
       const { data } = await api.profiles.index({
         page: 1,
         perPage: 100,
@@ -49,7 +49,7 @@ export function Navigation() {
       });
 
       if (data) {
-        if (data[0]?.id) {
+        if (data.at(0)?.id) {
           localStorage.setItem("portfolioId", JSON.stringify(data[0].id));
         }
         setProfilesData(data);
@@ -149,7 +149,7 @@ export function Navigation() {
                             <button
                               className={clsx(
                                 active ? "bg-zinc-100" : "",
-                                "block px-4 py-2 text-sm text-zinc-700"
+                                "block w-full px-4 py-2 text-sm text-zinc-700"
                               )}
                               onClick={() => {
                                 localStorage.setItem(

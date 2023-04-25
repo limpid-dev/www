@@ -111,11 +111,19 @@ export default function TendersMy({ data }: Props) {
       startingPrice?: number;
     };
 
+    const profileId = localStorage.getItem("portfolioId");
+
+    if (!profileId) {
+      // eslint-disable-next-line no-alert
+      alert("Необходимо создать профиль");
+      return;
+    }
+
     const { data } = await api.tenders.store({
       title: values.title,
       description: values.description,
       duration: values.duration,
-      profileId: 1,
+      profileId: Number.parseInt(profileId, 10),
       startingPrice: values.startingPrice,
     });
 
