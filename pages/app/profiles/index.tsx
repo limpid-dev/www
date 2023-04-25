@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import api from "../../../api";
 import { Entity } from "../../../api/profiles";
+import * as Users from "../../../api/users";
 import { Navigation } from "../../../components/Navigation";
 import { Button } from "../../../components/Primitives/Button";
 import { Skeleton } from "../../../components/Primitives/Skeleton";
@@ -20,7 +21,9 @@ function classNames(...classes: any) {
 }
 export default function All() {
   const [search, setSearch] = useState("");
-  const [profilesData, setProfilesData] = useState<Entity[]>([]);
+  const [profilesData, setProfilesData] = useState<
+    (Entity & { user: Users.Show["Data"] })[]
+  >([]);
   const [loading, setLoading] = useState(true);
 
   const router = useRouter();
@@ -41,7 +44,7 @@ export default function All() {
       const withUsers = data!.map(async (d) => {
         const user = await api.users.show(d.userId);
 
-        return { ...d, ...user.data! };
+        return { ...d, user: user.data! };
       });
 
       const w = await Promise.all(withUsers);
@@ -149,8 +152,8 @@ export default function All() {
               </div>
             ) : (
               <>
-                {profilesData.map((profile, profileIndex) => (
-                  <Link key={profileIndex} href={`/app/profiles/${profile.id}`}>
+                {profilesData.map((profile) => (
+                  <Link key={profile.id} href={`/app/profiles/${profile.id}`}>
                     <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
                       <div className="grid grid-cols-10">
                         <div className="col-span-4">
@@ -162,7 +165,7 @@ export default function All() {
                         </div>
                         <div className="col-span-6 flex flex-col gap-1 pl-3">
                           <p>
-                            {profile.firstName} {profile.lastName}
+                            {profile.user.firstName} {profile.user.lastName}
                           </p>
 
                           <p className="text-xs text-slate-400">
