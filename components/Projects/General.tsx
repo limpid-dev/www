@@ -9,17 +9,15 @@ import { Button } from "../Primitives/Button";
 export default function General({ projectId }: any) {
   const [project, setProject] = useState<Entity>();
   const [userData, setUserData] = useState({});
-  const [profileId, setProfileId] = useState({});
+
   useEffect(() => {
     async function fetchProfiles() {
       const { data } = await api.projects.show(projectId);
       if (data) {
         setProject(data);
-        setProfileId(data.profileId);
-        console.log(data);
       }
-      const { data: user } = await api.users.show(profileId);
-      console.log(user);
+
+      const { data: user } = await api.users.show(data?.profileId);
       if (user) {
         setUserData(user);
       }

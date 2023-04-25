@@ -12,13 +12,14 @@ import Test from "../../images/avatars/defaultProfile.svg";
 export function General({ portfolioId }: any) {
   const [data, setData] = useState<Entity>();
   const [userData, setUserData] = useState({});
+
   useEffect(() => {
     async function fetchProfiles() {
       const { data } = await api.profiles.show(portfolioId);
       if (data) {
         setData(data);
       }
-      const { data: user } = await api.users.show(portfolioId);
+      const { data: user } = await api.users.show(data?.userId);
       if (user) {
         setUserData(user);
       }
