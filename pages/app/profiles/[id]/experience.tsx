@@ -59,11 +59,11 @@ export default function One() {
       href: `/app/profiles/${id}/certification`,
       current: false,
     },
-    {
-      name: "Проекты",
-      href: `/app/profiles/${id}/profileProjects`,
-      current: false,
-    },
+    // {
+    //   name: "Проекты",
+    //   href: `/app/profiles/${id}/profileProjects`,
+    //   current: false,
+    // },
     {
       name: "Опыт работы",
       href: `/app/profiles/${id}/experience`,

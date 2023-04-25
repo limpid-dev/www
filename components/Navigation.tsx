@@ -7,11 +7,11 @@ import { useRouter } from "next/router";
 import { Fragment, useEffect, useState } from "react";
 import api from "../api";
 import { Entity } from "../api/profiles";
-import testAva from "../images/avatars/avatar-1.jpg";
+import testAva from "../images/avatars/defaultProfile.svg";
 import { Logo } from "./Logo";
 import { Button } from "./Primitives/Button";
 
-function findById(array, id) {
+function findById(array: any, id: any) {
   for (const element of array) {
     if (element.id === id) {
       return element;
@@ -62,10 +62,9 @@ export function Navigation() {
         }
         const myObject = findById(
           data,
-          Number.parseInt(localStorage.getItem("portfolioId"), 10)
+          Number.parseInt(localStorage.getItem("portfolioId") as string, 10)
         );
-        setProfession(myObject.title);
-        console.log(profilesData)
+        setProfession(myObject?.title);
         setProfilesData(data);
       }
     }

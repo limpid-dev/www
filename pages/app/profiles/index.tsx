@@ -37,8 +37,17 @@ export default function All() {
         page: 1,
         perPage: 100,
       });
+
+      const withUsers = data!.map(async (d) => {
+        const user = await api.users.show(d.userId);
+
+        return { ...d, ...user.data! };
+      });
+
+      const w = await Promise.all(withUsers);
+
       if (data) {
-        setProfilesData(data);
+        setProfilesData(w);
         setLoading(false);
       }
     }
@@ -152,7 +161,9 @@ export default function All() {
                           />
                         </div>
                         <div className="col-span-6 flex flex-col gap-1 pl-3">
-                          <p>Full name</p>
+                          <p>
+                            {profile.firstName} {profile.lastName}
+                          </p>
 
                           <p className="text-xs text-slate-400">
                             {profile.industry}

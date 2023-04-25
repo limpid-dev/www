@@ -7,16 +7,22 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import api from "../../api";
 import { Entity } from "../../api/profiles";
-import Test from "../../images/avatars/avatar-1.jpg";
+import Test from "../../images/avatars/defaultProfile.svg";
 
 export function General({ portfolioId }: any) {
   const [data, setData] = useState<Entity>();
-
+  const [userData, setUserData] = useState({});
   useEffect(() => {
     async function fetchProfiles() {
       const { data } = await api.profiles.show(portfolioId);
       if (data) {
         setData(data);
+      }
+      const { data: user } = await api.users.show(
+        Number.parseInt(localStorage.getItem("portfolioId") as string, 10)
+      );
+      if (user) {
+        setUserData(user);
       }
     }
     fetchProfiles();
@@ -30,7 +36,9 @@ export function General({ portfolioId }: any) {
           alt="Photo by Alvaro Pinot"
           className="mb-3 h-[106px] w-auto rounded-md object-cover"
         />
-        <p className=" text-2xl font-semibold">Almaz</p>
+        <p className=" text-2xl font-semibold">
+          {userData.firstName} {userData.lastName}
+        </p>
         <p className=" text-sm">{data?.industry}</p>
         {/* <p className=" text-sm text-sky-500">Отзывы (5)</p> */}
       </div>

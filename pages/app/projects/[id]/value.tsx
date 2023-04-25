@@ -4,36 +4,37 @@ import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
 import General from "../../../../components/Projects/General";
 
-const tabs = [
-  { name: "О проекте", href: "/app/projects/[id]/", current: false },
-  {
-    name: "Ресурсы",
-    href: "/app/projects/[id]/resources",
-    current: false,
-  },
-  {
-    name: "Рентабельность",
-    href: "/app/projects/[id]/value",
-    current: true,
-  },
-  {
-    name: "Фото и видео",
-    href: "/app/projects/[id]/media",
-    curent: false,
-  },
-];
-
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 export default function One() {
   const [isAuthor, setisAuthor] = useState(false);
   const router = useRouter();
+  const { id } = router.query;
 
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
   };
+
+  const tabs = [
+    { name: "О проекте", href: `/app/projects/${id}/`, current: false },
+    {
+      name: "Ресурсы",
+      href: `/app/projects/${id}/resources`,
+      current: false,
+    },
+    {
+      name: "Рентабельность",
+      href: `/app/projects/${id}/value`,
+      current: true,
+    },
+    // {
+    //   name: "Фото и видео",
+    //   href: "/app/projects/[id]/media",
+    //   current: false,
+    // },
+  ];
 
   return (
     <div>
@@ -41,13 +42,13 @@ export default function One() {
 
       <div className="min-h-[90vh] bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
-          <h1 className="text-sm">
+          {/* <h1 className="text-sm">
             <span className="text-slate-300">Профиль / </span>
             Гостиница для животных
-          </h1>
+          </h1> */}
 
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
-            {isAuthor ? (
+            {/* {isAuthor ? (
               <div className="flex gap-5">
                 <Button className=" bg-slate-700 hover:bg-black">
                   Редактировать
@@ -64,7 +65,7 @@ export default function One() {
                   Написать в чате
                 </Button>
               </div>
-            )}
+            )} */}
           </div>
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-10">

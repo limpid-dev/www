@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import api from "../../api";
 import { Entity } from "../../api/projects";
-import testAva from "../../images/avatars/avatar-1.jpg";
+import testAva from "../../images/avatars/defaultProfile.svg";
 import { Button } from "../Primitives/Button";
 
 export default function General({ projectId }: any) {
