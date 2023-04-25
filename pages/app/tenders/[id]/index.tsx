@@ -1,10 +1,24 @@
 import { LinkSimple } from "@phosphor-icons/react";
 import { GetStaticPropsContext, InferGetServerSidePropsType } from "next";
-import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import api from "../../../../api";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../../../../components/Primitives/Dialog";
+import {
+  Field,
+  Form,
+  Input,
+  Label,
+} from "../../../../components/Primitives/Form";
 
 const calcTime = (date: string) => {
   const now = new Date();
@@ -54,6 +68,7 @@ export const getServerSideProps = async (
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 export default function Tender({ data }: Props) {
+  const router = useRouter();
   return (
     <>
       <Navigation />
@@ -116,13 +131,60 @@ export default function Tender({ data }: Props) {
           </div>
           <div className="pt-4" />
           <div className="w-full border-t border-slate-200 pt-4">
-            <Button
-              variant="outline"
-              className="w-full disabled:cursor-not-allowed disabled:opacity-60"
-              disabled
-            >
-              Принять участие
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="w-full disabled:cursor-not-allowed disabled:opacity-60"
+                  disabled={!data.finishedAt}
+                >
+                  Принять участие
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Ваша ставка</DialogTitle>
+                </DialogHeader>
+                <Form
+                  onSubmit={async (event) => {
+                    event.preventDefault();
+
+                    const form = new FormData(event.currentTarget);
+
+                    const values = Object.fromEntries(
+                      form.entries()
+                    ) as unknown as {
+                      price: number;
+                    };
+
+                    const profileId = Number(
+                      localStorage.getItem("portfolioId")
+                    );
+
+                    await api.tenders
+                      .bids(data.id)
+                      .store({ price: values.price, profileId });
+
+                    await router.push(`/app/tenders/${data.id}/bids`);
+                  }}
+                >
+                  <Field name="price">
+                    <Label>Сумма</Label>
+                    <Input
+                      placeholder="KZT"
+                      type="number"
+                      min={1}
+                      max={data.startingPrice}
+                    />
+                  </Field>
+                  <DialogFooter className="mt-4">
+                    <Button type="submit" className="rounded-lg">
+                      Сделать ставку
+                    </Button>
+                  </DialogFooter>
+                </Form>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </main>

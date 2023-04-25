@@ -223,12 +223,7 @@ export default function TendersMy({ data }: Props) {
                   </Field>
                   <Field name="startingPrice">
                     <Label>Стартовая цена</Label>
-                    <Input
-                      type="number"
-                      placeholder="Опционально"
-                      required
-                      min={1}
-                    />
+                    <Input type="number" placeholder="Опционально" min={1} />
                   </Field>
                   <Button
                     type="button"
@@ -253,7 +248,7 @@ export default function TendersMy({ data }: Props) {
                   />
                   <DialogFooter>
                     <Button type="submit" className="rounded-lg">
-                      Создать профиль
+                      Создать тендер
                     </Button>
                   </DialogFooter>
                 </Form>

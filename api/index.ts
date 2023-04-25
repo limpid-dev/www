@@ -11,6 +11,7 @@ import * as ProfilesSkills from "./profilesSkills";
 import * as Projects from "./projects";
 import * as Recovery from "./recovery";
 import * as Session from "./session";
+import * as TenderBids from "./tender-bid";
 import * as TenderFiles from "./tender-file";
 import * as Tenders from "./tenders";
 import * as Users from "./users";
@@ -390,6 +391,41 @@ class Api {
         ),
       destroy: (id: number, init?: Helpers.FetchRequestInit) =>
         this.delete(`${this.baseUrl}/tenders/${id}`, init),
+
+      bids: (tenderId: number) => {
+        return {
+          index: (
+            qp: Pick<QueryParams<TenderBids.Entity>, "page" | "perPage">,
+            init?: Helpers.FetchRequestInit
+          ) => {
+            const url = Helpers.buildQueryParamsUrl(
+              `${this.baseUrl}/tenders/${tenderId}/bids`,
+              qp
+            );
+
+            return this.get<TenderBids.Index["Data"]>(url.toString(), init);
+          },
+          store: (
+            payload: TenderBids.Store["Payload"],
+            init?: Helpers.FetchRequestInit
+          ) =>
+            this.post<TenderBids.Store["Data"], TenderBids.Store["Payload"]>(
+              `${this.baseUrl}/tenders/${tenderId}/bids`,
+              payload,
+              init
+            ),
+
+          update: (
+            payload: TenderBids.Update["Payload"],
+            init?: Helpers.FetchRequestInit
+          ) =>
+            this.patch<TenderBids.Update["Data"], TenderBids.Update["Payload"]>(
+              `${this.baseUrl}/tenders/${tenderId}/bids`,
+              payload,
+              init
+            ),
+        };
+      },
 
       files: (tenderId: number) => {
         return {
