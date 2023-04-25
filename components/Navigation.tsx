@@ -11,6 +11,14 @@ import testAva from "../images/avatars/avatar-1.jpg";
 import { Logo } from "./Logo";
 import { Button } from "./Primitives/Button";
 
+function findById(array, id) {
+  for (const element of array) {
+    if (element.id === id) {
+      return element;
+    }
+  }
+  return null;
+}
 const user = {
   name: "Debbie Lewis",
   handle: "deblewis",
@@ -49,9 +57,14 @@ export function Navigation() {
       });
 
       if (data) {
-        if (data.at(0)?.id) {
+        if (data[0]?.id && localStorage.length === 0) {
           localStorage.setItem("portfolioId", JSON.stringify(data[0].id));
         }
+        const myObject = findById(
+          data,
+          Number.parseInt(localStorage.getItem("portfolioId"), 10)
+        );
+        setProfession(myObject.title);
         setProfilesData(data);
       }
     }
