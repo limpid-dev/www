@@ -8,12 +8,19 @@ import { Button } from "../Primitives/Button";
 
 export default function General({ projectId }: any) {
   const [project, setProject] = useState<Entity>();
-  console.log(projectId);
+  const [userData, setUserData] = useState({});
+
   useEffect(() => {
     async function fetchProfiles() {
       const { data } = await api.projects.show(projectId);
       if (data) {
         setProject(data);
+      }
+      const { data: user } = await api.users.show(
+        Number.parseInt(localStorage.getItem("portfolioId") as string, 10)
+      );
+      if (user) {
+        setUserData(user);
       }
     }
     fetchProfiles();
@@ -27,7 +34,9 @@ export default function General({ projectId }: any) {
           alt="Photo by Alvaro Pinot"
           className="mb-6 h-[106px] w-auto rounded-md object-cover"
         />
-        <p className=" text-2xl font-semibold">Almaz Nurgali</p>
+        <p className=" text-2xl font-semibold">
+          {userData.firstName} {userData.lastName}
+        </p>
         <p className=" text-sm">{project?.industry}</p>
       </div>
       <div className="mb-6 mt-3" />

@@ -1,5 +1,7 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import api from "../../../../api";
+import { Entity } from "../../../../api/projects";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
 import General from "../../../../components/Projects/General";
@@ -8,14 +10,27 @@ function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 export default function One() {
-  const [isAuthor, setisAuthor] = useState(false);
   const router = useRouter();
   const { id } = router.query;
+  const [isAuthor, seisAuthor] = useState(false);
+  const [data, setData] = useState<Entity>();
+  const parsedId = Number.parseInt(id as string, 10) as number;
 
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
   };
+
+  useEffect(() => {
+    async function fetchProfiles() {
+      const { data } = await api.projects.show(parsedId);
+      if (data) {
+        setData(data);
+      }
+      console.log(data)
+    }
+    fetchProfiles();
+  }, [parsedId]);
 
   const tabs = [
     { name: "О проекте", href: `/app/projects/${id}/`, current: false },
@@ -130,7 +145,7 @@ export default function One() {
                   <p className=" text-xl font-semibold text-slate-400">
                     Ожидаемая рентабельность
                   </p>
-                  <p className="text-sm">700 000 тг в месяц</p>
+                  <p className="text-sm">{data?.profitability}</p>
                 </div>
               </div>
             </div>

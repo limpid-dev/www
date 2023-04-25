@@ -1,5 +1,7 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import api from "../../../../api";
+import { Entity } from "../../../../api/projects";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
 import General from "../../../../components/Projects/General";
@@ -11,10 +13,24 @@ export default function One() {
   const router = useRouter();
   const { id } = router.query;
   const [isAuthor, seisAuthor] = useState(false);
+  const [data, setData] = useState<Entity>();
+  const parsedId = Number.parseInt(id as string, 10) as number;
+
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
   };
+
+  useEffect(() => {
+    async function fetchProfiles() {
+      const { data } = await api.projects.show(parsedId);
+      if (data) {
+        setData(data);
+      }
+    }
+    fetchProfiles();
+  }, [parsedId]);
+
   const tabs = [
     { name: "О проекте", href: `/app/projects/${id}/`, current: false },
     {
@@ -129,14 +145,7 @@ export default function One() {
                     <p className=" text-xl font-semibold text-slate-400">
                       Материальный ресурс
                     </p>
-                    <p className="text-sm">
-                      Ультрасовременная гостиница для кошек и с собак с
-                      раздельным содержанием самцов и самок. В гостинице будут
-                      предусмотрены номера Люкс и Стандарт класса. Перед
-                      заселением необходимо будет пройти профилактический осмотр
-                      ветеринара и предоставить ветеринарный паспорт с
-                      поставленными прививками
-                    </p>
+                    <p className="text-sm">{data?.ownedMaterialResources}</p>
                   </div>
                   <div />
                   <div className="flex flex-col gap-3">
@@ -144,12 +153,7 @@ export default function One() {
                       Интеллектуальный ресурс
                     </p>
                     <p className="text-sm">
-                      Ультрасовременная гостиница для кошек и с собак с
-                      раздельным содержанием самцов и самок. В гостинице будут
-                      предусмотрены номера Люкс и Стандарт класса. Перед
-                      заселением необходимо будет пройти профилактический осмотр
-                      ветеринара и предоставить ветеринарный паспорт с
-                      поставленными прививками
+                      {data?.ownedIntellectualResources}
                     </p>
                   </div>
                 </div>

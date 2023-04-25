@@ -343,7 +343,7 @@ class Api {
           }`
         ),
       show: (id: number) =>
-        this.get<Projects.Show["Data"]>(`${this.baseUrl}/profiles/${id}`),
+        this.get<Projects.Show["Data"]>(`${this.baseUrl}/projects/${id}`),
       store: (payload: Profiles.Store["Payload"]) =>
         this.post<Profiles.Store["Data"], Profiles.Store["Payload"]>(
           `${this.baseUrl}/projects`,

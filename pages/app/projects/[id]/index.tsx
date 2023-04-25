@@ -1,5 +1,7 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import api from "../../../../api";
+import { Entity } from "../../../../api/projects";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
 import General from "../../../../components/Projects/General";
@@ -10,11 +12,23 @@ function classNames(...classes: any) {
 export default function One() {
   const router = useRouter();
   const { id } = router.query;
+  const parsedId = Number.parseInt(id as string, 10) as number;
+  const [data, setData] = useState<Entity>();
 
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
   };
+
+  useEffect(() => {
+    async function fetchProfiles() {
+      const { data } = await api.projects.show(parsedId);
+      if (data) {
+        setData(data);
+      }
+    }
+    fetchProfiles();
+  }, [parsedId]);
 
   const tabs = [
     { name: "О проекте", href: `/app/projects/${id}/`, current: true },
@@ -129,13 +143,7 @@ export default function One() {
                   <p className=" text-xl font-semibold text-slate-400">
                     О проекте
                   </p>
-                  <p className="text-sm">
-                    Ультрасовременная гостиница для кошек и с собак с раздельным
-                    содержанием самцов и самок. В гостинице будут предусмотрены
-                    номера Люкс и Стандарт класса. Перед заселением необходимо
-                    будет пройти профилактический осмотр ветеринара и
-                    предоставить ветеринарный паспорт с поставленными прививками
-                  </p>
+                  <p className="text-sm">{data?.description}</p>
                 </div>
               </div>
             </div>
