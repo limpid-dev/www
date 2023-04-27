@@ -1,6 +1,6 @@
 import { Plus } from "@phosphor-icons/react";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import api from "../../../api";
 import { Button } from "../../Primitives/Button";
@@ -19,10 +19,15 @@ interface FormValues {
 export function EducationCreate({ portfolioId, isAddHandler }: any) {
   const [error, setError] = useState("");
   const router = useRouter();
+  const { itemId } = router.query;
+  const parsedId = Number.parseInt(itemId as string, 10) as number;
+  const isEdit = !itemId;
+  // console.log(isEdit);
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
     control,
   } = useForm<FormValues>({
@@ -38,14 +43,39 @@ export function EducationCreate({ portfolioId, isAddHandler }: any) {
 
   const onSubmit = async (data: FormValues) => {
     try {
-      data.education.forEach(async (post) => {
-        const { data } = await api.educations.store(post, portfolioId);
-      });
-      router.reload();
+      if (isEdit === false) {
+        console.log(data);
+      } else {
+        data.education.forEach(async (post) => {
+          const { data } = await api.educations.store(post, portfolioId);
+        });
+      }
+      // router.reload();
+      console.log();
     } catch (error) {
       setError("Что то пошло не так, попробуйте позже");
     }
   };
+
+  useEffect(() => {
+    if (Number.isNaN(parsedId)) return;
+    async function fetchEducation() {
+      await api.educations.show(portfolioId, parsedId).then(({ data }) => {
+        setValue(`education.0.title`, data?.title);
+        setValue(`education.0.institution`, data?.institution);
+        setValue(`education.0.description`, data?.description);
+        setValue(
+          `education.0.startedAt`,
+          new Date(data.startedAt).toISOString().slice(0, 10)
+        );
+        setValue(
+          `education.0.finishedAt`,
+          new Date(data.finishedAt).toISOString().slice(0, 10)
+        );
+      });
+    }
+    fetchEducation();
+  }, [portfolioId, setValue, parsedId]);
 
   return (
     <div className="m-auto border-none sm:w-4/6">

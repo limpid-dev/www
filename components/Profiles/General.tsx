@@ -1,8 +1,4 @@
-import {
-  InstagramLogo,
-  LinkedinLogo,
-  YoutubeLogo,
-} from "@phosphor-icons/react";
+
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import api from "../../api";

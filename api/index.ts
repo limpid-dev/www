@@ -254,6 +254,10 @@ class Api {
 
   get educations() {
     return {
+      show: (portfolioId: number, id: number) =>
+        this.get<ProfilesEducations.Show["Data"]>(
+          `${this.baseUrl}/profiles/${portfolioId}/educations/${id}`
+        ),
       index: (portfolioId: number) =>
         this.get<ProfilesEducations.Index["Data"]>(
           `${this.baseUrl}/profiles/${portfolioId}/educations?page=1&perPage=20`

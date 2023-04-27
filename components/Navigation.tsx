@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { Fragment, useEffect, useState } from "react";
 import api from "../api";
 import { Entity } from "../api/profiles";
+import { Entity as UserEntity } from "../api/users";
 import testAva from "../images/avatars/defaultProfile.svg";
 import { Logo } from "./Logo";
 import { Button } from "./Primitives/Button";
@@ -19,12 +20,6 @@ function findById(array: any, id: any) {
   }
   return null;
 }
-const user = {
-  name: "Debbie Lewis",
-  handle: "deblewis",
-  email: "debbielewis@example.com",
-  imageUrl: "",
-};
 
 const navigation = [
   { name: "Проекты", href: "/app/projects" },
@@ -34,15 +29,15 @@ const navigation = [
 ];
 
 const userNavigation = [
-  // { name: "Your Profile", href: "#" },
-  // { name: "Settings", href: "#" },
-  // { name: "Выйти", href: "#" },
+  { name: "Your Profile", href: "#" },
+  { name: "Settings", href: "#" },
 ];
 
 export function Navigation() {
   const router = useRouter();
   const [profilesData, setProfilesData] = useState<Entity[]>([]);
   const [profession, setProfession] = useState("");
+  const [user, setUser] = useState<UserEntity>();
 
   useEffect(() => {
     async function fetchProfiles() {
@@ -55,6 +50,7 @@ export function Navigation() {
           userId: userId || 0,
         },
       });
+      setUser(sessionData.data);
 
       if (data) {
         if (data[0]?.id && localStorage.length === 0) {
@@ -217,10 +213,10 @@ export function Navigation() {
                 </div>
                 <div className="ml-3">
                   <div className="text-base font-medium text-zinc-800">
-                    {user.name}
+                    {user?.firstName} {user?.lastName}
                   </div>
                   <div className="text-sm font-medium text-zinc-500">
-                    {user.email}
+                    {user?.email}
                   </div>
                 </div>
                 <button

@@ -58,6 +58,8 @@ export default function Login() {
       return;
     }
 
+    localStorage.clear();
+
     await router.push({
       pathname: "/app/projects",
     });

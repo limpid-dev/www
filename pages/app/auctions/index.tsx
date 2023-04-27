@@ -33,7 +33,6 @@ export default function All() {
                 <label htmlFor="tabs" className="sr-only">
                   Select a tab
                 </label>
-                {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
                 <select
                   onChange={handleSelectChange}
                   id="tabs"

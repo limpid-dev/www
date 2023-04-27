@@ -1,4 +1,4 @@
-import { Plus } from "@phosphor-icons/react";
+import { Pen, Plus, Trash } from "@phosphor-icons/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -104,7 +104,9 @@ export default function Education() {
                 {/* <Button className=" bg-slate-700 hover:bg-black">
                   Редактировать
                 </Button> */}
-                <Button className="  bg-red-600">Удалить</Button>
+                <Button variant="outline">
+                  <Trash className="h-6 w-6" />
+                </Button>
               </div>
             ) : (
               <div className="flex gap-5">
@@ -192,7 +194,7 @@ export default function Education() {
                               {item.finishedAt}
                             </div>
                           </div>
-                          <div className="col-span-6">
+                          <div className="col-span-4">
                             <p className=" text-lg font-semibold">
                               {item.institution}
                             </p>
@@ -200,6 +202,26 @@ export default function Education() {
                               {item.title}
                             </p>
                             <p className=" text-sm">{item.description}</p>
+                          </div>
+                          <div className="col-span-2">
+                            <div className="flex justify-end gap-6">
+                              <Button
+                                variant="outline"
+                                color="zinc"
+                                onClick={() => {
+                                  setIsAdd(false);
+                                  router.push({
+                                    pathname: `/app/profiles/${id}/education`,
+                                    query: { itemId: item.id },
+                                  });
+                                }}
+                              >
+                                <Pen className="h-6 w-6" />
+                              </Button>
+                              <Button variant="outline">
+                                <Trash className="h-6 w-6" />
+                              </Button>
+                            </div>
                           </div>
                         </div>
                         <div className="relative py-6">
@@ -212,12 +234,15 @@ export default function Education() {
                         </div>
                       </div>
                     ))}
-                    <div className="flex items-center justify-end text-sm text-sky-500 underline">
-                      <Plus />
-                      <button onClick={() => setIsAdd(false)}>
-                        Добавить образование
-                      </button>
-                    </div>
+
+                    {isAuthor && (
+                      <div className="flex items-center justify-end text-sm text-sky-500 underline">
+                        <Plus />
+                        <button onClick={() => setIsAdd(false)}>
+                          Добавить образование
+                        </button>
+                      </div>
+                    )}
                   </>
                 ) : (
                   <>
