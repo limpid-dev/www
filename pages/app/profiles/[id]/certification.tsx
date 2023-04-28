@@ -243,12 +243,14 @@ export default function One() {
                         </div>
                       </div>
                     ))}
-                    <div className="mt-7 flex items-center justify-end text-sm text-sky-500 underline">
-                      <Plus />
-                      <button onClick={certificateAdd}>
-                        Добавить сертификат
-                      </button>
-                    </div>
+                    {isAuthor && (
+                      <div className="mt-7 flex items-center justify-end text-sm text-sky-500 underline">
+                        <Plus />
+                        <button onClick={certificateAdd}>
+                          Добавить сертификат
+                        </button>
+                      </div>
+                    )}
                   </>
                 ) : (
                   <>
@@ -281,10 +283,12 @@ export default function One() {
                         </div>
                       ))}
                     </div>
-                    <div className="mt-7 flex items-center justify-end text-sm text-sky-500 underline">
-                      <Plus />
-                      <button onClick={skillAdd}>Добавить навык</button>
-                    </div>
+                    {isAuthor && (
+                      <div className="mt-7 flex items-center justify-end text-sm text-sky-500 underline">
+                        <Plus />
+                        <button onClick={skillAdd}>Добавить навык</button>
+                      </div>
+                    )}
                   </>
                 ) : (
                   <>

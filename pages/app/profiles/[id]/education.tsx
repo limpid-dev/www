@@ -212,29 +212,31 @@ export default function Education() {
                             </p>
                             <p className=" text-sm">{item.description}</p>
                           </div>
-                          <div className="col-span-2">
-                            <div className="flex justify-end gap-6">
-                              <Button
-                                variant="outline"
-                                color="zinc"
-                                onClick={() => {
-                                  setIsAdd(false);
-                                  router.push({
-                                    pathname: `/app/profiles/${id}/education`,
-                                    query: { itemId: item.id },
-                                  });
-                                }}
-                              >
-                                <Pen className="h-6 w-6" />
-                              </Button>
-                              <Button
-                                variant="outline"
-                                onClick={() => handleDelete(item.id)}
-                              >
-                                <Trash className="h-6 w-6" />
-                              </Button>
+                          {isAuthor && (
+                            <div className="col-span-2">
+                              <div className="flex justify-end gap-6">
+                                <Button
+                                  variant="outline"
+                                  color="zinc"
+                                  onClick={() => {
+                                    setIsAdd(false);
+                                    router.push({
+                                      pathname: `/app/profiles/${id}/education`,
+                                      query: { itemId: item.id },
+                                    });
+                                  }}
+                                >
+                                  <Pen className="h-6 w-6" />
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  onClick={() => handleDelete(item.id)}
+                                >
+                                  <Trash className="h-6 w-6" />
+                                </Button>
+                              </div>
                             </div>
-                          </div>
+                          )}
                         </div>
                         <div className="relative py-6">
                           <div

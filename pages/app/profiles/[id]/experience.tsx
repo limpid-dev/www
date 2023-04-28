@@ -221,12 +221,14 @@ export default function One() {
                         </div>
                       </div>
                     ))}
-                    <div className="mt-7 flex items-center justify-end text-sm text-sky-500 underline">
-                      <Plus />
-                      <button onClick={experienceAdd}>
-                        Добавить опыт работы
-                      </button>
-                    </div>
+                    {isAuthor && (
+                      <div className="mt-7 flex items-center justify-end text-sm text-sky-500 underline">
+                        <Plus />
+                        <button onClick={experienceAdd}>
+                          Добавить опыт работы
+                        </button>
+                      </div>
+                    )}
                   </>
                 ) : (
                   <ExperienceCreate
