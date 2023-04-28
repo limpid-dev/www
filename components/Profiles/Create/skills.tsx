@@ -1,4 +1,4 @@
-import { Plus } from "@phosphor-icons/react";
+import { Plus, Trash } from "@phosphor-icons/react";
 import router from "next/router";
 import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -13,7 +13,7 @@ interface SkillValues {
   }[];
 }
 
-export default function SkillsCreate({ skillAdd, portfolioId }: any) {
+export default function SkillsCreate({ skillAdd, profileId }: any) {
   const [skillData, setSkillData] = useState<Entity[]>([]);
   const [error, setError] = useState("");
 
@@ -40,7 +40,7 @@ export default function SkillsCreate({ skillAdd, portfolioId }: any) {
   const onSubmit = async (data: SkillValues) => {
     try {
       data.skills.forEach(async (post) => {
-        const { data } = await api.skills.store(post, portfolioId);
+        const { data } = await api.skills.store(post, profileId);
         if (data) {
           router.reload();
         } else {
@@ -59,7 +59,7 @@ export default function SkillsCreate({ skillAdd, portfolioId }: any) {
     >
       {fields.map((field, index) => {
         return (
-          <div key={field.id}>
+          <div key={field.id} className="flex gap-5">
             <Input
               placeholder="Навык"
               className="w-fit"

@@ -54,11 +54,11 @@ export function Navigation() {
 
       if (data) {
         if (data[0]?.id && localStorage.length === 0) {
-          localStorage.setItem("portfolioId", JSON.stringify(data[0].id));
+          localStorage.setItem("profileId", JSON.stringify(data[0].id));
         }
         const myObject = findById(
           data,
-          Number.parseInt(localStorage.getItem("portfolioId") as string, 10)
+          Number.parseInt(localStorage.getItem("profileId") as string, 10)
         );
         setProfession(myObject?.title);
         setProfilesData(data);
@@ -120,13 +120,13 @@ export function Navigation() {
                 ) : (
                   ""
                 )}
-                <button
+                {/* <button
                   type="button"
                   className="flex-shrink-0 rounded-full bg-white p-1 text-zinc-400 hover:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2"
                 >
                   <span className="sr-only">View notifications</span>
                   <Bell className="h-6 w-6" aria-hidden="true" />
-                </button>
+                </button> */}
 
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-4 flex-shrink-0">
@@ -162,7 +162,7 @@ export function Navigation() {
                               )}
                               onClick={() => {
                                 localStorage.setItem(
-                                  "portfolioId",
+                                  "profileId",
                                   JSON.stringify(item.id)
                                 );
                                 setProfession(item.title);
@@ -175,8 +175,8 @@ export function Navigation() {
                       ))}
                       <Button
                         onClick={handleLogout}
-                        className="flex w-full items-start justify-start rounded-none px-4 py-2 text-left text-sm text-zinc-700 hover:bg-zinc-100"
-                        color="white"
+                        variant="link"
+                        className="w-full text-left"
                       >
                         Выйти
                       </Button>
@@ -219,13 +219,13 @@ export function Navigation() {
                     {user?.email}
                   </div>
                 </div>
-                <button
+                {/* <button
                   type="button"
                   className="ml-auto flex-shrink-0 rounded-full bg-white p-1 text-zinc-400 hover:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2"
                 >
                   <span className="sr-only">View notifications</span>
                   <Bell className="h-6 w-6" aria-hidden="true" />
-                </button>
+                </button> */}
               </div>
               <div className="mt-3 space-y-1 px-2">
                 {userNavigation.map((item) => (

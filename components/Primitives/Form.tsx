@@ -88,17 +88,12 @@ export const Submit = forwardRef<
   ElementRef<typeof Primitives.Submit>,
   Omit<ComponentPropsWithoutRef<typeof Primitives.Submit>, "asChild"> &
     ButtonProps
->(
-  (
-    { className, variant = "solid", color = "lime", children, ...props },
-    ref
-  ) => {
-    return (
-      <Primitives.Submit {...props} ref={ref} asChild>
-        <Button variant={variant} color={color} className={clsx(className)}>
-          {children}
-        </Button>
-      </Primitives.Submit>
-    );
-  }
-);
+>(({ className, variant = "default", children, ...props }, ref) => {
+  return (
+    <Primitives.Submit {...props} ref={ref} asChild>
+      <Button variant={variant} className={clsx(className)}>
+        {children}
+      </Button>
+    </Primitives.Submit>
+  );
+});

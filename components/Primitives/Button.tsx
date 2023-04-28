@@ -1,45 +1,48 @@
-import clsx from "clsx";
-import { ComponentPropsWithoutRef, forwardRef } from "react";
+import { cva, VariantProps } from "class-variance-authority";
+import React from "react";
+import { cn } from "../../lib/utils";
 
-const baseStyles = {
-  solid:
-    "group inline-flex items-center justify-center rounded-md py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2",
-  outline:
-    "group inline-flex ring-1 items-center justify-center rounded-md py-2 px-4 text-sm focus:outline-none",
-};
+const buttonVariants = cva(
+  "active:scale-95 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none data-[state=open]:bg-slate-100",
+  {
+    variants: {
+      variant: {
+        default: "bg-lime-500 text-white hover:bg-lime-700",
+        destructive: "bg-red-500 text-white hover:bg-red-600",
+        outline: "bg-transparent border border-slate-200 hover:bg-slate-100",
+        subtle: "bg-slate-100 text-slate-900 hover:bg-slate-200",
+        ghost:
+          "bg-transparent hover:bg-slate-100 data-[state=open]:bg-transparent ",
+        link: "bg-transparent  underline-offset-4 hover:undeButtonrline text-slate-900  hover:bg-transparent ",
+      },
+      size: {
+        default: "h-10 py-2 px-4",
+        sm: "h-9 px-2 rounded-md",
+        lg: "h-11 px-8 rounded-md",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+);
 
-const variantStyles = {
-  solid: {
-    zinc: "bg-zinc-900 text-white hover:bg-zinc-700 hover:te  xt-zinc-100 active:bg-zinc-800 active:text-zinc-300 focus-visible:outline-zinc-900",
-    lime: "bg-lime-600 text-white hover:text-zinc-100 hover:bg-lime-500 active:bg-lime-800 active:text-lime-100 focus-visible:outline-lime-600",
-    white:
-      "bg-white text-zinc-900 hover:bg-lime-50 active:bg-lime-200 active:text-zinc-600 focus-visible:outline-white",
-  },
-  outline: {
-    zinc: "ring-zinc-200 text-zinc-700 hover:text-zinc-900 hover:ring-zinc-300 active:bg-zinc-100 active:text-zinc-600 focus-visible:outline-lime-600 focus-visible:ring-zinc-300",
-    lime: "ring-zinc-200 text-zinc-700 hover:text-zinc-900 hover:ring-zinc-300 active:bg-zinc-100 active:text-zinc-600 focus-visible:outline-lime-600 focus-visible:ring-zinc-300",
-    white:
-      "ring-zinc-700 text-white hover:ring-zinc-500 active:ring-zinc-700 active:text-zinc-400 focus-visible:outline-white",
-  },
-};
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {}
 
-export interface ButtonProps extends ComponentPropsWithoutRef<"button"> {
-  variant?: "solid" | "outline";
-  color?: "lime" | "zinc" | "white";
-}
-
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "solid", color = "lime", ...props }, ref) => {
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, ...props }, ref) => {
     return (
       <button
-        {...props}
+        className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
-        className={clsx(
-          baseStyles[variant],
-          variantStyles[variant][color],
-          className
-        )}
+        {...props}
       />
     );
   }
 );
+Button.displayName = "Button";
+
+export { Button, buttonVariants };

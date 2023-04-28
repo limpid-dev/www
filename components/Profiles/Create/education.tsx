@@ -16,13 +16,12 @@ interface FormValues {
   }[];
 }
 
-export function EducationCreate({ portfolioId, isAddHandler }: any) {
+export function EducationCreate({ profileId, isAddHandler }: any) {
   const [error, setError] = useState("");
   const router = useRouter();
   const { itemId } = router.query;
   const parsedId = Number.parseInt(itemId as string, 10) as number;
   const isEdit = !itemId;
-  // console.log(isEdit);
 
   const {
     register,
@@ -44,14 +43,20 @@ export function EducationCreate({ portfolioId, isAddHandler }: any) {
   const onSubmit = async (data: FormValues) => {
     try {
       if (isEdit === false) {
-        console.log(data);
+        await api.educations.update(profileId, parsedId, data.education[0]);
+        await router.push({
+          pathname: `/app/profiles/${profileId}/education`,
+          query: {},
+        });
+        router.reload();
       } else {
         data.education.forEach(async (post) => {
-          const { data } = await api.educations.store(post, portfolioId);
+          const { data } = await api.educations.store(post, profileId);
         });
+        if (data) {
+          router.reload();
+        }
       }
-      // router.reload();
-      console.log();
     } catch (error) {
       setError("Что то пошло не так, попробуйте позже");
     }
@@ -60,7 +65,7 @@ export function EducationCreate({ portfolioId, isAddHandler }: any) {
   useEffect(() => {
     if (Number.isNaN(parsedId)) return;
     async function fetchEducation() {
-      await api.educations.show(portfolioId, parsedId).then(({ data }) => {
+      await api.educations.show(profileId, parsedId).then(({ data }) => {
         setValue(`education.0.title`, data?.title);
         setValue(`education.0.institution`, data?.institution);
         setValue(`education.0.description`, data?.description);
@@ -75,7 +80,7 @@ export function EducationCreate({ portfolioId, isAddHandler }: any) {
       });
     }
     fetchEducation();
-  }, [portfolioId, setValue, parsedId]);
+  }, [profileId, setValue, parsedId]);
 
   return (
     <div className="m-auto border-none sm:w-4/6">
@@ -185,29 +190,28 @@ export function EducationCreate({ portfolioId, isAddHandler }: any) {
               </div>
             );
           })}
-
-          <div className="mt-4 flex flex-col gap-4">
-            <Button
-              type="button"
-              onClick={() => {
-                append({
-                  institution: "",
-                  title: "",
-                  description: "",
-                  startedAt: "",
-                  finishedAt: "",
-                });
-              }}
-              variant="outline"
-            >
-              <Plus /> Добавить образование
-            </Button>
-          </div>
+          {isEdit && (
+            <div className="mt-4 flex flex-col gap-4">
+              <Button
+                type="button"
+                onClick={() => {
+                  append({
+                    institution: "",
+                    title: "",
+                    description: "",
+                    startedAt: "",
+                    finishedAt: "",
+                  });
+                }}
+                variant="outline"
+              >
+                <Plus /> Добавить образование
+              </Button>
+            </div>
+          )}
 
           <div className="mt-5 flex justify-end gap-3 pt-4">
-            <Button variant="solid" onClick={isAddHandler}>
-              Отмена
-            </Button>
+            <Button onClick={isAddHandler}>Отмена</Button>
             <Button type="submit">Сохранить</Button>
           </div>
         </form>

@@ -254,87 +254,83 @@ class Api {
 
   get educations() {
     return {
-      show: (portfolioId: number, id: number) =>
+      show: (profileId: number, id: number) =>
         this.get<ProfilesEducations.Show["Data"]>(
-          `${this.baseUrl}/profiles/${portfolioId}/educations/${id}`
+          `${this.baseUrl}/profiles/${profileId}/educations/${id}`
         ),
-      index: (portfolioId: number) =>
+      index: (profileId: number) =>
         this.get<ProfilesEducations.Index["Data"]>(
-          `${this.baseUrl}/profiles/${portfolioId}/educations?page=1&perPage=20`
+          `${this.baseUrl}/profiles/${profileId}/educations?page=1&perPage=20`
         ),
       store: (
         payload: ProfilesEducations.Store["Payload"],
-        portfolioId: number
+        profileId: number
       ) =>
         this.post<
           ProfilesEducations.Store["Data"],
           ProfilesEducations.Store["Payload"]
-        >(`${this.baseUrl}/profiles/${portfolioId}/educations`, payload),
+        >(`${this.baseUrl}/profiles/${profileId}/educations`, payload),
+      update: (
+        profileId: number,
+        id: number,
+        payload: ProfilesEducations.Update["Payload"]
+      ) =>
+        this.patch<
+          ProfilesEducations.Update["Data"],
+          ProfilesEducations.Update["Payload"]
+        >(`${this.baseUrl}/profiles/${profileId}/educations/${id}`, payload),
+      destroy: (profileId: number, id: number) =>
+        this.delete(`${this.baseUrl}/profiles/${profileId}/educations/${id}`),
     };
   }
 
   get experiences() {
     return {
-      index: (portfolioId: number) =>
+      index: (profileId: number) =>
         this.get<ProfilesExperiences.Index["Data"]>(
-          `${this.baseUrl}/profiles/${portfolioId}/experiences?page=1&perPage=20`
+          `${this.baseUrl}/profiles/${profileId}/experiences?page=1&perPage=20`
         ),
       store: (
         payload: ProfilesExperiences.Store["Payload"],
-        portfolioId: number
+        profileId: number
       ) =>
         this.post<
           ProfilesExperiences.Store["Data"],
           ProfilesExperiences.Store["Payload"]
-        >(`${this.baseUrl}/profiles/${portfolioId}/experiences`, payload),
+        >(`${this.baseUrl}/profiles/${profileId}/experiences`, payload),
     };
   }
 
   get certifications() {
     return {
-      index: (portfolioId: number) =>
+      index: (profileId: number) =>
         this.get<ProfileSertifications.Index["Data"]>(
-          `${this.baseUrl}/profiles/${portfolioId}/certificates?page=1&perPage=20`
+          `${this.baseUrl}/profiles/${profileId}/certificates?page=1&perPage=20`
         ),
       store: (
         payload: ProfileSertifications.Store["Payload"],
-        portfolioId: number
+        profileId: number
       ) =>
         this.post<
           ProfileSertifications.Store["Data"],
           ProfileSertifications.Store["Payload"]
-        >(`${this.baseUrl}/profiles/${portfolioId}/certificates`, payload),
-    };
-  }
-
-  get certificateFile() {
-    return {
-      store: (
-        payload: ProfileSertificationFile.Store["Payload"],
-        portfolioId: number,
-        fileId: number
-      ) =>
-        this.post<
-          ProfileSertificationFile.Store["Data"],
-          ProfileSertificationFile.Store["Payload"]
-        >(
-          `${this.baseUrl}/profiles/${portfolioId}/certificates/${fileId}/files`,
-          payload
-        ),
+        >(`${this.baseUrl}/profiles/${profileId}/certificates`, payload),
     };
   }
 
   get skills() {
     return {
-      index: (portfolioId: number) =>
+      index: (profileId: number) =>
         this.get<ProfilesSkills.Index["Data"]>(
-          `${this.baseUrl}/profiles/${portfolioId}/skills?page=1&perPage=20`
+          `${this.baseUrl}/profiles/${profileId}/skills?page=1&perPage=20`
         ),
-      store: (payload: ProfilesSkills.Store["Payload"], portfolioId: number) =>
+      store: (payload: ProfilesSkills.Store["Payload"], profileId: number) =>
         this.post<
           ProfilesSkills.Store["Data"],
           ProfilesSkills.Store["Payload"]
-        >(`${this.baseUrl}/profiles/${portfolioId}/skills`, payload),
+        >(`${this.baseUrl}/profiles/${profileId}/skills`, payload),
+      destroy: (profileId: number, id: number) =>
+        this.delete(`${this.baseUrl}/profiles/${profileId}/skills/${id}`),
     };
   }
 
@@ -467,6 +463,48 @@ class Api {
               init
             ),
         };
+      },
+    };
+  }
+
+  get certificateFile() {
+    return {
+      store: (
+        payload: ProfileSertificationFile.Store["Payload"],
+        profileId: number,
+        fileId: number
+      ) =>
+        this.post<
+          ProfileSertificationFile.Store["Data"],
+          ProfileSertificationFile.Store["Payload"]
+        >(
+          `${this.baseUrl}/profiles/${profileId}/certificates/${fileId}/files`,
+          // prosto zaglushka ne imeet smysl po idee
+          payload,
+          {
+            headers: {
+              ContentType: "multipart/form-data",
+              Accept: "application/json",
+            },
+            body: payload,
+          }
+        ),
+      index: (
+        profileId: number,
+        qp: Pick<
+          QueryParams<ProfileSertificationFile.Entity>,
+          "page" | "perPage"
+        >,
+        init?: Helpers.FetchRequestInit
+      ) => {
+        const url = Helpers.buildQueryParamsUrl(
+          `${this.baseUrl}/profiles/${profileId}/certificates/6/files`,
+          qp
+        );
+        return this.get<ProfileSertificationFile.Index["Data"]>(
+          url.toString(),
+          init
+        );
       },
     };
   }

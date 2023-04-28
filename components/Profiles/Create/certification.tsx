@@ -1,7 +1,14 @@
-import { Plus } from "@phosphor-icons/react";
-import React, { useState } from "react";
+import "@uppy/core/dist/style.min.css";
+import "@uppy/dashboard/dist/style.min.css";
+import { Paperclip, Plus } from "@phosphor-icons/react";
+import Uppy from "@uppy/core";
+import Russian from "@uppy/locales/lib/ru_RU";
+import { Dashboard, DashboardModal } from "@uppy/react";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import api from "../../../api";
+import { buildFormData } from "../../../api/profileCertifiationFile";
 import { Button } from "../../Primitives/Button";
 import { Input } from "../../Primitives/Input";
 import { TextArea } from "../../Primitives/TextArea";
@@ -16,10 +23,41 @@ interface CertificationValues {
   }[];
 }
 
-export function CertificationCreate({ certificateAdd, portfolioId }: any) {
+const uppy = new Uppy({
+  locale: Russian,
+  restrictions: {
+    maxNumberOfFiles: 1,
+    allowedFileTypes: [
+      ".jpg",
+      ".jpeg",
+      ".png",
+      ".pdf",
+      ".docx",
+      ".doc",
+      ".pptx",
+      ".ppt",
+      ".xlsx",
+      ".xls",
+    ],
+    maxFileSize: 1024 * 1024 * 8,
+  },
+});
+
+export function CertificationCreate({ certificateAdd, profileId }: any) {
   const [error, setError] = useState("");
   const [fileId, setFileId] = useState(1);
+  const [fileDashboardOpen, setFileDashboardOpen] = useState(false);
+  const router = useRouter();
 
+  useEffect(() => {
+    uppy.on("dashboard:modal-closed", () => setFileDashboardOpen(false));
+  }, []);
+  const [fileCount, setFileCount] = useState(0);
+
+  useEffect(() => {
+    uppy.on("file-added", () => setFileCount(uppy.getFiles().length));
+    uppy.on("file-removed", () => setFileCount(uppy.getFiles().length));
+  }, []);
   const {
     register,
     handleSubmit,
@@ -44,32 +82,18 @@ export function CertificationCreate({ certificateAdd, portfolioId }: any) {
     control,
   });
 
-  const onSubmitFile = async (fileId: any) => {
-    const inputFile = document.querySelector("#fileInput") as HTMLInputElement;
-    const formData = new FormData();
-    for (const f of inputFile.files as FileList) {
-      formData.set("file", f);
-    }
-
-    const { data } = await api.certificateFile.store(
-      formData,
-      portfolioId,
-      fileId
-    );
-  };
-
   const onSubmit = async (data: CertificationValues) => {
     try {
       data.certification.forEach(async (post) => {
-        const { data } = await api.certifications.store(post, portfolioId);
+        const { data } = await api.certifications.store(post, profileId);
         if (data) {
-          const fileId = data.profileId;
-          setFileId(fileId);
-          onSubmitFile(fileId);
-        } else {
-          throw new Error("Network response was not ok.");
+          const files = uppy.getFiles();
+          const formData = buildFormData(files[0].data);
+          const fileId = data.id;
+          return api.certificateFile.store(formData, profileId, fileId);
         }
       });
+      // router.reload();
     } catch (error) {
       setError("Что то пошло не так, попробуйте позже");
     }
@@ -93,7 +117,24 @@ export function CertificationCreate({ certificateAdd, portfolioId }: any) {
                   />
                 </div>
 
-                <Input id="fileInput" type="file" />
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="space-x-2"
+                  onClick={() => setFileDashboardOpen(true)}
+                >
+                  <Paperclip weight="bold" className="h-4 w-4 text-zinc-800" />
+                  <span>Прикрепление файлов</span>
+                  <span className="font-semibold">
+                    {fileCount > 0 && `${fileCount} выбран(о)`}
+                  </span>
+                </Button>
+                <DashboardModal
+                  proudlyDisplayPoweredByUppy={false}
+                  hideUploadButton
+                  open={fileDashboardOpen}
+                  uppy={uppy}
+                />
                 <div className="flex flex-col justify-around gap-5 md:flex-row">
                   <div className="flex items-center justify-between gap-3">
                     <p>Начало</p>
@@ -146,7 +187,7 @@ export function CertificationCreate({ certificateAdd, portfolioId }: any) {
               </div>
             );
           })}
-          <div className="mt-4 flex flex-col gap-4">
+          {/* <div className="mt-4 flex flex-col gap-4">
             <Button
               type="button"
               onClick={() => {
@@ -162,7 +203,7 @@ export function CertificationCreate({ certificateAdd, portfolioId }: any) {
             >
               <Plus /> Добавить сертификат
             </Button>
-          </div>
+          </div> */}
           <div className="mt-5 flex justify-end gap-3 pt-4">
             <Button onClick={certificateAdd}>Отмена</Button>
             <Button type="submit">Сохранить</Button>

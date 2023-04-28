@@ -1,4 +1,4 @@
-import { Plus } from "@phosphor-icons/react";
+import { Plus, Trash } from "@phosphor-icons/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import api from "../../../../api";
@@ -20,6 +20,9 @@ export default function One() {
   const router = useRouter();
   const { id } = router.query;
   const parsedId = Number.parseInt(id as string, 10) as number;
+  const handleDeleteProfile = () => {
+    api.profiles.destroy(parsedId);
+  };
 
   const [first, setfirst] = useState(1);
   const [second, setsecond] = useState(1);
@@ -109,7 +112,9 @@ export default function One() {
                 {/* <Button className=" bg-slate-700 hover:bg-black">
                   Редактировать
                 </Button> */}
-                <Button className="  bg-red-600">Удалить</Button>
+                <Button variant="outline" onClick={() => handleDeleteProfile()}>
+                  <Trash className="h-6 w-6" />
+                </Button>
               </div>
             ) : (
               <div className="flex gap-5">
@@ -126,7 +131,7 @@ export default function One() {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-10 ">
             <div className="rounded-lg border sm:col-span-3">
-              <General portfolioId={id} />
+              <General profileId={id} />
             </div>
 
             <div className="rounded-lg border bg-white sm:col-span-7">
@@ -225,7 +230,7 @@ export default function One() {
                   </>
                 ) : (
                   <ExperienceCreate
-                    portfolioId={id}
+                    profileId={id}
                     experienceAdd={experienceAdd}
                   />
                 )}

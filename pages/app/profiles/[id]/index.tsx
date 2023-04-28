@@ -1,3 +1,4 @@
+import { Trash } from "@phosphor-icons/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -18,6 +19,8 @@ export default function One() {
   const { id } = router.query as {
     id: string;
   };
+  const parsedId = Number.parseInt(id as string, 10) as number;
+
   const [data, setData] = useState<Entity>();
 
   useEffect(() => {
@@ -40,6 +43,10 @@ export default function One() {
     }
     getSession();
   }, [id]);
+
+  const handleDeleteProfile = () => {
+    api.profiles.destroy(parsedId);
+  };
 
   const isAuthor = first && second && first === second;
 
@@ -78,7 +85,9 @@ export default function One() {
                 {/* <Button className=" bg-slate-700 hover:bg-black">
                   Редактировать
                 </Button> */}
-                <Button className="  bg-red-600">Удалить</Button>
+                <Button variant="outline" onClick={() => handleDeleteProfile()}>
+                  <Trash className="h-6 w-6" />
+                </Button>{" "}
               </div>
             ) : (
               <div className="flex gap-5">
@@ -95,7 +104,7 @@ export default function One() {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-10 ">
             <div className="rounded-lg border sm:col-span-3">
-              <General portfolioId={id} />
+              <General profileId={id} />
             </div>
 
             <div className="rounded-lg border bg-white sm:col-span-7">

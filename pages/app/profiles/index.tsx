@@ -105,7 +105,7 @@ export default function All() {
                 </nav>
               </div>
             </div>
-            <div className="flex flex-wrap items-end justify-end gap-3">
+            {/* <div className="flex flex-wrap items-end justify-end gap-3">
               <div className="flex rounded-lg border">
                 <input
                   value={search}
@@ -142,7 +142,7 @@ export default function All() {
                   <SquaresFour className="h-6 w-6" />
                 </Button>
               </div>
-            </div>
+            </div> */}
           </div>
 
           <div className="grid gap-6 sm:grid-cols-3">

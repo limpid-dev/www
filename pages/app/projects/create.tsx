@@ -36,7 +36,7 @@ export default function Create() {
 
   const onSubmit = async (post: FormValues) => {
     try {
-      const profileId = localStorage.getItem("portfolioId");
+      const profileId = localStorage.getItem("profileId");
       const fullObject = {
         ...post,
         profileId,

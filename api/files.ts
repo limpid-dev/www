@@ -9,6 +9,7 @@ export interface Entity {
   extname: string;
   userId?: number;
   certificateId?: number;
+  profileId?: number;
   projectId?: number;
   auctionId?: number;
   tenderId?: number;

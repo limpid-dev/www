@@ -25,7 +25,10 @@ export function Hero() {
       </p>
       <div className="mt-10 flex justify-center gap-x-6">
         <Link href="/register">
-          <Button variant="solid" color="zinc">
+          <Button
+            variant="default"
+            className="bg-slate-900 text-white hover:bg-black"
+          >
             Начать бесплатно
           </Button>
         </Link>

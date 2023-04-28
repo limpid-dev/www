@@ -16,7 +16,7 @@ interface FormValues {
   }[];
 }
 
-export function ExperienceCreate({ portfolioId, experienceAdd }: any) {
+export function ExperienceCreate({ profileId, experienceAdd }: any) {
   const [error, setError] = useState("");
   const router = useRouter();
 
@@ -39,7 +39,7 @@ export function ExperienceCreate({ portfolioId, experienceAdd }: any) {
   const onSubmit = async (data: FormValues) => {
     try {
       data.experiences.forEach(async (post) => {
-        const { data } = await api.experiences.store(post, portfolioId);
+        const { data } = await api.experiences.store(post, profileId);
       });
       router.reload();
     } catch (error) {

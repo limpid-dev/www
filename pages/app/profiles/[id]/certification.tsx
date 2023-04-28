@@ -1,4 +1,4 @@
-import { Plus, Power } from "@phosphor-icons/react";
+import { Plus, Power, Trash } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -24,44 +24,6 @@ function classNames(...classes: any) {
 export default function One() {
   const router = useRouter();
   const { id } = router.query;
-  const [first, setfirst] = useState(1);
-  const [second, setsecond] = useState(1);
-  const [certificate, setCertificate] = useState(true);
-  const [skill, setSkill] = useState(true);
-  const parsedId = Number.parseInt(id as string, 10) as number;
-  const [certificateData, setCertificateData] = useState<CertificateEntity[]>(
-    []
-  );
-  const [skillsData, setSkillsData] = useState<SkillsEntity[]>([]);
-  useEffect(() => {
-    async function fetchProfiles() {
-      const { data } = await api.profiles.show(parsedId);
-      if (data) {
-        setsecond(data.userId);
-      }
-    }
-    fetchProfiles();
-  }, [parsedId]);
-
-  useEffect(() => {
-    async function getSession() {
-      const { data } = await api.session.show();
-      if (data) {
-        setfirst(data.id);
-      }
-    }
-    getSession();
-  }, [id]);
-
-  const isAuthor = first && second && first === second;
-
-  const skillAdd = () => {
-    setSkill((current: boolean) => !current);
-  };
-
-  const certificateAdd = () => {
-    setCertificate((current: boolean) => !current);
-  };
 
   const tabs = [
     { name: "Ресурсы", href: `/app/profiles/${id}/`, current: false },
@@ -86,10 +48,64 @@ export default function One() {
       current: false,
     },
   ];
+  const [first, setfirst] = useState(1);
+  const [second, setsecond] = useState(1);
+  const [certificate, setCertificate] = useState(true);
+  const [skill, setSkill] = useState(true);
+  const parsedId = Number.parseInt(id as string, 10) as number;
+  const [certificateData, setCertificateData] = useState<CertificateEntity[]>(
+    []
+  );
+  const [skillsData, setSkillsData] = useState<SkillsEntity[]>([]);
+
+  const isAuthor = first && second && first === second;
+
+  const skillAdd = () => {
+    setSkill((current: boolean) => !current);
+  };
+
+  const certificateAdd = () => {
+    setCertificate((current: boolean) => !current);
+  };
+
+  const handleDeleteProfile = () => {
+    api.profiles.destroy(parsedId);
+  };
+
+  const handleDeleteSkill = (skillId: number) => {
+    api.skills.destroy(id, skillId);
+
+    router.reload();
+  };
+
+  useEffect(() => {
+    async function fetchProfiles() {
+      const { data } = await api.profiles.show(parsedId);
+      if (data) {
+        setsecond(data.userId);
+      }
+    }
+    fetchProfiles();
+  }, [parsedId]);
+
+  useEffect(() => {
+    async function getSession() {
+      const { data } = await api.session.show();
+      if (data) {
+        setfirst(data.id);
+      }
+    }
+    getSession();
+  }, [id]);
 
   useEffect(() => {
     async function fetchCertifications() {
       const { data } = await api.certifications.index(parsedId);
+      const { data: files } = await api.certificateFile.index(parsedId, {
+        page: 1,
+        perPage: 100,
+      });
+      console.log(files);
       if (data) {
         const updatedItems = data.map((item) => {
           return {
@@ -120,18 +136,15 @@ export default function One() {
 
       <div className=" min-h-[90vh] bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
-          <h1 className="text-sm">
-            <span className="text-slate-300">Профиль / </span>
-            Консультационные услуги
-          </h1>
-
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
             {isAuthor ? (
               <div className="flex gap-5">
                 {/* <Button className=" bg-slate-700 hover:bg-black">
                   Редактировать
                 </Button> */}
-                <Button className=" bg-red-600">Удалить</Button>
+                <Button variant="outline" onClick={() => handleDeleteProfile()}>
+                  <Trash className="h-6 w-6" />
+                </Button>
               </div>
             ) : (
               <div className="flex gap-5">
@@ -148,7 +161,7 @@ export default function One() {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-10 ">
             <div className="rounded-lg border sm:col-span-3">
-              <General portfolioId={id} />
+              <General profileId={id} />
             </div>
 
             <div className="rounded-lg border bg-white sm:col-span-7">
@@ -240,7 +253,7 @@ export default function One() {
                 ) : (
                   <>
                     <CertificationCreate
-                      portfolioId={id}
+                      profileId={id}
                       certificateAdd={certificateAdd}
                     />
                   </>
@@ -252,12 +265,19 @@ export default function One() {
                   <>
                     <div className="mt-8 flex flex-wrap gap-7">
                       {skillsData.map((skill, skillIndex) => (
-                        <div
-                          key={skillIndex}
-                          className="flex items-center gap-3 rounded-md bg-slate-100 px-4 py-3 text-sm"
-                        >
-                          <Power />
-                          <p>{skill.name}</p>
+                        <div key={skillIndex} className="flex gap-3">
+                          <div className="flex items-center gap-3 rounded-md bg-slate-100 px-4 py-3 text-sm">
+                            <Power />
+                            <p>{skill.name}</p>
+                          </div>
+                          {isAuthor && (
+                            <Button
+                              variant="destructive"
+                              onClick={() => handleDeleteSkill(skill.id)}
+                            >
+                              <Trash className="h-4 w-4" />
+                            </Button>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -268,7 +288,7 @@ export default function One() {
                   </>
                 ) : (
                   <>
-                    <SkillsCreate portfolioId={id} skillAdd={skillAdd} />
+                    <SkillsCreate profileId={id} skillAdd={skillAdd} />
                   </>
                 )}
               </div>

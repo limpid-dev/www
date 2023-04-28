@@ -157,9 +157,7 @@ export default function Tender({ data }: Props) {
                       price: number;
                     };
 
-                    const profileId = Number(
-                      localStorage.getItem("portfolioId")
-                    );
+                    const profileId = Number(localStorage.getItem("profileId"));
 
                     await api.tenders
                       .bids(data.id)

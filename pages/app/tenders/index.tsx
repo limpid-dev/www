@@ -49,6 +49,10 @@ const tabs = [
 ];
 
 export default function Tenders({ data, meta }: Props) {
+  const handleSelectChange = (event: any) => {
+    const selectedPage = event.target.value;
+    router.push(selectedPage);
+  };
   const router = useRouter();
   return (
     <div className="min-h-screen bg-slate-50">
@@ -62,16 +66,14 @@ export default function Tenders({ data, meta }: Props) {
                 Выберите таб
               </label>
               <select
+                onChange={handleSelectChange}
                 id="tabs"
                 name="tabs"
                 className="block w-full  border-gray-300 focus:border-lime-500 focus:ring-lime-500"
-                defaultValue={tabs.find((tab) => tab.current)?.name}
+                defaultValue="/app/tenders"
               >
-                {tabs.map((tab) => (
-                  <option key={tab.name} value={tab.href}>
-                    {tab.name}
-                  </option>
-                ))}
+                <option value="/app/tenders">Все тендеры</option>
+                <option value="/app/tenders/my">Мои тендеры</option>
               </select>
             </div>
             <div className="hidden sm:block">
@@ -94,7 +96,7 @@ export default function Tenders({ data, meta }: Props) {
               </nav>
             </div>
           </div>
-          <div className="flex flex-wrap items-end justify-end gap-3">
+          {/* <div className="flex flex-wrap items-end justify-end gap-3">
             <div className="flex rounded-lg border">
               <input
                 type="search"
@@ -129,7 +131,7 @@ export default function Tenders({ data, meta }: Props) {
                 <SquaresFour className="h-6 w-6" />
               </Button>
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {data.map((tender) => (

@@ -82,9 +82,10 @@ function Plan({ name, price, description, href, features, featured = false }) {
       <Link href="/register">
         <Button
           href={href}
-          variant={featured ? "solid" : "outline"}
-          color="white"
-          className="mt-8"
+          variant={featured ? "subtle" : "outline"}
+          className={
+            featured ? "mt-8 text-black" : "mt-8 text-white hover:text-black"
+          }
           aria-label={`Get started with the ${name} plan for ${price}`}
         >
           Начни сейчас

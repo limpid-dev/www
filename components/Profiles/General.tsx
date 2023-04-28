@@ -1,17 +1,16 @@
-
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import api from "../../api";
 import { Entity } from "../../api/profiles";
 import Test from "../../images/avatars/defaultProfile.svg";
 
-export function General({ portfolioId }: any) {
+export function General({ profileId }: any) {
   const [data, setData] = useState<Entity>();
   const [userData, setUserData] = useState({});
 
   useEffect(() => {
     async function fetchProfiles() {
-      const { data } = await api.profiles.show(portfolioId);
+      const { data } = await api.profiles.show(profileId);
       if (data) {
         setData(data);
       }
@@ -21,7 +20,7 @@ export function General({ portfolioId }: any) {
       }
     }
     fetchProfiles();
-  }, [portfolioId]);
+  }, [profileId]);
 
   return (
     <div className="h-full bg-white px-6">

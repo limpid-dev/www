@@ -74,6 +74,15 @@ export default function Education() {
     setIsAdd((current: boolean) => !current);
   };
 
+  const handleDeleteProfile = () => {
+    api.profiles.destroy(parsedId);
+  };
+
+  const handleDelete = (itemId: any) => {
+    api.educations.destroy(parsedId, itemId);
+    router.reload();
+  };
+
   useEffect(() => {
     async function fetchProfiles() {
       if (Number.isNaN(parsedId)) return;
@@ -104,7 +113,7 @@ export default function Education() {
                 {/* <Button className=" bg-slate-700 hover:bg-black">
                   Редактировать
                 </Button> */}
-                <Button variant="outline">
+                <Button variant="outline" onClick={() => handleDeleteProfile()}>
                   <Trash className="h-6 w-6" />
                 </Button>
               </div>
@@ -123,7 +132,7 @@ export default function Education() {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-10 ">
             <div className="rounded-lg border sm:col-span-3">
-              <General portfolioId={id} />
+              <General profileId={id} />
             </div>
 
             <div className="rounded-lg border bg-white sm:col-span-7">
@@ -218,7 +227,10 @@ export default function Education() {
                               >
                                 <Pen className="h-6 w-6" />
                               </Button>
-                              <Button variant="outline">
+                              <Button
+                                variant="outline"
+                                onClick={() => handleDelete(item.id)}
+                              >
                                 <Trash className="h-6 w-6" />
                               </Button>
                             </div>
@@ -238,7 +250,15 @@ export default function Education() {
                     {isAuthor && (
                       <div className="flex items-center justify-end text-sm text-sky-500 underline">
                         <Plus />
-                        <button onClick={() => setIsAdd(false)}>
+                        <button
+                          onClick={() => {
+                            setIsAdd(false);
+                            router.push({
+                              pathname: `/app/profiles/${id}/education`,
+                              query: {},
+                            });
+                          }}
+                        >
                           Добавить образование
                         </button>
                       </div>
@@ -247,7 +267,7 @@ export default function Education() {
                 ) : (
                   <>
                     <EducationCreate
-                      portfolioId={parsedId}
+                      profileId={parsedId}
                       isAddHandler={isAddHandler}
                     />
                   </>

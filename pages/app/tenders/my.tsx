@@ -111,7 +111,7 @@ export default function TendersMy({ data }: Props) {
       startingPrice?: number;
     };
 
-    const profileId = localStorage.getItem("portfolioId");
+    const profileId = localStorage.getItem("profileId");
 
     if (!profileId) {
       // eslint-disable-next-line no-alert
@@ -130,7 +130,6 @@ export default function TendersMy({ data }: Props) {
     if (data) {
       const files = uppy.getFiles().map((file) => {
         const formData = buildFormData(file.data);
-
         return api.tenders.files(data.id).store(formData);
       });
 
@@ -154,13 +153,10 @@ export default function TendersMy({ data }: Props) {
                   id="tabs"
                   name="tabs"
                   className="block w-full  border-gray-300 focus:border-lime-500 focus:ring-lime-500"
-                  defaultValue={tabs.find((tab) => tab.current)?.name}
+                  defaultValue="/app/tenders/my"
                 >
-                  {tabs.map((tab) => (
-                    <option key={tab.name} value={tab.href}>
-                      {tab.name}
-                    </option>
-                  ))}
+                  <option value="/app/tenders">Все тендеры</option>
+                  <option value="/app/tenders/my">Мои тендеры</option>
                 </select>
               </div>
               <div className="hidden sm:block">
