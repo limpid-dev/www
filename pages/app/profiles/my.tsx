@@ -306,14 +306,6 @@ export default function All() {
                     </div>
                   </div>
                 </div>
-                <DialogFooter>
-                  <Button
-                    className=" bg-black hover:bg-slate-700 "
-                    type="submit"
-                  >
-                    Создать
-                  </Button>
-                </DialogFooter>
               </DialogContent>
             </Dialog>
           </div>

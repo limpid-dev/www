@@ -149,7 +149,7 @@ export function Navigation() {
                           width={0}
                           unoptimized
                           height={0}
-                          src={test?.file.url}
+                          src={test?.file?.url ? test.file.url : testAva}
                           alt=""
                         />
                       )}
