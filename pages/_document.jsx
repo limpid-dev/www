@@ -17,11 +17,6 @@ export default function Document() {
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Lexend:wght@400;500&display=swap"
         />
-        <script
-          defer
-          data-domain="limpid.kz"
-          src="https://analytics.limpid.kz/js/script.js"
-        />
       </Head>
       <body className="flex h-full flex-col">
         <Main />
