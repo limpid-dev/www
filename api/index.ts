@@ -525,6 +525,6 @@ class Api {
   }
 }
 
-const api = new Api("http://localhost:3333");
+const api = new Api(process.env.NEXT_PUBLIC_API_URL);
 
 export default api;

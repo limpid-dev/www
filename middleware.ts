@@ -6,13 +6,16 @@ export async function middleware(request: NextRequest) {
   const Cookie = request.headers.get("Cookie");
 
   if (Cookie) {
-    const response = await fetch("http://localhost:3333/session", {
+    const response = await fetch(process.env.NEXT_PUBLIC_API_URL, {
       method: "GET",
       headers: {
         Cookie,
         Accept: "application/json",
       },
     });
+
+    console.info(process.env);
+    console.info(response);
 
     const json = await response.json();
 
