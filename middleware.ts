@@ -14,6 +14,9 @@ export async function middleware(request: NextRequest) {
       },
     });
 
+    console.info(process.env);
+    console.info(response);
+
     const json = await response.json();
 
     if (typeof json.data === "object" && json.data !== null) {
