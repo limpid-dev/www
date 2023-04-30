@@ -14,6 +14,7 @@ import * as Session from "./session";
 import * as TenderBids from "./tender-bid";
 import * as TenderFiles from "./tender-file";
 import * as Tenders from "./tenders";
+import * as UserFiles from "./user-file";
 import * as Users from "./users";
 import * as Verification from "./verification";
 
@@ -190,6 +191,20 @@ class Api {
           `${this.baseUrl}/users/${id}`,
           payload
         ),
+      avatar: (id: number, payload: UserFiles.Store["Payload"]) => {
+        this.patch<UserFiles.Store["Data"], UserFiles.Store["Payload"]>(
+          `${this.baseUrl}/users/${id}/`,
+          payload,
+          {
+            headers: {
+              ContentType: "multipart/form-data",
+              Accept: "application/json",
+            },
+            body: payload,
+            credentials: "include",
+          }
+        );
+      },
     };
   }
 

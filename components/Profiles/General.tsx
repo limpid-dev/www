@@ -2,11 +2,12 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import api from "../../api";
 import { Entity } from "../../api/profiles";
-import Test from "../../images/avatars/defaultProfile.svg";
+import { Skeleton } from "../Primitives/Skeleton";
 
 export function General({ profileId }: any) {
   const [data, setData] = useState<Entity>();
   const [userData, setUserData] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchProfiles() {
@@ -17,6 +18,7 @@ export function General({ profileId }: any) {
       const { data: user } = await api.users.show(data?.userId);
       if (user) {
         setUserData(user);
+        setLoading(false);
       }
     }
     fetchProfiles();
@@ -25,11 +27,18 @@ export function General({ profileId }: any) {
   return (
     <div className="h-full bg-white px-6">
       <div className="flex flex-col items-center justify-center pt-12">
-        <Image
-          src={Test}
-          alt="Photo by Alvaro Pinot"
-          className="mb-3 h-[106px] w-auto rounded-md object-cover"
-        />
+        {loading ? (
+          <Skeleton className="h-[106px] w-[110px] rounded-md" />
+        ) : (
+          <Image
+            src={userData.file?.url}
+            width={0}
+            height={0}
+            unoptimized
+            alt="Photo by Alvaro Pinot"
+            className="mb-3 h-[106px] w-auto rounded-md object-cover"
+          />
+        )}
         <p className=" text-2xl font-semibold">
           {userData.firstName} {userData.lastName}
         </p>

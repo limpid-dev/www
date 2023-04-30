@@ -54,7 +54,7 @@ export default function All() {
         setLoading(false);
       }
     }
-
+    console.log(profilesData);
     fetchProfiles();
   }, []);
 
@@ -158,7 +158,10 @@ export default function All() {
                       <div className="grid grid-cols-10">
                         <div className="col-span-4">
                           <Image
-                            src={testAva}
+                            src={profile.user.file?.url}
+                            width={0}
+                            height={0}
+                            unoptimized
                             alt="test"
                             className=" h-32 w-32 rounded-lg"
                           />
