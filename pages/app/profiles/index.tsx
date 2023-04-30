@@ -163,7 +163,7 @@ export default function All() {
                             height={0}
                             unoptimized
                             alt="test"
-                            className=" h-32 w-32 rounded-lg"
+                            className=" h-32 w-32 rounded-lg object-cover"
                           />
                         </div>
                         <div className="col-span-6 flex flex-col gap-1 pl-3">

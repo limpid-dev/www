@@ -145,11 +145,11 @@ export function Navigation() {
                         <Skeleton className="h-8 w-8 rounded-full" />
                       ) : (
                         <Image
-                          className="h-8 w-8 rounded-full"
+                          className="h-8 w-8 rounded-full object-cover"
                           width={0}
                           unoptimized
                           height={0}
-                          src={test?.file.url}
+                          src={test?.file?.url ? test.file.url : testAva}
                           alt=""
                         />
                       )}
