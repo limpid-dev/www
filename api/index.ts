@@ -506,6 +506,7 @@ class Api {
         ),
       index: (
         profileId: number,
+        certificateId: number,
         qp: Pick<
           QueryParams<ProfileSertificationFile.Entity>,
           "page" | "perPage"
@@ -513,7 +514,7 @@ class Api {
         init?: Helpers.FetchRequestInit
       ) => {
         const url = Helpers.buildQueryParamsUrl(
-          `${this.baseUrl}/profiles/${profileId}/certificates/6/files`,
+          `${this.baseUrl}/profiles/${profileId}/certificates/1/files`,
           qp
         );
         return this.get<ProfileSertificationFile.Index["Data"]>(

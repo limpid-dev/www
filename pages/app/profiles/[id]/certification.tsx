@@ -57,6 +57,7 @@ export default function One() {
     []
   );
   const [skillsData, setSkillsData] = useState<SkillsEntity[]>([]);
+  const [testFile, setTestFile] = useState();
 
   const isAuthor = first && second && first === second;
 
@@ -101,10 +102,19 @@ export default function One() {
   useEffect(() => {
     async function fetchCertifications() {
       const { data } = await api.certifications.index(parsedId);
-      const { data: files } = await api.certificateFile.index(parsedId, {
-        page: 1,
-        perPage: 100,
-      });
+      const certificateId = data?.id;
+      const { data: files } = await api.certificateFile.index(
+        parsedId,
+        certificateId,
+        {
+          page: 1,
+          perPage: 100,
+        }
+      );
+
+      if(files){
+        setTestFile(files[0])
+      }
       if (data) {
         const updatedItems = data.map((item) => {
           return {

@@ -34,6 +34,7 @@ function classNames(...classes: any) {
 export default function Settings() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const inputRef = useRef(null);
+  const [userId, setUserId] = useState();
 
   const router = useRouter();
   const handleClick = () => {
@@ -47,7 +48,7 @@ export default function Settings() {
       return;
     }
 
-    api.users.avatar(1, buildFormData(fileObj));
+    api.users.avatar(userId, buildFormData(fileObj));
     router.reload();
   };
   const [user, setUser] = useState({});
@@ -55,6 +56,7 @@ export default function Settings() {
   useEffect(() => {
     async function fetchUser() {
       const { data } = await api.session.show();
+      setUserId(data.id);
       if (data) {
         const { data: user } = await api.users.show(data.id);
         setUser(user);
@@ -124,7 +126,7 @@ export default function Settings() {
                 </p>
               </div>
             </div>
-            <div>
+            {/* <div>
               <h2 className="text-base font-semibold leading-7 text-gray-900">
                 Profile
               </h2>
@@ -163,7 +165,7 @@ export default function Settings() {
                   </dd>
                 </div>
               </dl>
-            </div>
+            </div> */}
           </div>
         </main>
       </div>
