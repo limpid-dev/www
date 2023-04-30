@@ -88,6 +88,7 @@ export function CertificationCreate({ certificateAdd, profileId }: any) {
         const { data } = await api.certifications.store(post, profileId);
         if (data) {
           const files = uppy.getFiles();
+          console.log(files[0]);
           const formData = buildFormData(files[0].data);
           const fileId = data.id;
           return api.certificateFile.store(formData, profileId, fileId);

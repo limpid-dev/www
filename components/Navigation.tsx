@@ -1,5 +1,5 @@
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bell, List, X } from "@phosphor-icons/react";
+import { Aperture, Bell, List, X } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,6 +11,7 @@ import { Entity as UserEntity } from "../api/users";
 import testAva from "../images/avatars/defaultProfile.svg";
 import { Logo } from "./Logo";
 import { Button } from "./Primitives/Button";
+import { Skeleton } from "./Primitives/Skeleton";
 
 function findById(array: any, id: any) {
   for (const element of array) {
@@ -38,6 +39,8 @@ export function Navigation() {
   const [profilesData, setProfilesData] = useState<Entity[]>([]);
   const [profession, setProfession] = useState("");
   const [user, setUser] = useState<UserEntity>();
+  const [test, setTest] = useState();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchProfiles() {
@@ -52,6 +55,10 @@ export function Navigation() {
       });
       setUser(sessionData.data);
 
+      const { data: userData } = await api.users.show(userId);
+      console.log(userData);
+      setTest(userData);
+
       if (data) {
         if (data[0]?.id && localStorage.length === 0) {
           localStorage.setItem("profileId", JSON.stringify(data[0].id));
@@ -62,6 +69,7 @@ export function Navigation() {
         );
         setProfession(myObject?.title);
         setProfilesData(data);
+        setLoading(false);
       }
     }
     fetchProfiles();
@@ -133,13 +141,18 @@ export function Navigation() {
                   <div>
                     <Menu.Button className="flex rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2">
                       <span className="sr-only">Open user menu</span>
-                      <Image
-                        className="h-8 w-8 rounded-full"
-                        width={8}
-                        height={8}
-                        src={testAva}
-                        alt=""
-                      />
+                      {loading ? (
+                        <Skeleton className="h-8 w-8 rounded-full" />
+                      ) : (
+                        <Image
+                          className="h-8 w-8 rounded-full"
+                          width={0}
+                          unoptimized
+                          height={0}
+                          src={test?.file.url}
+                          alt=""
+                        />
+                      )}
                     </Menu.Button>
                   </div>
                   <Transition
@@ -173,6 +186,11 @@ export function Navigation() {
                           )}
                         </Menu.Item>
                       ))}
+                      <Link href="/app/settings">
+                        <Button variant="link" className="w-full text-left">
+                          Настройки
+                        </Button>
+                      </Link>
                       <Button
                         onClick={handleLogout}
                         variant="link"

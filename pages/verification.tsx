@@ -64,18 +64,25 @@ export default function Verification() {
             />
           </Field>
           <div className="space-y-4">
-            <Button
-              type="submit"
-              variant="solid"
-              color="lime"
-              className="w-full"
-            >
+            <Button type="submit"
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+             color="lime" className="w-full">
               Подтвердить
             </Button>
             <Button
               onClick={sendVerificationEmail}
               variant="outline"
-              color="zinc"
               type="reset"
               className="w-full"
             >

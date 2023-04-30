@@ -105,7 +105,6 @@ export default function One() {
         page: 1,
         perPage: 100,
       });
-      console.log(files);
       if (data) {
         const updatedItems = data.map((item) => {
           return {

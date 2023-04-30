@@ -7,6 +7,7 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  images: { domains: ["object.pscloud.io"] },
 };
 
 module.exports = nextConfig;
