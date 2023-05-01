@@ -21,6 +21,7 @@ const nextConfig = {
       },
     ];
   },
+  transpilePackages: ["react-pdf"],
 };
 
 module.exports = nextConfig;
