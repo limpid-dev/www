@@ -13,7 +13,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 import api from "../../../api";
-import { buildFormData } from "../../../api/tender-file";
 import { Entity } from "../../../api/tenders";
 import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
@@ -41,6 +40,7 @@ import {
   Label,
   Textarea,
 } from "../../../components/primitives/form";
+import { buildFormData } from "../../../api/files";
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 

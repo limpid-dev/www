@@ -9,11 +9,11 @@ import Router, { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import api from "../../../api";
-import { buildFormData } from "../../../api/project-file";
 import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
 import { Input } from "../../../components/primitives/input";
 import { TextArea } from "../../../components/primitives/text-area";
+import { buildFormData } from "../../../api/files";
 
 interface FormValues {
   title: string;

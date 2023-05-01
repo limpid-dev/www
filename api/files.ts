@@ -14,3 +14,11 @@ export interface Entity {
   auctionId?: number;
   tenderId?: number;
 }
+
+export function buildFormData(file: File | Blob) {
+  const formData = new FormData();
+
+  formData.append("file", file);
+
+  return formData;
+}

@@ -6,9 +6,10 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import api from "../../../api";
-import { buildFormData } from "../../../api/user-file";
+import {  } from "../../../api/user-file";
 import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
+import { buildFormData } from "../../../api/files";
 
 const secondaryNavigation = [
   { name: "Аккаунт", href: "#", icon: UserCircleIcon, current: true },
