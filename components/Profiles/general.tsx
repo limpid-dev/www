@@ -4,7 +4,7 @@ import api from "../../api";
 import { Entity } from "../../api/profiles";
 import * as User from "../../api/users";
 import DefaultAva from "../../images/avatars/defaultProfile.svg";
-import { Skeleton } from "../Primitives/Skeleton";
+import { Skeleton } from "../Primitives/skeleton";
 
 export function General({ profileId }: any) {
   const [profileData, setProfileData] = useState<Entity>();

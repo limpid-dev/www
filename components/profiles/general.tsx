@@ -3,10 +3,11 @@ import { useEffect, useState } from "react";
 import api from "../../api";
 import { Entity } from "../../api/profiles";
 import * as User from "../../api/users";
-import { Skeleton } from "../primitives/skeleton";
+import DefaultAva from "../../images/avatars/defaultProfile.svg";
+import { Skeleton } from "../Primitives/skeleton";
 
 export function General({ profileId }: any) {
-  const [data, setData] = useState<Entity>();
+  const [profileData, setProfileData] = useState<Entity>();
   const [userData, setUserData] = useState<User.Show["Data"] | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -14,7 +15,7 @@ export function General({ profileId }: any) {
     async function fetchProfiles() {
       const { data } = await api.profiles.show(profileId);
       if (data) {
-        setData(data);
+        setProfileData(data);
         const { data: user } = await api.users.show(data.userId);
         if (user) {
           setUserData(user);
@@ -32,7 +33,7 @@ export function General({ profileId }: any) {
           <Skeleton className="h-[106px] w-[110px] rounded-md" />
         ) : (
           <Image
-            src={userData?.file.url}
+            src={userData?.file ? userData.file.url : DefaultAva}
             width={0}
             height={0}
             unoptimized
@@ -41,26 +42,25 @@ export function General({ profileId }: any) {
           />
         )}
         <p className=" text-2xl font-semibold">
-          {userData.firstName} {userData.lastName}
+          {userData?.firstName} {userData?.lastName}
         </p>
-        <p className=" text-sm">{data?.industry}</p>
-        {/* <p className=" text-sm text-sky-500">Отзывы (5)</p> */}
+        <p className=" text-sm">{profileData?.industry}</p>
       </div>
       <div className="mb-6 mt-3" />
       <div className="grid grid-cols-2 gap-y-4">
         <div>
           <p className=" text-sm text-slate-400"> Локация</p>
-          <p className="text-sm">{data?.location}</p>
+          <p className="text-sm">{profileData?.location}</p>
         </div>
         <div>
           <p className=" text-sm text-slate-400">Профессия</p>
-          <p className="text-sm">{data?.title}</p>
+          <p className="text-sm">{profileData?.title}</p>
         </div>
       </div>
       <div className="mb-6 mt-4" />
       <div className="">
         <p className=" text-lg font-semibold">Обо мне</p>
-        <p className="pt-3  text-sm">{data?.description}</p>
+        <p className="pt-3  text-sm">{profileData?.description}</p>
       </div>
       <div className="mb-5 mt-3" />
       {/* <div>
