@@ -4,10 +4,10 @@ import Router, { useRouter } from "next/router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import api from "../../../api";
-import { Navigation } from "../../../components/Navigation";
-import { Button } from "../../../components/Primitives/Button";
-import { Input } from "../../../components/Primitives/Input";
-import { TextArea } from "../../../components/Primitives/TextArea";
+import { Navigation } from "../../../components/navigation";
+import { Button } from "../../../components/primitives/button";
+import { Input } from "../../../components/primitives/input";
+import { TextArea } from "../../../components/primitives/text-area";
 
 interface FormValues {
   title: string;

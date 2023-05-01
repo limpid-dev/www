@@ -3,9 +3,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import api from "../../../../api";
-import { Navigation } from "../../../../components/Navigation";
-import { Button } from "../../../../components/Primitives/Button";
-import { General } from "../../../../components/Profiles/General";
+import { Navigation } from "../../../../components/navigation";
+import { Button } from "../../../../components/primitives/button";
+import { General } from "../../../../components/Profiles/general";
 import Badge from "../../../../images/badge.svg";
 
 function classNames(...classes: any) {

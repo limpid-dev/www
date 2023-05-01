@@ -3,10 +3,10 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import api from "../../../../api";
 import { Entity } from "../../../../api/profile-experiences";
-import { Navigation } from "../../../../components/Navigation";
-import { Button } from "../../../../components/Primitives/Button";
-import { ExperienceCreate } from "../../../../components/Profiles/Create/experience";
-import { General } from "../../../../components/Profiles/General";
+import { Navigation } from "../../../../components/navigation";
+import { Button } from "../../../../components/primitives/button";
+import { ExperienceCreate } from "../../../../components/Profiles/create/experience";
+import { General } from "../../../../components/Profiles/general";
 
 const dateFormatter = (arg: string) => {
   return new Date(arg).getFullYear().toString();

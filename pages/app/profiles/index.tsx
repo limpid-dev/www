@@ -6,9 +6,9 @@ import { useEffect, useState } from "react";
 import api from "../../../api";
 import { Entity } from "../../../api/profiles";
 import * as Users from "../../../api/users";
-import { Navigation } from "../../../components/Navigation";
-import { Button } from "../../../components/Primitives/Button";
-import { Skeleton } from "../../../components/Primitives/Skeleton";
+import { Navigation } from "../../../components/navigation";
+import { Button } from "../../../components/primitives/button";
+import { Skeleton } from "../../../components/primitives/skeleton";
 import testAva from "../../../images/avatars/defaultProfile.svg";
 
 const tabs = [

@@ -15,8 +15,8 @@ import { FormEvent, useEffect, useState } from "react";
 import api from "../../../api";
 import { buildFormData } from "../../../api/tender-file";
 import { Entity } from "../../../api/tenders";
-import { Navigation } from "../../../components/Navigation";
-import { Button } from "../../../components/Primitives/Button";
+import { Navigation } from "../../../components/navigation";
+import { Button } from "../../../components/primitives/button";
 import {
   Card,
   CardContent,
@@ -24,7 +24,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../../../components/Primitives/Card";
+} from "../../../components/primitives/card";
 import {
   Dialog,
   DialogContent,
@@ -33,14 +33,14 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../../../components/Primitives/Dialog";
+} from "../../../components/primitives/dialog";
 import {
   Field,
   Form,
   Input,
   Label,
   Textarea,
-} from "../../../components/Primitives/Form";
+} from "../../../components/primitives/form";
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 

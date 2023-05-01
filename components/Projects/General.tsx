@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import api from "../../api";
 import { Entity } from "../../api/projects";
 import testAva from "../../images/avatars/defaultProfile.svg";
-import { Button } from "../Primitives/Button";
+import { Button } from "../primitives/button";
 
 export default function General({ projectId }: any) {
   const [project, setProject] = useState<Entity>();

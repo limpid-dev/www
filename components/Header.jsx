@@ -2,10 +2,10 @@ import { Popover, Transition } from "@headlessui/react";
 import clsx from "clsx";
 import Link from "next/link";
 import { Fragment } from "react";
-import { Container } from "./Container";
+import { Container } from "./container";
 import { Logo } from "./Logo";
 import { NavLink } from "./NavLink";
-import { Button } from "./Primitives/Button";
+import { Button } from "./primitives/button";
 
 function MobileNavLink({ href, children }) {
   return (

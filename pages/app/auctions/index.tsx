@@ -2,8 +2,8 @@ import { CaretRight, Faders, SquaresFour } from "@phosphor-icons/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { Navigation } from "../../../components/Navigation";
-import { Button } from "../../../components/Primitives/Button";
+import { Navigation } from "../../../components/navigation";
+import { Button } from "../../../components/primitives/button";
 
 const tabs = [
   { name: "Все аукционы", href: "/app/auctions/", current: true },

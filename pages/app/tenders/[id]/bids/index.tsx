@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import api from "../../../../../api";
 import { Entity } from "../../../../../api/tender-bid";
-import { Navigation } from "../../../../../components/Navigation";
+import { Navigation } from "../../../../../components/navigation";
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext

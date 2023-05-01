@@ -3,8 +3,8 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import api from "../../../api";
-import { Button } from "../../Primitives/Button";
-import { TextArea } from "../../Primitives/TextArea";
+import { Button } from "../../primitives/button";
+import { TextArea } from "../../primitives/text-area";
 
 interface FormValues {
   education: {

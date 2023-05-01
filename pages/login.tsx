@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 import api from "../api";
 import { BadRequest, Validation } from "../api/errors";
-import { AuthLayout } from "../components/AuthLayout";
+import { AuthLayout } from "../components/auth-layout";
 import {
   Field,
   Form,
@@ -11,7 +11,7 @@ import {
   Label,
   Message,
   Submit,
-} from "../components/Primitives/Form";
+} from "../components/primitives/form";
 
 export default function Login() {
   const [errors, setErrors] = useState({

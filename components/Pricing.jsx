@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import Link from "next/link";
-import { Container } from "./Container";
-import { Button } from "./Primitives/Button";
+import { Container } from "./container";
+import { Button } from "./primitives/button";
 
 function SwirlyDoodle({ className }) {
   return (

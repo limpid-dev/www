@@ -1,7 +1,7 @@
 import * as Primitives from "@radix-ui/react-form";
 import clsx from "clsx";
 import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
-import { Button, ButtonProps } from "./Button";
+import { Button, ButtonProps } from "./button";
 
 export const Form = forwardRef<
   ElementRef<typeof Primitives.Root>,

@@ -4,8 +4,8 @@ import { InferGetServerSidePropsType, InferGetStaticPropsType } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import api from "../../../api";
-import { Navigation } from "../../../components/Navigation";
-import { Button } from "../../../components/Primitives/Button";
+import { Navigation } from "../../../components/navigation";
+import { Button } from "../../../components/primitives/button";
 import {
   Card,
   CardContent,
@@ -13,7 +13,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../../../components/Primitives/Card";
+} from "../../../components/primitives/card";
 
 const calcTime = (date: string) => {
   const now = new Date();

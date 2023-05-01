@@ -3,11 +3,11 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent } from "react";
 import api from "../api";
-import { AuthLayout } from "../components/AuthLayout";
-import { TextField } from "../components/Fields";
-import { Logo } from "../components/Logo";
-import { Button } from "../components/Primitives/Button";
-import { Field, Form, Input, Label } from "../components/Primitives/Form";
+import { AuthLayout } from "../components/auth-layout";
+import { TextField } from "../components/fields";
+import { Logo } from "../components/logo";
+import { Button } from "../components/primitives/button";
+import { Field, Form, Input, Label } from "../components/primitives/form";
 
 export default function Verification() {
   const router = useRouter();

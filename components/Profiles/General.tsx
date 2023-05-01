@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import api from "../../api";
 import { Entity } from "../../api/profiles";
-import { Skeleton } from "../Primitives/Skeleton";
+import { Skeleton } from "../primitives/skeleton";
 
 export function General({ profileId }: any) {
   const [data, setData] = useState<Entity>();

@@ -5,9 +5,9 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import api from "../../../api";
 import { Entity } from "../../../api/projects";
-import { Navigation } from "../../../components/Navigation";
-import { Button } from "../../../components/Primitives/Button";
-import { Skeleton } from "../../../components/Primitives/Skeleton";
+import { Navigation } from "../../../components/navigation";
+import { Button } from "../../../components/primitives/button";
+import { Skeleton } from "../../../components/primitives/skeleton";
 import testAva from "../../../images/avatars/projectDefault.svg";
 import NoProjects from "../../../images/noProjects.svg";
 

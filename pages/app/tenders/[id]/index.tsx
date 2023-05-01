@@ -3,8 +3,8 @@ import { GetStaticPropsContext, InferGetServerSidePropsType } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import api from "../../../../api";
-import { Navigation } from "../../../../components/Navigation";
-import { Button } from "../../../../components/Primitives/Button";
+import { Navigation } from "../../../../components/navigation";
+import { Button } from "../../../../components/primitives/button";
 import {
   Dialog,
   DialogContent,
@@ -12,13 +12,13 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../../../../components/Primitives/Dialog";
+} from "../../../../components/primitives/dialog";
 import {
   Field,
   Form,
   Input,
   Label,
-} from "../../../../components/Primitives/Form";
+} from "../../../../components/primitives/form";
 
 const calcTime = (date: string) => {
   const now = new Date();

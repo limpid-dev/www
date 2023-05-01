@@ -2,8 +2,8 @@ import { CaretRight, Plus } from "@phosphor-icons/react";
 import { useRouter } from "next/router";
 import { FormEvent } from "react";
 import api from "../../../api";
-import { Navigation } from "../../../components/Navigation";
-import { Button } from "../../../components/Primitives/Button";
+import { Navigation } from "../../../components/navigation";
+import { Button } from "../../../components/primitives/button";
 import {
   Dialog,
   DialogContent,
@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../../../components/Primitives/Dialog";
+} from "../../../components/primitives/dialog";
 import {
   Field,
   Form,
@@ -20,7 +20,7 @@ import {
   Label,
   Message,
   Textarea,
-} from "../../../components/Primitives/Form";
+} from "../../../components/primitives/form";
 
 const tabs = [
   { name: "Все профили", href: "/app/profiles/", current: false },

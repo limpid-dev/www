@@ -7,9 +7,9 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import api from "../../../api";
 import { Entity } from "../../../api/projects";
-import { Navigation } from "../../../components/Navigation";
-import { Button } from "../../../components/Primitives/Button";
-import EmblaCarousel from "../../../components/Primitives/EmblaCarousel";
+import { Navigation } from "../../../components/navigation";
+import { Button } from "../../../components/primitives/button";
+import EmblaCarousel from "../../../components/primitives/EmblaCarousel";
 import testAva from "../../../images/avatars/projectDefault.svg";
 
 const tabs = [

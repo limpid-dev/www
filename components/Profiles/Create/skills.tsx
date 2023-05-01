@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import api from "../../../api";
 import { Entity } from "../../../api/profile-skills";
-import { Button } from "../../Primitives/Button";
-import { Input } from "../../Primitives/Input";
+import { Button } from "../../primitives/button";
+import { Input } from "../../primitives/input";
 
 interface SkillValues {
   skills: {

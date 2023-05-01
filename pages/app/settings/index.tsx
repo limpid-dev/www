@@ -15,8 +15,8 @@ import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import api from "../../../api";
 import { buildFormData } from "../../../api/user-file";
-import { Navigation } from "../../../components/Navigation";
-import { Button } from "../../../components/Primitives/Button";
+import { Navigation } from "../../../components/navigation";
+import { Button } from "../../../components/primitives/button";
 
 const secondaryNavigation = [
   { name: "Аккаунт", href: "#", icon: UserCircleIcon, current: true },
