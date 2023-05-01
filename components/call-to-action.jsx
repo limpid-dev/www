@@ -1,7 +1,7 @@
 import Image from "next/image";
 import backgroundImage from "../images/background-call-to-action.jpg";
-import { Container } from "./Container";
-import { Button } from "./Primitives/Button";
+import { Container } from "./container";
+import { Button } from "./primitives/button";
 
 export function CallToAction() {
   return (

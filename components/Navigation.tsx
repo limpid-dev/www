@@ -1,5 +1,5 @@
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Aperture, Bell, List, X } from "@phosphor-icons/react";
+import { List, X } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";

@@ -64,20 +64,7 @@ export default function Verification() {
             />
           </Field>
           <div className="space-y-4">
-            <Button type="submit"
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-             color="lime" className="w-full">
+            <Button type="submit" color="lime" className="w-full">
               Подтвердить
             </Button>
             <Button

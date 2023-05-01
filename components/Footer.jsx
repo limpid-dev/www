@@ -6,8 +6,8 @@ import {
 } from "@phosphor-icons/react";
 import Link from "next/link";
 import { Container } from "./container";
-import { Logo } from "./Logo";
-import { NavLink } from "./NavLink";
+import { Logo } from "./logo";
+import { NavLink } from "./nav-link";
 
 export function Footer() {
   return (

@@ -5,7 +5,7 @@ import { useId } from "react";
 import screenshotInventory from "../images/screenshots/chat.png";
 import screenshotContacts from "../images/screenshots/invoice.png";
 import screenshotProfitLoss from "../images/screenshots/myProjects.png";
-import { Container } from "./Container";
+import { Container } from "./container";
 
 const features = [
   {

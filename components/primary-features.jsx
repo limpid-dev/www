@@ -7,7 +7,7 @@ import screenshotVatReturns from "../images/screenshots/allAuctions.png";
 import screenshotPayroll from "../images/screenshots/allProfiles.png";
 import screenshotExpenses from "../images/screenshots/allProjects.png";
 import screenshotReporting from "../images/screenshots/allTenders.png";
-import { Container } from "./Container";
+import { Container } from "./container";
 
 const features = [
   {

@@ -1,11 +1,10 @@
-import { CallToAction } from "../components/CallToAction";
-import { Footer } from "../components/Footer";
-import { Header } from "../components/Header";
-import { Hero } from "../components/Hero";
-import { Pricing } from "../components/Pricing";
-import { PrimaryFeatures } from "../components/PrimaryFeatures";
-import { SecondaryFeatures } from "../components/SecondaryFeatures";
-import { Testimonials } from "../components/Testimonials";
+import { Footer } from "../components/footer";
+import { Header } from "../components/header";
+import { Hero } from "../components/hero";
+import { Pricing } from "../components/pricing";
+import { PrimaryFeatures } from "../components/primary-features";
+import { SecondaryFeatures } from "../components/secondary-features";
+import { Testimonials } from "../components/testimonials";
 
 export default function Home() {
   return (
@@ -15,7 +14,6 @@ export default function Home() {
         <Hero />
         <PrimaryFeatures />
         <SecondaryFeatures />
-        {/* <CallToAction /> */}
         <Testimonials />
         <Pricing />
       </main>

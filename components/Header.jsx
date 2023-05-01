@@ -3,8 +3,8 @@ import clsx from "clsx";
 import Link from "next/link";
 import { Fragment } from "react";
 import { Container } from "./container";
-import { Logo } from "./Logo";
-import { NavLink } from "./NavLink";
+import { Logo } from "./logo";
+import { NavLink } from "./nav-link";
 import { Button } from "./primitives/button";
 
 function MobileNavLink({ href, children }) {

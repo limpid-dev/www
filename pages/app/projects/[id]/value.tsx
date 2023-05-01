@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import api from "../../../../api";
 import { Entity } from "../../../../api/projects";
 import { Navigation } from "../../../../components/navigation";
-import { Button } from "../../../../components/primitives/button";
 import General from "../../../../components/projects/general";
 
 function classNames(...classes: any) {
@@ -12,7 +11,6 @@ function classNames(...classes: any) {
 export default function One() {
   const router = useRouter();
   const { id } = router.query;
-  const [isAuthor, seisAuthor] = useState(false);
   const [data, setData] = useState<Entity>();
   const parsedId = Number.parseInt(id as string, 10) as number;
 
@@ -27,7 +25,6 @@ export default function One() {
       if (data) {
         setData(data);
       }
-      console.log(data)
     }
     fetchProfiles();
   }, [parsedId]);
@@ -85,7 +82,7 @@ export default function One() {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-10">
             <div className="rounded-lg border sm:col-span-3">
-            <General projectId={id} />
+              <General projectId={id} />
             </div>
 
             <div className="rounded-lg border bg-white sm:col-span-7">

@@ -1,6 +1,5 @@
-import { Paperclip, Plus } from "@phosphor-icons/react";
 import Link from "next/link";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import api from "../../../api";
@@ -25,32 +24,22 @@ interface FormValues {
 }
 
 export default function Create() {
-  const [error, setError] = useState("");
-  const [tab, setTab] = useState("general");
   const router = useRouter();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>({});
+  const { register, handleSubmit } = useForm<FormValues>({});
 
   const onSubmit = async (post: FormValues) => {
-    try {
-      const profileId = localStorage.getItem("profileId");
-      const fullObject = {
-        ...post,
-        profileId,
-      };
-      const { data } = await api.projects.store(fullObject);
-      if (data) {
-        router.push({
-          pathname: "/app/projects/resources",
-          query: { projectId: data.id },
-        });
-      }
-    } catch (error) {
-      setError("Что то пошло не так, попробуйте позже");
+    const profileId = localStorage.getItem("profileId");
+    const fullObject = {
+      ...post,
+      profileId,
+    };
+    const { data } = await api.projects.store(fullObject);
+    if (data) {
+      router.push({
+        pathname: "/app/projects/resources",
+        query: { projectId: data.id },
+      });
     }
   };
 

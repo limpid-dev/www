@@ -1,4 +1,4 @@
-import { Plus, Trash } from "@phosphor-icons/react";
+import { Plus } from "@phosphor-icons/react";
 import router from "next/router";
 import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -14,15 +14,7 @@ interface SkillValues {
 }
 
 export default function SkillsCreate({ skillAdd, profileId }: any) {
-  const [skillData, setSkillData] = useState<Entity[]>([]);
-  const [error, setError] = useState("");
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    control,
-  } = useForm<SkillValues>({
+  const { register, handleSubmit, control } = useForm<SkillValues>({
     defaultValues: {
       skills: [
         {
@@ -32,24 +24,20 @@ export default function SkillsCreate({ skillAdd, profileId }: any) {
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append } = useFieldArray({
     name: "skills",
     control,
   });
 
   const onSubmit = async (data: SkillValues) => {
-    try {
-      data.skills.forEach(async (post) => {
-        const { data } = await api.skills.store(post, profileId);
-        if (data) {
-          router.reload();
-        } else {
-          throw new Error("Network response was not ok.");
-        }
-      });
-    } catch (error) {
-      setError("Что то пошло не так, попробуйте позже");
-    }
+    data.skills.forEach(async (post) => {
+      const { data } = await api.skills.store(post, profileId);
+      if (data) {
+        router.reload();
+      } else {
+        throw new Error("Network response was not ok.");
+      }
+    });
   };
 
   return (

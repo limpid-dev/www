@@ -2,7 +2,7 @@ import Image from "next/image";
 import avatarImage1 from "../images/avatars/avatar-1.jpg";
 import avatarImage2 from "../images/avatars/avatar-2.jpg";
 import avatarImage3 from "../images/avatars/avatar-3.jpg";
-import { Container } from "./Container";
+import { Container } from "./container";
 
 const testimonials = [
   [

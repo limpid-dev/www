@@ -1,4 +1,3 @@
-import { Faders, SquaresFour } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -7,9 +6,7 @@ import api from "../../../api";
 import { Entity } from "../../../api/profiles";
 import * as Users from "../../../api/users";
 import { Navigation } from "../../../components/navigation";
-import { Button } from "../../../components/primitives/button";
 import { Skeleton } from "../../../components/primitives/skeleton";
-import testAva from "../../../images/avatars/defaultProfile.svg";
 
 const tabs = [
   { name: "Все профили", href: "/app/profiles/", current: true },
@@ -20,14 +17,12 @@ function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 export default function All() {
-  const [search, setSearch] = useState("");
   const [profilesData, setProfilesData] = useState<
     (Entity & { user: Users.Show["Data"] })[]
   >([]);
   const [loading, setLoading] = useState(true);
 
   const router = useRouter();
-  const { id } = router.query;
 
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
