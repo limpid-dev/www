@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import api from "../../../api";
-import { buildFormData } from "../../../api/profileCertifiationFile";
+import { buildFormData } from "../../../api/profile-certificate-files";
 import { Button } from "../../Primitives/Button";
 import { Input } from "../../Primitives/Input";
 import { TextArea } from "../../Primitives/TextArea";

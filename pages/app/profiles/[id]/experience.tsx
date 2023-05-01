@@ -2,7 +2,7 @@ import { Plus, Trash } from "@phosphor-icons/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import api from "../../../../api";
-import { Entity } from "../../../../api/profilesExperience";
+import { Entity } from "../../../../api/profile-experiences";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
 import { ExperienceCreate } from "../../../../components/Profiles/Create/experience";

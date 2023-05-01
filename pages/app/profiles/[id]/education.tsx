@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import api from "../../../../api";
-import { Entity } from "../../../../api/profilesEducation";
+import { Entity } from "../../../../api/profile-educations";
 import { Navigation } from "../../../../components/Navigation";
 import { Button } from "../../../../components/Primitives/Button";
 import { EducationCreate } from "../../../../components/Profiles/Create/education";
