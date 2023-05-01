@@ -9,9 +9,9 @@ import { Entity as CertificateEntity } from "../../../../api/profile-certificate
 import { Entity as SkillsEntity } from "../../../../api/profile-skills";
 import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";
-import { CertificationCreate } from "../../../../components/Profiles/create/certification";
-import SkillsCreate from "../../../../components/Profiles/create/skills";
-import { General } from "../../../../components/Profiles/general";
+import { CertificationCreate } from "../../../../components/profiles/create/certification";
+import SkillsCreate from "../../../../components/profiles/create/skills";
+import { General } from "../../../../components/profiles/general";
 import Badge from "../../../../images/badge.svg";
 
 export default function One() {

@@ -2,11 +2,12 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import api from "../../api";
 import { Entity } from "../../api/profiles";
+import * as User from "../../api/users";
 import { Skeleton } from "../primitives/skeleton";
 
 export function General({ profileId }: any) {
   const [data, setData] = useState<Entity>();
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState<User.Show["Data"] | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -14,11 +15,11 @@ export function General({ profileId }: any) {
       const { data } = await api.profiles.show(profileId);
       if (data) {
         setData(data);
-      }
-      const { data: user } = await api.users.show(data?.userId);
-      if (user) {
-        setUserData(user);
-        setLoading(false);
+        const { data: user } = await api.users.show(data.userId);
+        if (user) {
+          setUserData(user);
+          setLoading(false);
+        }
       }
     }
     fetchProfiles();
@@ -31,7 +32,7 @@ export function General({ profileId }: any) {
           <Skeleton className="h-[106px] w-[110px] rounded-md" />
         ) : (
           <Image
-            src={userData.file?.url}
+            src={userData?.file.url}
             width={0}
             height={0}
             unoptimized

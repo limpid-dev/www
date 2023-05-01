@@ -8,14 +8,8 @@ module.exports = {
   ],
   theme: {
     extend: {
-      borderRadius: {
-        "4xl": "2rem",
-      },
       fontFamily: {
-        sans: ["Inter", ...defaultTheme.fontFamily.sans],
-      },
-      maxWidth: {
-        "2xl": "40rem",
+        sans: ["var(--font-inter)", ...defaultTheme.fontFamily.sans],
       },
     },
   },

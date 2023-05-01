@@ -6,7 +6,7 @@ import api from "../../../../api";
 import { Entity } from "../../../../api/profiles";
 import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";
-import { General } from "../../../../components/Profiles/general";
+import { General } from "../../../../components/profiles/general";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");

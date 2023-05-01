@@ -1,3 +1,5 @@
+import * as File from "./files";
+
 export interface Entity {
   id: number;
   email: string;
@@ -7,6 +9,8 @@ export interface Entity {
   createdAt: string;
   updatedAt: string;
   verifiedAt: null;
+  fileId: number | null;
+  file: File.Entity;
 }
 
 export interface Show {
