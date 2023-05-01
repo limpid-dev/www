@@ -10,15 +10,13 @@ import { Button } from "../../../components/primitives/button";
 import { Skeleton } from "../../../components/primitives/skeleton";
 import testAva from "../../../images/avatars/projectDefault.svg";
 import NoProjects from "../../../images/noProjects.svg";
+import clsx from "clsx";
 
 const tabs = [
   { name: "Все проекты", href: "/app/projects/", current: false },
   { name: "Мои проекты", href: "/app/projects/my", current: true },
 ];
 
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join(" ");
-}
 export default function All() {
   const [projectsData, setProjectsData] = useState<Entity[]>([]);
   const router = useRouter();
@@ -71,7 +69,7 @@ export default function All() {
                     <a
                       key={tab.name}
                       href={tab.href}
-                      className={classNames(
+                      className={clsx(
                         tab.current
                           ? "bg-lime-100 text-lime-700"
                           : "text-gray-500 hover:text-gray-700",

@@ -32,7 +32,7 @@ export default function One() {
     },
     // {
     //   name: "Проекты",
-    //   href: `/app/profiles/${id}/profileProjects`,
+    //   href: `/app/profiles/${id}/projects`,
     //   current: false,
     // },
     {

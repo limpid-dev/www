@@ -7,15 +7,14 @@ import { Entity } from "../../../api/profiles";
 import * as Users from "../../../api/users";
 import { Navigation } from "../../../components/navigation";
 import { Skeleton } from "../../../components/primitives/skeleton";
+import clsx from "clsx";
 
 const tabs = [
   { name: "Все профили", href: "/app/profiles/", current: true },
   { name: "Мои профили", href: "/app/profiles/my", current: false },
 ];
 
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join(" ");
-}
+
 export default function All() {
   const [profilesData, setProfilesData] = useState<
     (Entity & { user: Users.Show["Data"] })[]
@@ -85,7 +84,7 @@ export default function All() {
                     <a
                       key={tab.name}
                       href={tab.href}
-                      className={classNames(
+                      className={clsx(
                         tab.current
                           ? "bg-lime-100 text-lime-700"
                           : "text-gray-500 hover:text-gray-700",

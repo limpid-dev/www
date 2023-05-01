@@ -1,18 +1,10 @@
-// Don't forget the CSS: core and the UI components + plugins you are using.
 import "@uppy/core/dist/style.min.css";
 import "@uppy/dashboard/dist/style.min.css";
-import {
-  BellIcon,
-  CreditCardIcon,
-  CubeIcon,
-  FingerPrintIcon,
-  UserCircleIcon,
-  UsersIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { UserCircleIcon } from "@heroicons/react/24/outline";
+import clsx from "clsx";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import api from "../../../api";
 import { buildFormData } from "../../../api/user-file";
 import { Navigation } from "../../../components/navigation";
@@ -26,10 +18,6 @@ const secondaryNavigation = [
   //   { name: "Billing", href: "#", icon: CreditCardIcon, current: false },
   //   { name: "Team members", href: "#", icon: UsersIcon, current: false },
 ];
-
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export default function Settings() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -77,7 +65,7 @@ export default function Settings() {
                 <li key={item.name}>
                   <a
                     href={item.href}
-                    className={classNames(
+                    className={clsx(
                       item.current
                         ? "bg-gray-50 text-lime-600"
                         : "text-gray-700 hover:bg-gray-50 hover:text-lime-600",
@@ -85,7 +73,7 @@ export default function Settings() {
                     )}
                   >
                     <item.icon
-                      className={classNames(
+                      className={clsx(
                         item.current
                           ? "text-lime-600"
                           : "text-gray-400 group-hover:text-lime-600",

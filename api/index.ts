@@ -3,11 +3,11 @@ import * as Health from "./health";
 import * as Helpers from "./helpers";
 import { QueryParams } from "./helpers";
 import * as ProfileSertificationFile from "./profile-certificate-files";
-import * as Profiles from "./profiles";
 import * as ProfileSertifications from "./profile-certificates";
 import * as ProfilesEducations from "./profile-educations";
 import * as ProfilesExperiences from "./profile-experiences";
 import * as ProfilesSkills from "./profile-skills";
+import * as Profiles from "./profiles";
 import * as ProjectFiles from "./project-file";
 import * as Projects from "./projects";
 import * as Recovery from "./recovery";
@@ -106,6 +106,7 @@ class Api {
       fetch(input, {
         method: "GET",
         headers: {
+          ...init?.headers,
           Accept: this.json,
         },
         credentials: "include",
@@ -127,6 +128,7 @@ class Api {
           Accept: this.json,
           "Content-Type": this.json,
           "X-XSRF-TOKEN": this.xsrf,
+          ...init?.headers,
         },
         body: JSON.stringify(payload),
         credentials: "include",
@@ -148,6 +150,7 @@ class Api {
           Accept: this.json,
           "Content-Type": this.json,
           "X-XSRF-TOKEN": this.xsrf,
+          ...init?.headers,
         },
         body: JSON.stringify(payload),
         credentials: "include",
@@ -163,6 +166,7 @@ class Api {
         method: "DELETE",
         headers: {
           "X-XSRF-TOKEN": this.xsrf,
+          ...init?.headers,
         },
         credentials: "include",
         ...init,

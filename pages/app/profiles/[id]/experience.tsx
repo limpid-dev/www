@@ -12,9 +12,6 @@ const dateFormatter = (arg: string) => {
   return new Date(arg).getFullYear().toString();
 };
 
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export default function One() {
   const router = useRouter();
@@ -64,7 +61,7 @@ export default function One() {
     },
     // {
     //   name: "Проекты",
-    //   href: `/app/profiles/${id}/profileProjects`,
+    //   href: `/app/profiles/${id}/projects`,
     //   current: false,
     // },
     {
@@ -160,7 +157,7 @@ export default function One() {
                       <a
                         key={tab.name}
                         href={tab.href}
-                        className={classNames(
+                        className={clsx(
                           tab.current
                             ? "text-gray-900"
                             : "text-gray-500 hover:text-gray-700",
@@ -173,7 +170,7 @@ export default function One() {
                         <span>{tab.name}</span>
                         <span
                           aria-hidden="true"
-                          className={classNames(
+                          className={clsx(
                             tab.current ? "bg-lime-500" : "bg-transparent",
                             "absolute inset-x-0 bottom-0 h-0.5"
                           )}
