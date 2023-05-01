@@ -46,7 +46,6 @@ export default function TenderBids({ data, tender }: Props) {
   const router = useRouter();
   const [a, setData] = useState<Entity[]>(data);
 
-
   const id = router.query.id as string;
 
   useEffect(() => {

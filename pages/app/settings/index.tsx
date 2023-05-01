@@ -1,5 +1,6 @@
 import "@uppy/core/dist/style.min.css";
 import "@uppy/dashboard/dist/style.min.css";
+import { UserCircle } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -9,7 +10,6 @@ import { buildFormData } from "../../../api/files";
 import {} from "../../../api/user-file";
 import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
-import { UserCircle } from "@phosphor-icons/react";
 
 const secondaryNavigation = [
   { name: "Аккаунт", href: "#", icon: UserCircle, current: true },

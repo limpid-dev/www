@@ -15,7 +15,7 @@ import {
 import {
   Sheet,
   SheetContent,
-  SheetTrigger
+  SheetTrigger,
 } from "../components/primitives/sheet";
 import { PrivacyPolicy } from "../components/privacy-policy";
 import { Proposal } from "../components/proposal";
