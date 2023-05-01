@@ -4,10 +4,10 @@ import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 import api from "../api";
 import * as Errors from "../api/errors";
-import { AuthLayout } from "../components/AuthLayout";
-import { TextField } from "../components/Fields";
-import { Logo } from "../components/Logo";
-import { Button } from "../components/Primitives/Button";
+import { AuthLayout } from "../components/auth-layout";
+import { TextField } from "../components/fields";
+import { Logo } from "../components/logo";
+import { Button } from "../components/primitives/button";
 import {
   Dialog,
   DialogContent,
@@ -15,7 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../components/Primitives/Dialog";
+} from "../components/primitives/dialog";
 import {
   Field,
   Form,
@@ -23,8 +23,8 @@ import {
   Label,
   Message,
   Submit,
-} from "../components/Primitives/Form";
-import { ScrollArea } from "../components/Primitives/Scroll-area";
+} from "../components/primitives/form";
+import { ScrollArea } from "../components/primitives/scroll-area";
 import {
   Sheet,
   SheetContent,
@@ -33,9 +33,9 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "../components/Primitives/Sheet";
-import { PrivacyPolicy } from "../components/PrivacyPolicy";
-import { Proposal } from "../components/Proposal";
+} from "../components/primitives/sheet";
+import { PrivacyPolicy } from "../components/privacy-policy";
+import { Proposal } from "../components/proposal";
 
 export default function Register() {
   const router = useRouter();

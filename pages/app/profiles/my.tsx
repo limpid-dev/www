@@ -9,8 +9,8 @@ import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 import api from "../../../api";
 import { Entity } from "../../../api/profiles";
-import { Navigation } from "../../../components/Navigation";
-import { Button } from "../../../components/Primitives/Button";
+import { Navigation } from "../../../components/navigation";
+import { Button } from "../../../components/primitives/button";
 import {
   Dialog,
   DialogContent,
@@ -19,7 +19,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../../../components/Primitives/Dialog";
+} from "../../../components/primitives/dialog";
 import {
   Field,
   Form,
@@ -27,14 +27,14 @@ import {
   Label,
   Message,
   Textarea,
-} from "../../../components/Primitives/Form";
-import { Skeleton } from "../../../components/Primitives/Skeleton";
+} from "../../../components/primitives/form";
+import { Skeleton } from "../../../components/primitives/skeleton";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "../../../components/Primitives/Tooltip";
+} from "../../../components/primitives/tooltip";
 import AnalyzingMarket from "../../../images/analyzingMarket.svg";
 import NoProfiles from "../../../images/noProfiles.svg";
 import onLaptop from "../../../images/onLaptop.svg";
