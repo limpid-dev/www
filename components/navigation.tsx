@@ -10,8 +10,8 @@ import { Entity } from "../api/profiles";
 import { Entity as UserEntity } from "../api/users";
 import testAva from "../images/avatars/defaultProfile.svg";
 import { Logo } from "./logo";
-import { Button } from "./Primitives/button";
-import { Skeleton } from "./Primitives/skeleton";
+import { Button } from "./primitives/button";
+import { Skeleton } from "./primitives/skeleton";
 
 function findById(array: any, id: any) {
   for (const element of array) {
