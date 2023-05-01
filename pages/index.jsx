@@ -8,15 +8,421 @@ import {
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useId, useState } from "react";
 import { Button } from "../components/primitives/button";
-import { SecondaryFeatures } from "../components/secondary-features";
-import { Testimonials } from "../components/testimonials";
+import avatarImage1 from "../images/avatars/avatar-1.jpg";
+import avatarImage2 from "../images/avatars/avatar-2.jpg";
+import avatarImage3 from "../images/avatars/avatar-3.jpg";
 import backgroundImage from "../images/background-features.jpg";
 import screenshotVatReturns from "../images/screenshots/allAuctions.png";
 import screenshotPayroll from "../images/screenshots/allProfiles.png";
 import screenshotExpenses from "../images/screenshots/allProjects.png";
 import screenshotReporting from "../images/screenshots/allTenders.png";
+import screenshotInventory from "../images/screenshots/chat.png";
+import screenshotContacts from "../images/screenshots/invoice.png";
+import screenshotProfitLoss from "../images/screenshots/myProjects.png";
+
+const primaryFeatures = [
+  {
+    title: "Профили",
+    description: "Создавайте свой профиль и будьте частью бизнес-сообщества",
+    image: screenshotPayroll,
+  },
+  {
+    title: "Создайте проект!",
+    description:
+      "Есть идея? Не откладывайте! У кого-то есть то, что тебе нужно! Найдите друг друга в LIM",
+    image: screenshotExpenses,
+  },
+  {
+    title: "Участвуйте в аукционах!",
+    description: "Закупайте и участвуйте в закупках без комиссий!",
+    image: screenshotVatReturns,
+  },
+  {
+    title: "Маркетплейс",
+    description:
+      "Продавайте на нашем маркетплэйсе без комиссий и выбирайте лучшие предложения!",
+    image: screenshotReporting,
+  },
+];
+
+export function PrimaryFeatures() {
+  const [tabOrientation, setTabOrientation] = useState("horizontal");
+
+  useEffect(() => {
+    const lgMediaQuery = window.matchMedia("(min-width: 1024px)");
+
+    function onMediaQueryChange({ matches }) {
+      setTabOrientation(matches ? "vertical" : "horizontal");
+    }
+
+    onMediaQueryChange(lgMediaQuery);
+    lgMediaQuery.addEventListener("change", onMediaQueryChange);
+
+    return () => {
+      lgMediaQuery.removeEventListener("change", onMediaQueryChange);
+    };
+  }, []);
+
+  return (
+    <section
+      id="features"
+      aria-label="Features for running your books"
+      className="relative overflow-hidden pb-28 pt-20 sm:py-32"
+    >
+      <Image
+        className="absolute left-1/2 top-1/2 max-w-none translate-x-[-44%] translate-y-[-42%] "
+        src={backgroundImage}
+        alt=""
+        width={2245}
+        height={1636}
+        unoptimized
+      />
+      <Container className="relative">
+        <div className="max-w-2xl md:mx-auto md:text-center xl:max-w-none">
+          <h2 className=" text-3xl tracking-tight text-white sm:text-4xl md:text-5xl">
+            Чем вам поможет платформа LIM?
+          </h2>
+          <p className="mt-6 text-lg tracking-tight text-lime-100">
+            Публикуйте идею, ищите единомышленников, берите их в долю и
+            начинайте действовать.
+          </p>
+        </div>
+        <Tab.Group
+          as="div"
+          className="mt-16 grid grid-cols-1 items-center gap-y-2 pt-10 sm:gap-y-6 md:mt-20 lg:grid-cols-12 lg:pt-0"
+          vertical={tabOrientation === "vertical"}
+        >
+          {({ selectedIndex }) => (
+            <>
+              <div className="-mx-4 flex overflow-x-auto pb-4 sm:mx-0 sm:overflow-visible sm:pb-0 lg:col-span-5">
+                <Tab.List className="relative z-10 flex gap-x-4 whitespace-nowrap px-4 sm:mx-auto sm:px-0 lg:mx-0 lg:block lg:gap-x-0 lg:gap-y-1 lg:whitespace-normal">
+                  {primaryFeatures.map((feature, featureIndex) => (
+                    <div
+                      key={feature.title}
+                      className={clsx(
+                        "group relative rounded-full px-4 py-1 lg:rounded-l-xl lg:rounded-r-none lg:p-6",
+                        selectedIndex === featureIndex
+                          ? "bg-white lg:bg-white/10 lg:ring-1 lg:ring-inset lg:ring-white/10"
+                          : "hover:bg-white/10 lg:hover:bg-white/5"
+                      )}
+                    >
+                      <h3>
+                        <Tab
+                          className={clsx(
+                            " text-lg [&:not(:focus-visible)]:focus:outline-none",
+                            selectedIndex === featureIndex
+                              ? "text-lime-600 lg:text-white"
+                              : "text-lime-100 hover:text-white lg:text-white"
+                          )}
+                        >
+                          <span className="absolute inset-0 rounded-full lg:rounded-l-xl lg:rounded-r-none" />
+                          {feature.title}
+                        </Tab>
+                      </h3>
+                      <p
+                        className={clsx(
+                          "mt-2 hidden text-sm lg:block",
+                          selectedIndex === featureIndex
+                            ? "text-white"
+                            : "text-lime-100 group-hover:text-white"
+                        )}
+                      >
+                        {feature.description}
+                      </p>
+                    </div>
+                  ))}
+                </Tab.List>
+              </div>
+              <Tab.Panels className="lg:col-span-7">
+                {primaryFeatures.map((feature) => (
+                  <Tab.Panel key={feature.title} unmount={false}>
+                    <div className="relative sm:px-6 lg:hidden">
+                      <div className="absolute -inset-x-4 bottom-[-4.25rem] top-[-6.5rem] bg-white/10 ring-1 ring-inset ring-white/10 sm:inset-x-0 sm:rounded-t-xl" />
+                      <p className="relative mx-auto max-w-2xl text-base text-white sm:text-center">
+                        {feature.description}
+                      </p>
+                    </div>
+                    <div className="mt-10 w-[45rem] overflow-hidden rounded-xl bg-zinc-50 shadow-xl shadow-lime-900/20 sm:w-auto lg:mt-0 lg:w-[67.8125rem]">
+                      <Image
+                        className="w-full"
+                        src={feature.image}
+                        alt=""
+                        priority
+                        sizes="(min-width: 1024px) 67.8125rem, (min-width: 640px) 100vw, 45rem"
+                      />
+                    </div>
+                  </Tab.Panel>
+                ))}
+              </Tab.Panels>
+            </>
+          )}
+        </Tab.Group>
+      </Container>
+    </section>
+  );
+}
+
+const secondaryFeatures = [
+  {
+    name: "Множества проектов",
+    summary: "Воплащайте свои мечты в 1 клик",
+    description:
+      "Вы можете воплатить свою идею в жизнь! Найдите партнеров, и начните действовать",
+    image: screenshotProfitLoss,
+    icon: function ReportingIcon() {
+      const id = useId();
+      return (
+        <>
+          <defs>
+            <linearGradient
+              id={id}
+              x1="11.5"
+              y1={18}
+              x2={36}
+              y2="15.5"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop offset=".194" stopColor="#fff" />
+              <stop offset={1} stopColor="#6692F1" />
+            </linearGradient>
+          </defs>
+          <path
+            d="m30 15-4 5-4-11-4 18-4-11-4 7-4-5"
+            stroke={`url(#${id})`}
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </>
+      );
+    },
+  },
+  {
+    name: "Коммуникация ключ к успеху",
+    summary: "Каждый проект имеет личное обсуждение",
+    description:
+      "В обсуждении проекта могут принять неограниченное количество пользователей",
+    image: screenshotInventory,
+    icon: function InventoryIcon() {
+      return (
+        <>
+          <path
+            opacity=".5"
+            d="M8 17a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2Z"
+            fill="#fff"
+          />
+          <path
+            opacity=".3"
+            d="M8 24a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2Z"
+            fill="#fff"
+          />
+          <path
+            d="M8 10a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2Z"
+            fill="#fff"
+          />
+        </>
+      );
+    },
+  },
+  {
+    name: "Делитесь вашим опытом, либо ресурсами",
+    summary: "Создавайте объявления",
+    description: "Наша платформа поддерживает все возможные пути заработка",
+    image: screenshotContacts,
+    icon: function ContactsIcon() {
+      return (
+        <>
+          <path
+            opacity=".5"
+            d="M25.778 25.778c.39.39 1.027.393 1.384-.028A11.952 11.952 0 0 0 30 18c0-6.627-5.373-12-12-12S6 11.373 6 18c0 2.954 1.067 5.659 2.838 7.75.357.421.993.419 1.384.028.39-.39.386-1.02.036-1.448A9.959 9.959 0 0 1 8 18c0-5.523 4.477-10 10-10s10 4.477 10 10a9.959 9.959 0 0 1-2.258 6.33c-.35.427-.354 1.058.036 1.448Z"
+            fill="#fff"
+          />
+          <path
+            d="M12 28.395V28a6 6 0 0 1 12 0v.395A11.945 11.945 0 0 1 18 30c-2.186 0-4.235-.584-6-1.605ZM21 16.5c0-1.933-.5-3.5-3-3.5s-3 1.567-3 3.5 1.343 3.5 3 3.5 3-1.567 3-3.5Z"
+            fill="#fff"
+          />
+        </>
+      );
+    },
+  },
+];
+
+function Feature({ feature, isActive, className, ...props }) {
+  return (
+    <div
+      className={clsx(className, !isActive && "opacity-75 hover:opacity-100")}
+      {...props}
+    >
+      <div
+        className={clsx(
+          "w-9 rounded-lg",
+          isActive ? "bg-lime-600" : "bg-zinc-500"
+        )}
+      >
+        <svg aria-hidden="true" className="h-9 w-9" fill="none">
+          <feature.icon />
+        </svg>
+      </div>
+      <h3
+        className={clsx(
+          "mt-6 text-sm font-medium",
+          isActive ? "text-lime-600" : "text-zinc-600"
+        )}
+      >
+        {feature.name}
+      </h3>
+      <p className="mt-2  text-xl text-zinc-900">{feature.summary}</p>
+      <p className="mt-4 text-sm text-zinc-600">{feature.description}</p>
+    </div>
+  );
+}
+
+function FeaturesMobile() {
+  return (
+    <div className="-mx-4 mt-20 flex flex-col gap-y-10 overflow-hidden px-4 sm:-mx-6 sm:px-6 lg:hidden">
+      {secondaryFeatures.map((feature) => (
+        <div key={feature.name}>
+          <Feature feature={feature} className="mx-auto max-w-2xl" isActive />
+          <div className="relative mt-10 pb-10">
+            <div className="absolute -inset-x-4 bottom-0 top-8 bg-zinc-200 sm:-inset-x-6" />
+            <div className="relative mx-auto w-[52.75rem] overflow-hidden rounded-xl bg-white shadow-lg shadow-zinc-900/5 ring-1 ring-zinc-500/10">
+              <Image
+                className="w-full"
+                src={feature.image}
+                alt=""
+                sizes="52.75rem"
+              />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function FeaturesDesktop() {
+  return (
+    <Tab.Group as="div" className="hidden lg:mt-20 lg:block">
+      {({ selectedIndex }) => (
+        <>
+          <Tab.List className="grid grid-cols-3 gap-x-8">
+            {secondaryFeatures.map((feature, featureIndex) => (
+              <Feature
+                key={feature.name}
+                feature={{
+                  ...feature,
+                  name: (
+                    <Tab className="[&:not(:focus-visible)]:focus:outline-none">
+                      <span className="absolute inset-0" />
+                      {feature.name}
+                    </Tab>
+                  ),
+                }}
+                isActive={featureIndex === selectedIndex}
+                className="relative"
+              />
+            ))}
+          </Tab.List>
+          <Tab.Panels className="relative mt-20 overflow-hidden rounded-3xl bg-zinc-200 px-14 py-16 xl:px-16">
+            <div className="-mx-5 flex">
+              {secondaryFeatures.map((feature, featureIndex) => (
+                <Tab.Panel
+                  key={feature.name}
+                  static
+                  className={clsx(
+                    "px-5 transition duration-500 ease-in-out [&:not(:focus-visible)]:focus:outline-none",
+                    featureIndex !== selectedIndex && "opacity-60"
+                  )}
+                  style={{ transform: `translateX(-${selectedIndex * 100}%)` }}
+                  aria-hidden={featureIndex !== selectedIndex}
+                >
+                  <div className="w-[52.75rem] overflow-hidden rounded-xl bg-white shadow-lg shadow-zinc-900/5 ring-1 ring-zinc-500/10">
+                    <Image
+                      className="w-full"
+                      src={feature.image}
+                      alt=""
+                      sizes="52.75rem"
+                    />
+                  </div>
+                </Tab.Panel>
+              ))}
+            </div>
+            <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-zinc-900/10" />
+          </Tab.Panels>
+        </>
+      )}
+    </Tab.Group>
+  );
+}
+
+export function SecondaryFeatures() {
+  return (
+    <section
+      id="secondary-features"
+      aria-label="Features for simplifying everyday business tasks"
+      className="pb-14 pt-20 sm:pb-20 sm:pt-32 lg:pb-32"
+    >
+      <Container>
+        <div className="mx-auto max-w-2xl md:text-center">
+          <h2 className=" text-3xl tracking-tight text-zinc-900 sm:text-4xl">
+            LIM - ты не один !
+          </h2>
+          <p className="mt-4 text-lg tracking-tight text-zinc-700">
+            Наша платформа позволяет открыть свой бизнес совместными усилиями
+          </p>
+        </div>
+        <FeaturesMobile />
+        <FeaturesDesktop />
+      </Container>
+    </section>
+  );
+}
+
+const testimonials = [
+  [
+    {
+      content:
+        "Limpid - это настоящий прорыв для меня в создании моего бизнеса, благодаря возможности создания проектов и формирования сообщества. Интуитивный интерфейс и мощные функции платформы позволили мне эффективно управлять своими инициативами, налаживать контакты и обмениваться идеями с единомышленниками. Благодаря Limpid моя бизнес-идея стала реальностью!",
+      author: {
+        name: "Абзал Игиссин",
+        role: "CEO KZGBKR",
+        image: avatarImage1,
+      },
+    },
+  ],
+  [
+    {
+      content:
+        "Я искренне благодарен Limpid за поддержку в создании и управлении проектами и сообществом для моего бизнеса. Инструменты управления проектами и функции формирования сообщества платформы позволили мне находиться на одной волне с другими предпринимателями, обмениваться идеями и получать обратную связь, чтобы совершенствовать мою бизнес-концепцию. Limpid действительно помог мне воплотить свою мечту в жизнь!",
+      author: {
+        name: "Нұрбақыт Жүсіпәлиев",
+        role: "Director SMART INVESTOR",
+        image: avatarImage2,
+      },
+    },
+  ],
+  [
+    {
+      content:
+        "Limpid - это незаменимая платформа для меня в создании и развитии моих бизнес-проектов и сообщества. Простой в использовании интерфейс и мощные функции платформы позволяют мне эффективно планировать и воплощать свои инициативы, а также налаживать контакты с другими предпринимателями. Я искренне благодарен Limpid за его влияние на мой предпринимательский путь.",
+      author: {
+        name: "Куаныш Асембай",
+        role: "Director Design Sensei",
+        image: avatarImage3,
+      },
+    },
+  ],
+];
+
+function QuoteIcon(props) {
+  return (
+    <svg aria-hidden="true" width={105} height={78} {...props}>
+      <path d="M25.086 77.292c-4.821 0-9.115-1.205-12.882-3.616-3.767-2.561-6.78-6.102-9.04-10.622C1.054 58.534 0 53.411 0 47.686c0-5.273.904-10.396 2.712-15.368 1.959-4.972 4.746-9.567 8.362-13.786a59.042 59.042 0 0 1 12.43-11.3C28.325 3.917 33.599 1.507 39.324 0l11.074 13.786c-6.479 2.561-11.677 5.951-15.594 10.17-3.767 4.219-5.65 7.835-5.65 10.848 0 1.356.377 2.863 1.13 4.52.904 1.507 2.637 3.089 5.198 4.746 3.767 2.41 6.328 4.972 7.684 7.684 1.507 2.561 2.26 5.5 2.26 8.814 0 5.123-1.959 9.19-5.876 12.204-3.767 3.013-8.588 4.52-14.464 4.52Zm54.24 0c-4.821 0-9.115-1.205-12.882-3.616-3.767-2.561-6.78-6.102-9.04-10.622-2.11-4.52-3.164-9.643-3.164-15.368 0-5.273.904-10.396 2.712-15.368 1.959-4.972 4.746-9.567 8.362-13.786a59.042 59.042 0 0 1 12.43-11.3C82.565 3.917 87.839 1.507 93.564 0l11.074 13.786c-6.479 2.561-11.677 5.951-15.594 10.17-3.767 4.219-5.65 7.835-5.65 10.848 0 1.356.377 2.863 1.13 4.52.904 1.507 2.637 3.089 5.198 4.746 3.767 2.41 6.328 4.972 7.684 7.684 1.507 2.561 2.26 5.5 2.26 8.814 0 5.123-1.959 9.19-5.876 12.204-3.767 3.013-8.588 4.52-14.464 4.52Z" />
+    </svg>
+  );
+}
 
 export function Footer() {
   return (
@@ -614,7 +1020,63 @@ export default function Home() {
         </Container>
       </section>
       <SecondaryFeatures />
-      <Testimonials />
+      <section
+        id="testimonials"
+        aria-label="What our customers are saying"
+        className="bg-zinc-50 py-20 sm:py-32"
+      >
+        <Container>
+          <div className="mx-auto max-w-2xl md:text-center">
+            <h2 className=" text-3xl tracking-tight text-zinc-900 sm:text-4xl">
+              Любимый людьми по всей стране.
+            </h2>
+            <p className="mt-4 text-lg tracking-tight text-zinc-700">
+              Наше программное обеспечение настолько простое, что люди не могут
+              не влюбиться в него. Простота — это легко, когда вы просто
+              пропускаете множество критически важных функций.
+            </p>
+          </div>
+          <ul className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-6 sm:gap-8 lg:mt-20 lg:max-w-none lg:grid-cols-3">
+            {testimonials.map((column, columnIndex) => (
+              <li key={columnIndex}>
+                <ul className="flex flex-col gap-y-6 sm:gap-y-8">
+                  {column.map((testimonial, testimonialIndex) => (
+                    <li key={testimonialIndex}>
+                      <figure className="relative rounded-2xl bg-white p-6 shadow-xl shadow-zinc-900/10">
+                        <QuoteIcon className="absolute left-6 top-6 fill-zinc-100" />
+                        <blockquote className="relative">
+                          <p className="text-lg tracking-tight text-zinc-900">
+                            {testimonial.content}
+                          </p>
+                        </blockquote>
+                        <figcaption className="relative mt-6 flex items-center justify-between border-t border-zinc-100 pt-6">
+                          <div>
+                            <div className=" text-base text-zinc-900">
+                              {testimonial.author.name}
+                            </div>
+                            <div className="mt-1 text-sm text-zinc-500">
+                              {testimonial.author.role}
+                            </div>
+                          </div>
+                          <div className="overflow-hidden rounded-full bg-zinc-50">
+                            <Image
+                              className="h-14 w-14 object-cover"
+                              src={testimonial.author.image}
+                              alt=""
+                              width={56}
+                              height={56}
+                            />
+                          </div>
+                        </figcaption>
+                      </figure>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </Container>
+      </section>
       <Pricing />
       <Footer />
     </>

@@ -1,5 +1,6 @@
 import "focus-visible";
 import "../tailwind.css";
+import clsx from "clsx";
 import { AppProps } from "next/app";
 import { Inter } from "next/font/google";
 import Script from "next/script";
@@ -11,7 +12,7 @@ const inter = Inter({
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <div className={inter.variable}>
+    <div className={clsx(inter.variable, "font-sans")}>
       <Component {...pageProps} />
       <Script defer data-domain="limpid.kz" src="/js/script.js" />
     </div>

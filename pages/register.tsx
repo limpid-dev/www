@@ -17,8 +17,6 @@ import {
   SheetContent,
   SheetTrigger,
 } from "../components/primitives/sheet";
-import { PrivacyPolicy } from "../components/privacy-policy";
-import { Proposal } from "../components/proposal";
 
 export default function Register() {
   const router = useRouter();
@@ -100,35 +98,19 @@ export default function Register() {
         </Field>
         <div className="text-xs">
           Регистрируясь в Limpid, вы соглашаетесь с{" "}
-          <Sheet>
-            <SheetTrigger asChild>
-              <p className="focus inline-block w-fit cursor-pointer font-semibold text-lime-600 hover:underline">
-                Условиями предоставления услуг
-              </p>
-            </SheetTrigger>
-            <SheetContent
-              position="right"
-              size="full"
-              className=" overflow-auto"
-            >
-              <Proposal />
-            </SheetContent>
-          </Sheet>{" "}
+          <Link
+            href="/terms-and-conditions"
+            className="focus inline-block w-fit cursor-pointer font-semibold text-lime-600 hover:underline"
+          >
+            Условиями предоставления услуг
+          </Link>
           и{" "}
-          <Sheet>
-            <SheetTrigger asChild>
-              <p className="inline-block w-fit cursor-pointer font-semibold text-lime-600 hover:underline">
-                Политикой конфиденциальности
-              </p>
-            </SheetTrigger>
-            <SheetContent
-              position="right"
-              size="full"
-              className=" overflow-auto"
-            >
-              <PrivacyPolicy />
-            </SheetContent>
-          </Sheet>{" "}
+          <Link
+            href="/privacy-policy"
+            className="inline-block w-fit cursor-pointer font-semibold text-lime-600 hover:underline"
+          >
+            Политикой конфиденциальности
+          </Link>{" "}
           Limpid.
         </div>
         <Submit>Зарегистрироваться</Submit>
