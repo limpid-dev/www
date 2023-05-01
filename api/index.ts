@@ -8,6 +8,7 @@ import * as ProfileSertifications from "./profilesCertifiations";
 import * as ProfilesEducations from "./profilesEducation";
 import * as ProfilesExperiences from "./profilesExperience";
 import * as ProfilesSkills from "./profilesSkills";
+import * as ProjectFiles from "./project-file";
 import * as Projects from "./projects";
 import * as Recovery from "./recovery";
 import * as Session from "./session";
@@ -365,6 +366,42 @@ class Api {
           payload
         ),
       destroy: (id: number) => this.delete(`${this.baseUrl}/profiles/${id}`),
+      files: (projectID: number) => {
+        return {
+          index: (
+            qp: Pick<QueryParams<ProjectFiles.Entity>, "page" | "perPage">,
+            init?: Helpers.FetchRequestInit
+          ) => {
+            const url = Helpers.buildQueryParamsUrl(
+              `${this.baseUrl}/projects/${projectID}/files`,
+              qp
+            );
+
+            return this.get<ProjectFiles.Index["Data"]>(url.toString(), init);
+          },
+          store: (
+            payload: ProjectFiles.Store["Payload"],
+            init?: Helpers.FetchRequestInit
+          ) =>
+            this.post<
+              ProjectFiles.Store["Data"],
+              ProjectFiles.Store["Payload"]
+            >(`${this.baseUrl}/projects/${projectID}/files`, payload, {
+              headers: {
+                ContentType: "multipart/form-data",
+                Accept: "application/json",
+              },
+              body: payload,
+              credentials: "include",
+              ...init,
+            }),
+          delete: (id: number, init?: Helpers.FetchRequestInit) =>
+            this.delete(
+              `${this.baseUrl}/projects/${projectID}/files/${id}`,
+              init
+            ),
+        };
+      },
     };
   }
 
@@ -514,7 +551,7 @@ class Api {
         init?: Helpers.FetchRequestInit
       ) => {
         const url = Helpers.buildQueryParamsUrl(
-          `${this.baseUrl}/profiles/${profileId}/certificates/1/files`,
+          `${this.baseUrl}/profiles/${profileId}/certificates/${certificateId}/files`,
           qp
         );
         return this.get<ProfileSertificationFile.Index["Data"]>(

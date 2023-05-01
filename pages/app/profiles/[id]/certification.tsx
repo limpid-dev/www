@@ -102,28 +102,19 @@ export default function One() {
   useEffect(() => {
     async function fetchCertifications() {
       const { data } = await api.certifications.index(parsedId);
-      const certificateId = data?.id;
-      const { data: files } = await api.certificateFile.index(
-        parsedId,
-        certificateId,
-        {
-          page: 1,
-          perPage: 100,
-        }
-      );
 
-      if(files){
-        setTestFile(files[0])
-      }
       if (data) {
-        const updatedItems = data.map((item) => {
-          return {
-            ...item,
-            startedAt: dateFormatter(item.issuedAt),
-            finishedAt: dateFormatter(item.expiredAt),
-          };
+        const withFiles = data!.map(async (d) => {
+          const certificate = await api.certificateFile.index(parsedId, d.id, {
+            page: 1,
+            perPage: 100,
+          });
+          return { ...d, certificate: certificate.data! };
         });
-        setCertificateData(updatedItems);
+        const w = await Promise.all(withFiles);
+        if (w) {
+          setCertificateData(w);
+        }
       }
     }
     fetchCertifications();
@@ -243,11 +234,14 @@ export default function One() {
                             <p className="text-center text-xs  font-normal sm:text-sm">
                               {certificate.description}
                             </p>
-                            <Link href="/">
+                            <a
+                              target="_blank"
+                              href={certificate.certificate[0]?.url}
+                            >
                               <p className="text-sm font-medium text-sky-500">
                                 Смотреть сертификат
                               </p>
-                            </Link>
+                            </a>
                           </div>
                         </div>
                       </div>

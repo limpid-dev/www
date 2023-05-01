@@ -1,4 +1,6 @@
 import { Faders, SquaresFour } from "@phosphor-icons/react";
+import Autoplay from "embla-carousel-autoplay";
+import useEmblaCarousel, { EmblaOptionsType } from "embla-carousel-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -7,6 +9,7 @@ import api from "../../../api";
 import { Entity } from "../../../api/projects";
 import { Navigation } from "../../../components/Navigation";
 import { Button } from "../../../components/Primitives/Button";
+import EmblaCarousel from "../../../components/Primitives/EmblaCarousel";
 import testAva from "../../../images/avatars/projectDefault.svg";
 
 const tabs = [
@@ -21,6 +24,8 @@ export default function All() {
   const [search, setSearch] = useState("");
   const router = useRouter();
   const [projectsData, setProjectsData] = useState<Entity[]>([]);
+  const OPTIONS: EmblaOptionsType = { align: "center", loop: true };
+  const [emblaRef] = useEmblaCarousel(OPTIONS, [Autoplay()]);
 
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
@@ -30,11 +35,27 @@ export default function All() {
   useEffect(() => {
     async function fetchProfiles() {
       const { data } = await api.projects.index();
+
+      const withFiles = data!.map(async (d) => {
+        const file = await api.projects.files(d.id).index({
+          page: 1,
+          perPage: 100,
+        });
+        return { ...d, file: file.data! };
+      });
+
+      const w = await Promise.all(withFiles);
+      const filteredImages = w.map((withFiles, index) => {
+        const images = withFiles.file.filter((item) => {
+          return item.extname === ".jpg" || item.extname === ".png";
+        });
+        return { ...withFiles, images };
+      });
+
       if (data) {
-        setProjectsData(data);
+        setProjectsData(filteredImages);
       }
     }
-
     fetchProfiles();
   }, []);
   return (
@@ -130,11 +151,26 @@ export default function All() {
                   <div className="p-4">
                     <div className="grid w-full grid-cols-10 gap-4">
                       <div className="col-span-2">
-                        <Image
-                          src={testAva}
-                          alt="test"
-                          className="rounded-lg"
-                        />
+                        <div className="overflow-hidden" ref={emblaRef}>
+                          <div className="flex">
+                            {project.images.map((data, index) => (
+                              <div
+                                key={index}
+                                className="relative h-28 flex-[0_0_100%]"
+                              >
+                                <Image
+                                  width={0}
+                                  height={0}
+                                  unoptimized
+                                  fill
+                                  className="rounded-md object-cover"
+                                  src={data.url}
+                                  alt="Your alt text"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
                       </div>
                       <div className="col-span-8 flex flex-col gap-1">
                         <div className="flex justify-between">

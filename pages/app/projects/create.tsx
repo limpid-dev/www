@@ -1,4 +1,5 @@
 import { Paperclip, Plus } from "@phosphor-icons/react";
+import Link from "next/link";
 import Router, { useRouter } from "next/router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -44,7 +45,8 @@ export default function Create() {
       const { data } = await api.projects.store(fullObject);
       if (data) {
         router.push({
-          pathname: "/app/projects/" + data.id,
+          pathname: "/app/projects/projectResources",
+          query: { projectId: data.id },
         });
       }
     } catch (error) {
@@ -236,8 +238,10 @@ export default function Create() {
                   />
                 </div>
                 <div className="flex justify-end gap-3 pt-4 ">
-                  <Button>Отмена</Button>
-                  <Button type="submit">Сохранить</Button>
+                  <Link href="/app/projects/my">
+                    <Button>Отмена</Button>
+                  </Link>
+                  <Button type="submit">Далее</Button>
                 </div>
               </form>
             </div>

@@ -54,7 +54,6 @@ export default function All() {
         setLoading(false);
       }
     }
-    console.log(profilesData);
     fetchProfiles();
   }, []);
 
