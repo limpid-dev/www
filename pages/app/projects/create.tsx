@@ -45,7 +45,7 @@ export default function Create() {
       const { data } = await api.projects.store(fullObject);
       if (data) {
         router.push({
-          pathname: "/app/projects/projectResources",
+          pathname: "/app/projects/resources",
           query: { projectId: data.id },
         });
       }
