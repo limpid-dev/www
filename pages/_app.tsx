@@ -12,7 +12,7 @@ const inter = Inter({
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <div className={clsx(inter.variable, "font-sans")}>
+    <div className={clsx(inter.variable, "min-h-full font-sans")}>
       <Component {...pageProps} />
       <Script defer data-domain="limpid.kz" src="/js/script.js" />
     </div>
