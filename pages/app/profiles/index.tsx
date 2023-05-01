@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -7,13 +8,11 @@ import { Entity } from "../../../api/profiles";
 import * as Users from "../../../api/users";
 import { Navigation } from "../../../components/navigation";
 import { Skeleton } from "../../../components/primitives/skeleton";
-import clsx from "clsx";
 
 const tabs = [
   { name: "Все профили", href: "/app/profiles/", current: true },
   { name: "Мои профили", href: "/app/profiles/my", current: false },
 ];
-
 
 export default function All() {
   const [profilesData, setProfilesData] = useState<
@@ -151,7 +150,7 @@ export default function All() {
                       <div className="grid grid-cols-10">
                         <div className="col-span-4">
                           <Image
-                            src={profile.user.file?.url}
+                            src={profile.user.file.url}
                             width={0}
                             height={0}
                             unoptimized

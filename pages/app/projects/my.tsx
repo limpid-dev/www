@@ -1,4 +1,5 @@
 import { Plus } from "@phosphor-icons/react";
+import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -10,7 +11,6 @@ import { Button } from "../../../components/primitives/button";
 import { Skeleton } from "../../../components/primitives/skeleton";
 import testAva from "../../../images/avatars/projectDefault.svg";
 import NoProjects from "../../../images/noProjects.svg";
-import clsx from "clsx";
 
 const tabs = [
   { name: "Все проекты", href: "/app/projects/", current: false },

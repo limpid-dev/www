@@ -1,16 +1,15 @@
 import { CaretRight, Faders, SquaresFour } from "@phosphor-icons/react";
+import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
-import clsx from "clsx";
 
 const tabs = [
   { name: "Все аукционы", href: "/app/auctions/", current: true },
   { name: "Мои аукционы", href: "/app/auctions/my", current: false },
 ];
-
 
 export default function All() {
   const [search, setSearch] = useState("");

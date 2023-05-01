@@ -12,7 +12,6 @@ const dateFormatter = (arg: string) => {
   return new Date(arg).getFullYear().toString();
 };
 
-
 export default function One() {
   const router = useRouter();
   const { id } = router.query;

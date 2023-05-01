@@ -3,16 +3,14 @@ import "@uppy/dashboard/dist/style.css";
 import "@uppy/drag-drop/dist/style.css";
 import { Paperclip } from "@phosphor-icons/react";
 import { Uppy } from "@uppy/core";
-import UppyForm from "@uppy/form";
 import Russian from "@uppy/locales/lib/ru_RU";
-import { Dashboard, DashboardModal } from "@uppy/react";
-import Url from "@uppy/url";
+import { DashboardModal } from "@uppy/react";
 import clsx from "clsx";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 import api from "../../../api";
+import { buildFormData } from "../../../api/files";
 import { Entity } from "../../../api/tenders";
 import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
@@ -20,7 +18,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "../../../components/primitives/card";
@@ -40,7 +37,6 @@ import {
   Label,
   Textarea,
 } from "../../../components/primitives/form";
-import { buildFormData } from "../../../api/files";
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
