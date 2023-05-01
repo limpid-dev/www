@@ -28,7 +28,7 @@ export default function All() {
     async function fetchProfiles() {
       const data1 = await api.session.show();
       const userId = data1.data?.id;
-      const { data } = await api.projects.index(userId || 0);
+      const { data } = await api.projects.index(userId);
 
       if (data) {
         setProjectsData(data);
