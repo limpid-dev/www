@@ -1,11 +1,8 @@
 import Head from "next/head";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent } from "react";
 import api from "../api";
 import { AuthLayout } from "../components/auth-layout";
-import { TextField } from "../components/fields";
-import { Logo } from "../components/logo";
 import { Button } from "../components/primitives/button";
 import { Field, Form, Input, Label } from "../components/primitives/form";
 

@@ -1,21 +1,9 @@
-import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 import api from "../api";
 import * as Errors from "../api/errors";
 import { AuthLayout } from "../components/auth-layout";
-import { TextField } from "../components/fields";
-import { Logo } from "../components/logo";
-import { Button } from "../components/primitives/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../components/primitives/dialog";
 import {
   Field,
   Form,
@@ -24,15 +12,10 @@ import {
   Message,
   Submit,
 } from "../components/primitives/form";
-import { ScrollArea } from "../components/primitives/scroll-area";
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
+  SheetTrigger
 } from "../components/primitives/sheet";
 import { PrivacyPolicy } from "../components/privacy-policy";
 import { Proposal } from "../components/proposal";
