@@ -3,6 +3,7 @@ import "@uppy/drag-drop/dist/style.min.css";
 import { Briefcase, Plus, Question } from "@phosphor-icons/react";
 import Uppy from "@uppy/core";
 import { DragDrop } from "@uppy/react";
+import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -38,14 +39,11 @@ import {
 import AnalyzingMarket from "../../../images/analyzingMarket.svg";
 import NoProfiles from "../../../images/noProfiles.svg";
 import onLaptop from "../../../images/onLaptop.svg";
-import clsx from "clsx";
 
 const tabs = [
   { name: "Все профили", href: "/app/profiles/", current: false },
   { name: "Мои профили", href: "/app/profiles/my", current: true },
 ];
-
-
 
 export default function All() {
   const router = useRouter();

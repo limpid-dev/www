@@ -9,9 +9,7 @@
     "lint": "next lint --fix"
   },
   "dependencies": {
-    "@formkit/auto-animate": "^1.0.0-beta.6",
     "@headlessui/react": "^1.7.13",
-    "@heroicons/react": "^2.0.17",
     "@phosphor-icons/react": "^2.0.8",
     "@radix-ui/react-dialog": "^1.0.3",
     "@radix-ui/react-form": "^0.0.2",
@@ -25,7 +23,6 @@
     "@uppy/locales": "^3.2.0",
     "@uppy/progress-bar": "^3.0.2",
     "@uppy/react": "^3.1.2",
-    "@uppy/url": "^3.3.1",
     "class-variance-authority": "^0.5.2",
     "clsx": "^1.2.1",
     "embla-carousel-autoplay": "^8.0.0-rc02",
@@ -35,11 +32,9 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.43.9",
-    "sharp": "^0.32.1",
-    "tailwind-merge": "^1.12.0"
+    "sharp": "^0.32.1"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "^13.3.0",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.9",
     "@types/node": "18.15.11",
@@ -47,8 +42,6 @@
     "autoprefixer": "^10.4.12",
     "eslint": "^8.26.0",
     "eslint-kit": "^7.0.0",
-    "prettier": "^2.8.7",
-    "prettier-plugin-tailwindcss": "^0.2.6",
     "tailwindcss": "^3.3.0"
   }
 }

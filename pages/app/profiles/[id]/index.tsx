@@ -1,4 +1,5 @@
 import { Trash } from "@phosphor-icons/react";
+import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -7,8 +8,6 @@ import { Entity } from "../../../../api/profiles";
 import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";
 import { General } from "../../../../components/profiles/general";
-import clsx from "clsx";
-
 
 export default function One() {
   const router = useRouter();

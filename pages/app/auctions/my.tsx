@@ -1,4 +1,5 @@
 import { CaretRight, Plus } from "@phosphor-icons/react";
+import clsx from "clsx";
 import { useRouter } from "next/router";
 import { FormEvent } from "react";
 import api from "../../../api";
@@ -21,14 +22,11 @@ import {
   Message,
   Textarea,
 } from "../../../components/primitives/form";
-import clsx from "clsx";
 
 const tabs = [
   { name: "Все профили", href: "/app/profiles/", current: false },
   { name: "Мои профили", href: "/app/profiles/my", current: true },
 ];
-
-
 
 export default function All() {
   const router = useRouter();

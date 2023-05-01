@@ -1,18 +1,18 @@
 import "@uppy/core/dist/style.min.css";
 import "@uppy/dashboard/dist/style.min.css";
-import { UserCircleIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import api from "../../../api";
-import {  } from "../../../api/user-file";
+import { buildFormData } from "../../../api/files";
+import {} from "../../../api/user-file";
 import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
-import { buildFormData } from "../../../api/files";
+import { UserCircle } from "@phosphor-icons/react";
 
 const secondaryNavigation = [
-  { name: "Аккаунт", href: "#", icon: UserCircleIcon, current: true },
+  { name: "Аккаунт", href: "#", icon: UserCircle, current: true },
   //   { name: "Security", href: "#", icon: FingerPrintIcon, current: false },
   //   { name: "Notifications", href: "#", icon: BellIcon, current: false },
   //   { name: "Plan", href: "#", icon: CubeIcon, current: false },

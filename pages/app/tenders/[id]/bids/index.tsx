@@ -1,4 +1,3 @@
-import autoAnimate from "@formkit/auto-animate";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
@@ -47,11 +46,6 @@ export default function TenderBids({ data, tender }: Props) {
   const router = useRouter();
   const [a, setData] = useState<Entity[]>(data);
 
-  const parent = useRef(null);
-
-  useEffect(() => {
-    parent.current && autoAnimate(parent.current);
-  }, [parent]);
 
   const id = router.query.id as string;
 
@@ -99,7 +93,7 @@ export default function TenderBids({ data, tender }: Props) {
                 </th>
               </tr>
             </thead>
-            <tbody ref={parent}>
+            <tbody>
               {a.map((bid) => (
                 <tr
                   key={bid.id}

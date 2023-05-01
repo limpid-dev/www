@@ -1,4 +1,5 @@
 import { Faders, SquaresFour } from "@phosphor-icons/react";
+import clsx from "clsx";
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel, { EmblaOptionsType } from "embla-carousel-react";
 import Image from "next/image";
@@ -11,13 +12,11 @@ import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
 import EmblaCarousel from "../../../components/primitives/EmblaCarousel";
 import testAva from "../../../images/avatars/projectDefault.svg";
-import clsx from "clsx";
 
 const tabs = [
   { name: "Все проекты", href: "/app/projects/", current: true },
   { name: "Мои проекты", href: "/app/projects/my", current: false },
 ];
-
 
 export default function All() {
   const [search, setSearch] = useState("");

@@ -8,10 +8,10 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import api from "../../../api";
+import { buildFormData } from "../../../api/files";
 import { Button } from "../../primitives/button";
 import { Input } from "../../primitives/input";
 import { TextArea } from "../../primitives/text-area";
-import { buildFormData } from "../../../api/files";
 
 interface CertificationValues {
   certification: {
