@@ -1,8 +1,13 @@
+import { Plus } from "@phosphor-icons/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { FormEvent, useCallback, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
 import api from "../../../api";
 import { Navigation } from "../../../components/navigation";
+import { OrganizationCertificationCreate } from "../../../components/organization-certification-create";
+import { Button } from "../../../components/primitives/button";
+import { TextArea } from "../../../components/primitives/text-area";
 
 export type Steps = readonly unknown[];
 export type UseStep = ReturnType<typeof useStep>;
@@ -52,12 +57,51 @@ const options = [
   { id: 33, name: "Интернет / Связь / Информационные технологии" },
 ];
 
+interface ExperienceFormValues {
+  experiences: {
+    organization: string;
+    title: string;
+    description: string;
+    startedAt: string;
+    finishedAt: string;
+  }[];
+}
+
 export default function OrganizationsCreate() {
+  const [error, setError] = useState("");
   const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = useForm<ExperienceFormValues>({
+    defaultValues: {
+      experiences: [{}],
+    },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    name: "experiences",
+    control,
+  });
+
   const [data, setData] = useState<any>({});
   const goBack = () => router.back();
 
-  const { step, goToStep } = useStep(["general", "contacts"] as const);
+  const { step, goToStep } = useStep([
+    "certificates",
+    "general",
+    "experiences",
+    "contacts",
+  ] as const);
+
+  const onSubmitExperiences = async (data: ExperienceFormValues) => {
+    setData((prev: any) => ({ ...prev, experiences: data.experiences }));
+
+    goToStep("certificates");
+  };
 
   const onSubmitGeneral = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -66,6 +110,17 @@ export default function OrganizationsCreate() {
     const values = Object.fromEntries(formData.entries());
 
     setData((prev: any) => ({ ...prev, general: values }));
+
+    goToStep("experiences");
+  };
+
+  const onSubmitCertificates = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+    const values = Object.fromEntries(formData.entries());
+
+    setData((prev: any) => ({ ...prev, certificates: values }));
 
     goToStep("contacts");
   };
@@ -186,7 +241,6 @@ export default function OrganizationsCreate() {
                       />
                       <select
                         name="industry"
-                        defaultValue={data.general?.industry}
                         className="py-4 px-5 text-black rounded-md border border-slate-300 mt-6 flex-1 max-w-full text-ellipsis whitespace-nowrap overflow-hidden w-full"
                         required
                       >
@@ -194,7 +248,11 @@ export default function OrganizationsCreate() {
                           Отрасль
                         </option>
                         {options.map((option) => (
-                          <option key={option.id} value={option.name}>
+                          <option
+                            key={option.id}
+                            selected={data.general?.industry === option.name}
+                            value={option.name}
+                          >
                             {option.name}
                           </option>
                         ))}
@@ -203,17 +261,36 @@ export default function OrganizationsCreate() {
                     <div className="flex gap-8">
                       <select
                         name="type"
-                        defaultValue={data.general?.type}
                         className="py-4 px-5 text-black rounded-md border border-slate-300 mt-6 flex-1"
                         required
                       >
                         <option value="" disabled selected>
                           Тип компании
                         </option>
-                        <option value="ИП">ИП</option>
-                        <option value="ТОО">ТОО</option>
-                        <option value="АО">АО</option>
-                        <option value="ООО">ООО</option>
+                        <option
+                          selected={data.general?.type === "ИП"}
+                          value="ИП"
+                        >
+                          ИП
+                        </option>
+                        <option
+                          selected={data.general?.type === "ТОО"}
+                          value="ТОО"
+                        >
+                          ТОО
+                        </option>
+                        <option
+                          selected={data.general?.type === "АО"}
+                          value="АО"
+                        >
+                          АО
+                        </option>
+                        <option
+                          selected={data.general?.type === "ООО"}
+                          value="ООО"
+                        >
+                          ООО
+                        </option>
                       </select>
                       <input
                         type="text"
@@ -287,7 +364,222 @@ export default function OrganizationsCreate() {
               </div>
             </div>
           )}
-          
+          {step === "experiences" && (
+            <div className="mt-12 bg-white border border-slate-200 rounded-lg">
+              <div className="flex divide-x">
+                <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-lime-500 text-xl">
+                  Общие данные
+                </div>
+                <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-lime-600 text-xl">
+                  Опыт работы
+                </div>
+                <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-xl">
+                  Сертификаты
+                </div>
+                <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-xl">
+                  Доп.материалы
+                </div>
+                <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-xl">
+                  Соцсети
+                </div>
+              </div>
+              <form
+                onSubmit={handleSubmit(onSubmitExperiences)}
+                className="p-12 mx-auto"
+              >
+                <div className="m-auto border-none sm:w-4/6">
+                  <div className="m-auto flex flex-col gap-5">
+                    {fields.map((field, index) => {
+                      return (
+                        <div key={field.id} className="grid gap-5">
+                          <div className="flex justify-between gap-5 sm:flex-row">
+                            <div>
+                              <input
+                                className="w-full rounded-md border p-2"
+                                placeholder="Название"
+                                {...register(`experiences.${index}.title`, {
+                                  required: "Please enter your first name.",
+                                })}
+                              />
+                              {errors.experiences?.[index]?.title && (
+                                <p className="ml-2 text-sm text-red-500">
+                                  Обязательное поле
+                                </p>
+                              )}
+                            </div>
+                            <div>
+                              <input
+                                className="w-full rounded-md border p-2"
+                                placeholder="Организация"
+                                {...register(
+                                  `experiences.${index}.organization`,
+                                  {
+                                    required: "Please enter your first name.",
+                                  }
+                                )}
+                              />
+                              {errors.experiences?.[index]?.organization && (
+                                <p className="ml-2 text-sm text-red-500">
+                                  Обязательное поле
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                          <div>
+                            <TextArea
+                              className="rounded-md"
+                              placeholder="Описание деятельности"
+                              {...register(`experiences.${index}.description`, {
+                                required: "Please enter your first name.",
+                              })}
+                            />
+                            {errors.experiences?.[index]?.description && (
+                              <p className="ml-2 text-sm text-red-500">
+                                Обязательное поле
+                              </p>
+                            )}
+                          </div>
+                          <div className="flex flex-col justify-around gap-5 md:flex-row">
+                            <div className="flex items-center justify-between gap-3">
+                              <p>Начало</p>
+                              <div>
+                                <input
+                                  className="rounded-lg border p-1"
+                                  placeholder="начало"
+                                  type="date"
+                                  id="birthday"
+                                  {...register(
+                                    `experiences.${index}.startedAt`,
+                                    {
+                                      required: "Please enter your first name.",
+                                      setValueAs: (value: string | undefined) =>
+                                        value
+                                          ? new Date(value).toISOString()
+                                          : undefined,
+                                    }
+                                  )}
+                                />
+                                {errors.experiences?.[index]?.startedAt && (
+                                  <p className="ml-2 text-sm text-red-500">
+                                    Выберите дату
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex items-center justify-between gap-3">
+                              <p>Конец</p>
+                              <div>
+                                <input
+                                  className="rounded-lg border p-1"
+                                  placeholder="начало"
+                                  type="date"
+                                  id="birthday"
+                                  {...register(
+                                    `experiences.${index}.finishedAt`,
+                                    {
+                                      required: "Please enter your first name.",
+                                      setValueAs: (value: string | undefined) =>
+                                        value
+                                          ? new Date(value).toISOString()
+                                          : undefined,
+                                    }
+                                  )}
+                                />
+                                {errors.experiences?.[index]?.finishedAt && (
+                                  <p className="ml-2 text-sm text-red-500">
+                                    Выберите дату
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="relative py-6">
+                            <div
+                              className="absolute inset-0 flex items-center"
+                              aria-hidden="true"
+                            >
+                              <div className="w-full border-t border-gray-300" />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                    <div className="mt-4 flex flex-col gap-4">
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          append({
+                            organization: "",
+                            title: "",
+                            description: "",
+                            startedAt: "",
+                            finishedAt: "",
+                          });
+                        }}
+                        variant="outline"
+                      >
+                        <Plus /> Добавить образование
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-44 flex gap-8 max-w-screen-sm w-full mx-auto">
+                  <button
+                    onClick={() => goToStep("general")}
+                    className="rounded-md text-black py-2 px-4 border border-black text-sm font-medium flex-1"
+                  >
+                    Назад
+                  </button>
+                  <button
+                    type="submit"
+                    className="text-white bg-slate-900 py-2 rounded-md px-4 text-sm font-medium flex-1"
+                  >
+                    Далее
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+          {step === "certificates" && (
+            <form
+              onSubmit={onSubmitCertificates}
+              className="mt-12 bg-white border border-slate-200 rounded-lg"
+            >
+              <div className="flex divide-x">
+                <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-lime-500 text-xl">
+                  Общие данные
+                </div>
+                <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-lime-500 text-xl">
+                  Опыт работы
+                </div>
+                <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-lime-600 text-xl">
+                  Сертификаты
+                </div>
+                <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-xl">
+                  Доп.материалы
+                </div>
+                <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-xl">
+                  Соцсети
+                </div>
+              </div>
+              <OrganizationCertificationCreate />
+              <div className="mt-20 flex gap-8 max-w-screen-sm w-full mx-auto mb-8">
+                <button
+                  onClick={() => goToStep("experiences")}
+                  className="rounded-md text-black py-2 px-4 border border-black text-sm font-medium flex-1"
+                >
+                  Назад
+                </button>
+                <button
+                  type="submit"
+                  className="text-white bg-slate-900 py-2 rounded-md px-4 text-sm font-medium flex-1"
+                >
+                  Далее
+                </button>
+              </div>
+            </form>
+          )}
           {step === "contacts" && (
             <div className="mt-12 bg-white border border-slate-200 rounded-lg">
               <div className="flex divide-x">
@@ -421,7 +713,7 @@ export default function OrganizationsCreate() {
                 </div>
                 <div className="mt-44 flex gap-8 max-w-screen-sm w-full mx-auto">
                   <button
-                    onClick={() => goToStep("general")}
+                    onClick={() => goToStep("experiences")}
                     className="rounded-md text-black py-2 px-4 border border-black text-sm font-medium flex-1"
                   >
                     Назад
