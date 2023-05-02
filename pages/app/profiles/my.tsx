@@ -75,6 +75,32 @@ export default function All() {
     router.push(selectedPage);
   };
 
+  const handleOrganizationCreate = async (
+    event: FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+
+    const form = new FormData(event.currentTarget);
+    const values = Object.fromEntries(form.entries()) as {
+      name: string;
+      bin: string;
+      description: string;
+      industry: string;
+      ownedIntellectualResources: string;
+      ownedMaterialResources: string;
+      type: string;
+      perfomance: string;
+    };
+
+    const { data, error } = await api.organizations.store(values);
+
+    if (data) {
+      await router.push({
+        pathname: "/app/profiles/organizations/" + data.id,
+      });
+    }
+  };
+
   const handleProfileCreate = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
@@ -292,16 +318,18 @@ export default function All() {
                       </Form>
                     </DialogContent>
                   </Dialog>
-
-                  <div className="flex flex-col items-center justify-center rounded-lg border  hover:border-black">
+                  <Link
+                    href="/app/organizations/create"
+                    className="flex flex-col items-center justify-center rounded-lg border  hover:border-black"
+                  >
                     <Image src={AnalyzingMarket} alt="Нет профилей" />
                     <div className="mb-3 flex flex-col items-center">
                       <p className="text-sm font-bold sm:text-lg">
-                        Профиль компании
+                        Профиль организации
                       </p>
                       <p className="text-xs">для юридического лица</p>
                     </div>
-                  </div>
+                  </Link>
                 </div>
               </DialogContent>
             </Dialog>

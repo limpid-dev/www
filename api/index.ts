@@ -2,6 +2,8 @@ import * as Errors from "./errors";
 import * as Health from "./health";
 import * as Helpers from "./helpers";
 import { QueryParams } from "./helpers";
+import * as OrganizationContacts from "./organization-contacts";
+import * as Organizations from "./organizations";
 import * as ProfileSertificationFile from "./profile-certificate-files";
 import * as ProfileSertifications from "./profile-certificates";
 import * as ProfilesEducations from "./profile-educations";
@@ -560,6 +562,76 @@ class Api {
           url.toString(),
           init
         );
+      },
+    };
+  }
+
+  get organizations() {
+    return {
+      index: (
+        qp: QueryParams<Organizations.Entity>,
+        init?: Helpers.FetchRequestInit
+      ) => {
+        const url = Helpers.buildQueryParamsUrl(
+          `${this.baseUrl}/organizations`,
+          qp
+        );
+
+        return this.get<Organizations.Index["Data"]>(url.toString(), init);
+      },
+      show: (id: number) =>
+        this.get<Organizations.Show["Data"]>(
+          `${this.baseUrl}/organizations/${id}`
+        ),
+      store: (payload: Organizations.Store["Payload"]) =>
+        this.post<Organizations.Store["Data"], Organizations.Store["Payload"]>(
+          `${this.baseUrl}/organizations`,
+          payload
+        ),
+      update: (id: number, payload: Organizations.Update["Payload"]) =>
+        this.patch<
+          Organizations.Update["Data"],
+          Organizations.Update["Payload"]
+        >(`${this.baseUrl}/organizations/${id}`, payload),
+      destroy: (id: number) =>
+        this.delete(`${this.baseUrl}/organizations/${id}`),
+      contacts: (organizationId: number) => {
+        return {
+          index: (init?: Helpers.FetchRequestInit) =>
+            this.get<OrganizationContacts.Index["Data"]>(
+              `${this.baseUrl}/organizations/${organizationId}/contacts`,
+              init
+            ),
+          store: (
+            payload: OrganizationContacts.Store["Payload"],
+            init?: Helpers.FetchRequestInit
+          ) =>
+            this.post<
+              OrganizationContacts.Store["Data"],
+              OrganizationContacts.Store["Payload"]
+            >(
+              `${this.baseUrl}/organizations/${organizationId}/contacts`,
+              payload,
+              init
+            ),
+          update: (
+            payload: OrganizationContacts.Update["Payload"],
+            init?: Helpers.FetchRequestInit
+          ) =>
+            this.patch<
+              OrganizationContacts.Update["Data"],
+              OrganizationContacts.Update["Payload"]
+            >(
+              `${this.baseUrl}/organizations/${organizationId}/contacts`,
+              payload,
+              init
+            ),
+          destroy: (id: number, init?: Helpers.FetchRequestInit) =>
+            this.delete(
+              `${this.baseUrl}/organizations/${organizationId}/contacts/${id}`,
+              init
+            ),
+        };
       },
     };
   }
