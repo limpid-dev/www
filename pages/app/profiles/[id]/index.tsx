@@ -13,7 +13,10 @@ export default function One() {
   const router = useRouter();
   const [first, setfirst] = useState(1);
   const [second, setsecond] = useState(1);
-
+  const handleSelectChange = (event: any) => {
+    const selectedPage = event.target.value;
+    router.push(selectedPage);
+  };
   const { id } = router.query as {
     id: string;
   };
@@ -85,7 +88,7 @@ export default function One() {
                 </Button> */}
                 <Button variant="outline" onClick={() => handleDeleteProfile()}>
                   <Trash className="h-6 w-6" />
-                </Button>{" "}
+                </Button>
               </div>
             ) : (
               <div className="flex gap-5">
@@ -111,15 +114,17 @@ export default function One() {
                   <label htmlFor="tabs" className="sr-only">
                     Select a tab
                   </label>
-                  {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
                   <select
                     id="tabs"
+                    onChange={handleSelectChange}
                     name="tabs"
                     className="block w-full  border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-                    defaultValue={tabs.find((tab) => tab.current)?.name}
+                    defaultValue={`/app/profiles/${id}/`}
                   >
                     {tabs.map((tab) => (
-                      <option key={tab.name}>{tab.name}</option>
+                      <option key={tab.name} value={tab.href}>
+                        {tab.name}
+                      </option>
                     ))}
                   </select>
                 </div>

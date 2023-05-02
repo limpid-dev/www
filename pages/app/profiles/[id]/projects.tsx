@@ -110,7 +110,7 @@ export default function One() {
                     id="tabs"
                     name="tabs"
                     className="block w-full  border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-                    defaultValue={tabs.find((tab) => tab.current)?.name}
+                    defaultValue={`/app/profiles/${id}/projects`}
                   >
                     {tabs.map((tab) => (
                       <option key={tab.name}>{tab.name}</option>

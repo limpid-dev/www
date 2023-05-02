@@ -1,4 +1,5 @@
 import { Plus, Trash } from "@phosphor-icons/react";
+import clsx from "clsx";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import api from "../../../../api";
@@ -7,7 +8,6 @@ import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";
 import { ExperienceCreate } from "../../../../components/profiles/create/experience";
 import { General } from "../../../../components/profiles/general";
-import clsx from "clsx";
 
 const dateFormatter = (arg: string) => {
   return new Date(arg).getFullYear().toString();
@@ -20,7 +20,10 @@ export default function One() {
   const handleDeleteProfile = () => {
     api.profiles.destroy(parsedId);
   };
-
+  const handleSelectChange = (event: any) => {
+    const selectedPage = event.target.value;
+    router.push(selectedPage);
+  };
   const [first, setfirst] = useState(1);
   const [second, setsecond] = useState(1);
   useEffect(() => {
@@ -138,13 +141,16 @@ export default function One() {
                     Select a tab
                   </label>
                   <select
+                    onChange={handleSelectChange}
                     id="tabs"
                     name="tabs"
                     className="block w-full  border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-                    defaultValue={tabs.find((tab) => tab.current)?.name}
+                    defaultValue={`/app/profiles/${id}/experience`}
                   >
                     {tabs.map((tab) => (
-                      <option key={tab.name}>{tab.name}</option>
+                      <option key={tab.name} value={tab.href}>
+                        {tab.name}
+                      </option>
                     ))}
                   </select>
                 </div>

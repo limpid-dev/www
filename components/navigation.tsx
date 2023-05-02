@@ -101,7 +101,6 @@ export function Navigation() {
       setUser(sessionData.data);
 
       const { data: userData } = await api.users.show(userId);
-      console.log(userData);
       setTest(userData);
 
       if (data) {

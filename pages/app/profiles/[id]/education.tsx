@@ -65,7 +65,10 @@ export default function Education() {
       current: false,
     },
   ];
-
+  const handleSelectChange = (event: any) => {
+    const selectedPage = event.target.value;
+    router.push(selectedPage);
+  };
   const [data, setData] = useState<Entity[]>([]);
   const [isAdd, setIsAdd] = useState(true);
 
@@ -142,13 +145,14 @@ export default function Education() {
                   </label>
                   {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
                   <select
+                    onChange={handleSelectChange}
                     id="tabs"
                     name="tabs"
                     className="block w-full  border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-                    defaultValue={tabs.find((tab) => tab.current)?.name}
+                    defaultValue={`/app/profiles/${id}/education`}
                   >
                     {tabs.map((tab) => (
-                      <option key={tab.name}>{tab.name}</option>
+                      <option key={tab.name} value={tab.href}>{tab.name}</option>
                     ))}
                   </select>
                 </div>
@@ -193,7 +197,7 @@ export default function Education() {
                     {data.map((item) => (
                       <div key={item.id}>
                         <div className="grid grid-cols-10 gap-4">
-                          <div className="col-span-4 flex flex-row gap-5">
+                          <div className="col-span-4 flex-col md:flex-row gap-5">
                             <div className=" text-lg font-semibold">
                               {item.startedAt}
                             </div>
@@ -209,7 +213,9 @@ export default function Education() {
                             <p className=" text-sm font-semibold">
                               {item.title}
                             </p>
-                            <p className=" text-sm">{item.description}</p>
+                            <p className=" text-sm flex flex-wrap">
+                              {item.description}
+                            </p>
                           </div>
                           {isAuthor && (
                             <div className="col-span-2">
