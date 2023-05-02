@@ -37,7 +37,7 @@ export function General({ profileId }: any) {
             width={0}
             height={0}
             unoptimized
-            alt="Photo by Alvaro Pinot"
+            alt="Profile image"
             className="mb-3 h-[106px] w-auto rounded-md object-cover"
           />
         )}

@@ -8,6 +8,7 @@ import { Entity } from "../../../api/profiles";
 import * as Users from "../../../api/users";
 import { Navigation } from "../../../components/navigation";
 import { Skeleton } from "../../../components/primitives/skeleton";
+import DefaultAvatar from "../../../images/avatars/defaultProfile.svg";
 
 const tabs = [
   { name: "Все профили", href: "/app/profiles/", current: true },
@@ -15,12 +16,12 @@ const tabs = [
 ];
 
 export default function All() {
+  const router = useRouter();
+
+  const [loading, setLoading] = useState(true);
   const [profilesData, setProfilesData] = useState<
     (Entity & { user: Users.Show["Data"] })[]
   >([]);
-  const [loading, setLoading] = useState(true);
-
-  const router = useRouter();
 
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
@@ -150,7 +151,11 @@ export default function All() {
                       <div className="grid grid-cols-10">
                         <div className="col-span-4">
                           <Image
-                            src={profile.user.file.url}
+                            src={
+                              profile.user.fileId
+                                ? profile.user.file.url
+                                : DefaultAvatar
+                            }
                             width={0}
                             height={0}
                             unoptimized

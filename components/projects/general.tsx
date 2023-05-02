@@ -13,11 +13,10 @@ export default function General({ projectId }: any) {
       const { data } = await api.projects.show(projectId);
       if (data) {
         setProject(data);
-      }
-
-      const { data: user } = await api.users.show(data?.profileId);
-      if (user) {
-        setUserData(user);
+        const { data: user } = await api.users.show(data.profileId);
+        if (user) {
+          setUserData(user);
+        }
       }
     }
     fetchProfiles();
