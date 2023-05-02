@@ -12,7 +12,7 @@ import testAva from "../images/avatars/defaultProfile.svg";
 import { Button } from "./primitives/button";
 import { Skeleton } from "./primitives/skeleton";
 
-export function Logo(props) {
+export function Logo(props: any) {
   return (
     <svg
       width="110"
@@ -291,21 +291,7 @@ export function Navigation() {
                 </button> */}
               </div>
               <div className="mt-3 space-y-1 px-2">
-                {userNavigation.map((item) => (
-                  <Disclosure.Button
-                    key={item.name}
-                    as="a"
-                    href={item.href}
-                    className="block  px-3 py-2 text-base font-medium text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900"
-                  >
-                    {item.name}
-                  </Disclosure.Button>
-                ))}
-                <Button
-                  onClick={handleLogout}
-                  className="flex w-full rounded-none px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-100"
-                  color="white"
-                >
+                <Button onClick={handleLogout} className="flex w-full">
                   Выйти
                 </Button>
               </div>
