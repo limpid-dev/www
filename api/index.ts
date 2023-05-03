@@ -423,6 +423,11 @@ class Api {
               init
             );
           },
+          store: (payload: ProjectMembership.Store["Payload"]) =>
+            this.post<
+              ProjectMembership.Store["Data"],
+              ProjectMembership.Store["Payload"]
+            >(`${this.baseUrl}/projects/${projectID}/memberships`, payload),
         };
       },
     };

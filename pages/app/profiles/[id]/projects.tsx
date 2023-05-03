@@ -109,7 +109,7 @@ export default function One() {
                   <select
                     id="tabs"
                     name="tabs"
-                    className="block w-full  border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                    className="block w-full  border-gray-300 focus:border-lime-500 focus:ring-lime-500"
                     defaultValue={`/app/profiles/${id}/projects`}
                   >
                     {tabs.map((tab) => (

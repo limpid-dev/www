@@ -6,6 +6,7 @@ export interface Entity {
   createdAt: string;
   updatedAt: string;
   acceptedAt: string;
+  message?: string;
 }
 
 export interface Index {
@@ -14,7 +15,7 @@ export interface Index {
 
 export interface Store {
   Data: Entity;
-  Payload: Pick<Entity, "profileId">;
+  Payload: Pick<Entity, "profileId" | "message">;
 }
 
 export interface Update {

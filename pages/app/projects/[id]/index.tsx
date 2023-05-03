@@ -8,9 +8,11 @@ import {
   Trash,
   User,
 } from "@phosphor-icons/react";
+import { DialogClose } from "@radix-ui/react-dialog";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import api from "../../../../api";
 import { Entity } from "../../../../api/projects";
 import { Navigation } from "../../../../components/navigation";
@@ -59,19 +61,44 @@ import {
 } from "../../../../components/primitives/tabs";
 import { TextArea } from "../../../../components/primitives/text-area";
 import Test from "../../../../images/avatars/defaultProfile.svg";
+import SentImage from "../../../../images/email 1.png";
+
+interface FormValues {
+  message: string;
+}
 
 export default function View() {
   const isTrue = true;
-  const isAuthor = true;
   const [isShown, setIsShown] = useState(true);
   const router = useRouter();
   const { id } = router.query;
+  const [sent, setSent] = useState(false);
   const parsedId = Number.parseInt(id as string, 10) as number;
   const [projectData, setProjectData] = useState<Entity>();
-
+  const [isAuthor, setIsAuthor] = useState(false);
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
+  };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = useForm<FormValues>();
+
+  const onSubmit = async (data1: FormValues) => {
+    try {
+      const profileId = localStorage.getItem("profileId");
+      const w = { profileId, ...data1 };
+      const { data } = await api.projects.memberships(parsedId).store(w);
+      if (data) {
+        setSent(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -101,7 +128,16 @@ export default function View() {
           page: 1,
           perPage: 100,
         });
-      
+      const profileId1 = Number.parseInt(
+        localStorage.getItem("profileId") as string,
+        10
+      );
+      const isAuthorProfile = authorData?.some((item) => {
+        return item.profileId === profileId1 && item.type === "owner";
+      });
+      if (isAuthorProfile) {
+        setIsAuthor(isAuthorProfile);
+      }
     }
     fetchAuthor();
   }, [parsedId]);
@@ -117,7 +153,7 @@ export default function View() {
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
           <h1 className="text-sm">
             <span className="text-slate-300">Проект / </span>
-            Гостиница для животных
+            {projectData?.title}
           </h1>
 
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline md:justify-end">
@@ -150,20 +186,41 @@ export default function View() {
               </div>
             ) : (
               <div className="flex flex-col gap-5 sm:flex-row">
-                <Button variant="outline">Добавить в избранное</Button>
                 <Dialog>
                   <DialogTrigger className="rounded-md bg-slate-700 p-2 text-sm text-white hover:bg-black">
                     Заинтересоваться проектом
                   </DialogTrigger>
                   <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Отправить заявку</DialogTitle>
-                      <DialogDescription>
-                        Напишите чем вы будете полезны проекту ?
-                      </DialogDescription>
-                    </DialogHeader>
-                    <TextArea />
-                    <Button variant="outline">Отправить</Button>
+                    {sent ? (
+                      <div className="flex flex-col items-center justify-center gap-3">
+                        <Image src={SentImage} alt="s" />
+                        <p className=" font-semibold text-2xl">
+                          Заявка успешно отправлена
+                        </p>
+                        <p>Ожидайте ответ от автора проекта</p>
+                        <DialogClose>
+                          <Button variant="outline">Понятно</Button>
+                        </DialogClose>
+                      </div>
+                    ) : (
+                      <>
+                        <DialogHeader>
+                          <DialogTitle>Отправить заявку</DialogTitle>
+                          <DialogDescription>
+                            Напишите чем вы будете полезны проекту ?
+                          </DialogDescription>
+                        </DialogHeader>
+                        <form
+                          onSubmit={handleSubmit(onSubmit)}
+                          className="flex flex-col items-end"
+                        >
+                          <TextArea {...register("message")} />
+                          <Button className="mt-4" variant="outline">
+                            Отправить
+                          </Button>
+                        </form>
+                      </>
+                    )}
                   </DialogContent>
                 </Dialog>
               </div>
