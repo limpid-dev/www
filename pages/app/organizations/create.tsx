@@ -9,6 +9,7 @@ import { buildFormData } from "../../../api/files";
 import { Navigation } from "../../../components/navigation";
 import { OrganizationCertificationCreate } from "../../../components/organization-certification-create";
 import { Button } from "../../../components/primitives/button";
+import { Input } from "../../../components/primitives/input";
 import { TextArea } from "../../../components/primitives/text-area";
 
 const OrganizationFileCount = dynamic(
@@ -193,11 +194,10 @@ export default function OrganizationsCreate() {
         <div>
           <div className="text-sm text-[#1b1c1d]">
             <span className="text-slate-200 ">Профиль /</span> Создание профиля
+            организации
           </div>
           <div className="mt-8 flex justify-between w-full">
-            <div className=" font-extrabold text-5xl leading-none">
-              Профиль компании
-            </div>
+            <div className=" font-extrabold text-5xl leading-none" />
             <div className="flex gap-3">
               <button
                 onClick={goBack}
@@ -217,20 +217,20 @@ export default function OrganizationsCreate() {
           {step === "general" && (
             <div>
               <div className="mt-12 bg-white border border-slate-200 rounded-lg">
-                <div className="flex divide-x">
-                  <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-lime-600 text-xl">
+                <div className="flex divide-x overflow-auto gap-4 px-5">
+                  <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-lime-600 text-lg sm:text-xl">
                     Общие данные
                   </div>
-                  <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-xl">
+                  <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-lg sm:text-xl">
                     Опыт работы
                   </div>
-                  <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-xl">
+                  <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-lg sm:text-xl">
                     Сертификаты
                   </div>
-                  <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-xl">
+                  <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-lg sm:text-xl">
                     Доп.материалы
                   </div>
-                  <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-xl">
+                  <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-lg sm:text-xl">
                     Соцсети
                   </div>
                 </div>
@@ -239,10 +239,10 @@ export default function OrganizationsCreate() {
                   className="p-12 max-w-screen-md mx-auto"
                 >
                   <div>
-                    <div className="font-semibold text-black text-2xl">
-                      Название
+                    <div className="font-semibold text-black text-lg sm:text-2xl">
+                      Название профиля компании
                     </div>
-                    <input
+                    <Input
                       type="text"
                       name="name"
                       defaultValue={data.general?.name}
@@ -253,11 +253,11 @@ export default function OrganizationsCreate() {
                     />
                   </div>
                   <div className="mt-6">
-                    <div className="font-semibold text-black text-2xl">
+                    <div className="font-semibold text-black text-lg sm:text-2xl">
                       Основная информация о вас
                     </div>
                     <div className="flex gap-8">
-                      <input
+                      <Input
                         type="text"
                         name="bin"
                         defaultValue={data.general?.bin}
@@ -270,7 +270,7 @@ export default function OrganizationsCreate() {
                       />
                       <select
                         name="industry"
-                        className="py-4 px-5 text-black rounded-md border border-slate-300 mt-6 flex-1 max-w-full text-ellipsis whitespace-nowrap overflow-hidden w-full"
+                        className="px-5 text-black rounded-md border border-slate-300 mt-6 flex-1 max-w-full text-ellipsis whitespace-nowrap overflow-hidden w-full"
                         required
                       >
                         <option value="" disabled selected>
@@ -290,7 +290,7 @@ export default function OrganizationsCreate() {
                     <div className="flex gap-8">
                       <select
                         name="type"
-                        className="py-4 px-5 text-black rounded-md border border-slate-300 mt-6 flex-1"
+                        className=" px-5 text-black rounded-md border border-slate-300 mt-6 flex-1"
                         required
                       >
                         <option value="" disabled selected>
@@ -321,7 +321,7 @@ export default function OrganizationsCreate() {
                           ООО
                         </option>
                       </select>
-                      <input
+                      <Input
                         type="text"
                         name="perfomance"
                         defaultValue={data.general?.perfomance}
@@ -334,12 +334,12 @@ export default function OrganizationsCreate() {
                     </div>
                   </div>
                   <div className="mt-6">
-                    <div className="font-semibold text-black text-2xl">
+                    <div className="font-semibold text-black text-lg sm:text-2xl">
                       О компании
                     </div>
-                    <textarea
+                    <TextArea
                       defaultValue={data.general?.description}
-                      className="w-full rounded-md bg-slate-100 border-none resize-none mt-6 py-4 px-5 text-black"
+                      className="mt-6 text-black"
                       name="description"
                       rows={4}
                       required
@@ -349,31 +349,33 @@ export default function OrganizationsCreate() {
                     />
                   </div>
                   <div className="mt-6">
-                    <div className="font-semibold text-black text-2xl">
+                    <div className="font-semibold text-black text-lg sm:text-2xl">
                       Материальный ресурсы
                     </div>
-                    <textarea
+                    <TextArea
                       defaultValue={data.general?.ownedMaterialResources}
-                      className="w-full rounded-md bg-slate-100 border-none resize-none mt-6 py-4 px-5 text-black"
+                      className="mt-6"
                       name="ownedMaterialResources"
                       rows={4}
                       required
                       minLength={1}
                       maxLength={1024}
+                      placeholder="Что  будет полезно другим людям о материальных ресурсах компании?"
                     />
                   </div>
                   <div className="mt-6">
-                    <div className="font-semibold text-black text-2xl">
+                    <div className="font-semibold text-black text-lg sm:text-2xl">
                       Интеллектуальные ресурсы
                     </div>
-                    <textarea
+                    <TextArea
                       defaultValue={data.general?.ownedIntellectualResources}
-                      className="w-full rounded-md bg-slate-100 border-none resize-none mt-6 py-4 px-5 text-black"
+                      className=" mt-6 "
                       name="ownedIntellectualResources"
                       rows={4}
                       required
                       minLength={1}
                       maxLength={1024}
+                      placeholder="Что  будет полезно другим людям о интеллектуальных ресурсах компании?"
                     />
                   </div>
                   <div className="mt-8 flex gap-8">
@@ -424,7 +426,7 @@ export default function OrganizationsCreate() {
                         <div key={field.id} className="grid gap-5">
                           <div className="flex justify-between gap-5 sm:flex-row">
                             <div>
-                              <input
+                              <Input
                                 className="w-full rounded-md border p-2"
                                 placeholder="Название"
                                 {...register(`experiences.${index}.title`, {
@@ -438,7 +440,7 @@ export default function OrganizationsCreate() {
                               )}
                             </div>
                             <div>
-                              <input
+                              <Input
                                 className="w-full rounded-md border p-2"
                                 placeholder="Организация"
                                 {...register(
@@ -473,7 +475,7 @@ export default function OrganizationsCreate() {
                             <div className="flex items-center justify-between gap-3">
                               <p>Начало</p>
                               <div>
-                                <input
+                                <Input
                                   className="rounded-lg border p-1"
                                   placeholder="начало"
                                   type="date"
@@ -499,7 +501,7 @@ export default function OrganizationsCreate() {
                             <div className="flex items-center justify-between gap-3">
                               <p>Конец</p>
                               <div>
-                                <input
+                                <Input
                                   className="rounded-lg border p-1"
                                   placeholder="начало"
                                   type="date"
@@ -661,7 +663,7 @@ export default function OrganizationsCreate() {
                         (Выбрано: <OrganizationFileCount />)
                       </span>
                     </Button>
-                    <input
+                    <Input
                       hidden
                       onChange={onSubmitFiles}
                       type="file"
@@ -728,7 +730,7 @@ export default function OrganizationsCreate() {
                       src="/2gis.png"
                       className="absolute left-5 inset-y-4"
                     />
-                    <input
+                    <Input
                       type="url"
                       name="2gis"
                       onChange={(e) => {
@@ -756,7 +758,7 @@ export default function OrganizationsCreate() {
                       src="/instagram.png"
                       className="absolute left-5 inset-y-4"
                     />
-                    <input
+                    <Input
                       type="url"
                       name="instagram"
                       onChange={(e) => {
@@ -784,7 +786,7 @@ export default function OrganizationsCreate() {
                       src="/whatsapp.png"
                       className="absolute left-5 inset-y-4"
                     />
-                    <input
+                    <Input
                       type="url"
                       name="whatsapp"
                       onChange={(e) => {
@@ -812,7 +814,7 @@ export default function OrganizationsCreate() {
                       src="/website.png"
                       className="absolute left-5 inset-y-4"
                     />
-                    <input
+                    <Input
                       type="url"
                       name="website"
                       className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"

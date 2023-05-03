@@ -10,6 +10,7 @@ import { buildFormData } from "../../../api/files";
 import {} from "../../../api/user-file";
 import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
+import DefaultAva from "../../../images/avatars/defaultProfile.svg"
 
 const secondaryNavigation = [
   { name: "Аккаунт", href: "#", icon: UserCircle, current: true },
@@ -94,7 +95,7 @@ export default function Settings() {
           <div className="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
             <div className="col-span-full flex items-center gap-x-8">
               <Image
-                src={user.file?.url}
+                src={user.file? ? userData.file.url : DefaultAva}
                 width={0}
                 height={0}
                 unoptimized
