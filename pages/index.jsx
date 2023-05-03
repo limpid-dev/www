@@ -9,6 +9,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useId, useState } from "react";
+import api from "../api";
 import { Button } from "../components/primitives/button";
 import avatarImage1 from "../images/avatars/avatar-1.jpg";
 import avatarImage2 from "../images/avatars/avatar-2.jpg";
@@ -833,6 +834,18 @@ function MobileNavigation() {
 }
 
 export function Header() {
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await api.session.show();
+
+      if (data) {
+        setSession(data);
+      }
+    })();
+  }, []);
+
   return (
     <header className="py-10">
       <Container>
@@ -849,16 +862,24 @@ export function Header() {
           </div>
           <div className="flex items-center gap-x-5 md:gap-x-8">
             <div className="hidden md:block">
-              <NavLink href="/login">Войти</NavLink>
+              {session ? (
+                <NavLink href="/app/projects">
+                  {session.firstName} {session.lastName}
+                </NavLink>
+              ) : (
+                <NavLink href="/login">Войти</NavLink>
+              )}
             </div>
-            <NavLink href="/register">
-              <Button color="lime" className="rounded-lg">
-                <span>
-                  Зарегистрируйтесь{" "}
-                  <span className="hidden lg:inline">сегодня</span>
-                </span>
-              </Button>
-            </NavLink>
+            {!session && (
+              <NavLink href="/register">
+                <Button color="lime" className="rounded-lg">
+                  <span>
+                    Зарегистрируйтесь{" "}
+                    <span className="hidden lg:inline">сегодня</span>
+                  </span>
+                </Button>
+              </NavLink>
+            )}
             <div className="-mr-1 md:hidden">
               <MobileNavigation />
             </div>
