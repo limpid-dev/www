@@ -77,20 +77,33 @@ export default function View() {
   useEffect(() => {
     async function fetchProjects() {
       const { data } = await api.projects.show(parsedId);
-      const file = await api.projects.files(parsedId).index({
+      const { data: file } = await api.projects.files(parsedId).index({
         page: 1,
         perPage: 100,
       });
-      const w = { ...data, file: file.data };
-
-      const images = w.file.filter((item) => {
-        return item.extname === ".jpg" || item.extname === ".png";
-      });
-      const final = { ...w, images };
-      console.log(final);
-      setProjectData(final);
+      if (file) {
+        const w = { ...data, file };
+        const images = w.file.filter((item) => {
+          return item.extname === ".jpg" || item.extname === ".png";
+        });
+        const final = { ...w, images };
+        setProjectData(final);
+      }
     }
     fetchProjects();
+  }, [parsedId]);
+
+  useEffect(() => {
+    async function fetchAuthor() {
+      const { data: authorData } = await api.projects
+        .memberships(parsedId)
+        .index({
+          page: 1,
+          perPage: 100,
+        });
+      
+    }
+    fetchAuthor();
   }, [parsedId]);
 
   const handleClick = (event: any) => {
@@ -191,7 +204,7 @@ export default function View() {
                         <SheetTitle>Фото</SheetTitle>
                       </SheetHeader>
                       <div className="m-auto mt-16 grid w-4/5 grid-cols-3 gap-y-6">
-                        {projectData?.images.map((img, index) => (
+                        {projectData?.images?.map((img, index) => (
                           <Image
                             key={index}
                             className="h-auto w-auto object-cover"

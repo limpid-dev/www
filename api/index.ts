@@ -1,9 +1,9 @@
 import * as Errors from "./errors";
-import * as OrganizationFile from "./organization-file";
 import * as Health from "./health";
 import * as Helpers from "./helpers";
 import { QueryParams } from "./helpers";
 import * as OrganizationContacts from "./organization-contacts";
+import * as OrganizationFile from "./organization-file";
 import * as Organizations from "./organizations";
 import * as ProfileSertificationFile from "./profile-certificate-files";
 import * as ProfileSertifications from "./profile-certificates";
@@ -12,6 +12,7 @@ import * as ProfilesExperiences from "./profile-experiences";
 import * as ProfilesSkills from "./profile-skills";
 import * as Profiles from "./profiles";
 import * as ProjectFiles from "./project-file";
+import * as ProjectMembership from "./project-membership";
 import * as Projects from "./projects";
 import * as Recovery from "./recovery";
 import * as Session from "./session";
@@ -407,6 +408,23 @@ class Api {
             ),
         };
       },
+      memberships: (projectID: number) => {
+        return {
+          index: (
+            qp: QueryParams<ProjectMembership.Entity>,
+            init?: Helpers.FetchRequestInit
+          ) => {
+            const url = Helpers.buildQueryParamsUrl(
+              `${this.baseUrl}/projects/${projectID}/memberships`,
+              qp
+            );
+            return this.get<ProjectMembership.Index["Data"]>(
+              url.toString(),
+              init
+            );
+          },
+        };
+      },
     };
   }
 
@@ -599,15 +617,21 @@ class Api {
       contacts: (organizationId: number) => {
         return {
           index: (
-            qp: Pick<QueryParams<OrganizationContacts.Entity>,'page'|'perPage'>,
+            qp: Pick<
+              QueryParams<OrganizationContacts.Entity>,
+              "page" | "perPage"
+            >,
             init?: Helpers.FetchRequestInit
           ) => {
             const url = Helpers.buildQueryParamsUrl(
               `${this.baseUrl}/organizations/${organizationId}/contacts`,
               qp
             );
-    
-            return this.get<OrganizationContacts.Index["Data"]>(url.toString(), init);
+
+            return this.get<OrganizationContacts.Index["Data"]>(
+              url.toString(),
+              init
+            );
           },
           store: (
             payload: OrganizationContacts.Store["Payload"],
@@ -651,13 +675,19 @@ class Api {
               qp
             );
 
-            return this.get<OrganizationFile.Index["Data"]>(url.toString(), init);
+            return this.get<OrganizationFile.Index["Data"]>(
+              url.toString(),
+              init
+            );
           },
           store: (
             payload: OrganizationFile.Store["Payload"],
             init?: Helpers.FetchRequestInit
           ) =>
-            this.post<OrganizationFile.Store["Data"], OrganizationFile.Store["Payload"]>(
+            this.post<
+              OrganizationFile.Store["Data"],
+              OrganizationFile.Store["Payload"]
+            >(
               `${this.baseUrl}/organizations/${organizationId}/files`,
               payload,
               {
