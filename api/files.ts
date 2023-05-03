@@ -13,6 +13,7 @@ export interface Entity {
   projectId?: number;
   auctionId?: number;
   tenderId?: number;
+  organizationId?: number;
 }
 
 export function buildFormData(file: File | Blob) {

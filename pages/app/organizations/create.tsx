@@ -1,18 +1,28 @@
-import { Plus } from "@phosphor-icons/react";
+import { Paperclip, Plus } from "@phosphor-icons/react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { FormEvent, useCallback, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import api from "../../../api";
+import { buildFormData } from "../../../api/files";
 import { Navigation } from "../../../components/navigation";
 import { OrganizationCertificationCreate } from "../../../components/organization-certification-create";
 import { Button } from "../../../components/primitives/button";
 import { TextArea } from "../../../components/primitives/text-area";
 
-export type Steps = readonly unknown[];
-export type UseStep = ReturnType<typeof useStep>;
+const OrganizationFileCount = dynamic(
+  () =>
+    import("../../../components/organization-count").then(
+      (mod) => mod.OrganizationFileCount
+    ),
+  { ssr: false }
+);
 
-export function useStep<T extends Steps>(steps: T) {
+type Steps = readonly unknown[];
+type UseStep = ReturnType<typeof useStep>;
+
+function useStep<T extends Steps>(steps: T) {
   const [index, setIndex] = useState(0);
 
   const step = steps[index] as T[number];
@@ -68,7 +78,6 @@ interface ExperienceFormValues {
 }
 
 export default function OrganizationsCreate() {
-  const [error, setError] = useState("");
   const router = useRouter();
 
   const {
@@ -91,9 +100,10 @@ export default function OrganizationsCreate() {
   const goBack = () => router.back();
 
   const { step, goToStep } = useStep([
-    "certificates",
     "general",
     "experiences",
+    "certificates",
+    "files",
     "contacts",
   ] as const);
 
@@ -122,39 +132,58 @@ export default function OrganizationsCreate() {
 
     setData((prev: any) => ({ ...prev, certificates: values }));
 
-    goToStep("contacts");
+    goToStep("files");
+  };
+
+  const onSubmitFiles = async (e: any) => {
+    setData((prev: any) => ({ ...prev, files: e.target.files }));
   };
 
   const onSubmit = async () => {
-    const { general, contacts } = data;
-
-    const { data: organization } = await api.organizations.store(general);
+    const { data: organization } = await api.organizations.store(data.general);
 
     if (organization) {
-      await Promise.all([
-        api.organizations.contacts(organization.id).store({
-          name: "Instagram",
-          value: contacts.instagram,
-          type: "URL",
-        }),
-        api.organizations.contacts(organization.id).store({
-          name: "WhatsApp",
-          value: contacts.whatsapp,
-          type: "URL",
-        }),
-        api.organizations.contacts(organization.id).store({
-          name: "2GIS",
-          value: contacts["2gis"],
-          type: "URL",
-        }),
-        api.organizations.contacts(organization.id).store({
-          name: "Вебсайт",
-          value: contacts.website,
-          type: "URL",
-        }),
-      ]);
+      if (data.contacts) {
+        await Promise.all([
+          data.contacts.instagram &&
+            api.organizations.contacts(organization.id).store({
+              name: "Instagram",
+              value: data.contacts.instagram,
+              type: "URL",
+            }),
+          data.contacts.whatsapp &&
+            api.organizations.contacts(organization.id).store({
+              name: "WhatsApp",
+              value: data.contacts.whatsapp,
+              type: "URL",
+            }),
+          data.contacts["2gis"] &&
+            api.organizations.contacts(organization.id).store({
+              name: "2GIS",
+              value: data.contacts["2gis"],
+              type: "URL",
+            }),
+          data.contacts.website &&
+            api.organizations.contacts(organization.id).store({
+              name: "Вебсайт",
+              value: data.contacts.website,
+              type: "URL",
+            }),
+        ]);
+      }
 
-      await router.push(`/app/organizations/${organization.id}`);
+      if (data.files) {
+        await Promise.all(
+          [...data.files].map(async (file: File) => {
+            await api.organizations
+              .files(organization.id)
+              .store(buildFormData(file));
+          })
+        );
+      }
+      console.log(data);
+
+      // await router.push(`/app/organizations/${organization.id}`);
     }
   };
 
@@ -179,7 +208,8 @@ export default function OrganizationsCreate() {
               </button>
               <button
                 onClick={onSubmit}
-                className="text-white py-2 px-4 font-medium leading-6 text-sm rounded-md bg-lime-500"
+                disabled={step !== "contacts"}
+                className="text-white py-2 px-4 font-medium leading-6 text-sm rounded-md bg-lime-500 disabled:bg-lime-300 disabled:cursor-not-allowed"
               >
                 Сохранить
               </button>
@@ -295,6 +325,7 @@ export default function OrganizationsCreate() {
                       <input
                         type="text"
                         name="perfomance"
+                        defaultValue={data.general?.perfomance}
                         className="py-4 px-5 text-black rounded-md border border-slate-300 mt-6 flex-1"
                         minLength={1}
                         maxLength={255}
@@ -541,6 +572,7 @@ export default function OrganizationsCreate() {
               </form>
             </div>
           )}
+
           {step === "certificates" && (
             <form
               onSubmit={onSubmitCertificates}
@@ -579,6 +611,86 @@ export default function OrganizationsCreate() {
                 </button>
               </div>
             </form>
+          )}
+          {step === "files" && (
+            <>
+              <div className="mt-12 bg-white border border-slate-200 rounded-lg">
+                <div className="flex divide-x">
+                  <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-lime-500 text-xl">
+                    Общие данные
+                  </div>
+                  <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-lime-500 text-xl">
+                    Опыт работы
+                  </div>
+                  <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-lime-500 text-xl">
+                    Сертификаты
+                  </div>
+                  <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-lime-600 text-xl">
+                    Доп.материалы
+                  </div>
+                  <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-xl">
+                    Соцсети
+                  </div>
+                </div>
+                <div className="max-w-screen-md mx-auto mt-8">
+                  <div className="font-semibold text-black text-2xl">
+                    Доп.материалы
+                  </div>
+                  <p className="text-sm text-black mt-3">
+                    Загрузите дополнительные материалы, например видео,
+                    презентации, статьи, публикации, которые помогут вам
+                    привлечь больше клиентов
+                  </p>
+                  <div className="w-full mt-8">
+                    <Button
+                      onClick={() => {
+                        document
+                          // eslint-disable-next-line unicorn/prefer-query-selector
+                          .getElementById("fffffff")
+                          ?.click();
+                      }}
+                      type="button"
+                      variant="outline"
+                      className="space-x-2 w-full"
+                    >
+                      <Paperclip
+                        weight="bold"
+                        className="h-4 w-4 text-zinc-800"
+                      />
+                      <span>Прикрепление файлов</span>
+                      <span>
+                        (Выбрано: <OrganizationFileCount />)
+                      </span>
+                    </Button>
+                    <input
+                      hidden
+                      onChange={onSubmitFiles}
+                      type="file"
+                      name="files"
+                      accept=".jpg,.jpeg,.png,.pdf,.docx,.doc,.pptx,.ppt,.xlsx,.xls"
+                      multiple
+                      id="fffffff"
+                    />
+                  </div>
+                </div>
+                <div className="mt-20 flex gap-8 max-w-screen-sm w-full mx-auto mb-8">
+                  <button
+                    onClick={() => goToStep("certificates")}
+                    className="rounded-md text-black py-2 px-4 border border-black text-sm font-medium flex-1"
+                  >
+                    Назад
+                  </button>
+                  <button
+                    onClick={() => {
+                      goToStep("contacts");
+                    }}
+                    className="text-white bg-slate-900 py-2 rounded-md px-4 text-sm font-medium flex-1"
+                  >
+                    Далее
+                  </button>
+                </div>
+              </div>
+            </>
           )}
           {step === "contacts" && (
             <div className="mt-12 bg-white border border-slate-200 rounded-lg">

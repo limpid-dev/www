@@ -1,4 +1,5 @@
 import * as Errors from "./errors";
+import * as OrganizationFile from "./organization-file";
 import * as Health from "./health";
 import * as Helpers from "./helpers";
 import { QueryParams } from "./helpers";
@@ -597,11 +598,17 @@ class Api {
         this.delete(`${this.baseUrl}/organizations/${id}`),
       contacts: (organizationId: number) => {
         return {
-          index: (init?: Helpers.FetchRequestInit) =>
-            this.get<OrganizationContacts.Index["Data"]>(
+          index: (
+            qp: Pick<QueryParams<OrganizationContacts.Entity>,'page'|'perPage'>,
+            init?: Helpers.FetchRequestInit
+          ) => {
+            const url = Helpers.buildQueryParamsUrl(
               `${this.baseUrl}/organizations/${organizationId}/contacts`,
-              init
-            ),
+              qp
+            );
+    
+            return this.get<OrganizationContacts.Index["Data"]>(url.toString(), init);
+          },
           store: (
             payload: OrganizationContacts.Store["Payload"],
             init?: Helpers.FetchRequestInit
@@ -629,6 +636,43 @@ class Api {
           destroy: (id: number, init?: Helpers.FetchRequestInit) =>
             this.delete(
               `${this.baseUrl}/organizations/${organizationId}/contacts/${id}`,
+              init
+            ),
+        };
+      },
+      files: (organizationId: number) => {
+        return {
+          index: (
+            qp: Pick<QueryParams<OrganizationFile.Entity>, "page" | "perPage">,
+            init?: Helpers.FetchRequestInit
+          ) => {
+            const url = Helpers.buildQueryParamsUrl(
+              `${this.baseUrl}/organizations/${organizationId}/files`,
+              qp
+            );
+
+            return this.get<OrganizationFile.Index["Data"]>(url.toString(), init);
+          },
+          store: (
+            payload: OrganizationFile.Store["Payload"],
+            init?: Helpers.FetchRequestInit
+          ) =>
+            this.post<OrganizationFile.Store["Data"], OrganizationFile.Store["Payload"]>(
+              `${this.baseUrl}/organizations/${organizationId}/files`,
+              payload,
+              {
+                headers: {
+                  ContentType: "multipart/form-data",
+                  Accept: "application/json",
+                },
+                body: payload,
+                credentials: "include",
+                ...init,
+              }
+            ),
+          delete: (id: number, init?: Helpers.FetchRequestInit) =>
+            this.delete(
+              `${this.baseUrl}/organizations/${organizationId}/files/${id}`,
               init
             ),
         };

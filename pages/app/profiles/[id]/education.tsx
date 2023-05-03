@@ -152,7 +152,9 @@ export default function Education() {
                     defaultValue={`/app/profiles/${id}/education`}
                   >
                     {tabs.map((tab) => (
-                      <option key={tab.name} value={tab.href}>{tab.name}</option>
+                      <option key={tab.name} value={tab.href}>
+                        {tab.name}
+                      </option>
                     ))}
                   </select>
                 </div>

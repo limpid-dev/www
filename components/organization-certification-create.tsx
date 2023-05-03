@@ -44,7 +44,7 @@ export function OrganizationCertificationCreate() {
   return (
     <div className="m-auto border-none sm:w-4/6 p-8">
       <div className="m-auto flex  flex-col gap-5">
-        <div>
+        <div className="flex gap-8 flex-col">
           {fields.map((field, index) => {
             return (
               <div key={field.id} className="flex flex-col gap-5">

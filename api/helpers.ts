@@ -14,7 +14,7 @@ export interface Meta {
 
 export interface QueryParams<E> {
   page: number;
-  perPage: number;
+  perPage?: number;
   filters?: Partial<E>;
   sort?: Record<keyof E, "asc" | "desc">;
   search?: string;
