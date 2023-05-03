@@ -181,9 +181,8 @@ export default function OrganizationsCreate() {
           })
         );
       }
-      console.log(data);
 
-      // await router.push(`/app/organizations/${organization.id}`);
+      await router.push(`/app/organizations/${organization.id}`);
     }
   };
 

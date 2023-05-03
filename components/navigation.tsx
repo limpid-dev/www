@@ -70,6 +70,7 @@ function findById(array: any, id: any) {
 const navigation = [
   { name: "Проекты", href: "/app/projects" },
   { name: "Профили", href: "/app/profiles" },
+  { name: "Организации", href: "/app/organizations" },
   // { name: "Аукционы", href: "/app/auctions" },
   { name: "Тендеры", href: "/app/tenders" },
 ];

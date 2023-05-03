@@ -614,6 +614,36 @@ class Api {
         >(`${this.baseUrl}/organizations/${id}`, payload),
       destroy: (id: number) =>
         this.delete(`${this.baseUrl}/organizations/${id}`),
+      memberships: (organizationId: number) => {
+        return {
+          index: (
+            qp: QueryParams<{
+              id: number;
+              createdAt: string;
+              updatedAt: string;
+              type: "owner" | "member";
+              organizationId: number;
+              userId: number;
+            }>,
+            init?: Helpers.FetchRequestInit
+          ) => {
+            const url = Helpers.buildQueryParamsUrl(
+              `${this.baseUrl}/organizations/${organizationId}/memberships`,
+              qp
+            );
+            return this.get<
+              {
+                id: number;
+                createdAt: string;
+                updatedAt: string;
+                type: "owner" | "member";
+                organizationId: number;
+                userId: number;
+              }[]
+            >(url.toString(), init);
+          },
+        };
+      },
       contacts: (organizationId: number) => {
         return {
           index: (
@@ -704,6 +734,22 @@ class Api {
             this.delete(
               `${this.baseUrl}/organizations/${organizationId}/files/${id}`,
               init
+            ),
+        };
+      },
+      experiences: (organizationId: number) => {
+        return {
+          index: () =>
+            this.get<ProfilesExperiences.Index["Data"]>(
+              `${this.baseUrl}/organization/${organizationId}/experiences?page=1`
+            ),
+          store: (payload: ProfilesExperiences.Store["Payload"]) =>
+            this.post<
+              ProfilesExperiences.Store["Data"],
+              ProfilesExperiences.Store["Payload"]
+            >(
+              `${this.baseUrl}/organization/${organizationId}/experiences`,
+              payload
             ),
         };
       },
