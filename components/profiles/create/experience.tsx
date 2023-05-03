@@ -175,9 +175,7 @@ export function ExperienceCreate({ profileId, experienceAdd }: any) {
           </div>
 
           <div className="mt-5 flex justify-end gap-3 pt-4">
-            <Button variant="solid" onClick={experienceAdd}>
-              Отмена
-            </Button>
+            <Button onClick={experienceAdd}>Отмена</Button>
             <Button type="submit">Сохранить</Button>
           </div>
         </form>

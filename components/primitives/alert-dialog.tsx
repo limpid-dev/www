@@ -26,7 +26,7 @@ const AlertDialogOverlay = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Overlay>
 >(({ className, children, ...props }, ref) => (
   <AlertDialogPrimitive.Overlay
-    className={cn(
+    className={clsx(
       "animate-in fade-in fixed inset-0 z-50 bg-black/50 backdrop-blur-sm transition-opacity",
       className
     )}

@@ -358,9 +358,9 @@ class Api {
 
   get projects() {
     return {
-      index: (id: number) =>
+      index: () =>
         this.get<Projects.Index["Data"]>(
-          `${this.baseUrl}/projects?page=1&perPage=100&filter[userId]=${id}`
+          `${this.baseUrl}/projects?page=1&perPage=100`
         ),
       show: (id: number) =>
         this.get<Projects.Show["Data"]>(`${this.baseUrl}/projects/${id}`),

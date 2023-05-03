@@ -1,18 +1,28 @@
-import { Trash } from "@phosphor-icons/react";
+import { Pen, Trash } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import api from "../../../../api";
 import { Entity } from "../../../../api/profiles";
 import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";
+import { TextArea } from "../../../../components/primitives/text-area";
 import { General } from "../../../../components/profiles/general";
+
+interface FormValues {
+  ownedMaterialResources: string;
+  ownedIntellectualResources: string;
+}
 
 export default function One() {
   const router = useRouter();
   const [first, setfirst] = useState(1);
   const [second, setsecond] = useState(1);
+  const [edit, setEdit] = useState(false);
+  const [error, setError] = useState("");
+
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
@@ -74,6 +84,33 @@ export default function One() {
       current: false,
     },
   ];
+
+  const editIntellectualResources = () => {
+    setEdit((current: boolean) => !current);
+  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = useForm<FormValues>();
+
+  const onSubmit = async (data1: FormValues) => {
+    try {
+      const { data } = await api.profiles.update(
+        Number.parseInt(id, 10),
+        data1
+      );
+      router.reload();
+    } catch (error) {
+      setError("Что то пошло не так, попробуйте позже");
+    }
+  };
+
+  const editMaterialResources = () => {
+    setEdit((current: boolean) => !current);
+  };
+
   return (
     <div>
       <Navigation />
@@ -83,23 +120,12 @@ export default function One() {
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
             {isAuthor ? (
               <div className="flex gap-5">
-                {/* <Button className=" bg-slate-700 hover:bg-black">
-                  Редактировать
-                </Button> */}
                 <Button variant="outline" onClick={() => handleDeleteProfile()}>
                   <Trash className="h-6 w-6" />
                 </Button>
               </div>
             ) : (
-              <div className="flex gap-5">
-                {/* <Button
-                  className=" bg-black hover:bg-slate-600"
-                  variant="outline"
-                  color="white"
-                >
-                  Написать в чате
-                </Button> */}
-              </div>
+              <></>
             )}
           </div>
 
@@ -161,31 +187,72 @@ export default function One() {
                 </div>
               </div>
               <div className="p-6">
-                <div className="flex flex-col gap-6 p-6">
-                  <div className="flex flex-col gap-3">
-                    <p className=" text-xl font-semibold text-slate-400">
-                      Материальный ресурс
-                    </p>
-                    <p className="text-sm">{data?.ownedMaterialResources}</p>
-                  </div>
-                  <div />
-                  <div className="flex flex-col gap-3">
-                    <p className=" text-xl font-semibold text-slate-400">
-                      Интеллектуальный ресурс
-                    </p>
-                    <p className="text-sm">
-                      {data?.ownedIntellectualResources}
-                    </p>
-                  </div>
-                </div>
-                <div className="relative">
-                  <div
-                    className="absolute inset-0 flex items-center"
-                    aria-hidden="true"
-                  >
-                    <div className="w-full border-t border-gray-300" />
-                  </div>
-                </div>
+                {edit ? (
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <div className="flex flex-col gap-6 p-6">
+                      <div className="flex flex-col gap-3">
+                        <p className=" text-xl font-semibold text-slate-400">
+                          Материальный ресурс
+                        </p>
+                        <TextArea
+                          placeholder={data?.ownedMaterialResources}
+                          {...register("ownedMaterialResources")}
+                        />
+                      </div>
+
+                      <div />
+                      <div className="flex flex-col gap-3">
+                        <p className=" text-xl font-semibold text-slate-400">
+                          Интеллектуальный ресурс
+                        </p>
+                        <TextArea
+                          {...register("ownedIntellectualResources")}
+                          placeholder={data?.ownedIntellectualResources}
+                        />
+                      </div>
+                    </div>
+                    <div className="mt-5 flex justify-end gap-3 pt-4">
+                      <Button onClick={editMaterialResources}>Отмена</Button>
+                      <Button type="submit">Сохранить</Button>
+                    </div>
+                  </form>
+                ) : (
+                  <>
+                    <div className="flex flex-col gap-6 p-6">
+                      <div className="flex flex-col gap-3">
+                        <p className=" text-xl font-semibold text-slate-400">
+                          Материальный ресурс
+                        </p>
+                        <p className="text-sm">
+                          {data?.ownedMaterialResources}
+                        </p>
+                      </div>
+
+                      <div />
+                      <div className="flex flex-col gap-3">
+                        <p className=" text-xl font-semibold text-slate-400">
+                          Интеллектуальный ресурс
+                        </p>
+                        <p className="text-sm">
+                          {data?.ownedIntellectualResources}
+                        </p>
+                      </div>
+                    </div>
+                    {isAuthor && (
+                      <div className="col-span-2">
+                        <div className="flex justify-end gap-6">
+                          <Button
+                            variant="outline"
+                            color="zinc"
+                            onClick={editMaterialResources}
+                          >
+                            <Pen className="h-6 w-6" />
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
             </div>
           </div>

@@ -269,14 +269,18 @@ export default function One() {
                   <>
                     <div className="mt-8 flex flex-wrap gap-7">
                       {skillsData.map((skill, skillIndex) => (
-                        <div key={skillIndex} className="flex gap-3">
+                        <div
+                          key={skillIndex}
+                          className="flex items-center gap-3"
+                        >
                           <div className="flex items-center gap-3 rounded-md bg-slate-100 px-4 py-3 text-sm">
                             <Power />
                             <p>{skill.name}</p>
                           </div>
                           {isAuthor && (
                             <Button
-                              variant="destructive"
+                              variant="outline"
+                              color="zinc"
                               onClick={() => handleDeleteSkill(skill.id)}
                             >
                               <Trash className="h-4 w-4" />

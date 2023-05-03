@@ -10,7 +10,6 @@ import api from "../../../api";
 import { Entity } from "../../../api/projects";
 import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
-import EmblaCarousel from "../../../components/primitives/EmblaCarousel";
 import testAva from "../../../images/avatars/projectDefault.svg";
 
 const tabs = [
@@ -43,6 +42,7 @@ export default function All() {
       });
 
       const w = await Promise.all(withFiles);
+
       const filteredImages = w.map((withFiles, index) => {
         const images = withFiles.file.filter((item) => {
           return item.extname === ".jpg" || item.extname === ".png";
