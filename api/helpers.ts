@@ -27,7 +27,9 @@ export const buildQueryParamsUrl = <E>(
   const _url = new URL(url);
 
   _url.searchParams.append("page", page.toString());
-  _url.searchParams.append("perPage", perPage.toString());
+  if (perPage) {
+    _url.searchParams.append("perPage", perPage.toString());
+  }
 
   if (filters) {
     Object.entries(filters).forEach(([key, value]) => {

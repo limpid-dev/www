@@ -1,6 +1,7 @@
 export interface Entity {
   id: number;
-  profileId: number;
+  profileId: number | null;
+  organizationId: number | null;
   title: string;
   description: string;
   organization: string;
