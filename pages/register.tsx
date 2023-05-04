@@ -102,8 +102,8 @@ export default function Register() {
             href="/terms-and-conditions"
             className="focus inline-block w-fit cursor-pointer font-semibold text-lime-600 hover:underline"
           >
-            Условиями предоставления услуг{" "}
-          </Link>
+            Условиями предоставления услуг
+          </Link>{" "}
           и{" "}
           <Link
             href="/privacy-policy"
