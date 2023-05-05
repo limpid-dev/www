@@ -12,11 +12,6 @@ import {
   Message,
   Submit,
 } from "../components/primitives/form";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "../components/primitives/sheet";
 
 export default function Register() {
   const router = useRouter();

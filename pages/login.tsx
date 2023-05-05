@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 import api from "../api";
-import { BadRequest, Validation } from "../api/errors";
+import { BadRequest, Unauthorized, Validation } from "../api/errors";
 import { AuthLayout } from "../components/auth-layout";
 import {
   Field,
@@ -56,6 +56,23 @@ export default function Login() {
         password: true,
       }));
       return;
+    }
+
+    if (Unauthorized.is(error)) {
+      setErrors((prev) => ({
+        ...prev,
+        email: true,
+      }));
+
+      setTimeout(async () => {
+        await api.verification.store({
+          email: values.email,
+        });
+        await router.push({
+          pathname: "/verification",
+          query: { email: values.email },
+        });
+      }, 1000);
     }
 
     localStorage.clear();

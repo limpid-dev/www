@@ -8,7 +8,7 @@ export default function TermsAndConditions() {
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
 
-  const onDocumentLoadSuccess = ({ numPages }) => {
+  const onDocumentLoadSuccess = ({ numPages }: any) => {
     setNumPages(numPages);
   };
 
@@ -16,7 +16,7 @@ export default function TermsAndConditions() {
     setPageNumber(pageNumber - 1 <= 1 ? 1 : pageNumber - 1);
 
   const goToNextPage = () =>
-    setPageNumber(pageNumber + 1 >= numPages ? numPages : pageNumber + 1);
+    setPageNumber(pageNumber + 1 >= numPages! ? numPages! : pageNumber + 1);
   return (
     <>
       <div className="flex flex-col justify-center items-center">
