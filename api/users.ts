@@ -3,7 +3,7 @@ import * as File from "./files";
 export interface Entity {
   id: number;
   email: string;
-  password: string;
+  password?: string;
   firstName: string;
   lastName: string;
   createdAt: string;

@@ -135,6 +135,12 @@ export default function Login() {
             Неверный пароль
           </Message>
         </Field>
+        <Link
+          href="./recovery"
+          className="font-medium text-sm text-right text-lime-600 hover:underline"
+        >
+          Забыли пароль?
+        </Link>
         <Submit>Войти</Submit>
       </Form>
     </AuthLayout>

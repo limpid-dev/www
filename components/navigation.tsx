@@ -76,45 +76,44 @@ const navigation = [
 ];
 
 const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
+  { name: "Настройки", href: "/app/settings" },
 ];
 
 export function Navigation() {
   const router = useRouter();
   const [profilesData, setProfilesData] = useState<Entity[]>([]);
   const [profession, setProfession] = useState("");
-  const [user, setUser] = useState<UserEntity>();
-  const [test, setTest] = useState();
+  const [session, setSession] = useState<UserEntity>();
+  const [test, setTest] = useState<UserEntity>();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchProfiles() {
-      const sessionData = await api.session.show();
-      const userId = sessionData.data?.id;
-      const { data } = await api.profiles.index({
-        page: 1,
-        perPage: 100,
-        filters: {
-          userId: userId || 0,
-        },
-      });
-      setUser(sessionData.data);
+      const { data: sessionData } = await api.session.show();
+      if (sessionData) {
+        setSession(sessionData);
+        setTest(sessionData);
 
-      const { data: userData } = await api.users.show(userId);
-      setTest(userData);
+        const { data } = await api.profiles.index({
+          page: 1,
+          perPage: 100,
+          filters: {
+            userId: sessionData.id || 0,
+          },
+        });
 
-      if (data) {
-        if (data[0]?.id && localStorage.length === 0) {
-          localStorage.setItem("profileId", JSON.stringify(data[0].id));
+        if (data) {
+          if (data[0]?.id && localStorage.length === 0) {
+            localStorage.setItem("profileId", JSON.stringify(data[0].id));
+          }
+          const myObject = findById(
+            data,
+            Number.parseInt(localStorage.getItem("profileId") as string, 10)
+          );
+          setProfession(myObject?.title);
+          setProfilesData(data);
+          setLoading(false);
         }
-        const myObject = findById(
-          data,
-          Number.parseInt(localStorage.getItem("profileId") as string, 10)
-        );
-        setProfession(myObject?.title);
-        setProfilesData(data);
-        setLoading(false);
       }
     }
     fetchProfiles();
@@ -136,7 +135,9 @@ export function Navigation() {
             <div className="relative flex h-16 justify-between">
               <div className="relative z-10 flex px-2 lg:px-0">
                 <div className="flex flex-shrink-0 items-center">
-                  <Logo />
+                  <Link href="/">
+                    <Logo />
+                  </Link>
                 </div>
               </div>
 
@@ -173,14 +174,6 @@ export function Navigation() {
                 ) : (
                   ""
                 )}
-                {/* <button
-                  type="button"
-                  className="flex-shrink-0 rounded-full bg-white p-1 text-zinc-400 hover:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2"
-                >
-                  <span className="sr-only">View notifications</span>
-                  <Bell className="h-6 w-6" aria-hidden="true" />
-                </button> */}
-
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-4 flex-shrink-0">
                   <div>
@@ -194,7 +187,7 @@ export function Navigation() {
                           width={0}
                           unoptimized
                           height={0}
-                          src={test?.file?.url ? test.file.url : testAva}
+                          src={test.file ? test.file.url : testAva}
                           alt=""
                         />
                       )}
@@ -276,21 +269,24 @@ export function Navigation() {
                 </div>
                 <div className="ml-3">
                   <div className="text-base font-medium text-zinc-800">
-                    {user?.firstName} {user?.lastName}
+                    {session?.firstName} {session?.lastName}
                   </div>
                   <div className="text-sm font-medium text-zinc-500">
-                    {user?.email}
+                    {session?.email}
                   </div>
                 </div>
-                {/* <button
-                  type="button"
-                  className="ml-auto flex-shrink-0 rounded-full bg-white p-1 text-zinc-400 hover:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2"
-                >
-                  <span className="sr-only">View notifications</span>
-                  <Bell className="h-6 w-6" aria-hidden="true" />
-                </button> */}
               </div>
               <div className="mt-3 space-y-1 px-2">
+                {userNavigation.map((item) => (
+                  <Disclosure.Button
+                    key={item.name}
+                    as="a"
+                    href={item.href}
+                    className="block rounded-md px-3 py-2 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+                  >
+                    {item.name}
+                  </Disclosure.Button>
+                ))}
                 <Button onClick={handleLogout} className="flex w-full">
                   Выйти
                 </Button>
