@@ -15,11 +15,15 @@ const dateFormatter = (arg: string) => {
 };
 
 export default function Education() {
-  const [first, setfirst] = useState(1);
-  const [second, setsecond] = useState(1);
   const router = useRouter();
   const { id } = router.query;
+
+  const [first, setfirst] = useState(1);
+  const [second, setsecond] = useState(1);
+  const [data, setData] = useState<Entity[]>([]);
+  const [isAdd, setIsAdd] = useState(true);
   const parsedId = Number.parseInt(id as string, 10) as number;
+
   useEffect(() => {
     async function fetchProfiles() {
       const { data } = await api.profiles.show(parsedId);
@@ -69,8 +73,6 @@ export default function Education() {
     const selectedPage = event.target.value;
     router.push(selectedPage);
   };
-  const [data, setData] = useState<Entity[]>([]);
-  const [isAdd, setIsAdd] = useState(true);
 
   const isAddHandler = () => {
     setIsAdd((current: boolean) => !current);
@@ -198,8 +200,8 @@ export default function Education() {
                   <>
                     {data.map((item) => (
                       <div key={item.id}>
-                        <div className="grid grid-cols-10 gap-4">
-                          <div className="col-span-4 flex-col md:flex-row gap-5">
+                        <div className="grid sm:grid-cols-10 grid-cols-1 gap-y-5">
+                          <div className="col-span-3 flex gap-5">
                             <div className=" text-lg font-semibold">
                               {item.startedAt}
                             </div>
@@ -208,7 +210,7 @@ export default function Education() {
                               {item.finishedAt}
                             </div>
                           </div>
-                          <div className="col-span-4">
+                          <div className="col-span-5">
                             <p className=" text-lg font-semibold">
                               {item.institution}
                             </p>

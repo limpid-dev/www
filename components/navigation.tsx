@@ -75,9 +75,7 @@ const navigation = [
   { name: "Тендеры", href: "/app/tenders" },
 ];
 
-const userNavigation = [
-  { name: "Настройки", href: "/app/settings" },
-];
+const userNavigation = [{ name: "Настройки", href: "/app/settings" }];
 
 export function Navigation() {
   const router = useRouter();

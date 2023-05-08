@@ -36,9 +36,9 @@ export default function One() {
 
   useEffect(() => {
     async function fetchProfiles() {
-      const { data } = await api.profiles.show(Number.parseInt(id, 10));
+      const { data } = await api.organizations.show(Number.parseInt(id, 10));
       if (data) {
-        setsecond(data.userId);
+        setsecond(data.id);
         setData(data);
       }
     }
@@ -189,7 +189,7 @@ export default function One() {
               <div className="p-6">
                 {edit ? (
                   <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="flex flex-col gap-6 p-6">
+                    <div className="flex flex-col gap-6">
                       <div className="flex flex-col gap-3">
                         <p className=" text-xl font-semibold text-slate-400">
                           Материальный ресурс
@@ -218,7 +218,7 @@ export default function One() {
                   </form>
                 ) : (
                   <>
-                    <div className="flex flex-col gap-6 p-6">
+                    <div className="flex flex-col gap-6">
                       <div className="flex flex-col gap-3">
                         <p className=" text-xl font-semibold text-slate-400">
                           Материальный ресурс

@@ -1,3 +1,5 @@
+import { Faders, SquaresFour } from "@phosphor-icons/react";
+import { Item } from "@radix-ui/react-dropdown-menu";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,8 +9,50 @@ import api from "../../../api";
 import { Entity } from "../../../api/profiles";
 import * as Users from "../../../api/users";
 import { Navigation } from "../../../components/navigation";
+import { Button } from "../../../components/primitives/button";
+import { Input } from "../../../components/primitives/input";
+import { Label } from "../../../components/primitives/label";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../../../components/primitives/sheet";
 import { Skeleton } from "../../../components/primitives/skeleton";
 import DefaultAvatar from "../../../images/avatars/defaultProfile.svg";
+
+const options = [
+  { id: 1, name: "Автомобили / Запчасти / Автосервис" },
+  { id: 2, name: "Мебель / Материалы / Фурнитура" },
+  { id: 4, name: "Хозтовары / Канцелярия / Упаковка" },
+  { id: 5, name: "Оборудование / Инструмент" },
+  { id: 6, name: "Медицина / Здоровье / Красота" },
+  { id: 7, name: "Одежда / Обувь / Галантерея / Парфюмерия" },
+  { id: 8, name: "Бытовая техника / Компьютеры / Офисная техника" },
+  { id: 9, name: "Продукты питания / Напитки" },
+  { id: 10, name: "Продукция производственно-технического назначения" },
+  { id: 16, name: "Спорт / Отдых / Туризм" },
+  { id: 17, name: "Строительные, отделочные материалы" },
+  { id: 18, name: "Металлы / Сырье / Химия" },
+  { id: 19, name: "Сельское хозяйство" },
+  { id: 20, name: "Ювелирные изделия / Искусство" },
+  { id: 21, name: "Электроника / Электротехника" },
+  { id: 22, name: "Юридические, финансовые, бизнес-услуги" },
+  { id: 23, name: "Транспорт / Грузоперевозки" },
+  { id: 24, name: "Торговые комплексы / Спецмагазины" },
+  { id: 25, name: "Реклама / Полиграфия / СМИ" },
+  { id: 26, name: "Текстиль / Предметы интерьера" },
+  { id: 27, name: "Образование / Работа / Карьера" },
+  { id: 28, name: "Аварийные, справочные, экстренные службы" },
+  { id: 29, name: "Охрана / Безопасность" },
+  { id: 30, name: "Строительство / Недвижимость / Ремонт" },
+  { id: 31, name: "Товары для животных / Ветеринария" },
+  { id: 32, name: "Досуг / Развлечения / Общественное питание" },
+  { id: 33, name: "Интернет / Связь / Информационные технологии" },
+];
 
 const tabs = [
   { name: "Все профили", href: "/app/profiles/", current: true },
@@ -63,7 +107,6 @@ export default function All() {
                 <label htmlFor="tabs" className="sr-only">
                   Select a tab
                 </label>
-                {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
                 <select
                   onChange={handleSelectChange}
                   id="tabs"
@@ -98,11 +141,9 @@ export default function All() {
                 </nav>
               </div>
             </div>
-            {/* <div className="flex flex-wrap items-end justify-end gap-3">
+            <div className="flex flex-wrap items-end justify-end gap-3">
               <div className="flex rounded-lg border">
                 <input
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
                   type="search"
                   placeholder="Искать по профилям"
                   className="rounded-lg border-none"
@@ -131,11 +172,48 @@ export default function All() {
                 <Button variant="outline">
                   <Faders className="h-6 w-6" />
                 </Button>
-                <Button variant="outline">
-                  <SquaresFour className="h-6 w-6" />
-                </Button>
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="outline">
+                      <SquaresFour className="w-6 h-6" />
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent position="right" size="default">
+                    <SheetHeader>
+                      <SheetTitle>Сфера деятельности</SheetTitle>
+                      <SheetDescription>
+                        Выберите сферы деятельности интересующие вас
+                      </SheetDescription>
+                    </SheetHeader>
+                    <div className="grid grid-cols-2 gap-4 py-4">
+                      {options.map((option) => (
+                        <div
+                          key={option.id}
+                          className="flex items-center gap-3"
+                        >
+                          <input type="checkbox" name="" id="" />
+                          <p className="text-sm">{option.name}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <SheetFooter>
+                      <Button type="reset" variant="outline">
+                        Сбросить
+                      </Button>
+                      <Button
+                        type="submit"
+                        className={clsx(
+                          " bg-slate-900 text-white hover:bg-slate-800"
+                        )}
+                        variant="subtle"
+                      >
+                        Применить
+                      </Button>
+                    </SheetFooter>
+                  </SheetContent>
+                </Sheet>
               </div>
-            </div> */}
+            </div>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-3">

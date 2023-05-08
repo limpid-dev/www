@@ -92,7 +92,6 @@ export default function One() {
     register,
     handleSubmit,
     formState: { errors },
-    control,
   } = useForm<FormValues>();
 
   const onSubmit = async (data1: FormValues) => {
@@ -189,7 +188,7 @@ export default function One() {
               <div className="p-6">
                 {edit ? (
                   <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="flex flex-col gap-6 p-6">
+                    <div className="flex flex-col gap-6">
                       <div className="flex flex-col gap-3">
                         <p className=" text-xl font-semibold text-slate-400">
                           Материальный ресурс
@@ -218,7 +217,7 @@ export default function One() {
                   </form>
                 ) : (
                   <>
-                    <div className="flex flex-col gap-6 p-6">
+                    <div className="flex flex-col gap-6 ">
                       <div className="flex flex-col gap-3">
                         <p className=" text-xl font-semibold text-slate-400">
                           Материальный ресурс
@@ -240,7 +239,7 @@ export default function One() {
                     </div>
                     {isAuthor && (
                       <div className="col-span-2">
-                        <div className="flex justify-end gap-6">
+                        <div className="flex justify-end gap-6 mt-4">
                           <Button
                             variant="outline"
                             color="zinc"

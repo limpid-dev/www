@@ -41,7 +41,7 @@ export function General({ profileId }: any) {
             className="mb-3 h-[106px] w-auto rounded-md object-cover"
           />
         )}
-        <p className=" text-2xl font-semibold">
+        <p className="text-2xl font-semibold">
           {userData?.firstName} {userData?.lastName}
         </p>
         <p className=" text-sm">{profileData?.industry}</p>
@@ -49,18 +49,18 @@ export function General({ profileId }: any) {
       <div className="mb-6 mt-3" />
       <div className="grid grid-cols-2 gap-y-4">
         <div>
-          <p className=" text-sm text-slate-400"> Локация</p>
-          <p className="text-sm">{profileData?.location}</p>
+          <p className="text-sm text-slate-400">Локация</p>
+          <p className="text-sm ">{profileData?.location}</p>
         </div>
         <div>
-          <p className=" text-sm text-slate-400">Профессия</p>
+          <p className="text-sm text-slate-400">Профессия</p>
           <p className="text-sm">{profileData?.title}</p>
         </div>
       </div>
       <div className="mb-6 mt-4" />
-      <div className="">
-        <p className=" text-lg font-semibold">Обо мне</p>
-        <p className="pt-3  text-sm">{profileData?.description}</p>
+      <div>
+        <p className="text-lg font-semibold">Обо мне</p>
+        <p className="pt-3 text-sm">{profileData?.description}</p>
       </div>
       <div className="mb-5 mt-3" />
       {/* <div>

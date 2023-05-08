@@ -76,6 +76,8 @@ export default function View() {
   const parsedId = Number.parseInt(id as string, 10) as number;
   const [projectData, setProjectData] = useState<Entity>();
   const [isAuthor, setIsAuthor] = useState(false);
+  const [accept, setAccept] = useState();
+
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
@@ -128,6 +130,15 @@ export default function View() {
           page: 1,
           perPage: 100,
         });
+
+      if (authorData) {
+        const acceptMembers = authorData.filter((item) => {
+          return item.type === "member" && !item.acceptedAt;
+        });
+        setAccept(acceptMembers);
+        console.log(accept);
+      }
+
       const profileId1 = Number.parseInt(
         localStorage.getItem("profileId") as string,
         10
@@ -456,11 +467,7 @@ export default function View() {
                           >
                             Artur Kim
                           </p>
-                          <p className="text-sm">
-                            Салют, я Артур. Есть опыт в работе с тепличными
-                            комплексами, думаю, что смогу быть полезен. Напиши
-                            мне на ватсап. 8 707 777 77 77
-                          </p>
+                          <p className="text-sm">{accept[0].message}</p>
                           <div className="flex justify-end gap-3">
                             <Button variant="ghost">Отклонить</Button>
                             <Button variant="ghost">Принять</Button>
