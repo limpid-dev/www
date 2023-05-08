@@ -9,6 +9,7 @@ import {
   User,
 } from "@phosphor-icons/react";
 import { DialogClose } from "@radix-ui/react-dialog";
+import clsx from "clsx";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -32,6 +33,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -42,6 +44,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../../../../components/primitives/dropdown-menu";
+import { Input } from "../../../../components/primitives/input";
+import { Label } from "../../../../components/primitives/label";
 import { ScrollArea } from "../../../../components/primitives/scroll-area";
 import { Separator } from "../../../../components/primitives/separator";
 import {
@@ -68,7 +72,7 @@ interface FormValues {
 }
 
 export default function View() {
-  const isTrue = true;
+  const isTrue = false;
   const [isShown, setIsShown] = useState(true);
   const router = useRouter();
   const { id } = router.query;
@@ -76,7 +80,10 @@ export default function View() {
   const parsedId = Number.parseInt(id as string, 10) as number;
   const [projectData, setProjectData] = useState<Entity>();
   const [isAuthor, setIsAuthor] = useState(false);
-  const [accept, setAccept] = useState();
+  const [accept, setAccept] = useState([]);
+  const [activeMember, setActiveMember] = useState(false);
+  const [member, setMember] = useState();
+  const [allMembers, setAllMembers] = useState();
 
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
@@ -124,6 +131,10 @@ export default function View() {
 
   useEffect(() => {
     async function fetchAuthor() {
+      const profileId1 = Number.parseInt(
+        localStorage.getItem("profileId") as string,
+        10
+      );
       const { data: authorData } = await api.projects
         .memberships(parsedId)
         .index({
@@ -132,17 +143,32 @@ export default function View() {
         });
 
       if (authorData) {
+        const withProfiles = authorData!.map(async (d) => {
+          const profile = await api.profiles.show(d.profileId);
+          return { ...d, profile: profile.data! };
+        });
+        const w = await Promise.all(withProfiles);
+        if (w) {
+          setAllMembers(w);
+        }
         const acceptMembers = authorData.filter((item) => {
           return item.type === "member" && !item.acceptedAt;
         });
         setAccept(acceptMembers);
-        console.log(accept);
+
+        if (acceptMembers) {
+          const acceptMembers1 = await api.profiles.show(
+            acceptMembers[0]?.profileId
+          );
+          setMember(acceptMembers1.data);
+        }
+
+        const activeMember = authorData.some((item) => {
+          return item.profileId === profileId1 && item.acceptedAt !== null;
+        });
+        setActiveMember(activeMember);
       }
 
-      const profileId1 = Number.parseInt(
-        localStorage.getItem("profileId") as string,
-        10
-      );
       const isAuthorProfile = authorData?.some((item) => {
         return item.profileId === profileId1 && item.type === "owner";
       });
@@ -157,6 +183,11 @@ export default function View() {
     setIsShown((current: boolean) => !current);
   };
 
+  const handleAccept = async () => {
+    const { data } = await api.projects
+      .memberships(parsedId)
+      .update(accept[0].id);
+  };
   return (
     <div>
       <Navigation />
@@ -188,7 +219,9 @@ export default function View() {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Отмена</AlertDialogCancel>
-                      <AlertDialogAction className="bg-rose-500 hover:bg-rose-700">
+                      <AlertDialogAction
+                        className={clsx("bg-rose-500 hover:bg-rose-700")}
+                      >
                         Удалить
                       </AlertDialogAction>
                     </AlertDialogFooter>
@@ -247,7 +280,9 @@ export default function View() {
                     alt="Photo by Alvaro Pinot"
                     className="h-[106px] w-auto rounded-md object-cover pb-6"
                   />
-                  <p className=" text-2xl font-semibold">Almaz Nurgali</p>
+                  <p className=" text-2xl font-semibold">
+                    {projectData?.title}
+                  </p>
                   <p className=" text-sm">{projectData?.title}</p>
                 </div>
                 <Separator className="mb-6 mt-3" />
@@ -292,16 +327,19 @@ export default function View() {
                       <div />
                     </SheetContent>
                   </Sheet>
-                  <Button
-                    variant="ghost"
-                    className="w-full"
-                    onClick={handleClick}
-                  >
-                    <div className="flex w-full items-center gap-3 text-sm font-semibold">
-                      <Chat /> Обсуждение проекта
-                    </div>
-                    <TagChevron />
-                  </Button>
+
+                  {activeMember && (
+                    <Button
+                      variant="ghost"
+                      className="w-full"
+                      onClick={handleClick}
+                    >
+                      <div className="flex w-full items-center gap-3 text-sm font-semibold">
+                        <Chat /> Обсуждение проекта
+                      </div>{" "}
+                      <TagChevron />
+                    </Button>
+                  )}
                 </div>
                 {/* <Separator className="mb-6 mt-4" />
               <div className="flex flex-col gap-4">
@@ -429,10 +467,21 @@ export default function View() {
                         <ArrowsVertical />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        <DropdownMenuItem className="text-base">
-                          <User className="mr-2 h-4 w-4" />
-                          Участники чата
-                        </DropdownMenuItem>
+                        <Dialog>
+                          <DialogTrigger className="text-base w-full p-2">
+                            Участники проекта
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Участники Обсуждения</DialogTitle>
+                            </DialogHeader>
+                            {allMembers.map((member) => (
+                              <div key={member.id}>
+                                <p>{member.profile.title}</p>
+                              </div>
+                            ))}
+                          </DialogContent>
+                        </Dialog>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
@@ -457,7 +506,7 @@ export default function View() {
                           className={`mt-2 rounded-lg px-2 py-1 ${
                             isTrue
                               ? "bg-lime-400"
-                              : "grid w-96  items-end justify-end gap-3 border bg-slate-50"
+                              : "grid max-w-96 items-end justify-end gap-3 border bg-slate-50"
                           }`}
                         >
                           <p
@@ -465,13 +514,19 @@ export default function View() {
                               isTrue ? "hidden" : ""
                             }`}
                           >
-                            Artur Kim
+                            {member?.title}
                           </p>
-                          <p className="text-sm">{accept[0].message}</p>
-                          <div className="flex justify-end gap-3">
-                            <Button variant="ghost">Отклонить</Button>
-                            <Button variant="ghost">Принять</Button>
-                          </div>
+                          <>
+                            <p className="text-sm">{accept[0]?.message}</p>
+                          </>
+                          {accept[0] && (
+                            <div className="flex justify-end gap-3">
+                              <Button variant="ghost">Отклонить</Button>
+                              <Button onClick={handleAccept} variant="ghost">
+                                Принять
+                              </Button>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>

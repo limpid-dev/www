@@ -204,12 +204,12 @@ export default function TendersMy({ data }: Props) {
                     <Textarea required minLength={1} maxLength={1024} />
                   </Field>
                   <Field name="duration">
-                    <Label>Длительность (в часах)</Label>
+                    <Label>Длительность (в днях)</Label>
                     <Input
                       type="number"
                       required
-                      min={24}
-                      max={720}
+                      min={1}
+                      max={31}
                       defaultValue={24}
                     />
                   </Field>

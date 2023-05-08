@@ -428,6 +428,14 @@ class Api {
               ProjectMembership.Store["Data"],
               ProjectMembership.Store["Payload"]
             >(`${this.baseUrl}/projects/${projectID}/memberships`, payload),
+          update: (membershipId: number) =>
+            this.patch<ProjectMembership.Update["Data"]>(
+              `${this.baseUrl}/projects/${projectID}/memberships/${membershipId}`
+            ),
+          destroy: (profileId: number, id: number) =>
+            this.delete(
+              `${this.baseUrl}/profiles/${profileId}/educations/${id}`
+            ),
         };
       },
     };
