@@ -27,7 +27,7 @@ export default function All() {
       router.push("/app/projects/create");
     } else {
       router.push("/app/profiles/my");
-      alert("Создайте портфолио");
+      alert("Создайте профиль");
     }
   };
 
