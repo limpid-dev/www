@@ -22,6 +22,15 @@ export default function All() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
 
+  const handleRoute = () => {
+    if (localStorage.getItem("profileId")) {
+      router.push("/app/projects/create");
+    } else {
+      router.push("/app/profiles/my");
+      alert("Создайте портфолио");
+    }
+  };
+
   useEffect(() => {
     async function fetchProfiles() {
       const data1 = await api.session.show();
@@ -83,12 +92,14 @@ export default function All() {
                 </nav>
               </div>
             </div>
-            <Link href="/app/projects/create">
-              <Button className="bg-zinc-900 p-2 text-sm text-white">
-                <Plus className="h-6 w-6" />
-                Создать проект
-              </Button>
-            </Link>
+
+            <Button
+              onClick={handleRoute}
+              className="bg-zinc-900 p-2 text-sm text-white"
+            >
+              <Plus className="h-6 w-6" />
+              Создать проект
+            </Button>
           </div>
 
           {loading ? (
