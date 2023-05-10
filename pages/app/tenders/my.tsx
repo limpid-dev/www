@@ -1,7 +1,13 @@
 import "@uppy/core/dist/style.css";
 import "@uppy/dashboard/dist/style.css";
 import "@uppy/drag-drop/dist/style.css";
-import { Paperclip } from "@phosphor-icons/react";
+import { Paperclip, Question } from "@phosphor-icons/react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@radix-ui/react-tooltip";
 import { Uppy } from "@uppy/core";
 import Russian from "@uppy/locales/lib/ru_RU";
 import { DashboardModal } from "@uppy/react";
@@ -53,8 +59,8 @@ const calcTime = (date: string) => {
 };
 
 const tabs = [
-  { name: "Все тендеры", href: "/app/tenders", current: false },
-  { name: "Мои тендеры", href: "/app/tenders/my", current: true },
+  { name: "Все продажи", href: "/app/tenders", current: false },
+  { name: "Мои продажи", href: "/app/tenders/my", current: true },
 ];
 
 const uppy = new Uppy({
@@ -140,7 +146,7 @@ export default function TendersMy({ data }: Props) {
       <Navigation />
       <div className="min-h-screen bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 py-8">
-          <p className=" text-sm text-slate-300">Мои тендеры</p>
+          <p className=" text-sm text-slate-300">Мои продажи</p>
           <div className="my-5 flex flex-col items-end justify-end gap-4 md:mb-12 md:flex-row md:items-center  md:justify-between">
             <div>
               <div className="sm:hidden">
@@ -151,8 +157,8 @@ export default function TendersMy({ data }: Props) {
                   className="block w-full  border-gray-300 focus:border-lime-500 focus:ring-lime-500"
                   defaultValue="/app/tenders/my"
                 >
-                  <option value="/app/tenders">Все тендеры</option>
-                  <option value="/app/tenders/my">Мои тендеры</option>
+                  <option value="/app/tenders">Все продажи</option>
+                  <option value="/app/tenders/my">Мои продажи</option>
                 </select>
               </div>
               <div className="hidden sm:block">
@@ -185,13 +191,13 @@ export default function TendersMy({ data }: Props) {
               }}
             >
               <DialogTrigger asChild>
-                <Button>Создать тендер</Button>
+                <Button>Создать продажи</Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Создать тендер</DialogTitle>
+                  <DialogTitle>Создать продажи</DialogTitle>
                   <DialogDescription>
-                    Заполните форму, чтобы создать тендер.
+                    Заполните форму, чтобы создать продажи.
                   </DialogDescription>
                 </DialogHeader>
                 <Form onSubmit={onSubmit} id="form">
@@ -204,7 +210,19 @@ export default function TendersMy({ data }: Props) {
                     <Textarea required minLength={1} maxLength={1024} />
                   </Field>
                   <Field name="duration">
-                    <Label>Длительность (в днях)</Label>
+                    <div className="flex gap-3">
+                      <Label>Длительность (в днях)</Label>{" "}
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Question className="h-6 w-6" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Сколько дней будет длиться аукцион</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
                     <Input
                       type="number"
                       required
@@ -240,7 +258,7 @@ export default function TendersMy({ data }: Props) {
                   />
                   <DialogFooter>
                     <Button type="submit" className="rounded-lg">
-                      Создать тендер
+                      Создать продажи
                     </Button>
                   </DialogFooter>
                 </Form>

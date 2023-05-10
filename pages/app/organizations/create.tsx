@@ -720,7 +720,7 @@ export default function OrganizationsCreate() {
                   <p className="text-sm text-black mt-3 whitespace-nowrap">
                     Укажите ссылки на аккаунты компании в социальных сетях
                   </p>
-                  <div className="relative mt-2">
+                  <div className="relative flex justify-center items-center">
                     <Image
                       width={24}
                       height={24}

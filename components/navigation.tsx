@@ -72,7 +72,7 @@ const navigation = [
   { name: "Профили", href: "/app/profiles" },
   { name: "Организации", href: "/app/organizations" },
   // { name: "Аукционы", href: "/app/auctions" },
-  { name: "Тендеры", href: "/app/tenders" },
+  { name: "Продажи", href: "/app/tenders" },
 ];
 
 const userNavigation = [{ name: "Настройки", href: "/app/settings" }];

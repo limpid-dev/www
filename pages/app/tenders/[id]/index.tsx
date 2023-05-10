@@ -1,23 +1,56 @@
 import {
-  Flashlight,
   Lightbulb,
   MaskHappy,
   Medal,
   ShieldWarning,
   Sun,
 } from "@phosphor-icons/react";
-import clsx from "clsx";
 import useEmblaCarousel, { EmblaOptionsType } from "embla-carousel-react";
 import { GetStaticPropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
+import { Entity } from "../../../../../api/tender-bid";
 import api from "../../../../api";
+import { TenderBids } from "../../../../components/bids/bidSheet";
 import { Navigation } from "../../../../components/navigation";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../../../../components/primitives/alert-dialog";
 import { Button } from "../../../../components/primitives/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../../../../components/primitives/dialog";
 import { Thumb } from "../../../../components/primitives/embla-thumbs";
+import { Field, Form } from "../../../../components/primitives/form";
+import { Input } from "../../../../components/primitives/input";
+import { Label } from "../../../../components/primitives/label";
 import { Separator } from "../../../../components/primitives/separator";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../../../../components/primitives/sheet";
+import { TextArea } from "../../../../components/primitives/text-area";
 
 const calcTime = (date: string) => {
   const now = new Date();
@@ -100,6 +133,9 @@ export default function Tender({ data }: Props) {
   }, [emblaMainApi, onSelect]);
 
   const router = useRouter();
+  const { id } = router.query;
+  const parsedId = Number.parseInt(id as string, 10) as number;
+
   return (
     <>
       <Navigation />
@@ -112,10 +148,14 @@ export default function Tender({ data }: Props) {
           </h1>
 
           <div className="">
-            <div className="flex gap-2 justify-center py-4 bg-lime-300  rounded-md my-4 font-bold text-base">
-              <ShieldWarning className="w-6 h-6" /> Объявление на рассмотрении y
-              модератора: 1 день
-            </div>
+            {data.verifiedAt ? (
+              ""
+            ) : (
+              <div className="flex gap-2 justify-center py-4 bg-lime-300  rounded-md my-4 font-bold text-base">
+                <ShieldWarning className="w-6 h-6" /> Объявление на рассмотрении
+                y модератора: 1 день
+              </div>
+            )}
 
             <div className="p-10 bg-white">
               <div className="grid grid-cols-10 gap-8  mt-2 rounded-md">
@@ -228,15 +268,7 @@ export default function Tender({ data }: Props) {
                       </p>
                     </div>
 
-                    <div className="bg-slate-100 p-3 rounded-md">
-                      <div className="flex justify-end">
-                        <Sun className="w-6 h-6 text-slate-400" />
-                      </div>
-                      <p className=" font-medium text-lg mt-4">0</p>
-                      <p className="text-sm text-slate-500 font-medium">
-                        Ставки
-                      </p>
-                    </div>
+                    <TenderBids />
 
                     <div className="bg-slate-100 col-span-2 rounded-md p-3">
                       <div>
@@ -257,14 +289,110 @@ export default function Tender({ data }: Props) {
                 </div>
               </div>
               <Separator className="my-10" />
-              <div className=" flex justify-center gap-3">
-                <Button variant="outline" className=" w-3/12">
-                  Удалить объявление
-                </Button>
-                <Button variant="black" className="w-3/12">
-                  Ускорить модерацию (3 часа)
-                </Button>
-              </div>
+              {data.verifiedAt ? (
+                <div className=" flex justify-center gap-3">
+                  <Button variant="outline" className="w-3/12">
+                    Купить за 100 000
+                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="black" className="w-3/12">
+                        Сделать ставку
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[725px]">
+                      <DialogHeader>
+                        <DialogTitle>Сделайте ставку</DialogTitle>
+                        <DialogDescription className="text-xs">
+                          Вы сможете в любое время повысить свою ставку. Другие
+                          участники будут видеть указанную вами цену
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <p className="font-semibold">Стартовая цена</p>
+                        <p className="bg-slate-100 text-2xl font-semibold p-4 rounded-md w-fit">
+                          {data.startingPrice}
+                        </p>
+
+                        <Form
+                          onSubmit={async (event) => {
+                            event.preventDefault();
+
+                            const form = new FormData(event.currentTarget);
+                            const values = Object.fromEntries(
+                              form.entries()
+                            ) as unknown as {
+                              price: number;
+                            };
+
+                            const profileId = Number(
+                              localStorage.getItem("profileId")
+                            );
+
+                            await api.tenders
+                              .bids(data.id)
+                              .store({ price: values.price, profileId });
+                          }}
+                          action=""
+                          className="flex flex-col gap-3"
+                        >
+                          <p>Ваша ставка</p>
+                          <div className="flex items-center gap-6">
+                            <Field name="price">
+                              <Label>Сумма</Label>
+                              <Input placeholder="KZT" type="number" min={1} />
+                            </Field>
+                            <p className="text-xs">
+                              Ваша ставка должна быть выше стартовый цены
+                            </p>
+                          </div>
+                          {/* <p>Комментарий</p>
+                          <TextArea /> */}
+                          <DialogFooter className=" justify-center">
+                            <Button variant="outline" className="w-3/4">
+                              Отмета
+                            </Button>
+                            <Button
+                              variant="black"
+                              type="submit"
+                              className="w-3/4"
+                            >
+                              Отправить
+                            </Button>
+                          </DialogFooter>
+                        </Form>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              ) : (
+                <div className=" flex justify-center gap-3">
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button className="w-3/12" variant="outline">
+                        Удалить Объявление
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Удалить объявление?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Восстановить удаленное объявление будет невозможно
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Отмена</AlertDialogCancel>
+                        <AlertDialogAction className="w-[90px] bg-rose-600 hover:bg-red-900">
+                          Да
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                  <Button variant="black" className="w-3/12">
+                    Ускорить модерацию (3 часа)
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>
