@@ -10,6 +10,7 @@ import api from "../../../../api";
 import { Entity } from "../../../../api/profiles";
 import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";
+import { Input } from "../../../../components/primitives/input";
 import { TextArea } from "../../../../components/primitives/text-area";
 import { General } from "../../../../components/profiles/general";
 import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
@@ -17,6 +18,13 @@ import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
 interface FormValues {
   ownedMaterialResources: string;
   ownedIntellectualResources: string;
+}
+
+interface FormValuesGeneral {
+  industry: string;
+  location: string;
+  description: string;
+  title: string;
 }
 
 export const getServerSideProps = async (
@@ -54,22 +62,9 @@ type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 export default function OneProfile({ data }: Props) {
   const router = useRouter();
-  const [edit, setEdit] = useState(false);
-  const [error, setError] = useState("");
-
-  const handleSelectChange = (event: any) => {
-    const selectedPage = event.target.value;
-    router.push(selectedPage);
-  };
   const { id } = router.query as {
     id: string;
   };
-  const parsedId = Number.parseInt(id as string, 10) as number;
-
-  const handleDeleteProfile = () => {
-    api.profiles.destroy(parsedId);
-  };
-
   const tabs = [
     { name: "Ресурсы", href: `/app/profiles/${id}/`, current: true },
     {
@@ -93,12 +88,36 @@ export default function OneProfile({ data }: Props) {
       current: false,
     },
   ];
+  const parsedId = Number.parseInt(id as string, 10) as number;
+
+  const [edit, setEdit] = useState(false);
+  const [error, setError] = useState("");
+  const [editGeneral, setEditGeneral] = useState(false);
+
+  const handleSelectChange = (event: any) => {
+    const selectedPage = event.target.value;
+    router.push(selectedPage);
+  };
+
+  const handleDeleteProfile = async () => {
+    api.profiles.destroy(parsedId);
+
+    await router.push({
+      pathname: "/app/profiles/my",
+    });
+  };
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
+
+  const {
+    register: register2,
+    formState: { errors: errors2 },
+    handleSubmit: handleSubmit2,
+  } = useForm<FormValuesGeneral>();
 
   const onSubmit = async (data1: FormValues) => {
     try {
@@ -112,8 +131,24 @@ export default function OneProfile({ data }: Props) {
     }
   };
 
-  const editMaterialResources = () => {
+  const onSubmit2 = async (data1: FormValuesGeneral) => {
+    try {
+      const { data } = await api.profiles.update(
+        Number.parseInt(id, 10),
+        data1
+      );
+      router.reload();
+    } catch (error) {
+      setError("Что то пошло не так, попробуйте позже");
+    }
+  };
+
+  const editResources = () => {
     setEdit((current: boolean) => !current);
+  };
+
+  const editGeneralInfo = () => {
+    setEditGeneral((current: boolean) => !current);
   };
 
   return (
@@ -136,39 +171,98 @@ export default function OneProfile({ data }: Props) {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-10 ">
             <div className="rounded-lg border sm:col-span-3">
-              <div className="h-full bg-white px-6">
-                <div className="flex flex-col items-center justify-center pt-12">
-                  <Image
-                    src={data.user.file.url ? data.user.file.url : DefaultAva}
-                    width={0}
-                    height={0}
-                    unoptimized
-                    alt="Profile image"
-                    className="mb-3 h-[106px] w-auto rounded-md object-cover"
-                  />
-                  <p className="text-2xl font-semibold">
-                    {data.user.firstName} {data.user.lastName}
-                  </p>
-                  <p className=" text-sm">{data.profile.industry}</p>
-                </div>
-                <div className="mb-6 mt-3" />
-                <div className="grid grid-cols-2 gap-y-4">
-                  <div>
-                    <p className="text-sm text-slate-400">Локация</p>
-                    <p className="text-sm ">{data.profile.location}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-slate-400">Профессия</p>
-                    <p className="text-sm">{data.profile.title}</p>
-                  </div>
-                </div>
-                <div className="mb-6 mt-4" />
-                <div>
-                  <p className="text-lg font-semibold">Обо мне</p>
-                  <p className="pt-3 text-sm">{data.profile.description}</p>
-                </div>
-                <div className="mb-5 mt-3" />
-                {/* <div>
+              {editGeneral ? (
+                //    <form onSubmit={handleSubmit(onSubmit)}>
+                //    <div className="flex flex-col gap-6">
+                //      <div className="flex flex-col gap-3">
+                //        <p className=" text-xl font-semibold text-slate-400">
+                //          Материальный ресурс
+                //        </p>
+                //        <TextArea
+                //          placeholder={data.profile.ownedMaterialResources}
+                //          {...register("ownedMaterialResources")}
+                //        />
+                //      </div>
+
+                //      <div />
+                //      <div className="flex flex-col gap-3">
+                //        <p className=" text-xl font-semibold text-slate-400">
+                //          Интеллектуальный ресурс
+                //        </p>
+                //        <TextArea
+                //          {...register("ownedIntellectualResources")}
+                //          placeholder={data.profile.ownedIntellectualResources}
+                //        />
+                //      </div>
+                //    </div>
+                //    <div className="mt-5 flex justify-end gap-3 pt-4">
+                //      <Button onClick={editMaterialResources}>Отмена</Button>
+                //      <Button type="submit">Сохранить</Button>
+                //    </div>
+                //  </form>
+                <form onSubmit={handleSubmit2(onSubmit2)}>
+                  <div className="h-full bg-white px-6">
+                    <div className="flex flex-col items-center justify-center pt-12">
+                      <Image
+                        src={
+                          data.user.file.url.length > 0
+                            ? data.user.file.url
+                            : DefaultAva
+                        }
+                        width={0}
+                        height={0}
+                        unoptimized
+                        alt="Profile image"
+                        className="mb-3 h-[106px] w-auto rounded-md object-cover"
+                      />
+                      <p className="text-2xl font-semibold">
+                        {data.user.firstName} {data.user.lastName}
+                      </p>
+                      <p className=" text-sm">
+                        <Input
+                          {...register2("industry")}
+                          placeholder={data.profile.industry}
+                        />
+                      </p>
+                    </div>
+                    <div className="mb-6 mt-3" />
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm text-slate-400">Локация</p>
+                        <p className="text-sm ">
+                          <Input
+                            {...register2("location")}
+                            placeholder={data.profile.location}
+                          />
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-slate-400">Профессия</p>
+                        <p className="text-sm">
+                          <Input
+                            {...register2("title")}
+                            placeholder={data.profile.title}
+                          />
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mb-6 mt-4" />
+                    <div>
+                      <p className="text-lg font-semibold">Обо мне</p>
+                      <p className="pt-3 text-sm">
+                        <TextArea
+                          {...register2("description")}
+                          className="h-full"
+                          placeholder={data.profile.description}
+                        />
+                      </p>
+                    </div>
+                    <div className="mt-5 flex justify-end gap-3 pt-4">
+                      <Button onClick={editGeneralInfo}>Отмена</Button>
+                      <Button type="submit">Сохранить</Button>
+                    </div>
+                    <div className="mb-5 mt-3" />
+                    {/* <div>
         <p className=" mb-4 text-lg font-semibold"> Социальные сети</p>
         <div className="flex gap-6 pb-5">
           <LinkedinLogo />
@@ -176,7 +270,66 @@ export default function OneProfile({ data }: Props) {
           <InstagramLogo />
         </div>
       </div> */}
-              </div>
+                  </div>
+                </form>
+              ) : (
+                <div className="h-full bg-white px-6">
+                  <div className="flex flex-col items-center justify-center pt-12">
+                    <Image
+                      src={
+                        data.user.file.url.length > 0
+                          ? data.user.file.url
+                          : DefaultAva
+                      }
+                      width={0}
+                      height={0}
+                      unoptimized
+                      alt="Profile image"
+                      className="mb-3 h-[106px] w-auto rounded-md object-cover"
+                    />
+                    <p className="text-2xl font-semibold">
+                      {data.user.firstName} {data.user.lastName}
+                    </p>
+                    <p className=" text-sm">{data.profile.industry}</p>
+                  </div>
+                  <div className="mb-6 mt-3" />
+                  <div className="grid grid-cols-2 gap-y-4">
+                    <div>
+                      <p className="text-sm text-slate-400">Локация</p>
+                      <p className="text-sm ">{data.profile.location}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-slate-400">Профессия</p>
+                      <p className="text-sm">{data.profile.title}</p>
+                    </div>
+                  </div>
+                  <div className="mb-6 mt-4" />
+                  <div>
+                    <p className="text-lg font-semibold">Обо мне</p>
+                    <p className="pt-3 text-sm">{data.profile.description}</p>
+                  </div>
+                  <div className="col-span-2">
+                    <div className="flex justify-end gap-6 mt-4">
+                      <Button
+                        variant="outline"
+                        color="zinc"
+                        onClick={editGeneralInfo}
+                      >
+                        <Pen className="h-6 w-6" />
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="mb-5 mt-3" />
+                  {/* <div>
+        <p className=" mb-4 text-lg font-semibold"> Социальные сети</p>
+        <div className="flex gap-6 pb-5">
+          <LinkedinLogo />
+          <YoutubeLogo />
+          <InstagramLogo />
+        </div>
+      </div> */}
+                </div>
+              )}
             </div>
 
             <div className="rounded-lg border bg-white sm:col-span-7">
@@ -257,7 +410,7 @@ export default function OneProfile({ data }: Props) {
                       </div>
                     </div>
                     <div className="mt-5 flex justify-end gap-3 pt-4">
-                      <Button onClick={editMaterialResources}>Отмена</Button>
+                      <Button onClick={editResources}>Отмена</Button>
                       <Button type="submit">Сохранить</Button>
                     </div>
                   </form>
@@ -289,7 +442,7 @@ export default function OneProfile({ data }: Props) {
                           <Button
                             variant="outline"
                             color="zinc"
-                            onClick={editMaterialResources}
+                            onClick={editResources}
                           >
                             <Pen className="h-6 w-6" />
                           </Button>
