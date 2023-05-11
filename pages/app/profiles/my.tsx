@@ -109,11 +109,11 @@ export default function MyProfiles({ data }: Props) {
       ownedMaterialResources: values.ownedMaterialResources,
     });
 
-    // if (data) {
-    //   await router.push({
-    //     pathname: "/app/profiles/" + data.id,
-    //   });
-    // }
+    if (data) {
+      await router.push({
+        pathname: "/app/profiles/" + data.id,
+      });
+    }
   };
 
   return (
@@ -187,7 +187,7 @@ export default function MyProfiles({ data }: Props) {
                         </div>
                       </div>
                     </DialogTrigger>
-                    <DialogContent className="overflow-auto h-full">
+                    <DialogContent className="overflow-auto h-full sm:h-auto">
                       <DialogHeader>
                         <DialogTitle> Создание профиля</DialogTitle>
                         <DialogDescription>
