@@ -92,8 +92,8 @@ export default function Profiles({ data }: Props) {
       <Navigation />
       <div className="h-screen bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
-          <p className=" text-sm text-slate-300">Профили</p>
-          <div className="my-5 flex flex-col items-center justify-end gap-4 md:mb-12 md:flex-row  md:justify-between">
+          <p className="text-sm text-slate-300">Профили</p>
+          <div className="my-5 flex flex-col items-center justify-end gap-4 md:mb-12 md:flex-row md:justify-between">
             <div>
               <div className="sm:hidden">
                 <label htmlFor="tabs" className="sr-only">
@@ -133,9 +133,8 @@ export default function Profiles({ data }: Props) {
                 </nav>
               </div>
             </div>
-
-            <div className="flex flex-wrap items-end justify-end gap-3">
-              <div className="flex rounded-lg border">
+            <div className="flex flex-wrap gap-3">
+              <div className="flex rounded-md border">
                 <input
                   type="search"
                   placeholder="Искать по профилям"
@@ -233,15 +232,17 @@ export default function Profiles({ data }: Props) {
                         {profile.user.firstName} {profile.user.lastName}
                       </p>
 
-                      <p className="text-xs text-slate-400">
+                      <p className="line-clamp-2 w-auto text-xs text-slate-400">
                         {profile.industry}
                       </p>
-                      <p className="text-xs text-slate-400">{profile.title}</p>
-                      <p className="text-sm text-slate-400">
+                      <p className="line-clamp-2 w-auto text-xs text-slate-400">
+                        {profile.title}
+                      </p>
+                      <p className="line-clamp-2 w-auto text-sm text-slate-400">
                         {profile.location}
                       </p>
 
-                      <p className="line-clamp-3 w-auto text-xs">
+                      <p className="line-clamp-2 w-auto text-xs">
                         {profile.description}
                       </p>
                     </div>

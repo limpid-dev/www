@@ -25,6 +25,16 @@ import {
   Message,
   Textarea,
 } from "../../../components/primitives/form";
+import { Options } from "../../../components/primitives/options";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "../../../components/primitives/select";
 import {
   Tooltip,
   TooltipContent,
@@ -99,11 +109,11 @@ export default function MyProfiles({ data }: Props) {
       ownedMaterialResources: values.ownedMaterialResources,
     });
 
-    if (data) {
-      await router.push({
-        pathname: "/app/profiles/" + data.id,
-      });
-    }
+    // if (data) {
+    //   await router.push({
+    //     pathname: "/app/profiles/" + data.id,
+    //   });
+    // }
   };
 
   return (
@@ -111,8 +121,8 @@ export default function MyProfiles({ data }: Props) {
       <Navigation />
       <div className="h-screen bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
-          <p className=" text-sm text-slate-300">Профили</p>
-          <div className="my-5 flex flex-col items-center justify-end gap-4 md:mb-12 md:flex-row  md:justify-between">
+          <p className="text-sm text-slate-300">Профили</p>
+          <div className="my-5 flex flex-col items-center justify-end gap-4 md:mb-12 md:flex-row md:justify-between">
             <div>
               <div className="sm:hidden">
                 <select
@@ -235,23 +245,24 @@ export default function MyProfiles({ data }: Props) {
                         </Field>
                         <Field name="industry">
                           <Label>Сфера деятельности</Label>
-                          <Input
-                            placeholder="Информационные технологии..."
-                            required
-                            minLength={1}
-                            maxLength={255}
-                          />
-                          <Message match="tooShort">
-                            Сфера деятельности профиля должна быть не менее 1
-                            символа
-                          </Message>
-                          <Message match="tooLong">
-                            Сфера деятельности профиля должна быть не более 255
-                            символов
-                          </Message>
-                          <Message match="valueMissing">
-                            Сфера деятельности профиля обязательна
-                          </Message>
+                          <Select name="industry">
+                            <SelectTrigger className="px-5 text-black rounded-md border border-slate-300 mt-6 flex-1 max-w-full text-ellipsis whitespace-nowrap overflow-hidden w-full">
+                              <SelectValue placeholder="Интернет / Связь / Информационные технологии" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup className="h-[300px] overflow-auto">
+                                <SelectLabel>Отрасль</SelectLabel>
+                                {Options.map((option) => (
+                                  <SelectItem
+                                    key={option.id}
+                                    value={option.name}
+                                  >
+                                    {option.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
                         </Field>
                         <Field name="description">
                           <Label>Описание</Label>
@@ -289,7 +300,6 @@ export default function MyProfiles({ data }: Props) {
                             maxLength={1024}
                           />
                         </Field>
-
                         <DialogFooter>
                           <Button type="submit" className="rounded-lg">
                             Создать профиль
@@ -319,13 +329,13 @@ export default function MyProfiles({ data }: Props) {
             <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
               {data.MyProfiles.map((profile, profileIndex) => (
                 <Link key={profileIndex} href={`/app/profiles/${profile.id}`}>
-                  <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-9 font-semibold hover:border-slate-700 sm:max-w-[400px]">
+                  <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-8 font-semibold hover:border-slate-700 sm:max-w-[400px]">
                     <Image
                       className="h-14 w-14"
                       src={ProfileDefault}
                       alt="some"
                     />
-                    <p className="w-[203px] mt-3 text-center text-base sm:text-xl ">
+                    <p className="mt-3 text-center text-base sm:text-xl ">
                       {profile.title}
                     </p>
                   </div>
