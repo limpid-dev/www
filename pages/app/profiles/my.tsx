@@ -315,7 +315,7 @@ export default function MyProfiles({ data }: Props) {
             </Dialog>
           </div>
 
-          {data ? (
+          {data.MyProfiles.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
               {data.MyProfiles.map((profile, profileIndex) => (
                 <Link key={profileIndex} href={`/app/profiles/${profile.id}`}>
