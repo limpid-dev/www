@@ -10,7 +10,7 @@ import api from "../../../api";
 import { Entity } from "../../../api/projects";
 import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
-import testAva from "../../../images/avatars/projectDefault.svg";
+import testAva from "../../../images/projectDefault.svg";
 
 const tabs = [
   { name: "Все проекты", href: "/app/projects/", current: true },
