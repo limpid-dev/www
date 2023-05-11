@@ -1,5 +1,7 @@
 import { Pen, Trash } from "@phosphor-icons/react";
 import clsx from "clsx";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -10,16 +12,48 @@ import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";
 import { TextArea } from "../../../../components/primitives/text-area";
 import { General } from "../../../../components/profiles/general";
+import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
 
 interface FormValues {
   ownedMaterialResources: string;
   ownedIntellectualResources: string;
 }
 
-export default function One() {
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext<{
+    id: string;
+  }>
+) => {
+  const session = await api.session.show({
+    headers: {
+      Cookie: context.req.headers.cookie!,
+    },
+    credentials: "include",
+  });
+  const { data: profile } = await api.profiles.show(Number(context.params!.id));
+
+  if (profile) {
+    const { data: user } = await api.users.show(profile.userId);
+    const isAuthor =
+      session.data?.id && profile.userId && session.data.id === profile.userId;
+
+    return {
+      props: {
+        data: {
+          ...session,
+          profile: profile!,
+          user: user!,
+          isAuthor: isAuthor!,
+        },
+      },
+    };
+  }
+};
+
+type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+export default function OneProfile({ data }: Props) {
   const router = useRouter();
-  const [first, setfirst] = useState(1);
-  const [second, setsecond] = useState(1);
   const [edit, setEdit] = useState(false);
   const [error, setError] = useState("");
 
@@ -32,34 +66,9 @@ export default function One() {
   };
   const parsedId = Number.parseInt(id as string, 10) as number;
 
-  const [data, setData] = useState<Entity>();
-
-  useEffect(() => {
-    async function fetchProfiles() {
-      const { data } = await api.profiles.show(Number.parseInt(id, 10));
-      if (data) {
-        setsecond(data.userId);
-        setData(data);
-      }
-    }
-    fetchProfiles();
-  }, [id]);
-
-  useEffect(() => {
-    async function getSession() {
-      const { data } = await api.session.show();
-      if (data) {
-        setfirst(data.id);
-      }
-    }
-    getSession();
-  }, [id]);
-
   const handleDeleteProfile = () => {
     api.profiles.destroy(parsedId);
   };
-
-  const isAuthor = first && second && first === second;
 
   const tabs = [
     { name: "Ресурсы", href: `/app/profiles/${id}/`, current: true },
@@ -85,9 +94,6 @@ export default function One() {
     },
   ];
 
-  const editIntellectualResources = () => {
-    setEdit((current: boolean) => !current);
-  };
   const {
     register,
     handleSubmit,
@@ -117,7 +123,7 @@ export default function One() {
       <div className="min-h-[90vh] bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
-            {isAuthor ? (
+            {data.isAuthor ? (
               <div className="flex gap-5">
                 <Button variant="outline" onClick={() => handleDeleteProfile()}>
                   <Trash className="h-6 w-6" />
@@ -130,7 +136,47 @@ export default function One() {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-10 ">
             <div className="rounded-lg border sm:col-span-3">
-              <General profileId={id} />
+              <div className="h-full bg-white px-6">
+                <div className="flex flex-col items-center justify-center pt-12">
+                  <Image
+                    src={data.user.file.url ? data.user.file.url : DefaultAva}
+                    width={0}
+                    height={0}
+                    unoptimized
+                    alt="Profile image"
+                    className="mb-3 h-[106px] w-auto rounded-md object-cover"
+                  />
+                  <p className="text-2xl font-semibold">
+                    {data.user.firstName} {data.user.lastName}
+                  </p>
+                  <p className=" text-sm">{data.profile.industry}</p>
+                </div>
+                <div className="mb-6 mt-3" />
+                <div className="grid grid-cols-2 gap-y-4">
+                  <div>
+                    <p className="text-sm text-slate-400">Локация</p>
+                    <p className="text-sm ">{data.profile.location}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-slate-400">Профессия</p>
+                    <p className="text-sm">{data.profile.title}</p>
+                  </div>
+                </div>
+                <div className="mb-6 mt-4" />
+                <div>
+                  <p className="text-lg font-semibold">Обо мне</p>
+                  <p className="pt-3 text-sm">{data.profile.description}</p>
+                </div>
+                <div className="mb-5 mt-3" />
+                {/* <div>
+        <p className=" mb-4 text-lg font-semibold"> Социальные сети</p>
+        <div className="flex gap-6 pb-5">
+          <LinkedinLogo />
+          <YoutubeLogo />
+          <InstagramLogo />
+        </div>
+      </div> */}
+              </div>
             </div>
 
             <div className="rounded-lg border bg-white sm:col-span-7">
@@ -194,7 +240,7 @@ export default function One() {
                           Материальный ресурс
                         </p>
                         <TextArea
-                          placeholder={data?.ownedMaterialResources}
+                          placeholder={data.profile.ownedMaterialResources}
                           {...register("ownedMaterialResources")}
                         />
                       </div>
@@ -206,7 +252,7 @@ export default function One() {
                         </p>
                         <TextArea
                           {...register("ownedIntellectualResources")}
-                          placeholder={data?.ownedIntellectualResources}
+                          placeholder={data.profile.ownedIntellectualResources}
                         />
                       </div>
                     </div>
@@ -223,7 +269,7 @@ export default function One() {
                           Материальный ресурс
                         </p>
                         <p className="text-sm">
-                          {data?.ownedMaterialResources}
+                          {data.profile.ownedMaterialResources}
                         </p>
                       </div>
 
@@ -233,11 +279,11 @@ export default function One() {
                           Интеллектуальный ресурс
                         </p>
                         <p className="text-sm">
-                          {data?.ownedIntellectualResources}
+                          {data.profile.ownedIntellectualResources}
                         </p>
                       </div>
                     </div>
-                    {isAuthor && (
+                    {data.isAuthor && (
                       <div className="col-span-2">
                         <div className="flex justify-end gap-6 mt-4">
                           <Button

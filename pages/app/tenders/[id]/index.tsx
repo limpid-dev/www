@@ -75,7 +75,7 @@ export const getServerSideProps = async (
     .files(Number(context.params!.id))
     .index({ page: 1, perPage: 100 });
 
-  if (!data) { 
+  if (!data) {
     return {
       notFound: true,
     };
@@ -133,8 +133,6 @@ export default function Tender({ data }: Props) {
   }, [emblaMainApi, onSelect]);
 
   const router = useRouter();
-  const { id } = router.query;
-  const parsedId = Number.parseInt(id as string, 10) as number;
 
   return (
     <>
