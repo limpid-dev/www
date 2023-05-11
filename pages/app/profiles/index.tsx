@@ -1,17 +1,13 @@
 import { Faders, SquaresFour } from "@phosphor-icons/react";
-import { Item } from "@radix-ui/react-dropdown-menu";
 import clsx from "clsx";
+import { InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { ChangeEvent } from "react";
 import api from "../../../api";
-import { Entity } from "../../../api/profiles";
-import * as Users from "../../../api/users";
 import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
-import { Input } from "../../../components/primitives/input";
-import { Label } from "../../../components/primitives/label";
 import {
   Sheet,
   SheetContent,
@@ -21,7 +17,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../../../components/primitives/sheet";
-import { Skeleton } from "../../../components/primitives/skeleton";
 import DefaultAvatar from "../../../images/avatars/defaultProfile.svg";
 
 const options = [
@@ -59,41 +54,38 @@ const tabs = [
   { name: "Мои профили", href: "/app/profiles/my", current: false },
 ];
 
-export default function All() {
+export const getServerSideProps = async () => {
+  const { data: profiles } = await api.profiles.index({
+    page: 1,
+    perPage: 100,
+  });
+
+  const withUsers = profiles!.map(async (d) => {
+    const user = await api.users.show(d.userId);
+
+    return { ...d, user: user.data! };
+  });
+
+  const w = await Promise.all(withUsers);
+
+  return {
+    props: {
+      data: {
+        profilesWithUser: w!,
+      },
+    },
+  };
+};
+
+type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+export default function Profiles({ data }: Props) {
   const router = useRouter();
 
-  const [loading, setLoading] = useState(true);
-  const [profilesData, setProfilesData] = useState<
-    (Entity & { user: Users.Show["Data"] })[]
-  >([]);
-
-  const handleSelectChange = (event: any) => {
+  const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>): void => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
   };
-
-  useEffect(() => {
-    async function fetchProfiles() {
-      const { data } = await api.profiles.index({
-        page: 1,
-        perPage: 100,
-      });
-
-      const withUsers = data!.map(async (d) => {
-        const user = await api.users.show(d.userId);
-
-        return { ...d, user: user.data! };
-      });
-
-      const w = await Promise.all(withUsers);
-
-      if (data) {
-        setProfilesData(w);
-        setLoading(false);
-      }
-    }
-    fetchProfiles();
-  }, []);
 
   return (
     <div>
@@ -141,6 +133,7 @@ export default function All() {
                 </nav>
               </div>
             </div>
+
             <div className="flex flex-wrap items-end justify-end gap-3">
               <div className="flex rounded-lg border">
                 <input
@@ -217,55 +210,45 @@ export default function All() {
           </div>
 
           <div className="grid gap-6 sm:grid-cols-3">
-            {loading ? (
-              <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-                <Skeleton className="h-[127px] w-[400px] rounded-md" />
-              </div>
-            ) : (
-              <>
-                {profilesData.map((profile) => (
-                  <Link key={profile.id} href={`/app/profiles/${profile.id}`}>
-                    <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
-                      <div className="grid grid-cols-10">
-                        <div className="col-span-4">
-                          <Image
-                            src={
-                              profile.user.fileId
-                                ? profile.user.file.url
-                                : DefaultAvatar
-                            }
-                            width={0}
-                            height={0}
-                            unoptimized
-                            alt="test"
-                            className=" h-32 w-32 rounded-lg object-cover"
-                          />
-                        </div>
-                        <div className="col-span-6 flex flex-col gap-1 pl-3">
-                          <p>
-                            {profile.user.firstName} {profile.user.lastName}
-                          </p>
-
-                          <p className="text-xs text-slate-400">
-                            {profile.industry}
-                          </p>
-                          <p className="text-xs text-slate-400">
-                            {profile.title}
-                          </p>
-                          <p className="text-sm text-slate-400">
-                            {profile.location}
-                          </p>
-
-                          <p className="line-clamp-3 w-auto text-xs">
-                            {profile.description}
-                          </p>
-                        </div>
-                      </div>
+            {data.profilesWithUser.map((profile) => (
+              <Link key={profile.id} href={`/app/profiles/${profile.id}`}>
+                <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
+                  <div className="grid grid-cols-10">
+                    <div className="col-span-4">
+                      <Image
+                        src={
+                          profile.user.fileId
+                            ? profile.user.file.url
+                            : DefaultAvatar
+                        }
+                        width={0}
+                        height={0}
+                        unoptimized
+                        alt="test"
+                        className=" h-32 w-32 rounded-lg object-cover"
+                      />
                     </div>
-                  </Link>
-                ))}
-              </>
-            )}
+                    <div className="col-span-6 flex flex-col gap-1 pl-3">
+                      <p>
+                        {profile.user.firstName} {profile.user.lastName}
+                      </p>
+
+                      <p className="text-xs text-slate-400">
+                        {profile.industry}
+                      </p>
+                      <p className="text-xs text-slate-400">{profile.title}</p>
+                      <p className="text-sm text-slate-400">
+                        {profile.location}
+                      </p>
+
+                      <p className="line-clamp-3 w-auto text-xs">
+                        {profile.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </div>

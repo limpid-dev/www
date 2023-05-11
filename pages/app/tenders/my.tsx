@@ -211,7 +211,7 @@ export default function TendersMy({ data }: Props) {
                   </Field>
                   <Field name="duration">
                     <div className="flex gap-3">
-                      <Label>Длительность (в днях)</Label>{" "}
+                      <Label>Срок приема заявок</Label>{" "}
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>

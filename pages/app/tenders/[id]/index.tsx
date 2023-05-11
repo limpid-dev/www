@@ -75,7 +75,7 @@ export const getServerSideProps = async (
     .files(Number(context.params!.id))
     .index({ page: 1, perPage: 100 });
 
-  if (!data) {
+  if (!data) { 
     return {
       notFound: true,
     };

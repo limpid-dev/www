@@ -1,15 +1,11 @@
-import "@uppy/core/dist/style.min.css";
-import "@uppy/drag-drop/dist/style.min.css";
-import { Briefcase, Plus, Question } from "@phosphor-icons/react";
-import Uppy from "@uppy/core";
-import { DragDrop } from "@uppy/react";
+import { Plus, Question } from "@phosphor-icons/react";
 import clsx from "clsx";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent } from "react";
 import api from "../../../api";
-import { Entity } from "../../../api/profiles";
 import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
 import {
@@ -29,7 +25,6 @@ import {
   Message,
   Textarea,
 } from "../../../components/primitives/form";
-import { Skeleton } from "../../../components/primitives/skeleton";
 import {
   Tooltip,
   TooltipContent,
@@ -39,66 +34,48 @@ import {
 import AnalyzingMarket from "../../../images/analyzingMarket.svg";
 import NoProfiles from "../../../images/noProfiles.svg";
 import onLaptop from "../../../images/onLaptop.svg";
+import ProfileDefault from "../../../images/profileDefault.svg";
 
 const tabs = [
   { name: "Все профили", href: "/app/profiles/", current: false },
   { name: "Мои профили", href: "/app/profiles/my", current: true },
 ];
 
-export default function All() {
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const session = await api.session.show({
+    headers: {
+      Cookie: context.req.headers.cookie!,
+    },
+    credentials: "include",
+  });
+
+  const profiles = await api.profiles.index({
+    page: 1,
+    perPage: 100,
+    filters: {
+      userId: session.data!.id,
+    },
+  });
+
+  return {
+    props: {
+      data: {
+        MyProfiles: profiles.data!,
+      },
+    },
+  };
+};
+
+type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+export default function MyProfiles({ data }: Props) {
   const router = useRouter();
-  const [profilesData, setProfilesData] = useState<Entity[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchProfiles() {
-      const data1 = await api.session.show();
-      const userId = data1.data?.id;
-      const { data } = await api.profiles.index({
-        page: 1,
-        perPage: 100,
-        filters: {
-          userId: userId || 0,
-        },
-      });
-
-      if (data) {
-        setProfilesData(data);
-        setLoading(false);
-      }
-    }
-    fetchProfiles();
-  }, []);
-
-  const handleSelectChange = (event: any) => {
+  const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>): void => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
-  };
-
-  const handleOrganizationCreate = async (
-    event: FormEvent<HTMLFormElement>
-  ) => {
-    event.preventDefault();
-
-    const form = new FormData(event.currentTarget);
-    const values = Object.fromEntries(form.entries()) as {
-      name: string;
-      bin: string;
-      description: string;
-      industry: string;
-      ownedIntellectualResources: string;
-      ownedMaterialResources: string;
-      type: string;
-      perfomance: string;
-    };
-
-    const { data, error } = await api.organizations.store(values);
-
-    if (data) {
-      await router.push({
-        pathname: "/app/profiles/organizations/" + data.id,
-      });
-    }
   };
 
   const handleProfileCreate = async (event: FormEvent<HTMLFormElement>) => {
@@ -113,7 +90,7 @@ export default function All() {
       ownedMaterialResources: string;
     };
 
-    const { data, error } = await api.profiles.store({
+    const { data } = await api.profiles.store({
       title: values.title,
       location: values.location,
       description: values.description,
@@ -174,7 +151,10 @@ export default function All() {
             </div>
             <Dialog>
               <DialogTrigger asChild>
-                <Button className="flex gap-1 bg-black text-xs hover:bg-slate-700 sm:text-sm">
+                <Button
+                  variant="black"
+                  className="flex gap-1 text-xs sm:text-sm"
+                >
                   <Plus /> Создать профиль
                 </Button>
               </DialogTrigger>
@@ -334,36 +314,31 @@ export default function All() {
               </DialogContent>
             </Dialog>
           </div>
-          {loading ? (
+
+          {data ? (
             <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-              <Skeleton className="h-[127px] w-[400px] rounded-md" />
+              {data.MyProfiles.map((profile, profileIndex) => (
+                <Link key={profileIndex} href={`/app/profiles/${profile.id}`}>
+                  <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-9 font-semibold hover:border-slate-700 sm:max-w-[400px]">
+                    <Image
+                      className="h-14 w-14"
+                      src={ProfileDefault}
+                      alt="some"
+                    />
+                    <p className="w-[203px] mt-3 text-center text-base sm:text-xl ">
+                      {profile.title}
+                    </p>
+                  </div>
+                </Link>
+              ))}
             </div>
           ) : (
-            <>
-              {profilesData.length > 0 ? (
-                <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-                  {profilesData.map((profile, profileIndex) => (
-                    <Link
-                      key={profileIndex}
-                      href={`/app/profiles/${profile.id}`}
-                    >
-                      <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-9 font-semibold hover:border-slate-700 sm:max-w-[400px]">
-                        <Briefcase className="h-6 w-6" />
-                        <p className="w-[203px] text-center text-base sm:text-xl ">
-                          {profile.title}
-                        </p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center gap-8">
-                  <Image src={NoProfiles} alt="Нет профилей" />
-                  <p className=" text-2xl font-semibold">У вас нет профиля</p>
-                </div>
-              )}
-            </>
+            <div className="flex flex-col items-center justify-center gap-8">
+              <Image src={NoProfiles} alt="Нет профилей" />
+              <p className=" text-2xl font-semibold">У вас нет профиля</p>
+            </div>
           )}
+
           <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3" />
         </div>
       </div>
