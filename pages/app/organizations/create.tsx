@@ -6,7 +6,7 @@ import { FormEvent, useCallback, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import api from "../../../api";
 import { buildFormData } from "../../../api/files";
-import { Navigation } from "../../navigation";
+import { Navigation } from "../../../components/navigation";
 import { OrganizationCertificationCreate } from "../../../components/organization-certification-create";
 import { Button } from "../../../components/primitives/button";
 import { Input } from "../../../components/primitives/input";
