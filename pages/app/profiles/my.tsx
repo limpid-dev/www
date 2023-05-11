@@ -187,7 +187,7 @@ export default function MyProfiles({ data }: Props) {
                         </div>
                       </div>
                     </DialogTrigger>
-                    <DialogContent>
+                    <DialogContent className="overflow-auto h-full">
                       <DialogHeader>
                         <DialogTitle> Создание профиля</DialogTitle>
                         <DialogDescription>
