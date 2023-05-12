@@ -215,7 +215,7 @@ export default function Create() {
                   >
                     <div className="w-full border-t border-gray-300" />
                   </div>
-                </div>{" "}
+                </div>
                 <div>
                   <p className=" mb-6 text-2xl font-semibold">
                     Ожидаемая рентабельность

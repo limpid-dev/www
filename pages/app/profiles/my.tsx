@@ -246,7 +246,7 @@ export default function MyProfiles({ data }: Props) {
                         <Field name="industry">
                           <Label>Сфера деятельности</Label>
                           <Select name="industry">
-                            <SelectTrigger className="px-5 text-black rounded-md border border-slate-300 mt-6 flex-1 max-w-full text-ellipsis whitespace-nowrap overflow-hidden w-full">
+                            <SelectTrigger className="px-5 text-black rounded-md border border-slate-300 flex-1 max-w-full text-ellipsis whitespace-nowrap overflow-hidden w-full">
                               <SelectValue placeholder="Интернет / Связь / Информационные технологии" />
                             </SelectTrigger>
                             <SelectContent>

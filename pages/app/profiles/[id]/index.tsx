@@ -175,9 +175,7 @@ export default function OneProfile({ data }: Props) {
                     <div className="flex flex-col items-center justify-center pt-12">
                       <Image
                         src={
-                          data.user.file.url.length > 0
-                            ? data.user.file.url
-                            : DefaultAva
+                          data.user.file > 0 ? data.user.file.url : DefaultAva
                         }
                         width={0}
                         height={0}
@@ -246,11 +244,7 @@ export default function OneProfile({ data }: Props) {
                 <div className="h-full bg-white px-6">
                   <div className="flex flex-col items-center justify-center pt-12">
                     <Image
-                      src={
-                        data.user.file.url.length > 0
-                          ? data.user.file.url
-                          : DefaultAva
-                      }
+                      src={data.user.file ? data.user.file.url : DefaultAva}
                       width={0}
                       height={0}
                       unoptimized

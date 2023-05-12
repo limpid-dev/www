@@ -166,11 +166,11 @@ export function Navigation() {
               </div>
               <div className="hidden lg:relative lg:z-10 lg:ml-4 lg:flex lg:items-center">
                 {profession ? (
-                  <p className="mr-3 rounded-md bg-lime-400 p-2 text-sm">
+                  <p className="mr-3 rounded-md bg-slate-100 p-2 text-sm text-slate-700 px-4 text-ellipsis w-24 whitespace-nowrap overflow-hidden">
                     {profession}
                   </p>
                 ) : (
-                  ""
+                  <p className="w-24 mr-3" />
                 )}
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-4 flex-shrink-0">

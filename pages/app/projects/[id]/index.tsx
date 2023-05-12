@@ -1,21 +1,21 @@
 import {
+  ArrowRight,
   ArrowsVertical,
   Chat,
+  Files,
   FileVideo,
   Paperclip,
-  Star,
   TagChevron,
   Trash,
-  User,
 } from "@phosphor-icons/react";
 import { DialogClose } from "@radix-ui/react-dialog";
 import clsx from "clsx";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import api from "../../../../api";
-import { Entity } from "../../../../api/projects";
 import { Navigation } from "../../../../components/navigation";
 import {
   AlertDialog,
@@ -33,7 +33,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -41,18 +40,13 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../../../../components/primitives/dropdown-menu";
-import { Input } from "../../../../components/primitives/input";
-import { Label } from "../../../../components/primitives/label";
 import { ScrollArea } from "../../../../components/primitives/scroll-area";
 import { Separator } from "../../../../components/primitives/separator";
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -71,24 +65,82 @@ interface FormValues {
   message: string;
 }
 
-export default function View() {
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext<{
+    id: string;
+  }>
+) => {
+  const session = await api.session.show({
+    headers: {
+      Cookie: context.req.headers.cookie!,
+    },
+    credentials: "include",
+  });
+
+  const { data: project } = await api.projects.show(Number(context.params!.id));
+
+  const { data: file } = await api.projects
+    .files(Number(context.params!.id))
+    .index({
+      page: 1,
+      perPage: 100,
+    });
+
+  const { data: membershipData } = await api.projects
+    .memberships(Number(context.params!.id))
+    .index({
+      page: 1,
+      perPage: 100,
+    });
+
+  const isAuthor = membershipData?.some((item) => {
+    return item.type === "owner" && item.profileId === session.data?.id;
+  });
+
+  const acceptMembers = membershipData?.filter((item) => {
+    return item.type === "member" && !item.acceptedAt;
+  });
+
+  const activeMember = membershipData?.some((item) => {
+    return item.profileId === session.data?.id;
+  });
+
+  const withProfiles = membershipData!.map(async (d) => {
+    const profile = await api.profiles.show(d.profileId!);
+    return { ...d, profile: profile.data! };
+  });
+
+  const w = await Promise.all(withProfiles);
+
+  if (file) {
+    const images = file.filter((item) => {
+      return item.extname === ".jpg" || item.extname === ".png";
+    });
+    return {
+      props: {
+        data: {
+          project: project!,
+          file: file!,
+          images: images!,
+          membershipData: w!,
+          isAuthor: isAuthor!,
+          acceptMembers: acceptMembers!,
+          activeMember: activeMember!,
+        },
+      },
+    };
+  }
+};
+
+type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+export default function ProjectView({ data }: Props) {
   const isTrue = false;
   const [isShown, setIsShown] = useState(true);
   const router = useRouter();
   const { id } = router.query;
   const [sent, setSent] = useState(false);
   const parsedId = Number.parseInt(id as string, 10) as number;
-  const [projectData, setProjectData] = useState<Entity>();
-  const [isAuthor, setIsAuthor] = useState(false);
-  const [accept, setAccept] = useState([]);
-  const [activeMember, setActiveMember] = useState(false);
-  const [member, setMember] = useState();
-  const [allMembers, setAllMembers] = useState();
-
-  const handleSelectChange = (event: any) => {
-    const selectedPage = event.target.value;
-    router.push(selectedPage);
-  };
 
   const {
     register,
@@ -110,75 +162,6 @@ export default function View() {
     }
   };
 
-  useEffect(() => {
-    async function fetchProjects() {
-      const { data } = await api.projects.show(parsedId);
-      const { data: file } = await api.projects.files(parsedId).index({
-        page: 1,
-        perPage: 100,
-      });
-      if (file) {
-        const w = { ...data, file };
-        const images = w.file.filter((item) => {
-          return item.extname === ".jpg" || item.extname === ".png";
-        });
-        const final = { ...w, images };
-        setProjectData(final);
-      }
-    }
-    fetchProjects();
-  }, [parsedId]);
-
-  useEffect(() => {
-    async function fetchAuthor() {
-      const profileId1 = Number.parseInt(
-        localStorage.getItem("profileId") as string,
-        10
-      );
-      const { data: authorData } = await api.projects
-        .memberships(parsedId)
-        .index({
-          page: 1,
-          perPage: 100,
-        });
-
-      if (authorData) {
-        const withProfiles = authorData!.map(async (d) => {
-          const profile = await api.profiles.show(d.profileId);
-          return { ...d, profile: profile.data! };
-        });
-        const w = await Promise.all(withProfiles);
-        if (w) {
-          setAllMembers(w);
-        }
-        const acceptMembers = authorData.filter((item) => {
-          return item.type === "member" && !item.acceptedAt;
-        });
-        setAccept(acceptMembers);
-
-        if (acceptMembers) {
-          const acceptMembers1 = await api.profiles.show(
-            acceptMembers[0]?.profileId
-          );
-          setMember(acceptMembers1.data);
-        }
-
-        const activeMember = authorData.some((item) => {
-          return item.profileId === profileId1 && item.acceptedAt !== null;
-        });
-        setActiveMember(activeMember);
-      }
-
-      const isAuthorProfile = authorData?.some((item) => {
-        return item.profileId === profileId1 && item.type === "owner";
-      });
-      if (isAuthorProfile) {
-        setIsAuthor(isAuthorProfile);
-      }
-    }
-    fetchAuthor();
-  }, [parsedId]);
-
   const handleClick = (event: any) => {
     setIsShown((current: boolean) => !current);
   };
@@ -195,11 +178,11 @@ export default function View() {
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
           <h1 className="text-sm">
             <span className="text-slate-300">Проект / </span>
-            {projectData?.title}
+            {data.project.title}
           </h1>
 
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline md:justify-end">
-            {isAuthor ? (
+            {data.isAuthor ? (
               <div className="flex gap-5">
                 <Button className="bg-slate-700 hover:bg-black">
                   Редактировать
@@ -281,36 +264,37 @@ export default function View() {
                     className="h-[106px] w-auto rounded-md object-cover pb-6"
                   />
                   <p className=" text-2xl font-semibold">
-                    {projectData?.title}
+                    {data.project.title}
                   </p>
-                  <p className=" text-sm">{projectData?.title}</p>
+                  <p className=" text-sm">{data.project.title}</p>
                 </div>
                 <Separator className="mb-6 mt-3" />
                 <div className="grid gap-3">
                   <Button variant="ghost" className="w-full">
                     <div className="flex w-full items-center gap-3 text-sm font-semibold">
-                      <FileVideo /> Бизнес-план
+                      <Files className="w-6 h-6" />
+                      Бизнес-план
                     </div>
-                    <TagChevron />
+                    <ArrowRight className="w-6 h-6" />
                   </Button>
                   <Sheet>
                     <SheetTrigger asChild>
                       <Button variant="ghost" className="w-full">
                         <div className="flex w-full items-center gap-3 text-sm font-semibold">
-                          <FileVideo /> Фото и видео
+                          <FileVideo className="w-6 h-6" /> Фото и видео
                         </div>
-                        <TagChevron />
+                        <ArrowRight className="w-6 h-6" />
                       </Button>
                     </SheetTrigger>
                     <SheetContent position="right" size="default">
                       <SheetHeader>
                         <SheetTitle>Фото</SheetTitle>
                       </SheetHeader>
-                      <div className="m-auto mt-16 grid w-4/5 grid-cols-3 gap-y-6">
-                        {projectData?.images?.map((img, index) => (
+                      <div className="m-auto mt-16 grid w-4/5 grid-cols-1 sm:grid-cols-3 gap-6">
+                        {data.images.map((img, index) => (
                           <Image
                             key={index}
-                            className="h-auto w-auto object-cover"
+                            className="h-auto w-auto object-cover rounded-md"
                             width={0}
                             height={0}
                             unoptimized
@@ -328,7 +312,7 @@ export default function View() {
                     </SheetContent>
                   </Sheet>
 
-                  {activeMember && (
+                  {data.activeMember && (
                     <Button
                       variant="ghost"
                       className="w-full"
@@ -377,7 +361,7 @@ export default function View() {
                       <p className=" text-xl font-semibold text-slate-400">
                         О проекте
                       </p>
-                      <p className="text-sm">{projectData?.description}</p>
+                      <p className="text-sm">{data.project.description}</p>
                     </div>
                   </TabsContent>
 
@@ -390,7 +374,7 @@ export default function View() {
                           Материальный ресурс
                         </p>
                         <p className="text-sm">
-                          {projectData?.ownedMaterialResources}
+                          {data.project.ownedMaterialResources}
                         </p>
                       </div>
                       <Separator />
@@ -399,7 +383,7 @@ export default function View() {
                           Интеллектуальный ресурс
                         </p>
                         <p className="text-sm">
-                          {projectData?.ownedIntellectualResources}
+                          {data.project.ownedIntellectualResources}
                         </p>
                       </div>
                     </div>
@@ -417,38 +401,12 @@ export default function View() {
                             Ожидаемая рентабельность
                           </p>
                           <p className="text-sm">
-                            {projectData?.profitability}
+                            {data.project.profitability}
                           </p>
                         </div>
                       </div>
                     </TabsContent>
                   </div>
-
-                  {/* feedback */}
-                  <TabsContent className="border-none" value="feedback">
-                    <ScrollArea className="h-[500px] w-full rounded-md border p-4">
-                      <div className="grid gap-4 sm:grid-cols-2">
-                        <div className="flex flex-col gap-3 rounded-xl bg-slate-100 p-6">
-                          <div className="flex justify-between">
-                            <div className="flex items-center gap-2">
-                              <Image src={Test} width={32} alt="test" /> Almaz
-                              Nurgali
-                            </div>
-                            <div className="flex gap-2 text-lime-500">
-                              <Star /> 5.0
-                            </div>
-                          </div>
-                          <p>
-                            Аманжол проявил себя как ответственный, надежный и
-                            добросовестный поставщик. Исполнительность,
-                            постоянное развитие, индивидуальный подход к
-                            заказчику, скорость выполнения поставок - это лучшие
-                            отличительные черты профессионала.
-                          </p>
-                        </div>
-                      </div>
-                    </ScrollArea>
-                  </TabsContent>
                 </Tabs>
               ) : (
                 <div>
@@ -475,7 +433,7 @@ export default function View() {
                             <DialogHeader>
                               <DialogTitle>Участники Обсуждения</DialogTitle>
                             </DialogHeader>
-                            {allMembers.map((member) => (
+                            {data.membershipData.map((member) => (
                               <div key={member.id}>
                                 <p>{member.profile.title}</p>
                               </div>
@@ -514,12 +472,14 @@ export default function View() {
                               isTrue ? "hidden" : ""
                             }`}
                           >
-                            {member?.title}
+                            {data.acceptMembers[0].id}
                           </p>
                           <>
-                            <p className="text-sm">{accept[0]?.message}</p>
+                            <p className="text-sm">
+                              {data.acceptMembers[0]?.message}
+                            </p>
                           </>
-                          {accept[0] && (
+                          {data.acceptMembers[0] && (
                             <div className="flex justify-end gap-3">
                               <Button variant="ghost">Отклонить</Button>
                               <Button onClick={handleAccept} variant="ghost">
