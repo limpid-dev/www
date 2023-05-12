@@ -2,6 +2,7 @@ import { Faders, SquaresFour } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel, { EmblaOptionsType } from "embla-carousel-react";
+import { InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -17,10 +18,40 @@ const tabs = [
   { name: "Мои проекты", href: "/app/projects/my", current: false },
 ];
 
-export default function All() {
+export const getServerSideProps = async () => {
+  const { data } = await api.projects.index();
+
+  const withFiles = data!.map(async (d) => {
+    const file = await api.projects.files(d.id).index({
+      page: 1,
+      perPage: 100,
+    });
+    return { ...d, file: file.data! };
+  });
+
+  const w = await Promise.all(withFiles);
+
+  const filteredImages = w.map((withFiles, index) => {
+    const images = withFiles.file.filter((item) => {
+      return item.extname === ".jpg" || item.extname === ".png";
+    });
+    return { ...withFiles, images };
+  });
+
+  return {
+    props: {
+      data: {
+        projects: filteredImages!,
+      },
+    },
+  };
+};
+
+type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+export default function All({ data }: Props) {
   const [search, setSearch] = useState("");
   const router = useRouter();
-  const [projectsData, setProjectsData] = useState<Entity[]>([]);
   const OPTIONS: EmblaOptionsType = { align: "center", loop: true };
   const [emblaRef] = useEmblaCarousel(OPTIONS, [Autoplay()]);
 
@@ -29,33 +60,6 @@ export default function All() {
     router.push(selectedPage);
   };
 
-  useEffect(() => {
-    async function fetchProfiles() {
-      const { data } = await api.projects.index();
-
-      const withFiles = data!.map(async (d) => {
-        const file = await api.projects.files(d.id).index({
-          page: 1,
-          perPage: 100,
-        });
-        return { ...d, file: file.data! };
-      });
-
-      const w = await Promise.all(withFiles);
-
-      const filteredImages = w.map((withFiles, index) => {
-        const images = withFiles.file.filter((item) => {
-          return item.extname === ".jpg" || item.extname === ".png";
-        });
-        return { ...withFiles, images };
-      });
-
-      if (data) {
-        setProjectsData(filteredImages);
-      }
-    }
-    fetchProfiles();
-  }, []);
   return (
     <div>
       <Navigation />
@@ -143,7 +147,7 @@ export default function All() {
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2">
-            {projectsData.map((project, projectIndex) => (
+            {data.projects.map((project, projectIndex) => (
               <Link key={projectIndex} href={`/app/projects/${project.id}`}>
                 <div className=" rounded-2xl border border-slate-200 bg-white hover:border-black">
                   <div className="p-4">
