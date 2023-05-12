@@ -211,7 +211,17 @@ export function EducationCreate({ profileId, isAddHandler }: any) {
           )}
 
           <div className="mt-5 flex justify-end gap-3 pt-4">
-            <Button onClick={isAddHandler}>Отмена</Button>
+            <Button
+              onClick={() => {
+                isAddHandler();
+                router.push({
+                  pathname: `/app/profiles/${profileId}/education`,
+                  query: {},
+                });
+              }}
+            >
+              Отмена
+            </Button>
             <Button type="submit">Сохранить</Button>
           </div>
         </form>

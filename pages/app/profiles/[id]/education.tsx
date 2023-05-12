@@ -1,50 +1,70 @@
 import { Pen, Plus, Trash } from "@phosphor-icons/react";
 import clsx from "clsx";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import api from "../../../../api";
-import { Entity } from "../../../../api/profile-educations";
 import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";
 import { EducationCreate } from "../../../../components/profiles/create/education";
-import { General } from "../../../../components/profiles/general";
+import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
 
 const dateFormatter = (arg: string) => {
   return new Date(arg).getFullYear().toString();
 };
 
-export default function Education() {
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext<{
+    id: string;
+  }>
+) => {
+  const session = await api.session.show({
+    headers: {
+      Cookie: context.req.headers.cookie!,
+    },
+    credentials: "include",
+  });
+  const { data: profile } = await api.profiles.show(Number(context.params!.id));
+  const { data: education } = await api.educations.index(
+    Number(context.params!.id)
+  );
+
+  if (profile && education) {
+    const { data: user } = await api.users.show(profile.userId);
+    const updatedItems = education.map((item) => {
+      return {
+        ...item,
+        startedAt: dateFormatter(item.startedAt),
+        finishedAt: dateFormatter(item.finishedAt),
+      };
+    });
+    const isAuthor =
+      session.data?.id && profile.userId && session.data.id === profile.userId;
+
+    return {
+      props: {
+        data: {
+          ...session,
+          profile: profile!,
+          user: user!,
+          isAuthor: isAuthor!,
+          education: updatedItems!,
+        },
+      },
+    };
+  }
+};
+
+type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+export default function Education({ data }: Props) {
   const router = useRouter();
   const { id } = router.query;
 
-  const [first, setfirst] = useState(1);
-  const [second, setsecond] = useState(1);
-  const [data, setData] = useState<Entity[]>([]);
   const [isAdd, setIsAdd] = useState(true);
   const parsedId = Number.parseInt(id as string, 10) as number;
-
-  useEffect(() => {
-    async function fetchProfiles() {
-      const { data } = await api.profiles.show(parsedId);
-      if (data) {
-        setsecond(data.userId);
-      }
-    }
-    fetchProfiles();
-  }, [parsedId]);
-
-  useEffect(() => {
-    async function getSession() {
-      const { data } = await api.session.show();
-      if (data) {
-        setfirst(data.id);
-      }
-    }
-    getSession();
-  }, [id]);
-
-  const isAuthor = first && second && first === second;
 
   const tabs = [
     { name: "Ресурсы", href: `/app/profiles/${id}`, current: false },
@@ -87,24 +107,6 @@ export default function Education() {
     router.reload();
   };
 
-  useEffect(() => {
-    async function fetchProfiles() {
-      if (Number.isNaN(parsedId)) return;
-      const { data } = await api.educations.index(parsedId);
-      if (data) {
-        const updatedItems = data.map((item) => {
-          return {
-            ...item,
-            startedAt: dateFormatter(item.startedAt),
-            finishedAt: dateFormatter(item.finishedAt),
-          };
-        });
-        setData(updatedItems);
-      }
-    }
-    fetchProfiles();
-  }, [parsedId]);
-
   return (
     <div>
       <Navigation />
@@ -112,7 +114,7 @@ export default function Education() {
       <div className=" min-h-[90vh] bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
-            {isAuthor ? (
+            {data.isAuthor ? (
               <div className="flex gap-5">
                 {/* <Button className=" bg-slate-700 hover:bg-black">
                   Редактировать
@@ -136,7 +138,51 @@ export default function Education() {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-10 ">
             <div className="rounded-lg border sm:col-span-3">
-              <General profileId={id} />
+              <div className="h-full bg-white px-6">
+                <div className="flex flex-col items-center justify-center pt-12">
+                  <Image
+                    src={
+                      data.user.file.url.length > 0
+                        ? data.user.file.url
+                        : DefaultAva
+                    }
+                    width={0}
+                    height={0}
+                    unoptimized
+                    alt="Profile image"
+                    className="mb-3 h-[106px] w-auto rounded-md object-cover"
+                  />
+                  <p className="text-2xl font-semibold">
+                    {data.user.firstName} {data.user.lastName}
+                  </p>
+                  <p className=" text-sm">{data.profile.industry}</p>
+                </div>
+                <div className="mb-6 mt-3" />
+                <div className="grid grid-cols-2 gap-y-4">
+                  <div>
+                    <p className="text-sm text-slate-400">Локация</p>
+                    <p className="text-sm ">{data.profile.location}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-slate-400">Профессия</p>
+                    <p className="text-sm">{data.profile.title}</p>
+                  </div>
+                </div>
+                <div className="mb-6 mt-4" />
+                <div>
+                  <p className="text-lg font-semibold">Обо мне</p>
+                  <p className="pt-3 text-sm">{data.profile.description}</p>
+                </div>
+                <div className="mb-5 mt-3" />
+                {/* <div>
+        <p className=" mb-4 text-lg font-semibold"> Социальные сети</p>
+        <div className="flex gap-6 pb-5">
+          <LinkedinLogo />
+          <YoutubeLogo />
+          <InstagramLogo />
+        </div>
+      </div> */}
+              </div>
             </div>
 
             <div className="rounded-lg border bg-white sm:col-span-7">
@@ -198,7 +244,7 @@ export default function Education() {
                 </p>
                 {isAdd ? (
                   <>
-                    {data.map((item) => (
+                    {data.education.map((item) => (
                       <div key={item.id}>
                         <div className="grid sm:grid-cols-10 grid-cols-1 gap-y-5">
                           <div className="col-span-3 flex gap-5">
@@ -221,7 +267,7 @@ export default function Education() {
                               {item.description}
                             </p>
                           </div>
-                          {isAuthor && (
+                          {data.isAuthor && (
                             <div className="col-span-2">
                               <div className="flex justify-end gap-6">
                                 <Button
@@ -258,7 +304,7 @@ export default function Education() {
                       </div>
                     ))}
 
-                    {isAuthor && (
+                    {data.isAuthor && (
                       <div className="flex items-center justify-end text-sm text-sky-500 underline">
                         <Plus />
                         <button

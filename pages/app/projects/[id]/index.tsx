@@ -396,7 +396,7 @@ export default function View() {
                       <Separator />
                       <div className="flex flex-col gap-3">
                         <p className=" text-xl font-semibold text-slate-400">
-                          Материальный ресурс
+                          Интеллектуальный ресурс
                         </p>
                         <p className="text-sm">
                           {projectData?.ownedIntellectualResources}

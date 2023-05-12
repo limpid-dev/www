@@ -8,7 +8,7 @@ import { TextArea } from "../../primitives/text-area";
 
 interface FormValues {
   experiences: {
-    organization: string;
+    company: string;
     title: string;
     description: string;
     startedAt: string;
@@ -72,12 +72,12 @@ export function ExperienceCreate({ profileId, experienceAdd }: any) {
                   <div>
                     <input
                       className="w-full rounded-md border p-2"
-                      placeholder="Организация"
-                      {...register(`experiences.${index}.organization`, {
+                      placeholder="Место работы"
+                      {...register(`experiences.${index}.company`, {
                         required: "Please enter your first name.",
                       })}
                     />
-                    {errors.experiences?.[index]?.organization && (
+                    {errors.experiences?.[index]?.company && (
                       <p className="ml-2 text-sm text-red-500">
                         Обязательное поле
                       </p>
@@ -161,7 +161,7 @@ export function ExperienceCreate({ profileId, experienceAdd }: any) {
               type="button"
               onClick={() => {
                 append({
-                  organization: "",
+                  company: "",
                   title: "",
                   description: "",
                   startedAt: "",

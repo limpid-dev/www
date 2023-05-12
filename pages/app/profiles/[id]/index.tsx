@@ -4,15 +4,13 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import api from "../../../../api";
-import { Entity } from "../../../../api/profiles";
 import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";
 import { Input } from "../../../../components/primitives/input";
 import { TextArea } from "../../../../components/primitives/text-area";
-import { General } from "../../../../components/profiles/general";
 import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
 
 interface FormValues {
@@ -172,34 +170,6 @@ export default function OneProfile({ data }: Props) {
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-10 ">
             <div className="rounded-lg border sm:col-span-3">
               {editGeneral ? (
-                //    <form onSubmit={handleSubmit(onSubmit)}>
-                //    <div className="flex flex-col gap-6">
-                //      <div className="flex flex-col gap-3">
-                //        <p className=" text-xl font-semibold text-slate-400">
-                //          Материальный ресурс
-                //        </p>
-                //        <TextArea
-                //          placeholder={data.profile.ownedMaterialResources}
-                //          {...register("ownedMaterialResources")}
-                //        />
-                //      </div>
-
-                //      <div />
-                //      <div className="flex flex-col gap-3">
-                //        <p className=" text-xl font-semibold text-slate-400">
-                //          Интеллектуальный ресурс
-                //        </p>
-                //        <TextArea
-                //          {...register("ownedIntellectualResources")}
-                //          placeholder={data.profile.ownedIntellectualResources}
-                //        />
-                //      </div>
-                //    </div>
-                //    <div className="mt-5 flex justify-end gap-3 pt-4">
-                //      <Button onClick={editMaterialResources}>Отмена</Button>
-                //      <Button type="submit">Сохранить</Button>
-                //    </div>
-                //  </form>
                 <form onSubmit={handleSubmit2(onSubmit2)}>
                   <div className="h-full bg-white px-6">
                     <div className="flex flex-col items-center justify-center pt-12">
@@ -257,10 +227,14 @@ export default function OneProfile({ data }: Props) {
                         />
                       </p>
                     </div>
-                    <div className="mt-5 flex justify-end gap-3 pt-4">
-                      <Button onClick={editGeneralInfo}>Отмена</Button>
-                      <Button type="submit">Сохранить</Button>
-                    </div>
+                    {data.isAuthor ? (
+                      <div className="mt-5 flex justify-end gap-3 pt-4">
+                        <Button onClick={editGeneralInfo}>Отмена</Button>
+                        <Button type="submit">Сохранить</Button>
+                      </div>
+                    ) : (
+                      <></>
+                    )}
                     <div className="mb-5 mt-3" />
                     {/* <div>
         <p className=" mb-4 text-lg font-semibold"> Социальные сети</p>

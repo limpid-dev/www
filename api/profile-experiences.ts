@@ -4,7 +4,7 @@ export interface Entity {
   organizationId: number | null;
   title: string;
   description: string;
-  organization: string;
+  company: string;
   startedAt: string;
   finishedAt: string;
   createdAt: string;
@@ -23,7 +23,7 @@ export interface Store {
   Data: Entity;
   Payload: Pick<
     Entity,
-    "title" | "description" | "organization" | "startedAt" | "finishedAt"
+    "title" | "description" | "company" | "startedAt" | "finishedAt"
   >;
 }
 
@@ -32,7 +32,7 @@ export interface Update {
   Payload: Partial<
     Pick<
       Entity,
-      "title" | "description" | "organization" | "startedAt" | "finishedAt"
+      "title" | "description" | "company" | "startedAt" | "finishedAt"
     >
   >;
 }
