@@ -227,14 +227,10 @@ export default function OneProfile({ data }: Props) {
                         />
                       </p>
                     </div>
-                    {data.isAuthor ? (
-                      <div className="mt-5 flex justify-end gap-3 pt-4">
-                        <Button onClick={editGeneralInfo}>Отмена</Button>
-                        <Button type="submit">Сохранить</Button>
-                      </div>
-                    ) : (
-                      <></>
-                    )}
+                    <div className="mt-5 flex justify-end gap-3 pt-4">
+                      <Button onClick={editGeneralInfo}>Отмена</Button>
+                      <Button type="submit">Сохранить</Button>
+                    </div>
                     <div className="mb-5 mt-3" />
                     {/* <div>
         <p className=" mb-4 text-lg font-semibold"> Социальные сети</p>
@@ -282,17 +278,21 @@ export default function OneProfile({ data }: Props) {
                     <p className="text-lg font-semibold">Обо мне</p>
                     <p className="pt-3 text-sm">{data.profile.description}</p>
                   </div>
-                  <div className="col-span-2">
-                    <div className="flex justify-end gap-6 mt-4">
-                      <Button
-                        variant="outline"
-                        color="zinc"
-                        onClick={editGeneralInfo}
-                      >
-                        <Pen className="h-6 w-6" />
-                      </Button>
+                  {data.isAuthor ? (
+                    <div className="col-span-2">
+                      <div className="flex justify-end gap-6 mt-4">
+                        <Button
+                          variant="outline"
+                          color="zinc"
+                          onClick={editGeneralInfo}
+                        >
+                          <Pen className="h-6 w-6" />
+                        </Button>
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <></>
+                  )}
                   <div className="mb-5 mt-3" />
                   {/* <div>
         <p className=" mb-4 text-lg font-semibold"> Социальные сети</p>
