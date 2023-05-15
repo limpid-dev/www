@@ -78,11 +78,11 @@ export default function Education({ data }: Props) {
       href: `/app/profiles/${id}/certification`,
       current: false,
     },
-    // {
-    //   name: "Проекты",
-    //   href: `/app/profiles/${id}/projects`,
-    //   current: false,
-    // },
+    {
+      name: "Проекты",
+      href: `/app/profiles/${id}/projects`,
+      current: false,
+    },
     {
       name: "Опыт работы",
       href: `/app/profiles/${id}/experience`,

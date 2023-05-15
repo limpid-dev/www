@@ -1,4 +1,10 @@
-import { Pen, Trash } from "@phosphor-icons/react";
+import {
+  InstagramLogo,
+  LinkedinLogo,
+  Pen,
+  Trash,
+  WhatsappLogo,
+} from "@phosphor-icons/react";
 import clsx from "clsx";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
@@ -75,11 +81,11 @@ export default function OneProfile({ data }: Props) {
       href: `/app/profiles/${id}/certification`,
       current: false,
     },
-    // {
-    //   name: "Проекты",
-    //   href: `/app/profiles/${id}/projects`,
-    //   current: false,
-    // },
+    {
+      name: "Проекты",
+      href: `/app/profiles/${id}/projects`,
+      current: false,
+    },
     {
       name: "Опыт работы",
       href: `/app/profiles/${id}/experience`,
@@ -174,9 +180,7 @@ export default function OneProfile({ data }: Props) {
                   <div className="h-full bg-white px-6">
                     <div className="flex flex-col items-center justify-center pt-12">
                       <Image
-                        src={
-                          data.user.file > 0 ? data.user.file.url : DefaultAva
-                        }
+                        src={data.user.file ? data.user.file.url : DefaultAva}
                         width={0}
                         height={0}
                         unoptimized
@@ -230,14 +234,16 @@ export default function OneProfile({ data }: Props) {
                       <Button type="submit">Сохранить</Button>
                     </div>
                     <div className="mb-5 mt-3" />
-                    {/* <div>
-        <p className=" mb-4 text-lg font-semibold"> Социальные сети</p>
-        <div className="flex gap-6 pb-5">
-          <LinkedinLogo />
-          <YoutubeLogo />
-          <InstagramLogo />
-        </div>
-      </div> */}
+                    <div>
+                      <p className=" mb-4 text-lg font-semibold">
+                        Социальные сети
+                      </p>
+                      <div className="flex gap-6 pb-5">
+                        <LinkedinLogo />
+                        <WhatsappLogo />
+                        <InstagramLogo />
+                      </div>
+                    </div>
                   </div>
                 </form>
               ) : (
@@ -288,14 +294,23 @@ export default function OneProfile({ data }: Props) {
                     <></>
                   )}
                   <div className="mb-5 mt-3" />
-                  {/* <div>
-        <p className=" mb-4 text-lg font-semibold"> Социальные сети</p>
-        <div className="flex gap-6 pb-5">
-          <LinkedinLogo />
-          <YoutubeLogo />
-          <InstagramLogo />
-        </div>
-      </div> */}
+                  <div>
+                    <p className=" mb-4 text-lg font-semibold">
+                      Социальные сети
+                    </p>
+                    <div className="flex gap-6 pb-5">
+                      <Image
+                        width={15}
+                        height={15}
+                        alt=""
+                        unoptimized
+                        quality={100}
+                        src="/2gis.png"
+                      />
+                      <WhatsappLogo />
+                      <InstagramLogo />
+                    </div>
+                  </div>
                 </div>
               )}
             </div>

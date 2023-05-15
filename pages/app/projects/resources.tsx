@@ -15,21 +15,6 @@ import { Button } from "../../../components/primitives/button";
 import { Input } from "../../../components/primitives/input";
 import { TextArea } from "../../../components/primitives/text-area";
 
-interface FormValues {
-  title: string;
-  location: string;
-  industry: string;
-  stage: string;
-  requiredMoneyAmount: number;
-  ownedMoneyAmount: number;
-  description: string;
-  requiredIntellectualResources: string;
-  ownedIntellectualResources: string;
-  requiredMaterialResources: string;
-  ownedMaterialResources: string;
-  profitability: string;
-}
-
 const uppy = new Uppy({
   locale: Russian,
   restrictions: {
@@ -60,7 +45,8 @@ export default function Create() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>({});
+  } = useForm({});
+
   useEffect(() => {
     uppy.on("dashboard:modal-closed", () => setFileDashboardOpen(false));
   }, []);
@@ -71,7 +57,7 @@ export default function Create() {
     uppy.on("file-removed", () => setFileCount(uppy.getFiles().length));
   }, []);
 
-  const onSubmit = async (post: FormValues) => {
+  const onSubmit = async () => {
     try {
       const files = uppy.getFiles().map((file) => {
         const formData = buildFormData(file.data);

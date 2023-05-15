@@ -112,7 +112,7 @@ export function CertificationCreate({ certificateAdd, profileId }: any) {
                     {...register(`certification.${index}.title`)}
                   />
                   <Input
-                    placeholder="Название сертификата"
+                    placeholder="Название организации"
                     {...register(`certification.${index}.institution`)}
                   />
                 </div>

@@ -30,11 +30,11 @@ export default function One() {
       href: `/app/profiles/${id}/certification`,
       current: true,
     },
-    // {
-    //   name: "Проекты",
-    //   href: `/app/profiles/${id}/projects`,
-    //   current: false,
-    // },
+    {
+      name: "Проекты",
+      href: `/app/profiles/${id}/projects`,
+      current: false,
+    },
     {
       name: "Опыт работы",
       href: `/app/profiles/${id}/experience`,

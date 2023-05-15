@@ -62,11 +62,11 @@ export default function One() {
       href: `/app/profiles/${id}/certification`,
       current: false,
     },
-    // {
-    //   name: "Проекты",
-    //   href: `/app/profiles/${id}/projects`,
-    //   current: false,
-    // },
+    {
+      name: "Проекты",
+      href: `/app/profiles/${id}/projects`,
+      current: false,
+    },
     {
       name: "Опыт работы",
       href: `/app/profiles/${id}/experience`,
@@ -206,7 +206,7 @@ export default function One() {
                                 {experiences.title}
                               </p>
                               <p className=" mb-3 text-sm font-normal">
-                                {experiences.organization}
+                                {experiences.company}
                               </p>
                               <p className="text-sm font-normal">
                                 {experiences.description}

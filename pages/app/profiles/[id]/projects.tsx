@@ -8,6 +8,7 @@ import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";
 import { General } from "../../../../components/profiles/general";
 import Badge from "../../../../images/badge.svg";
+import { Trash } from "@phosphor-icons/react";
 
 export default function One() {
   const [first, setfirst] = useState(1);
@@ -51,11 +52,11 @@ export default function One() {
       href: `/app/profiles/${id}/certification`,
       current: false,
     },
-    // {
-    //   name: "Проекты",
-    //   href: `/app/profiles/${id}/projects`,
-    //   current: true,
-    // },
+    {
+      name: "Проекты",
+      href: `/app/profiles/${id}/projects`,
+      current: true,
+    },
     {
       name: "Опыт работы",
       href: `/app/profiles/${id}/experience`,
@@ -80,7 +81,9 @@ export default function One() {
                 {/* <Button className=" bg-slate-700 hover:bg-black">
                   Редактировать
                 </Button> */}
-                <Button className="  bg-red-600">Удалить</Button>
+                <Button variant="outline" >
+                  <Trash className="h-6 w-6" />
+                </Button>
               </div>
             ) : (
               <div className="flex gap-5">
