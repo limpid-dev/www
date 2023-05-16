@@ -1,5 +1,6 @@
 import { CaretRight, Plus } from "@phosphor-icons/react";
 import clsx from "clsx";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent } from "react";
 import api from "../../../api";
@@ -24,8 +25,8 @@ import {
 } from "../../../components/primitives/form";
 
 const tabs = [
-  { name: "Все профили", href: "/app/profiles/", current: false },
-  { name: "Мои профили", href: "/app/profiles/my", current: true },
+  { name: "Все аукционы", href: "/app/profiles/", current: false },
+  { name: "Мои аукционы", href: "/app/profiles/my", current: true },
 ];
 
 export default function All() {
@@ -71,7 +72,9 @@ export default function All() {
       <Navigation />
       <div className="h-screen bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
-          <p className=" text-sm text-slate-300">Профили</p>
+          <p className=" text-sm">
+            Аукционы / <span className="text-slate-300">Продажи</span>
+          </p>
           <div className="my-5 flex flex-col items-center justify-end gap-4 md:mb-12 md:flex-row  md:justify-between">
             <div>
               <div className="sm:hidden">
@@ -109,119 +112,15 @@ export default function All() {
                 </nav>
               </div>
             </div>
-            <Dialog>
-              <DialogTrigger>
-                <div className="flex items-center gap-2 rounded-lg bg-zinc-900 p-2 text-sm text-white">
-                  <Plus className="h-6 w-6" />
-                  Создать профиль
-                </div>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Создать профиль</DialogTitle>
-                  <DialogDescription>
-                    Заполните форму, чтобы создать профиль.
-                  </DialogDescription>
-                </DialogHeader>
-                <Form onSubmit={handleProfileCreate}>
-                  <Field name="title">
-                    <Label>Название</Label>
-                    <Input
-                      placeholder="Web-Разработчик..."
-                      required
-                      minLength={1}
-                      maxLength={255}
-                    />
-                    <Message match="tooShort">
-                      Название профиля должно быть не менее 1 символа
-                    </Message>
-                    <Message match="tooLong">
-                      Название профиля должно быть не более 255 символов
-                    </Message>
-                    <Message match="valueMissing">
-                      Название профиля обязательно
-                    </Message>
-                  </Field>
-                  <Field name="location">
-                    <Label>Локация</Label>
-                    <Input
-                      placeholder="Астана, Казахстан..."
-                      required
-                      minLength={1}
-                      maxLength={255}
-                    />
-                    <Message match="tooShort">
-                      Локация профиля должна быть не менее 1 символа
-                    </Message>
-                    <Message match="tooLong">
-                      Локация профиля должна быть не более 255 символов
-                    </Message>
-                    <Message match="valueMissing">
-                      Локация профиля обязательна
-                    </Message>
-                  </Field>
-                  <Field name="industry">
-                    <Label>Сфера деятельности</Label>
-                    <Input
-                      placeholder="Информационные технологии..."
-                      required
-                      minLength={1}
-                      maxLength={255}
-                    />
-                    <Message match="tooShort">
-                      Сфера деятельности профиля должна быть не менее 1 символа
-                    </Message>
-                    <Message match="tooLong">
-                      Сфера деятельности профиля должна быть не более 255
-                      символов
-                    </Message>
-                    <Message match="valueMissing">
-                      Сфера деятельности профиля обязательна
-                    </Message>
-                  </Field>
-                  <Field name="description">
-                    <Label>Описание</Label>
-                    <Textarea
-                      placeholder="Кратко опишите себя..."
-                      required
-                      minLength={1}
-                      maxLength={1024}
-                    />
-                    <Message match="tooShort">
-                      Описание профиля должна быть не менее 1 символа
-                    </Message>
-                    <Message match="tooLong">
-                      Описание профиля должна быть не более 1024 символов
-                    </Message>
-                    <Message match="valueMissing">
-                      Описание профиля обязательна
-                    </Message>
-                  </Field>
-                  <Field name="ownedMaterialResources">
-                    <Textarea
-                      placeholder="Кратко опишите себя..."
-                      required
-                      minLength={1}
-                      maxLength={1024}
-                    />
-                  </Field>
-                  <Field name="ownedIntellectualResources">
-                    <Textarea
-                      placeholder="Кратко опишите себя..."
-                      required
-                      minLength={1}
-                      maxLength={1024}
-                    />
-                  </Field>
-
-                  <DialogFooter>
-                    <Button type="submit" className="rounded-lg">
-                      Создать профиль
-                    </Button>
-                  </DialogFooter>
-                </Form>
-              </DialogContent>
-            </Dialog>
+            <Link href="/app/auctions/create">
+              <Button
+                variant="black"
+                className="flex items-center gap-2 rounded-lg bg-zinc-900 p-2 text-sm text-white"
+              >
+                <Plus className="h-6 w-6" />
+                Создать аукцион
+              </Button>
+            </Link>
           </div>
 
           <div className="grid justify-center gap-6 md:grid-cols-2 lg:grid-cols-3">

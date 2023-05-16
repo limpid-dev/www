@@ -24,7 +24,7 @@ export default function All() {
       <Navigation />
       <div className="h-screen bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
-          <p className=" text-sm text-slate-300">Профили</p>
+          <p className=" text-sm text-slate-300">Аукционы</p>
           <div className="my-5 flex flex-col items-center justify-end gap-4 md:mb-12 md:flex-row  md:justify-between">
             <div>
               <div className="sm:hidden">
@@ -71,7 +71,7 @@ export default function All() {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   type="search"
-                  placeholder="Искать по профилям"
+                  placeholder="Искать по аукционам"
                   className="rounded-lg border-none"
                 />
                 <Button

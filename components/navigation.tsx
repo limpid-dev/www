@@ -4,13 +4,63 @@ import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import api from "../api";
 import { Entity } from "../api/profiles";
 import { Entity as UserEntity } from "../api/users";
 import testAva from "../images/avatars/defaultProfile.svg";
 import { Button } from "./primitives/button";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "./primitives/navigation-menu";
 import { Skeleton } from "./primitives/skeleton";
+
+const ListItem = React.forwardRef<
+  React.ElementRef<"a">,
+  React.ComponentPropsWithoutRef<"a">
+>(({ className, title, children, ...props }, ref) => {
+  return (
+    <li>
+      <NavigationMenuLink asChild>
+        <a
+          ref={ref}
+          className={clsx(
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-slate-100 hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            className
+          )}
+          {...props}
+        >
+          <div className="text-sm font-medium leading-none">{title}</div>
+          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+            {children}
+          </p>
+        </a>
+      </NavigationMenuLink>
+    </li>
+  );
+});
+ListItem.displayName = "ListItem";
+
+const components: { title: string; href: string; description: string }[] = [
+  {
+    title: "Продажи",
+    href: "/docs/primitives/alert-dialog",
+    description:
+      "Аукцион продаж - процесс конкурентной продажи товаров или услуг, где участники предлагают наивысшую цену за лоты, предоставленные продавцом.",
+  },
+  {
+    title: "Закупки",
+    href: "/docs/primitives/hover-card",
+    description:
+      "Аукцион закупок - это процесс конкурентного приобретения товаров или услуг, где потенциальные поставщики соревнуются друг с другом, предлагая наилучшие условия и цены для выполнения заказа.",
+  },
+];
 
 export function Logo(props: any) {
   return (
@@ -70,8 +120,7 @@ function findById(array: any, id: any) {
 const navigation = [
   { name: "Проекты", href: "/app/projects" },
   { name: "Профили", href: "/app/profiles" },
-  { name: "Организации", href: "/app/organizations" },
-  // { name: "Аукционы", href: "/app/auctions" },
+  { name: "Закупки", href: "/app/auctions" },
   { name: "Продажи", href: "/app/tenders" },
 ];
 
@@ -143,15 +192,51 @@ export function Navigation() {
                 className="hidden lg:flex lg:space-x-8 lg:py-2"
                 aria-label="Global"
               >
-                {navigation.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className="inline-flex items-center  px-3 py-2 text-sm font-medium text-zinc-900 hover:bg-zinc-50 hover:text-zinc-900"
-                  >
-                    {item.name}
-                  </a>
-                ))}
+                <NavigationMenu>
+                  <NavigationMenuList>
+                    <NavigationMenuItem>
+                      <Link href="/docs" legacyBehavior passHref>
+                        <NavigationMenuLink
+                          className={navigationMenuTriggerStyle()}
+                        >
+                          Проекты
+                        </NavigationMenuLink>
+                      </Link>
+                    </NavigationMenuItem>
+                    <NavigationMenuItem>
+                      <NavigationMenuTrigger>Профили</NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[400px] lg:grid-cols-1">
+                          <ListItem href="/docs" title="Ваш профиль">
+                            Ваш профиль покажите себя всему миру
+                          </ListItem>
+                          <ListItem
+                            href="/docs/installation"
+                            title="Профили и Организации"
+                          >
+                            Найдите интересующих вас людей или компании
+                          </ListItem>
+                        </ul>
+                      </NavigationMenuContent>
+                    </NavigationMenuItem>
+                    <NavigationMenuItem>
+                      <NavigationMenuTrigger>Аукционы</NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        <ul className="grid w-[400px] gap-3 p-4 md:w-[400px] md:grid-cols-1">
+                          {components.map((component) => (
+                            <ListItem
+                              key={component.title}
+                              title={component.title}
+                              href={component.href}
+                            >
+                              {component.description}
+                            </ListItem>
+                          ))}
+                        </ul>
+                      </NavigationMenuContent>
+                    </NavigationMenuItem>
+                  </NavigationMenuList>
+                </NavigationMenu>
               </nav>
               <div className="relative z-10 flex items-center lg:hidden">
                 {/* Mobile menu button */}
@@ -185,7 +270,7 @@ export function Navigation() {
                           width={0}
                           unoptimized
                           height={0}
-                          src={test.file ? test.file.url : testAva}
+                          src={test?.file ? test.file.url : testAva}
                           alt=""
                         />
                       )}
@@ -258,10 +343,11 @@ export function Navigation() {
               <div className="flex items-center px-4">
                 <div className="flex-shrink-0">
                   <Image
-                    className="h-10 w-10 rounded-full"
+                    className="h-10 w-10 rounded-full object-cover"
                     width={10}
+                    unoptimized
                     height={10}
-                    src={testAva}
+                    src={test?.file ? test.file.url : testAva}
                     alt=""
                   />
                 </div>

@@ -69,6 +69,15 @@ export const getServerSideProps = async (
     },
   });
 
+  if (!profiles.data) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/",
+      },
+    };
+  }
+
   return {
     props: {
       data: {
@@ -168,146 +177,24 @@ export default function MyProfiles({ data }: Props) {
                   <Plus /> Создать профиль
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[775px]">
+              <DialogContent className="sm:min-w-[775px]">
                 <DialogHeader>
                   <DialogTitle className="text-center">
                     Выберите вид профиля
                   </DialogTitle>
                 </DialogHeader>
-                <div className="grid grid-cols-2 gap-4 py-4">
-                  <Dialog>
-                    <DialogTrigger>
-                      <div className="flex flex-col items-center rounded-lg border hover:border-black">
-                        <Image src={onLaptop} alt="Нет профилей" />
-                        <div className="mb-3 flex flex-col items-center">
-                          <p className="text-sm font-bold sm:text-lg">
-                            Личный профиль
-                          </p>
-                          <p className="text-xs">физического лица</p>
-                        </div>
+                <div className="grid sm:grid-cols-2 gap-4 py-4 w-full">
+                  <Link href="/app/profiles/create">
+                    <div className="flex flex-col items-center rounded-lg border hover:border-black">
+                      <Image src={onLaptop} alt="Нет профилей" />
+                      <div className="mb-3 flex flex-col items-center">
+                        <p className="text-sm font-bold sm:text-lg">
+                          Личный профиль
+                        </p>
+                        <p className="text-xs">физического лица</p>
                       </div>
-                    </DialogTrigger>
-                    <DialogContent className="overflow-auto h-full sm:h-auto">
-                      <DialogHeader>
-                        <DialogTitle> Создание профиля</DialogTitle>
-                        <DialogDescription>
-                          Заполните форму, чтобы создать профиль.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <Form onSubmit={handleProfileCreate}>
-                        <Field name="title">
-                          <div className="flex justify-between">
-                            <Label>Название</Label>
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Question className="h-6 w-6" />
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>Опишите вашу позицию</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          </div>
-                          <Input
-                            placeholder="Web-Разработчик..."
-                            required
-                            minLength={1}
-                            maxLength={255}
-                          />
-                          <Message match="tooShort">
-                            Название профиля должно быть не менее 1 символа
-                          </Message>
-                          <Message match="tooLong">
-                            Название профиля должно быть не более 255 символов
-                          </Message>
-                          <Message match="valueMissing">
-                            Название профиля обязательно
-                          </Message>
-                        </Field>
-                        <Field name="location">
-                          <Label>Локация</Label>
-                          <Input
-                            placeholder="Астана, Казахстан..."
-                            required
-                            minLength={1}
-                            maxLength={255}
-                          />
-                          <Message match="tooShort">
-                            Локация профиля должна быть не менее 1 символа
-                          </Message>
-                          <Message match="tooLong">
-                            Локация профиля должна быть не более 255 символов
-                          </Message>
-                          <Message match="valueMissing">
-                            Локация профиля обязательна
-                          </Message>
-                        </Field>
-                        <Field name="industry">
-                          <Label>Сфера деятельности</Label>
-                          <Select name="industry">
-                            <SelectTrigger className="px-5 text-black rounded-md border border-slate-300 flex-1 max-w-full text-ellipsis whitespace-nowrap overflow-hidden w-full">
-                              <SelectValue placeholder="Интернет / Связь / Информационные технологии" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectGroup className="h-[300px] overflow-auto">
-                                <SelectLabel>Отрасль</SelectLabel>
-                                {Options.map((option) => (
-                                  <SelectItem
-                                    key={option.id}
-                                    value={option.name}
-                                  >
-                                    {option.name}
-                                  </SelectItem>
-                                ))}
-                              </SelectGroup>
-                            </SelectContent>
-                          </Select>
-                        </Field>
-                        <Field name="description">
-                          <Label>Описание</Label>
-                          <Textarea
-                            placeholder="Кратко опишите себя..."
-                            required
-                            minLength={1}
-                            maxLength={1024}
-                          />
-                          <Message match="tooShort">
-                            Описание профиля должна быть не менее 1 символа
-                          </Message>
-                          <Message match="tooLong">
-                            Описание профиля должна быть не более 1024 символов
-                          </Message>
-                          <Message match="valueMissing">
-                            Описание профиля обязательна
-                          </Message>
-                        </Field>
-                        <Field name="ownedMaterialResources">
-                          <Label>Материальные ресурсы</Label>
-                          <Textarea
-                            placeholder="Кратко опишите что вы можете предложить.."
-                            required
-                            minLength={1}
-                            maxLength={1024}
-                          />
-                        </Field>
-                        <Field name="ownedIntellectualResources">
-                          <Label>Интеллектуальные ресурсы</Label>
-                          <Textarea
-                            placeholder="Кратко опишите себя..."
-                            required
-                            minLength={1}
-                            maxLength={1024}
-                          />
-                        </Field>
-                        <DialogFooter>
-                          <Button type="submit" className="rounded-lg">
-                            Создать профиль
-                          </Button>
-                        </DialogFooter>
-                      </Form>
-                    </DialogContent>
-                  </Dialog>
+                    </div>
+                  </Link>
                   <Link
                     href="/app/organizations/create"
                     className="flex flex-col items-center justify-center rounded-lg border  hover:border-black"
