@@ -1,10 +1,19 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useForm } from "react-hook-form";
-import api from "../../../../api";
+import { Controller, useForm } from "react-hook-form";
 import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";
 import { Input } from "../../../../components/primitives/input";
+import { Options } from "../../../../components/primitives/options";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "../../../../components/primitives/select";
 import { TextArea } from "../../../../components/primitives/text-area";
 
 interface FormValues {
@@ -18,7 +27,7 @@ interface FormValues {
 export default function Create() {
   const router = useRouter();
 
-  const { register, handleSubmit } = useForm<FormValues>({});
+  const { register, handleSubmit, control } = useForm<FormValues>({});
 
   const onSubmit = async (data: FormValues) => {
     console.log(data);
@@ -75,10 +84,61 @@ export default function Create() {
                   minLength={1}
                   maxLength={1024}
                 />
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <Input placeholder="Локация" {...register("location")} />
-                  <Input placeholder="Стадия проекта" {...register("stage")} />
-                  <Input placeholder="Категория" {...register("industry")} />
+                <div className="grid gap-4 sm:grid-cols-2 mt-4">
+                  <Controller
+                    control={control}
+                    name="industry"
+                    render={({ field }) => (
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger className="px-5 text-black rounded-md flex-1 max-w-full text-ellipsis whitespace-nowrap overflow-hidden w-full">
+                          <SelectValue placeholder="Признак закупки" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Признак закупки</SelectLabel>
+                            <SelectItem value="Товар">Товар</SelectItem>
+                            <SelectItem value="Работа">Работа</SelectItem>
+                            <SelectItem value="Услуга">Услуга</SelectItem>
+                            <SelectItem value="Вакансия">Вакансия</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  <Controller
+                    control={control}
+                    name="industry"
+                    render={({ field }) => (
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger className="px-5 text-black rounded-md flex-1 max-w-full text-ellipsis whitespace-nowrap overflow-hidden w-full">
+                          <SelectValue placeholder="Сфера деятельности" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup className="overflow-auto h-[300px]">
+                            <SelectLabel>Сфера деятельности</SelectLabel>
+                            {Options.map((option) => (
+                              <SelectItem key={option.id} value={option.name}>
+                                {option.name}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  <Input
+                    type="number"
+                    required
+                    placeholder="Длительность приема заявок (в днях)"
+                    min={1}
+                    max={31}
+                  />
                 </div>
               </div>
               <div className="flex justify-end gap-3 pt-4 ">

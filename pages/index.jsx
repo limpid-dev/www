@@ -1,4 +1,4 @@
-import { Popover, Tab, Transition } from "@headlessui/react";
+import { Popover, RadioGroup, Tab, Transition } from "@headlessui/react";
 import {
   FacebookLogo,
   InstagramLogo,
@@ -23,6 +23,138 @@ import screenshotInventory from "../images/screenshots/chat.png";
 import screenshotContacts from "../images/screenshots/invoice.png";
 import screenshotProfitLoss from "../images/screenshots/myProjects.png";
 
+const frequencies = [
+  { value: "monthly", label: "Месяц", priceSuffix: "/мес" },
+  { value: "kvartal", label: "Квартал", priceSuffix: "/квартал" },
+  { value: "annually", label: "Год", priceSuffix: "/год" },
+];
+const tiers = [
+  {
+    name: "START",
+    id: "tier-start",
+    href: "#",
+    price: {},
+    description: "Подходит для всех!",
+    features: {
+      monthly: [
+        "Просмотр детальной информации проектов",
+        "Cоздание 1го проекта",
+        "1 участие на аукционе, стоимостью одного лота не более 1 000 000₸",
+      ],
+      annually: [
+        "Просмотр детальной информации проектов",
+        "Cоздание 1го проекта",
+        "1 участие на аукционе, стоимостью одного лота не более 1 000 000₸",
+      ],
+      kvartal: [
+        "Просмотр детальной информации проектов",
+        "Cоздание 1го проекта",
+        "1 участие на аукционе, стоимостью одного лота не более 1 000 000₸",
+      ],
+    },
+    mostPopular: false,
+  },
+  {
+    name: "LIGHT",
+    id: "tier-light",
+    href: "#",
+    price: { monthly: "2699₸", annually: "37 990₸", kvartal: "12 990₸" },
+    description: "Начинающим",
+    features: {
+      monthly: [
+        "Просмотр детальной информации проектов",
+        "Cоздание 3 проектов",
+        "7 участий на аукционах, стоимостью одного лота не более 1 000 000₸",
+      ],
+      annually: [
+        "Просмотр детальной информации проектов",
+        "Cоздание 36 проектов",
+        "84 участие на аукционах, стоимостью одного лота не более 1 000 000₸",
+      ],
+      kvartal: [
+        "Просмотр детальной информации проектов",
+        "Cоздание 9 проектов",
+        "21 участия на аукционах, стоимостью одного лота не более 1 000 000₸",
+      ],
+    },
+    mostPopular: false,
+  },
+  {
+    name: "STANDART",
+    id: "tier-standart",
+    href: "#",
+    price: { monthly: "4499", annually: "59 900₸", kvartal: "20 990₸" },
+    description: "На пути к успеху",
+    features: {
+      monthly: [
+        "Просмотр детальной информации проектов",
+        "Создание 5 проектов",
+        "15 участий на аукционах, стоимостью одного лота не более 1 000 000₸",
+        "Бесплатная верификация",
+        "Настройка видимости Профиля",
+      ],
+      annually: [
+        "Просмотр детальной информации проектов",
+        "Создание 60 проектов",
+        "180 участий на аукционах, стоимостью одного лота не более 1 000 000₸",
+        "Бесплатная верификация",
+        "Настройка видимости Профиля",
+      ],
+      kvartal: [
+        "Просмотр детальной информации проектов",
+        "Создание 15 проектов",
+        "45 участий на аукционах, стоимостью одного лота не более 1 000 000₸",
+        "Бесплатная верификация",
+        "Настройка видимости Профиля",
+      ],
+    },
+    mostPopular: true,
+  },
+  {
+    name: "PREMIUM",
+    id: "tier-premium",
+    href: "#",
+    price: { monthly: "", annually: "639 900₸", kvartal: "199900₸" },
+    description: "Без границ",
+    features: {
+      monthly: [
+        "Просмотр детальной информации проектов",
+        "Создание неограниченного количества проектов",
+        "Неограниченный доступ",
+        "Бесплатная верификация",
+        "Настройка видимости Профиля",
+        "Персональные консультации команды Платформы LIM",
+        "Приоритетная поддержкa",
+        "Личные встречи с Основателем Платформы LIM",
+      ],
+      annually: [
+        "Просмотр детальной информации проектов",
+        "Создание неограниченного количества проектов",
+        "Неограниченный доступ",
+        "Бесплатная верификация",
+        "Настройка видимости Профиля",
+        "Персональные консультации команды Платформы LIM",
+        "Приоритетная поддержкa",
+        "Личные встречи с Основателем Платформы LIM",
+      ],
+      kvartal: [
+        "Просмотр детальной информации проектов",
+        "Создание неограниченного количества проектов",
+        "Неограниченный доступ",
+        "Бесплатная верификация",
+        "Настройка видимости Профиля",
+        "Персональные консультации команды Платформы LIM",
+        "Приоритетная поддержкa",
+        "Личные встречи с Основателем Платформы LIM",
+      ],
+    },
+    mostPopular: false,
+  },
+];
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
 const primaryFeatures = [
   {
     title: "Профили",
@@ -621,6 +753,8 @@ function Plan({ name, price, description, href, features, featured = false }) {
 }
 
 export function Pricing() {
+  const [frequency, setFrequency] = useState(frequencies[0]);
+
   return (
     <section
       id="pricing"
@@ -640,55 +774,142 @@ export function Pricing() {
             Гарантия справедливого и прозрачного партнёрства
           </p>
         </div>
-        <div className="-mx-4 mt-16 grid max-w-2xl grid-cols-1 gap-y-10 sm:mx-auto lg:-mx-8 lg:max-w-none lg:grid-cols-4 xl:mx-0 xl:gap-x-8">
-          <Plan
-            name="START"
-            price="0₸"
-            description="Подходит для всех, кто работает на себя и только начинает работу."
-            href="/register"
-            features={[
-              "Просмотр контента",
-              "Создание профиль",
-              "Создание 1 проекта",
-            ]}
-          />
-          <Plan
-            name="LIGHT"
-            price="2699₸"
-            description="Начинающим"
-            href="/register"
-            features={[
-              "Просмотр контента",
-              "Создание профиль",
-              "Создание 3-х проектов",
-            ]}
-          />
-          <Plan
-            featured
-            name="STANDART"
-            price="4499₸"
-            description="На пути к богатству"
-            href="/register"
-            features={[
-              "Просмотр контента",
-              "Создание профиль",
-              "Настройка видимости порфолио",
-              "Создание 5-ти проектов",
-            ]}
-          />
-          <Plan
-            name="PREMIUM"
-            price="9499₸"
-            description="Пакет без границ"
-            href="/register"
-            features={[
-              "Просмотр контента",
-              "Создание профиль",
-              "Настройка видимости порфолио",
-              "Создание неограниченного количества проектов",
-              "Персональный менеджер",
-            ]}
-          />
+        <div className="mt-16 flex justify-center">
+          <RadioGroup
+            value={frequency}
+            onChange={setFrequency}
+            className="grid grid-cols-3 gap-x-1 rounded-full bg-white/5 p-1 text-center text-xs font-semibold leading-5 text-white"
+          >
+            <RadioGroup.Label className="sr-only">
+              Payment frequency
+            </RadioGroup.Label>
+            {frequencies.map((option) => (
+              <RadioGroup.Option
+                key={option.value}
+                value={option}
+                className={({ checked }) =>
+                  classNames(
+                    checked ? "bg-lime-500" : "",
+                    "cursor-pointer rounded-full px-2.5 py-1"
+                  )
+                }
+              >
+                <span>{option.label}</span>
+              </RadioGroup.Option>
+            ))}
+          </RadioGroup>
+        </div>
+        <div className="isolate mx-auto mt-10 grid max-w-md grid-cols-1 gap-8 lg:mx-0 lg:max-w-none lg:grid-cols-4">
+          {tiers.map((tier) => {
+            if (tier.name === "PREMIUM" && frequency.value === "monthly") {
+              return (
+                <div
+                  key={tier.id}
+                  className={classNames(
+                    tier.mostPopular
+                      ? "bg-white/5 ring-2 ring-lime-500"
+                      : "ring-1 ring-white/10",
+                    "rounded-3xl p-8 xl:p-10"
+                  )}
+                >
+                  <div className="flex items-center justify-between gap-x-4">
+                    <h3
+                      id={tier.id}
+                      className="text-lg font-semibold leading-8 text-white"
+                    >
+                      {tier.name}
+                    </h3>
+                    {tier.mostPopular ? (
+                      <p className="rounded-full bg-lime-500 px-2.5 py-1 text-xs font-semibold leading-5 text-white">
+                        Популярный
+                      </p>
+                    ) : null}
+                  </div>
+                  <p className="mt-4 text-sm leading-6 text-gray-300">
+                    {tier.description} <br /> (начинается с квартала)
+                  </p>
+                  <p className="mt-6 flex items-baseline gap-x-1">
+                    <p className="text-sm font-semibold leading-6 text-gray-300" />
+                  </p>
+
+                  <ul className="mt-8 space-y-3 text-sm leading-6 text-gray-300 xl:mt-10">
+                    {tier.features[frequency.value].map((feature) => (
+                      <li key={feature} className="flex gap-x-3">
+                        <CheckIcon
+                          className="h-6 w-5 flex-none text-white"
+                          aria-hidden="true"
+                        />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            }
+            return (
+              <div
+                key={tier.id}
+                className={classNames(
+                  tier.mostPopular
+                    ? "bg-white/5 ring-2 ring-lime-500"
+                    : "ring-1 ring-white/10",
+                  "rounded-3xl p-8 xl:p-10"
+                )}
+              >
+                <div className="flex items-center justify-between gap-x-4">
+                  <h3
+                    id={tier.id}
+                    className="text-lg font-semibold leading-8 text-white"
+                  >
+                    {tier.name}
+                  </h3>
+                  {tier.mostPopular ? (
+                    <p className="rounded-full bg-lime-500 px-2.5 py-1 text-xs font-semibold leading-5 text-white">
+                      Популярный
+                    </p>
+                  ) : null}
+                </div>
+                <p className="mt-4 text-sm leading-6 text-gray-300">
+                  {tier.description}
+                </p>
+                <p className="mt-6 flex items-baseline gap-x-1">
+                  <span className="text-3xl font-bold tracking-tight text-white">
+                    {tier.price[frequency.value]}
+                  </span>
+                  <span className="text-sm font-semibold leading-6 text-gray-300">
+                    {tier.name === "START" ? " " : frequency.priceSuffix}
+                  </span>
+                </p>
+                {tier.name === "START" ? (
+                  ""
+                ) : (
+                  <a
+                    href={tier.href}
+                    aria-describedby={tier.id}
+                    className={classNames(
+                      tier.mostPopular
+                        ? "bg-lime-500 text-white shadow-sm hover:bg-lime-400 focus-visible:outline-lime-500"
+                        : "bg-white/10 text-white hover:bg-white/20 focus-visible:outline-white",
+                      "mt-6 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                    )}
+                  >
+                    Начни сейчас
+                  </a>
+                )}
+                <ul className="mt-8 space-y-3 text-sm leading-6 text-gray-300 xl:mt-10">
+                  {tier.features[frequency.value].map((feature) => (
+                    <li key={feature} className="flex gap-x-3">
+                      <CheckIcon
+                        className="h-6 w-5 flex-none text-white"
+                        aria-hidden="true"
+                      />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          })}
         </div>
       </Container>
     </section>

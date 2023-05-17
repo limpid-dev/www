@@ -16,7 +16,7 @@ interface FormValues {
   }[];
 }
 
-export function ExperienceCreate({ profileId, experienceAdd }: any) {
+export default function ExperienceCreate({ profileId, experienceAdd }: any) {
   const [error, setError] = useState("");
   const router = useRouter();
 

@@ -193,7 +193,7 @@ export default function TendersMy({ data }: Props) {
               <DialogTrigger asChild>
                 <Button>Создать продажи</Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className={clsx("p-6")}>
                 <DialogHeader>
                   <DialogTitle>Создать продажи</DialogTitle>
                   <DialogDescription>
