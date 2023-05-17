@@ -767,7 +767,7 @@ export function Pricing() {
             <span className="relative whitespace-nowrap">
               <SwirlyDoodle className="absolute left-0 top-1/2 h-[1em] w-full fill-lime-400" />
               <span className="relative">Простая цена,</span>
-            </span>{" "}
+            </span>
             для всех.
           </h2>
           <p className="mt-4 text-lg text-zinc-400">
@@ -826,12 +826,8 @@ export function Pricing() {
                     ) : null}
                   </div>
                   <p className="mt-4 text-sm leading-6 text-gray-300">
-                    {tier.description} <br /> (начинается с квартала)
+                    {tier.description}
                   </p>
-                  <p className="mt-6 flex items-baseline gap-x-1">
-                    <p className="text-sm font-semibold leading-6 text-gray-300" />
-                  </p>
-
                   <ul className="mt-8 space-y-3 text-sm leading-6 text-gray-300 xl:mt-10">
                     {tier.features[frequency.value].map((feature) => (
                       <li key={feature} className="flex gap-x-3">
