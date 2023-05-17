@@ -111,8 +111,8 @@ const tiers = [
     mostPopular: true,
   },
   {
-    name: "PREMIUM",
-    id: "tier-premium",
+    name: "VIP",
+    id: "tier-VIP",
     href: "#",
     price: { monthly: "", annually: "639 900₸", kvartal: "199900₸" },
     description: "Без границ",
@@ -801,7 +801,7 @@ export function Pricing() {
         </div>
         <div className="isolate mx-auto mt-10 grid max-w-md grid-cols-1 gap-8 lg:mx-0 lg:max-w-none lg:grid-cols-4">
           {tiers.map((tier) => {
-            if (tier.name === "PREMIUM" && frequency.value === "monthly") {
+            if (tier.name === "VIP" && frequency.value === "monthly") {
               return (
                 <div
                   key={tier.id}
@@ -826,7 +826,7 @@ export function Pricing() {
                     ) : null}
                   </div>
                   <p className="mt-4 text-sm leading-6 text-gray-300">
-                    {tier.description}
+                    {tier.description} <br /> (доступен с квартала)
                   </p>
                   <ul className="mt-8 space-y-3 text-sm leading-6 text-gray-300 xl:mt-10">
                     {tier.features[frequency.value].map((feature) => (
