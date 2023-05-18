@@ -204,8 +204,10 @@ export function EducationCreate({ profileId, isAddHandler }: any) {
                   });
                 }}
                 variant="outline"
+                className="flex gap-3"
               >
-                <Plus /> Добавить образование
+                <Plus className="h-4 w-4" />
+                Добавить образование
               </Button>
             </div>
           )}

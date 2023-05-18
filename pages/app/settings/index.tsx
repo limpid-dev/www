@@ -1,6 +1,7 @@
 import "@uppy/core/dist/style.min.css";
 import "@uppy/dashboard/dist/style.min.css";
-import { UserCircle } from "@phosphor-icons/react";
+import { Switch } from "@headlessui/react";
+import { Cube, UserCircle } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -16,7 +17,7 @@ const secondaryNavigation = [
   { name: "Аккаунт", href: "#", icon: UserCircle, current: true },
   //   { name: "Security", href: "#", icon: FingerPrintIcon, current: false },
   //   { name: "Notifications", href: "#", icon: BellIcon, current: false },
-  //   { name: "Plan", href: "#", icon: CubeIcon, current: false },
+  { name: "Plan", href: "/app/settings/plan", icon: Cube, current: false },
   //   { name: "Billing", href: "#", icon: CreditCardIcon, current: false },
   //   { name: "Team members", href: "#", icon: UsersIcon, current: false },
 ];
@@ -25,12 +26,17 @@ export default function Settings() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const inputRef = useRef(null);
   const [userId, setUserId] = useState();
-
+  const [availableToHire, setAvailableToHire] = useState(true);
+  const [privateAccount, setPrivateAccount] = useState(false);
+  const [allowCommenting, setAllowCommenting] = useState(true);
+  const [allowMentions, setAllowMentions] = useState(true);
   const router = useRouter();
   const handleClick = () => {
     inputRef.current.click();
   };
-
+  function classNames(...classes) {
+    return classes.filter(Boolean).join(" ");
+  }
   const handleFileChange = (event: any) => {
     const fileObj = event.target.files && event.target.files[0];
 
@@ -116,9 +122,9 @@ export default function Settings() {
                 </p>
               </div>
             </div>
-            {/* <div>
+            <div>
               <h2 className="text-base font-semibold leading-7 text-gray-900">
-                Profile
+                Ваша информация
               </h2>
               <p className="mt-1 text-sm leading-6 text-gray-500">
                 Эта информация будет отображаться публично, поэтому будьте
@@ -128,10 +134,10 @@ export default function Settings() {
               <dl className="mt-6 space-y-6 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
                 <div className="pt-6 sm:flex">
                   <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                    Full name
+                    Полное имя
                   </dt>
                   <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                    <div className="text-gray-900">Tom Cook</div>
+                    <div className="text-gray-900">Nurgali Almaz</div>
                     <button
                       type="button"
                       className="font-semibold text-lime-600 hover:text-lime-500"
@@ -142,10 +148,10 @@ export default function Settings() {
                 </div>
                 <div className="pt-6 sm:flex">
                   <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-                    Email address
+                    Электронная почта
                   </dt>
                   <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                    <div className="text-gray-900">tom.cook@example.com</div>
+                    <div className="text-gray-900">Iheardthatwas@gmail.com</div>
                     <button
                       type="button"
                       className="font-semibold text-lime-600 hover:text-lime-500"
@@ -155,7 +161,51 @@ export default function Settings() {
                   </dd>
                 </div>
               </dl>
-            </div> */}
+              <div className="divide-y divide-gray-200 pt-6">
+                <div className="">
+                  <div>
+                    <h2 className="text-lg font-medium leading-6 text-gray-900">
+                      Приватность
+                    </h2>
+                  </div>
+                  <ul className="mt-2 divide-y divide-gray-200">
+                    <Switch.Group
+                      as="li"
+                      className="flex items-center justify-between py-4"
+                    >
+                      <div className="flex flex-col">
+                        <Switch.Label
+                          as="p"
+                          className="text-sm font-medium leading-6 text-gray-900"
+                          passive
+                        >
+                          Режим инкогнито
+                        </Switch.Label>
+                        <Switch.Description className="text-sm text-gray-500">
+                          Никто не увидит ваши данные без вашего подтверждения
+                        </Switch.Description>
+                      </div>
+                      <Switch
+                        checked={privateAccount}
+                        onChange={setPrivateAccount}
+                        className={classNames(
+                          privateAccount ? "bg-lime-500" : "bg-gray-200",
+                          "relative ml-4 inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-offset-2"
+                        )}
+                      >
+                        <span
+                          aria-hidden="true"
+                          className={classNames(
+                            privateAccount ? "translate-x-5" : "translate-x-0",
+                            "inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                          )}
+                        />
+                      </Switch>
+                    </Switch.Group>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         </main>
       </div>

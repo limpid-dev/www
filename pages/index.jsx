@@ -774,7 +774,7 @@ export function Pricing() {
             Гарантия справедливого и прозрачного партнёрства
           </p>
         </div>
-        <div className="mt-16 flex justify-center">
+        <div className="mt-10 flex justify-center">
           <RadioGroup
             value={frequency}
             onChange={setFrequency}

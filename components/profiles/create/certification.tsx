@@ -201,7 +201,8 @@ export function CertificationCreate({ certificateAdd, profileId }: any) {
               }}
               variant="outline"
             >
-              <Plus /> Добавить сертификат
+                            <Plus className="h-4 w-4" />
+ Добавить сертификат
             </Button>
           </div> */}
           <div className="mt-5 flex justify-end gap-3 pt-4">

@@ -95,9 +95,10 @@ export default function All() {
 
             <Button
               onClick={handleRoute}
-              className="bg-zinc-900 p-2 text-sm text-white"
+              variant="black"
+              className="flex gap-2"
             >
-              <Plus className="h-6 w-6" />
+              <Plus className="h-4 w-4" />
               Создать проект
             </Button>
           </div>

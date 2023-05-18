@@ -177,13 +177,18 @@ export default function Profiles({ data }: Props) {
                         Выберите сферы деятельности интересующие вас
                       </SheetDescription>
                     </SheetHeader>
-                    <div className="grid grid-cols-2 gap-4 py-4">
+                    <div className="grid grid-cols-2 gap-4 py-4 overflow-auto h-[88%]">
                       {options.map((option) => (
                         <div
                           key={option.id}
-                          className="flex items-center gap-3"
+                          className="flex items-center gap-3 bg-slate-50 rounded-md p-3"
                         >
-                          <input type="checkbox" name="" id="" />
+                          <input
+                            type="checkbox"
+                            name=""
+                            id=""
+                            className="rounded-md"
+                          />
                           <p className="text-sm">{option.name}</p>
                         </div>
                       ))}
