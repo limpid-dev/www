@@ -59,8 +59,6 @@ export default function Test() {
       Number.parseInt(router.query.organizationId as string, 10),
       fileId
     );
-
-    console.log(data);
   };
 
   const onSubmit = async (data: CertificationValues) => {

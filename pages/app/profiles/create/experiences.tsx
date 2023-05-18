@@ -47,14 +47,12 @@ export default function Test() {
     //     .experiences(Number.parseInt(router.query.organizationId as string, 10))
     //     .store(post);
     // });
-
     // if (organization) {
     //   router.push({
     //     pathname: "/app/organizations/create/",
     //     query: { organizationId: organization.id },
     //   });
     // }
-    console.log(data);
   };
 
   const { fields, append, remove } = useFieldArray({

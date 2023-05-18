@@ -76,8 +76,6 @@ export default function Test() {
     // } catch (error) {
     //   setError("Что то пошло не так, попробуйте позже");
     // }
-
-    console.log(data);
   };
 
   return (

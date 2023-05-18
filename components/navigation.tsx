@@ -50,13 +50,13 @@ ListItem.displayName = "ListItem";
 const components: { title: string; href: string; description: string }[] = [
   {
     title: "Продажи",
-    href: "/docs/primitives/alert-dialog",
+    href: "/app/auctions",
     description:
       "Аукцион продаж - процесс конкурентной продажи товаров или услуг, где участники предлагают наивысшую цену за лоты, предоставленные продавцом.",
   },
   {
     title: "Закупки",
-    href: "/docs/primitives/hover-card",
+    href: "/app/tenders",
     description:
       "Аукцион закупок - это процесс конкурентного приобретения товаров или услуг, где потенциальные поставщики соревнуются друг с другом, предлагая наилучшие условия и цены для выполнения заказа.",
   },
@@ -195,7 +195,7 @@ export function Navigation() {
                 <NavigationMenu>
                   <NavigationMenuList>
                     <NavigationMenuItem>
-                      <Link href="/docs" legacyBehavior passHref>
+                      <Link href="/app/projects" legacyBehavior passHref>
                         <NavigationMenuLink
                           className={navigationMenuTriggerStyle()}
                         >
@@ -207,11 +207,11 @@ export function Navigation() {
                       <NavigationMenuTrigger>Профили</NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[400px] lg:grid-cols-1">
-                          <ListItem href="/docs" title="Ваш профиль">
+                          <ListItem href="/app/profiles/my" title="Ваш профиль">
                             Ваш профиль покажите себя всему миру
                           </ListItem>
                           <ListItem
-                            href="/docs/installation"
+                            href="/app/profiles"
                             title="Профили и Организации"
                           >
                             Найдите интересующих вас людей или компании

@@ -38,7 +38,6 @@ export default function Test() {
     //     query: { organizationId: organization.id },
     //   });
     // }
-    console.log(data);
   };
 
   return (

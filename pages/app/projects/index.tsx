@@ -38,8 +38,6 @@ export const getServerSideProps = async () => {
     return { ...withFiles, images };
   });
 
-  console.log(filteredImages);
-
   return {
     props: {
       data: {

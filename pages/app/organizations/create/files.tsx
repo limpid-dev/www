@@ -49,7 +49,6 @@ export default function Test() {
       const formData = buildFormData(file.data);
       return formData;
     });
-    console.log(uppy.getFiles());
   };
   const [fileCount, setFileCount] = useState(0);
 

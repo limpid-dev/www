@@ -177,7 +177,7 @@ export default function MyProfiles({ data }: Props) {
                   <Plus /> Создать профиль
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:min-w-[775px]">
+              <DialogContent className="sm:min-w-[775px] p-6">
                 <DialogHeader>
                   <DialogTitle className="text-center">
                     Выберите вид профиля

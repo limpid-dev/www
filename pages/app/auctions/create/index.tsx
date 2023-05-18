@@ -29,9 +29,7 @@ export default function Create() {
 
   const { register, handleSubmit, control } = useForm<FormValues>({});
 
-  const onSubmit = async (data: FormValues) => {
-    console.log(data);
-  };
+  const onSubmit = async (data: FormValues) => {};
 
   return (
     <>

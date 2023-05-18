@@ -35,9 +35,7 @@ export default function Test() {
   const [data, setData] = useState<any>({});
 
   const onSubmit = async () => {
-    console.log(data.contacts);
     // const { data: organization } = await api.organizations.store(data.general);
-
     // if (organization) {
     //   if (data.contacts) {
     //     await Promise.all([
@@ -67,7 +65,6 @@ export default function Test() {
     //         }),
     //     ]);
     //   }
-
     //   if (data.files) {
     //     await Promise.all(
     //       [...data.files].map(async (file: File) => {
@@ -77,7 +74,6 @@ export default function Test() {
     //       })
     //     );
     //   }
-
     //   await router.push(`/app/organizations/${organization.id}`);
     // }
   };

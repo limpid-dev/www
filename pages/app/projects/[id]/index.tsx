@@ -157,9 +157,7 @@ export default function ProjectView({ data }: Props) {
       if (data) {
         setSent(true);
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const handleClick = (event: any) => {
