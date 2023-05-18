@@ -115,7 +115,10 @@ export default function All() {
               </div>
             </div>
             <Link href="/app/organizations/create">
-              <Button className="flex gap-1 bg-black text-xs hover:bg-slate-700 sm:text-sm">
+              <Button
+                variant="black"
+                className="flex gap-1 bg-black text-xs hover:bg-slate-700 sm:text-sm"
+              >
                 <Plus /> Создать организацию
               </Button>
             </Link>

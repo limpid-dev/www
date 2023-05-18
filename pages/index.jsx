@@ -58,7 +58,7 @@ const tiers = [
     name: "LIGHT",
     id: "tier-light",
     href: "#",
-    price: { monthly: "2699₸", annually: "37 990₸", kvartal: "12 990₸" },
+    price: { monthly: "4990₸", annually: "37 990₸", kvartal: "12 990₸" },
     description: "Начинающим",
     features: {
       monthly: [
@@ -83,7 +83,7 @@ const tiers = [
     name: "STANDART",
     id: "tier-standart",
     href: "#",
-    price: { monthly: "4499", annually: "59 900₸", kvartal: "20 990₸" },
+    price: { monthly: "8990", annually: "59 900₸", kvartal: "20 990₸" },
     description: "На пути к успеху",
     features: {
       monthly: [
@@ -247,7 +247,7 @@ export function PrimaryFeatures() {
                             " text-lg [&:not(:focus-visible)]:focus:outline-none",
                             selectedIndex === featureIndex
                               ? "text-lime-600 lg:text-white"
-                              : "text-lime-100 hover:text-white lg:text-white"
+                              : "text-lime-200 hover:text-white lg:text-white"
                           )}
                         >
                           <span className="absolute inset-0 rounded-full lg:rounded-l-xl lg:rounded-r-none" />
@@ -1201,7 +1201,7 @@ export default function Home() {
                           "group relative rounded-full px-4 py-1 lg:rounded-l-xl lg:rounded-r-none lg:p-6",
                           selectedIndex === featureIndex
                             ? "bg-white lg:bg-white/10 lg:ring-1 lg:ring-inset lg:ring-white/10"
-                            : "hover:bg-white/10 lg:hover:bg-white/5"
+                            : "hover:bg-white/10 lg:hover:bg-white/5 border border-lime-700"
                         )}
                       >
                         <h3>

@@ -137,6 +137,7 @@ export default function Create() {
                   </Button>
                   <Button
                     type="submit"
+                    variant="black"
                     className="text-white bg-slate-900 py-2 rounded-md px-4 text-sm font-medium flex-1"
                   >
                     Далее
