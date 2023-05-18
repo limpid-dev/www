@@ -1,3 +1,4 @@
+import { Trash } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,7 +9,6 @@ import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";
 import { General } from "../../../../components/profiles/general";
 import Badge from "../../../../images/badge.svg";
-import { Trash } from "@phosphor-icons/react";
 
 export default function One() {
   const [first, setfirst] = useState(1);
@@ -81,7 +81,7 @@ export default function One() {
                 {/* <Button className=" bg-slate-700 hover:bg-black">
                   Редактировать
                 </Button> */}
-                <Button variant="outline" >
+                <Button variant="outline">
                   <Trash className="h-6 w-6" />
                 </Button>
               </div>

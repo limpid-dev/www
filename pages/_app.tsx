@@ -8,7 +8,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <div className="min-h-full">
       <Head>
-        <title>Платформа LIM</title>
+        <title>LIM - все для бизнеса</title>
       </Head>
       <Component {...pageProps} />
       <Script defer data-domain="limpid.kz" src="/js/script.js" />

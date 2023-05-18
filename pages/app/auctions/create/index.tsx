@@ -60,7 +60,7 @@ export default function Create() {
             >
               <div className="pt-5">
                 <div className="mb-5 text-lg font-semibold sm:text-2xl">
-                  Название проекта
+                  Название аукциона
                 </div>
                 <Input placeholder="Название" {...register("title")} />
               </div>
@@ -92,7 +92,7 @@ export default function Create() {
                         onValueChange={field.onChange}
                       >
                         <SelectTrigger className="px-5 text-black rounded-md flex-1 max-w-full text-ellipsis whitespace-nowrap overflow-hidden w-full">
-                          <SelectValue placeholder="Признак закупки" />
+                          <SelectValue placeholder="Признак" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
