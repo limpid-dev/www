@@ -44,8 +44,8 @@ export async function getServerSideProps() {
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 const tabs = [
-  { name: "Все продажи", href: "/app/tenders", current: true },
-  { name: "Мои продажи", href: "/app/tenders/my", current: false },
+  { name: "Все закупки", href: "/app/tenders", current: true },
+  { name: "Мои закупки", href: "/app/tenders/my", current: false },
 ];
 
 export default function Tenders({ data, meta }: Props) {
@@ -58,7 +58,7 @@ export default function Tenders({ data, meta }: Props) {
     <div className="min-h-screen bg-slate-50">
       <Navigation />
       <div className="mx-auto max-w-screen-xl px-5 py-8">
-        <p className=" text-sm text-slate-300">Продажи</p>
+        <p className=" text-sm text-slate-300">Закупки</p>
         <div className="my-5 flex flex-col items-end  justify-end gap-4 md:mb-12 md:flex-row md:items-center  md:justify-between">
           <div>
             <div className="sm:hidden">

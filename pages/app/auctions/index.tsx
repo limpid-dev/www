@@ -7,8 +7,8 @@ import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
 
 const tabs = [
-  { name: "Все аукционы", href: "/app/auctions/", current: true },
-  { name: "Мои аукционы", href: "/app/auctions/my", current: false },
+  { name: "Все продажи", href: "/app/auctions/", current: true },
+  { name: "Мои продажи", href: "/app/auctions/my", current: false },
 ];
 
 export default function All() {
@@ -24,7 +24,7 @@ export default function All() {
       <Navigation />
       <div className="h-screen bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
-          <p className=" text-sm text-slate-300">Аукционы</p>
+          <p className=" text-sm text-slate-300">Продажи</p>
           <div className="my-5 flex flex-col items-center justify-end gap-4 md:mb-12 md:flex-row  md:justify-between">
             <div>
               <div className="sm:hidden">

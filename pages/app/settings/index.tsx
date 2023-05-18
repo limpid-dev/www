@@ -3,9 +3,10 @@ import "@uppy/dashboard/dist/style.min.css";
 import { Switch } from "@headlessui/react";
 import { Cube, UserCircle } from "@phosphor-icons/react";
 import clsx from "clsx";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import api from "../../../api";
 import { buildFormData } from "../../../api/files";
 import {} from "../../../api/user-file";
@@ -13,53 +14,61 @@ import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
 import DefaultAva from "../../../images/avatars/defaultProfile.svg";
 
+function classNames(...classes: string[]): string {
+  return classes.filter(Boolean).join(" ");
+}
+
 const secondaryNavigation = [
   { name: "Аккаунт", href: "#", icon: UserCircle, current: true },
-  //   { name: "Security", href: "#", icon: FingerPrintIcon, current: false },
-  //   { name: "Notifications", href: "#", icon: BellIcon, current: false },
-  { name: "Plan", href: "/app/settings/plan", icon: Cube, current: false },
-  //   { name: "Billing", href: "#", icon: CreditCardIcon, current: false },
-  //   { name: "Team members", href: "#", icon: UsersIcon, current: false },
+  {
+    name: "План подписки",
+    href: "/app/settings/plan",
+    icon: Cube,
+    current: false,
+  },
 ];
 
-export default function Settings() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const inputRef = useRef(null);
-  const [userId, setUserId] = useState();
-  const [availableToHire, setAvailableToHire] = useState(true);
-  const [privateAccount, setPrivateAccount] = useState(false);
-  const [allowCommenting, setAllowCommenting] = useState(true);
-  const [allowMentions, setAllowMentions] = useState(true);
-  const router = useRouter();
-  const handleClick = () => {
-    inputRef.current.click();
-  };
-  function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
-  }
-  const handleFileChange = (event: any) => {
-    const fileObj = event.target.files && event.target.files[0];
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const { data: session } = await api.session.show({
+    headers: {
+      Cookie: context.req.headers.cookie!,
+    },
+    credentials: "include",
+  });
 
+  if (session) {
+    const { data: user } = await api.users.show(session.id);
+    return {
+      props: {
+        data: {
+          userInfo: user!,
+        },
+      },
+    };
+  }
+};
+
+type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+export default function Settings({ data }: Props) {
+  const router = useRouter();
+  const inputRef = useRef(null);
+  const [privateAccount, setPrivateAccount] = useState(false);
+
+  const handleClick = () => {
+    (inputRef.current as unknown as HTMLInputElement).click();
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const fileObj = event.target.files?.[0];
     if (!fileObj) {
       return;
     }
-
-    api.users.avatar(userId, buildFormData(fileObj));
+    api.users.avatar(data.userInfo.id, buildFormData(fileObj));
     router.reload();
   };
-  const [user, setUser] = useState({});
-
-  useEffect(() => {
-    async function fetchUser() {
-      const { data } = await api.session.show();
-      setUserId(data.id);
-      if (data) {
-        const { data: user } = await api.users.show(data.id);
-        setUser(user);
-      }
-    }
-    fetchUser();
-  }, []);
 
   return (
     <>
@@ -98,10 +107,14 @@ export default function Settings() {
         </aside>
 
         <main className="px-4 py-16 sm:px-6 lg:flex-auto lg:px-0 lg:py-16">
-          <div className="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
+          <div className="mx-auto max-w-2xl space-y-16 lg:mx-0 lg:max-w-none">
             <div className="col-span-full flex items-center gap-x-8">
               <Image
-                src={user.file ? user.file.url : DefaultAva}
+                src={
+                  data.userInfo.file && data.userInfo.file.url
+                    ? data.userInfo.file.url
+                    : DefaultAva
+                }
                 width={0}
                 height={0}
                 unoptimized
@@ -161,50 +174,48 @@ export default function Settings() {
                   </dd>
                 </div>
               </dl>
-              <div className="divide-y divide-gray-200 pt-6">
-                <div className="">
-                  <div>
-                    <h2 className="text-lg font-medium leading-6 text-gray-900">
-                      Приватность
-                    </h2>
-                  </div>
-                  <ul className="mt-2 divide-y divide-gray-200">
-                    <Switch.Group
-                      as="li"
-                      className="flex items-center justify-between py-4"
-                    >
-                      <div className="flex flex-col">
-                        <Switch.Label
-                          as="p"
-                          className="text-sm font-medium leading-6 text-gray-900"
-                          passive
-                        >
-                          Режим инкогнито
-                        </Switch.Label>
-                        <Switch.Description className="text-sm text-gray-500">
-                          Никто не увидит ваши данные без вашего подтверждения
-                        </Switch.Description>
-                      </div>
-                      <Switch
-                        checked={privateAccount}
-                        onChange={setPrivateAccount}
-                        className={classNames(
-                          privateAccount ? "bg-lime-500" : "bg-gray-200",
-                          "relative ml-4 inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-offset-2"
-                        )}
-                      >
-                        <span
-                          aria-hidden="true"
-                          className={classNames(
-                            privateAccount ? "translate-x-5" : "translate-x-0",
-                            "inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
-                          )}
-                        />
-                      </Switch>
-                    </Switch.Group>
-                  </ul>
-                </div>
+            </div>
+            <div className="divide-y divide-gray-200">
+              <div>
+                <h2 className="text-base font-semibold leading-7 text-gray-900">
+                  Приватность
+                </h2>
               </div>
+              <ul className="mt-2 divide-y divide-gray-200">
+                <Switch.Group
+                  as="li"
+                  className="flex items-center justify-between py-4"
+                >
+                  <div className="flex flex-col">
+                    <Switch.Label
+                      as="p"
+                      className="text-sm font-medium leading-6 text-gray-900"
+                      passive
+                    >
+                      Режим инкогнито
+                    </Switch.Label>
+                    <Switch.Description className="text-sm text-gray-500">
+                      Никто не увидит ваши данные без вашего подтверждения
+                    </Switch.Description>
+                  </div>
+                  <Switch
+                    checked={privateAccount}
+                    onChange={setPrivateAccount}
+                    className={classNames(
+                      privateAccount ? "bg-lime-500" : "bg-gray-200",
+                      "relative ml-4 inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-offset-2"
+                    )}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className={classNames(
+                        privateAccount ? "translate-x-5" : "translate-x-0",
+                        "inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                      )}
+                    />
+                  </Switch>
+                </Switch.Group>
+              </ul>
             </div>
           </div>
         </main>

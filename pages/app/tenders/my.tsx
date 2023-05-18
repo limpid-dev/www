@@ -59,8 +59,8 @@ const calcTime = (date: string) => {
 };
 
 const tabs = [
-  { name: "Все продажи", href: "/app/tenders", current: false },
-  { name: "Мои продажи", href: "/app/tenders/my", current: true },
+  { name: "Все закупки", href: "/app/tenders", current: false },
+  { name: "Мои закупки", href: "/app/tenders/my", current: true },
 ];
 
 const uppy = new Uppy({
@@ -144,9 +144,9 @@ export default function TendersMy({ data }: Props) {
   return (
     <>
       <Navigation />
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-[90vh] bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 py-8">
-          <p className=" text-sm text-slate-300">Мои продажи</p>
+          <p className=" text-sm text-slate-300">Мои закупки</p>
           <div className="my-5 flex flex-col items-end justify-end gap-4 md:mb-12 md:flex-row md:items-center  md:justify-between">
             <div>
               <div className="sm:hidden">
@@ -157,8 +157,8 @@ export default function TendersMy({ data }: Props) {
                   className="block w-full  border-gray-300 focus:border-lime-500 focus:ring-lime-500"
                   defaultValue="/app/tenders/my"
                 >
-                  <option value="/app/tenders">Все продажи</option>
-                  <option value="/app/tenders/my">Мои продажи</option>
+                  <option value="/app/tenders">Все закупки</option>
+                  <option value="/app/tenders/my">Мои закупки</option>
                 </select>
               </div>
               <div className="hidden sm:block">
@@ -180,7 +180,7 @@ export default function TendersMy({ data }: Props) {
                   ))}
                 </nav>
               </div>
-            </div>
+            </div> <Button>Создать закупки</Button>
             <Dialog
               onOpenChange={(open) => {
                 if (!open) {
@@ -191,13 +191,13 @@ export default function TendersMy({ data }: Props) {
               }}
             >
               <DialogTrigger asChild>
-                <Button>Создать продажи</Button>
+               
               </DialogTrigger>
               <DialogContent className={clsx("p-6")}>
                 <DialogHeader>
-                  <DialogTitle>Создать продажи</DialogTitle>
+                  <DialogTitle>Создать закупки</DialogTitle>
                   <DialogDescription>
-                    Заполните форму, чтобы создать продажи.
+                    Заполните форму, чтобы создать закупки.
                   </DialogDescription>
                 </DialogHeader>
                 <Form onSubmit={onSubmit} id="form">
@@ -258,7 +258,7 @@ export default function TendersMy({ data }: Props) {
                   />
                   <DialogFooter>
                     <Button type="submit" className="rounded-lg">
-                      Создать продажи
+                      Создать закупки
                     </Button>
                   </DialogFooter>
                 </Form>

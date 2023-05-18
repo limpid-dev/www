@@ -119,7 +119,7 @@ export default function Test() {
                               {...register(`certification.${index}.title`)}
                             />
                             <Input
-                              placeholder="Название организации"
+                              placeholder="Выдано кем?"
                               {...register(
                                 `certification.${index}.institution`
                               )}

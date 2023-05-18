@@ -98,7 +98,7 @@ export default function Test() {
                           <div className="flex flex-col sm:flex-row justify-between gap-5">
                             <Input
                               className="w-full rounded-md border p-2"
-                              placeholder="Название"
+                              placeholder="Должность"
                               {...register(`experiences.${index}.title`, {
                                 required: "Please enter your first name.",
                               })}
@@ -125,7 +125,7 @@ export default function Test() {
                           <div>
                             <TextArea
                               className="rounded-md"
-                              placeholder="Описание деятельности"
+                              placeholder="Расскажите какие у вас были обязанности, какие задачи вы выполняли во время работы в компании?"
                               {...register(`experiences.${index}.description`, {
                                 required: "Please enter your first name.",
                               })}
@@ -205,6 +205,7 @@ export default function Test() {
                     <div className="mt-4 flex flex-col gap-4">
                       <Button
                         type="button"
+                        className="flex gap-3"
                         onClick={() => {
                           append({
                             company: "",
@@ -216,7 +217,7 @@ export default function Test() {
                         }}
                         variant="outline"
                       >
-                        <Plus /> Добавить образование
+                        <Plus className="w-5 h-5" /> Добавить опыт работы
                       </Button>
                     </div>
                   </div>

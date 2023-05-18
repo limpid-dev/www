@@ -4,9 +4,9 @@ import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, SVGProps, useEffect, useState } from "react";
 import api from "../api";
-import { Entity } from "../api/profiles";
+import { Entity as ProfileEntity } from "../api/profiles";
 import { Entity as UserEntity } from "../api/users";
 import testAva from "../images/avatars/defaultProfile.svg";
 import { Button } from "./primitives/button";
@@ -62,7 +62,7 @@ const components: { title: string; href: string; description: string }[] = [
   },
 ];
 
-export function Logo(props: any) {
+export function Logo(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       width="110"
@@ -108,7 +108,7 @@ export function Logo(props: any) {
   );
 }
 
-function findById(array: any, id: any) {
+function findById(array: Array<{ id: number }>, id: number) {
   for (const element of array) {
     if (element.id === id) {
       return element;
@@ -128,37 +128,25 @@ const userNavigation = [{ name: "Настройки", href: "/app/settings" }];
 
 export function Navigation() {
   const router = useRouter();
-  const [profilesData, setProfilesData] = useState<Entity[]>([]);
-  const [profession, setProfession] = useState("");
-  const [session, setSession] = useState<UserEntity>();
-  const [test, setTest] = useState<UserEntity>();
+  const [profilesData, setProfilesData] = useState<ProfileEntity[]>([]);
+  const [profession, setProfession] = useState();
+  const [sessionData, setSessionData] = useState<UserEntity>();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchProfiles() {
       const { data: sessionData } = await api.session.show();
       if (sessionData) {
-        setSession(sessionData);
-        setTest(sessionData);
-
-        const { data } = await api.profiles.index({
+        setSessionData(sessionData);
+        const { data: profiles } = await api.profiles.index({
           page: 1,
           perPage: 100,
           filters: {
             userId: sessionData.id || 0,
           },
         });
-
-        if (data) {
-          if (data[0]?.id && localStorage.length === 0) {
-            localStorage.setItem("profileId", JSON.stringify(data[0].id));
-          }
-          const myObject = findById(
-            data,
-            Number.parseInt(localStorage.getItem("profileId") as string, 10)
-          );
-          setProfession(myObject?.title);
-          setProfilesData(data);
+        if (profiles) {
+          setProfilesData(profiles);
           setLoading(false);
         }
       }
@@ -168,7 +156,6 @@ export function Navigation() {
 
   const handleLogout = async () => {
     await api.session.destroy();
-
     await router.push({
       pathname: "/",
     });
@@ -250,7 +237,7 @@ export function Navigation() {
                 </Disclosure.Button>
               </div>
               <div className="hidden lg:relative lg:z-10 lg:ml-4 lg:flex lg:items-center">
-                {profession ? (
+                {profilesData ? (
                   <p className="mr-3 rounded-md bg-slate-100 p-2 text-sm text-slate-700 px-4 text-ellipsis w-24 whitespace-nowrap overflow-hidden">
                     {profession}
                   </p>
@@ -270,7 +257,9 @@ export function Navigation() {
                           width={0}
                           unoptimized
                           height={0}
-                          src={test?.file ? test.file.url : testAva}
+                          src={
+                            sessionData?.file ? sessionData.file.url : testAva
+                          }
                           alt=""
                         />
                       )}
@@ -299,7 +288,6 @@ export function Navigation() {
                                   "profileId",
                                   JSON.stringify(item.id)
                                 );
-                                setProfession(item.title);
                               }}
                             >
                               {item.title}
@@ -347,16 +335,16 @@ export function Navigation() {
                     width={10}
                     unoptimized
                     height={10}
-                    src={test?.file ? test.file.url : testAva}
+                    src={sessionData?.file ? sessionData.file.url : testAva}
                     alt=""
                   />
                 </div>
                 <div className="ml-3">
                   <div className="text-base font-medium text-zinc-800">
-                    {session?.firstName} {session?.lastName}
+                    {sessionData?.firstName} {sessionData?.lastName}
                   </div>
                   <div className="text-sm font-medium text-zinc-500">
-                    {session?.email}
+                    {sessionData?.email}
                   </div>
                 </div>
               </div>

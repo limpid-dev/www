@@ -1,14 +1,13 @@
 import "@uppy/core/dist/style.min.css";
 import "@uppy/dashboard/dist/style.min.css";
-import { Switch } from "@headlessui/react";
 import { Cube, UserCircle } from "@phosphor-icons/react";
 import clsx from "clsx";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import api from "../../../api";
 import { buildFormData } from "../../../api/files";
-import {} from "../../../api/user-file";
 import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
 import {
@@ -23,41 +22,55 @@ import {
 import DefaultAva from "../../../images/avatars/defaultProfile.svg";
 
 const secondaryNavigation = [
-  { name: "Аккаунт", href: "/app/settings", icon: UserCircle, current: false },
-  //   { name: "Security", href: "#", icon: FingerPrintIcon, current: false },
-  //   { name: "Notifications", href: "#", icon: BellIcon, current: false },
-  { name: "Plan", href: "#", icon: Cube, current: true },
-  //   { name: "Billing", href: "#", icon: CreditCardIcon, current: false },
-  //   { name: "Team members", href: "#", icon: UsersIcon, current: false },
+  { name: "Аккаунт", href: "/app/settings/", icon: UserCircle, current: false },
+  {
+    name: "План подписки",
+    href: "/app/settings/plan",
+    icon: Cube,
+    current: true,
+  },
 ];
 
-export default function Settings() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const inputRef = useRef(null);
-  const [userId, setUserId] = useState();
-  const [availableToHire, setAvailableToHire] = useState(true);
-  const [privateAccount, setPrivateAccount] = useState(false);
-  const [allowCommenting, setAllowCommenting] = useState(true);
-  const [allowMentions, setAllowMentions] = useState(true);
-  const router = useRouter();
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const { data: session } = await api.session.show({
+    headers: {
+      Cookie: context.req.headers.cookie!,
+    },
+    credentials: "include",
+  });
 
-  function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
+  if (session) {
+    const { data: user } = await api.users.show(session.id);
+    return {
+      props: {
+        data: {
+          userInfo: user!,
+        },
+      },
+    };
   }
+};
 
-  const [user, setUser] = useState({});
+type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-  useEffect(() => {
-    async function fetchUser() {
-      const { data } = await api.session.show();
-      setUserId(data.id);
-      if (data) {
-        const { data: user } = await api.users.show(data.id);
-        setUser(user);
-      }
+export default function Settings({ data }: Props) {
+  const router = useRouter();
+  const inputRef = useRef(null);
+
+  const handleClick = () => {
+    (inputRef.current as unknown as HTMLInputElement).click();
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const fileObj = event.target.files?.[0];
+    if (!fileObj) {
+      return;
     }
-    fetchUser();
-  }, []);
+    api.users.avatar(data.userInfo.id, buildFormData(fileObj));
+    router.reload();
+  };
 
   return (
     <>
@@ -99,13 +112,30 @@ export default function Settings() {
           <div className="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
             <div className="col-span-full flex items-center gap-x-8">
               <Image
-                src={user.file ? user.file.url : DefaultAva}
+                src={
+                  data.userInfo.file && data.userInfo.file.url
+                    ? data.userInfo.file.url
+                    : DefaultAva
+                }
                 width={0}
                 height={0}
                 unoptimized
                 alt=""
                 className=" h-44 w-44 flex-none rounded-lg bg-gray-100 object-cover"
               />
+              <div>
+                <input
+                  ref={inputRef}
+                  style={{ display: "none" }}
+                  type="file"
+                  placeholder="shitty"
+                  onChange={handleFileChange}
+                />
+                <Button onClick={handleClick}>Поменять фото</Button>
+                <p className="mt-2 text-xs leading-5 text-gray-400">
+                  JPG или PNG. 1MB макс.
+                </p>
+              </div>
             </div>
             <div>
               <h2 className="text-base font-semibold leading-7 text-gray-900 mb-4">

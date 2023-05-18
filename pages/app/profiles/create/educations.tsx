@@ -111,7 +111,7 @@ export default function Test() {
 
                             <Input
                               className="w-full rounded-md border p-2"
-                              placeholder="Организация"
+                              placeholder="Учебное заведение"
                               {...register(`educations.${index}.institution`, {
                                 required: "Please enter your first name.",
                               })}

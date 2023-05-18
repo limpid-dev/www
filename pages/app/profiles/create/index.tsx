@@ -82,7 +82,7 @@ export default function Test() {
                       type="text"
                       {...register("title")}
                       className="py-4 px-5 text-black rounded-md border border-slate-300 mt-6 w-1/2"
-                      placeholder="Название"
+                      placeholder="Cпециализация"
                       minLength={1}
                       maxLength={255}
                     />
@@ -97,17 +97,33 @@ export default function Test() {
                       //   {...register("bin")}
                       className="py-4 px-5 text-black rounded-md border border-slate-300 flex-1"
                       {...register("location")}
-                      placeholder="Локация"
+                      placeholder="Населенный пункт"
                       required
                     />
 
-                    <Input
-                      type="text"
-                      //   {...register("bin")}
-                      className="py-4 px-5 text-black rounded-md border border-slate-300 flex-1"
-                      {...register("industry")}
-                      placeholder="Индустрия"
-                      required
+                    <Controller
+                      control={control}
+                      name="industry"
+                      render={({ field }) => (
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
+                          <SelectTrigger className="px-5 text-black rounded-md flex-1 max-w-full text-ellipsis whitespace-nowrap overflow-hidden w-full">
+                            <SelectValue placeholder="Выберите отрасль" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup className="overflow-auto h-[300px]">
+                              <SelectLabel>Отрасль</SelectLabel>
+                              {Options.map((option) => (
+                                <SelectItem key={option.id} value={option.name}>
+                                  {option.name}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      )}
                     />
                   </div>
 
@@ -122,7 +138,7 @@ export default function Test() {
                       required
                       minLength={1}
                       maxLength={1024}
-                      placeholder="Что  будет полезно другим людям о материальных ресурсах компании?"
+                      placeholder="Чем вы можете быть полезны ? (помещение, финансы другие материальные ресурсы)"
                     />
                   </div>
                   <div>
@@ -136,7 +152,7 @@ export default function Test() {
                       required
                       minLength={1}
                       maxLength={1024}
-                      placeholder="Что  будет полезно другим людям о интеллектуальных ресурсах компании?"
+                      placeholder="Какимими навыками вы обладаете ? (Excel, логика, критическое мышление) "
                     />
                   </div>
                   <div className="mt-8 flex gap-5">

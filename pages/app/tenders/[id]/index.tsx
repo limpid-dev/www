@@ -140,9 +140,8 @@ export default function Tender({ data }: Props) {
       <main className="min-h-[90vh] bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
           <h1 className="text-sm">
-            <span className="text-slate-300">
-              Аукционы / Продажи / {data.title}
-            </span>
+            <span className="text-slate-300">Аукционы / Продажи / </span>
+            {data.title}
           </h1>
 
           <div className="">

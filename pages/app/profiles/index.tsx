@@ -8,6 +8,7 @@ import { ChangeEvent } from "react";
 import api from "../../../api";
 import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
+import { Options } from "../../../components/primitives/options";
 import {
   Sheet,
   SheetContent,
@@ -18,36 +19,6 @@ import {
   SheetTrigger,
 } from "../../../components/primitives/sheet";
 import DefaultAvatar from "../../../images/avatars/defaultProfile.svg";
-
-const options = [
-  { id: 1, name: "Автомобили / Запчасти / Автосервис" },
-  { id: 2, name: "Мебель / Материалы / Фурнитура" },
-  { id: 4, name: "Хозтовары / Канцелярия / Упаковка" },
-  { id: 5, name: "Оборудование / Инструмент" },
-  { id: 6, name: "Медицина / Здоровье / Красота" },
-  { id: 7, name: "Одежда / Обувь / Галантерея / Парфюмерия" },
-  { id: 8, name: "Бытовая техника / Компьютеры / Офисная техника" },
-  { id: 9, name: "Продукты питания / Напитки" },
-  { id: 10, name: "Продукция производственно-технического назначения" },
-  { id: 16, name: "Спорт / Отдых / Туризм" },
-  { id: 17, name: "Строительные, отделочные материалы" },
-  { id: 18, name: "Металлы / Сырье / Химия" },
-  { id: 19, name: "Сельское хозяйство" },
-  { id: 20, name: "Ювелирные изделия / Искусство" },
-  { id: 21, name: "Электроника / Электротехника" },
-  { id: 22, name: "Юридические, финансовые, бизнес-услуги" },
-  { id: 23, name: "Транспорт / Грузоперевозки" },
-  { id: 24, name: "Торговые комплексы / Спецмагазины" },
-  { id: 25, name: "Реклама / Полиграфия / СМИ" },
-  { id: 26, name: "Текстиль / Предметы интерьера" },
-  { id: 27, name: "Образование / Работа / Карьера" },
-  { id: 28, name: "Аварийные, справочные, экстренные службы" },
-  { id: 29, name: "Охрана / Безопасность" },
-  { id: 30, name: "Строительство / Недвижимость / Ремонт" },
-  { id: 31, name: "Товары для животных / Ветеринария" },
-  { id: 32, name: "Досуг / Развлечения / Общественное питание" },
-  { id: 33, name: "Интернет / Связь / Информационные технологии" },
-];
 
 const tabs = [
   { name: "Все профили", href: "/app/profiles/", current: true },
@@ -178,7 +149,7 @@ export default function Profiles({ data }: Props) {
                       </SheetDescription>
                     </SheetHeader>
                     <div className="grid grid-cols-2 gap-4 py-4 overflow-auto h-[88%]">
-                      {options.map((option) => (
+                      {Options.map((option) => (
                         <div
                           key={option.id}
                           className="flex items-center gap-3 bg-slate-50 rounded-md p-3"

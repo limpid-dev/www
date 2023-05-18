@@ -38,7 +38,7 @@ export default function Create() {
         <div className="container mx-auto mb-4 max-w-screen-xl px-5 pt-8">
           <h1 className="text-sm">
             <span className="text-slate-300">Аукцион / </span>
-            Создание аукциона продаж
+            Создание аукциона закупок
           </h1>
 
           <div className="flex items-baseline justify-between">
@@ -78,7 +78,7 @@ export default function Create() {
                 </div>
                 <TextArea
                   required
-                  placeholder="Описание аукциона"
+                  placeholder="Описание аукциона закупок"
                   minLength={1}
                   maxLength={1024}
                 />
