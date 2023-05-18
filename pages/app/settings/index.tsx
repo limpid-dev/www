@@ -142,7 +142,7 @@ export default function Settings() {
                       type="button"
                       className="font-semibold text-lime-600 hover:text-lime-500"
                     >
-                      Update
+                      Изменить
                     </button>
                   </dd>
                 </div>
@@ -156,7 +156,7 @@ export default function Settings() {
                       type="button"
                       className="font-semibold text-lime-600 hover:text-lime-500"
                     >
-                      Update
+                      Изменить
                     </button>
                   </dd>
                 </div>
