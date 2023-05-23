@@ -159,8 +159,8 @@ export default function OneProfile({ data }: Props) {
     <div>
       <Navigation />
 
-      <div className="min-h-[90vh] bg-slate-50">
-        <div className="mx-auto max-w-screen-xl px-5 pt-8">
+      <div className="min-h-[90vh] bg-slate-50 px-5 pt-8">
+        <div className="mx-auto max-w-screen-xl">
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
             {data.isAuthor ? (
               <div className="flex gap-5">
@@ -307,8 +307,22 @@ export default function OneProfile({ data }: Props) {
                         quality={100}
                         src="/2gis.png"
                       />
-                      <WhatsappLogo />
-                      <InstagramLogo />
+                      <Image
+                        width={15}
+                        height={15}
+                        alt=""
+                        unoptimized
+                        quality={100}
+                        src="/2gis.png"
+                      />
+                     <Image
+                        width={15}
+                        height={15}
+                        alt=""
+                        unoptimized
+                        quality={100}
+                        src="/2gis.png"
+                      />
                     </div>
                   </div>
                 </div>

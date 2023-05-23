@@ -122,20 +122,25 @@ const navigation = [
   { name: "Профили", href: "/app/profiles" },
   { name: "Закупки", href: "/app/auctions" },
   { name: "Продажи", href: "/app/tenders" },
+  { name: "Чаты", href: "/app/chats" },
 ];
 
 const userNavigation = [{ name: "Настройки", href: "/app/settings" }];
-
+interface MyObject {
+  id: number;
+  title?: string;
+}
 export function Navigation() {
   const router = useRouter();
   const [profilesData, setProfilesData] = useState<ProfileEntity[]>([]);
-  const [profession, setProfession] = useState();
+  const [profession, setProfession] = useState<string>();
   const [sessionData, setSessionData] = useState<UserEntity>();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchProfiles() {
       const { data: sessionData } = await api.session.show();
+
       if (sessionData) {
         setSessionData(sessionData);
         const { data: profiles } = await api.profiles.index({
@@ -145,8 +150,18 @@ export function Navigation() {
             userId: sessionData.id || 0,
           },
         });
+
         if (profiles) {
           setProfilesData(profiles);
+          if (!localStorage.getItem("profileId")) {
+            setProfession(profiles[0].title);
+          } else {
+            const myObject: MyObject = findById(
+              profiles,
+              Number.parseInt(localStorage.getItem("profileId") as string, 10)
+            )!;
+            setProfession(myObject.title);
+          }
           setLoading(false);
         }
       }
@@ -165,7 +180,7 @@ export function Navigation() {
     <Disclosure as="header" className="border-b bg-white">
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:divide-y lg:divide-zinc-200 lg:px-8">
+          <div className="mx-auto max-w-screen-xl lg:divide-y lg:divide-zinc-200">
             <div className="relative flex h-16 justify-between">
               <div className="relative z-10 flex px-2 lg:px-0">
                 <div className="flex flex-shrink-0 items-center">
@@ -207,6 +222,15 @@ export function Navigation() {
                       </NavigationMenuContent>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
+                      <Link href="/app/chats" legacyBehavior passHref>
+                        <NavigationMenuLink
+                          className={navigationMenuTriggerStyle()}
+                        >
+                          Чаты
+                        </NavigationMenuLink>
+                      </Link>
+                    </NavigationMenuItem>
+                    <NavigationMenuItem>
                       <NavigationMenuTrigger>Аукционы</NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <ul className="grid w-[400px] gap-3 p-4 md:w-[400px] md:grid-cols-1">
@@ -237,7 +261,7 @@ export function Navigation() {
                 </Disclosure.Button>
               </div>
               <div className="hidden lg:relative lg:z-10 lg:ml-4 lg:flex lg:items-center">
-                {profilesData ? (
+                {profilesData[0]?.title.length > 0 ? (
                   <p className="mr-3 rounded-md bg-slate-100 p-2 text-sm text-slate-700 px-4 text-ellipsis w-24 whitespace-nowrap overflow-hidden">
                     {profession}
                   </p>
@@ -288,6 +312,7 @@ export function Navigation() {
                                   "profileId",
                                   JSON.stringify(item.id)
                                 );
+                                setProfession(item.title);
                               }}
                             >
                               {item.title}

@@ -19,7 +19,9 @@ import { TextArea } from "../../../../components/primitives/text-area";
 interface FormValues {
   title: string;
   description: string;
+  industry: string;
   finishedAt: string;
+  type: string
   startingPrice: number;
   purchasePrice: number;
 }
@@ -29,7 +31,9 @@ export default function Create() {
 
   const { register, handleSubmit, control } = useForm<FormValues>({});
 
-  const onSubmit = async (data: FormValues) => {};
+  const onSubmit = async (data: FormValues) => {
+    console.log(data)
+  };
 
   return (
     <>
@@ -85,7 +89,7 @@ export default function Create() {
                 <div className="grid gap-4 sm:grid-cols-2 mt-4">
                   <Controller
                     control={control}
-                    name="industry"
+                    name="type"
                     render={({ field }) => (
                       <Select
                         value={field.value}

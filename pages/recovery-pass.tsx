@@ -102,7 +102,7 @@ export default function Recovery() {
           <Input required minLength={6} />
           <Message match="valueMissing">Пожалуйста введите код</Message>
         </Field>
-        <Submit>Отправить запрос</Submit>
+        <Submit>Восстановить</Submit>
       </Form>
     </AuthLayout>
   );

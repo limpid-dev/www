@@ -323,18 +323,6 @@ export default function ProjectView({ data }: Props) {
                     </Button>
                   )}
                 </div>
-                {/* <Separator className="mb-6 mt-4" />
-              <div className="flex flex-col gap-4">
-                <p className="w-fit rounded-xl bg-slate-100 p-2 text-sm">
-                  участников в проекте: 1
-                </p>
-                <p className="w-fit rounded-xl bg-slate-100 p-2 text-sm">
-                  желаемых партнеров: 1
-                </p>
-                <p className="w-fit rounded-xl bg-slate-100 p-2 text-sm">
-                  участников в проекте: 1
-                </p>
-              </div> */}
                 <div />
               </div>
             </div>

@@ -77,7 +77,7 @@ export default function Recovery() {
             Адрес не найден или не верифицирован
           </Message>
         </Field>
-        <Submit>Отправить запрос</Submit>
+        <Submit>Восстановить пароль</Submit>
       </Form>
     </AuthLayout>
   );

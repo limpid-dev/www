@@ -19,6 +19,7 @@ export default function All() {
     const selectedPage = event.target.value;
     router.push(selectedPage);
   };
+  
   return (
     <div>
       <Navigation />

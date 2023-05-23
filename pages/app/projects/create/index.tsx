@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import api from "../../../api";
-import { Navigation } from "../../../components/navigation";
-import { Button } from "../../../components/primitives/button";
-import { Input } from "../../../components/primitives/input";
-import { TextArea } from "../../../components/primitives/text-area";
+import api from "../../../../api";
+import { Navigation } from "../../../../components/navigation";
+import { Button } from "../../../../components/primitives/button";
+import { Input } from "../../../../components/primitives/input";
+import { TextArea } from "../../../../components/primitives/text-area";
 
 interface FormValues {
   title: string;
@@ -36,7 +36,7 @@ export default function Create() {
     const { data } = await api.projects.store(fullObject);
     if (data) {
       router.push({
-        pathname: "/app/projects/resources",
+        pathname: "/app/projects/files",
         query: { projectId: data.id },
       });
     }
@@ -57,6 +57,14 @@ export default function Create() {
           </div>
 
           <div className="rounded-lg bg-white shadow-sm">
+            <div className="flex divide-x overflow-auto gap-4 px-5">
+              <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-lime-600 text-lg sm:text-xl">
+                Общие данные
+              </div>
+              <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-lg sm:text-xl">
+                Документация
+              </div>
+            </div>
             <div className="m-auto min-h-[500px] border-none sm:w-7/12">
               <form onSubmit={handleSubmit(onSubmit)} className="pb-4">
                 <div className="pt-5">
