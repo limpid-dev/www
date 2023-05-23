@@ -1136,7 +1136,7 @@ export default function Home() {
       <Hero />
       <PrimaryFeatures />
       <SecondaryFeatures />
-      <div className="bg-zinc-900 py-24 sm:py-32">
+      {/* <div className="bg-zinc-900 py-24 sm:py-32">
         <div className="relative isolate">
           <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div className="mx-auto flex max-w-2xl flex-col gap-16 bg-white/5 px-6 py-16 ring-1 ring-white/10 sm:rounded-3xl sm:p-8 lg:mx-0 lg:max-w-none lg:flex-row lg:items-center lg:py-20 xl:gap-x-20 xl:px-20">
@@ -1147,22 +1147,24 @@ export default function Home() {
               />
               <div className="w-full flex-auto">
                 <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                Спешим поделиться новостью !
+                  Спешим поделиться новостью !
                 </h2>
                 <p className="mt-6 text-lg leading-8 text-gray-300">
-                Платформа LIM стала участником крупнейшего технопарка IT-стартапов в Центральной Азии - Astana HUB,
-что позволит нам расти быстрее и предоставлять более качественные услуги нашим пользователям!
+                  Платформа LIM стала участником крупнейшего технопарка
+                  IT-стартапов в Центральной Азии - Astana HUB, что позволит нам
+                  расти быстрее и предоставлять более качественные услуги нашим
+                  пользователям!
                 </p>
-                {/* <ul className="mt-10 grid grid-cols-1 gap-x-8 gap-y-3 text-base leading-7 text-white sm:grid-cols-2">
+                <ul className="mt-10 grid grid-cols-1 gap-x-8 gap-y-3 text-base leading-7 text-white sm:grid-cols-2">
                   {benefits.map((benefit) => (
                     <li key={benefit} className="flex gap-x-3">
                       {benefit}
                     </li>
                   ))}
-                </ul> */}
+                </ul>
                 <div className="mt-10 flex">
                   <Link
-                   target="_blank"
+                    target="_blank"
                     href="astanahub.kz"
                     className="text-sm font-semibold leading-6 text-lime-400"
                   >
@@ -1173,7 +1175,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       <section
         id="testimonials"
         aria-label="What our customers are saying"
