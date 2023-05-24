@@ -1,10 +1,10 @@
-import { ArrowLeft, ArrowRight, Plus } from "@phosphor-icons/react";
+import { Plus } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import api from "../../../api";
 import { GeneralLayout } from "../../../components/general-layout";
 import { Navigation } from "../../../components/navigation";
@@ -70,10 +70,10 @@ export default function MyProfiles({ data }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 10; // Replace with the total number of pages in your data
 
-  const handlePageChange = (page) => {
+  const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    // Perform data fetching or update the displayed content based on the new page
   };
+
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>): void => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
@@ -163,8 +163,8 @@ export default function MyProfiles({ data }: Props) {
         </div>
         {data.MyProfiles.length > 0 ? (
           <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-            {data.MyProfiles.map((profile, profileIndex) => (
-              <Link key={profileIndex} href={`/app/profiles/${profile.id}`}>
+            {data.MyProfiles.map((profile) => (
+              <Link key={profile.id} href={`/app/profiles/${profile.id}`}>
                 <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-8 font-semibold hover:border-slate-700 sm:max-w-[400px]">
                   <Image
                     className="h-14 w-14"

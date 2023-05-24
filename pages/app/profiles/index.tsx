@@ -231,7 +231,7 @@ export default function Profiles({ data }: Props) {
             <Link key={profile.id} href={`/app/profiles/${profile.id}`}>
               <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
                 <div className="grid grid-cols-10 h-[130px]">
-                  <div className="col-span-4">
+                  <div className="col-span-4 mr-3">
                     <Image
                       src={
                         profile.user.fileId
