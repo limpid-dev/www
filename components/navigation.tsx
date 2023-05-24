@@ -271,11 +271,12 @@ export function Navigation() {
                   <div>
                     <Menu.Button className="flex rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2">
                       <span className="sr-only">Open user menu</span>
+
                       <Image
                         className="h-8 w-8 rounded-full object-cover"
-                        width={0}
+                        width={10}
                         unoptimized
-                        height={0}
+                        height={10}
                         src={sessionData?.file ? sessionData.file.url : testAva}
                         alt=""
                       />
