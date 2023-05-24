@@ -187,7 +187,7 @@ export default function OneProfile({ data }: Props) {
                         alt="Profile image"
                         className="mb-3 h-[106px] w-auto rounded-md object-cover"
                       />
-                      <p className="text-2xl font-semibold">
+                      <p className="text-2xl font-semibold mb-2">
                         {data.user.firstName} {data.user.lastName}
                       </p>
                       <p className=" text-sm">
@@ -200,7 +200,7 @@ export default function OneProfile({ data }: Props) {
                     <div className="mb-6 mt-3" />
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-sm text-slate-400">Локация</p>
+                        <p className="text-sm text-slate-400 mb-2">Локация</p>
                         <p className="text-sm ">
                           <Input
                             {...register2("location")}
@@ -209,7 +209,7 @@ export default function OneProfile({ data }: Props) {
                         </p>
                       </div>
                       <div>
-                        <p className="text-sm text-slate-400">Профессия</p>
+                        <p className="text-sm text-slate-400 mb-2">Профессия</p>
                         <p className="text-sm">
                           <Input
                             {...register2("title")}
@@ -224,14 +224,18 @@ export default function OneProfile({ data }: Props) {
                       <p className="pt-3 text-sm">
                         <TextArea
                           {...register2("description")}
-                          className="h-full"
+                          className=" h-"
                           placeholder={data.profile.description}
                         />
                       </p>
                     </div>
                     <div className="mt-5 flex justify-end gap-3 pt-4">
-                      <Button onClick={editGeneralInfo}>Отмена</Button>
-                      <Button type="submit">Сохранить</Button>
+                      <Button variant="outline" onClick={editGeneralInfo}>
+                        Отмена
+                      </Button>
+                      <Button variant="black" type="submit">
+                        Сохранить
+                      </Button>
                     </div>
                     <div className="mb-5 mt-3" />
                     <div>
@@ -300,28 +304,36 @@ export default function OneProfile({ data }: Props) {
                     </p>
                     <div className="flex gap-6 pb-5">
                       <Image
-                        width={15}
-                        height={15}
+                        width={24}
+                        height={24}
                         alt=""
                         unoptimized
                         quality={100}
                         src="/2gis.png"
                       />
                       <Image
-                        width={15}
-                        height={15}
+                        width={24}
+                        height={24}
                         alt=""
                         unoptimized
                         quality={100}
-                        src="/2gis.png"
+                        src="/instagram.png"
                       />
-                     <Image
-                        width={15}
-                        height={15}
+                      <Image
+                        width={24}
+                        height={24}
                         alt=""
                         unoptimized
                         quality={100}
-                        src="/2gis.png"
+                        src="/whatsapp.png"
+                      />
+                      <Image
+                        width={24}
+                        height={24}
+                        alt=""
+                        unoptimized
+                        quality={100}
+                        src="/website.png"
                       />
                     </div>
                   </div>

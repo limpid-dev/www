@@ -1,25 +1,27 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import api from "./api";
 
 export async function middleware(request: NextRequest) {
+  const url = request.nextUrl.clone();
   const Cookie = request.headers.get("Cookie");
 
   if (Cookie) {
-    const { data } = await api.session.show({
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/session`, {
+      method: "GET",
       headers: {
         Cookie,
+        Accept: "application/json",
       },
     });
 
-    if (data) {
+    const json = await response.json();
+
+    if (typeof json.data === "object" && json.data !== null) {
       return NextResponse.next();
     }
   }
-  const url = request.nextUrl.clone();
 
   url.pathname = "/login";
-
   return NextResponse.redirect(url);
 }
 
