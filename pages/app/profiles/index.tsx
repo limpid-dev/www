@@ -268,6 +268,6 @@ export default function Profiles({ data }: Props) {
           ))}
         </div>
       </GeneralLayout>
-    </div>
+    </div> 
   );
 }

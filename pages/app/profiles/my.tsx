@@ -184,12 +184,6 @@ export default function MyProfiles({ data }: Props) {
             <p className=" text-2xl font-semibold">У вас нет профиля</p>
           </div>
         )}
-
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />
       </GeneralLayout>
     </div>
   );

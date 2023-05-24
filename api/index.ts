@@ -777,6 +777,6 @@ class Api {
   }
 }
 
-const api = new Api("https://api.limpid.kz");
+const api = new Api(process.env.NEXT_PUBLIC_API_URL);
 
 export default api;

@@ -135,7 +135,6 @@ export function Navigation() {
   const [profilesData, setProfilesData] = useState<ProfileEntity[]>([]);
   const [profession, setProfession] = useState<string>();
   const [sessionData, setSessionData] = useState<UserEntity>();
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchProfiles() {
@@ -162,7 +161,6 @@ export function Navigation() {
             )!;
             setProfession(myObject.title);
           }
-          setLoading(false);
         }
       }
     }
@@ -273,20 +271,14 @@ export function Navigation() {
                   <div>
                     <Menu.Button className="flex rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2">
                       <span className="sr-only">Open user menu</span>
-                      {loading ? (
-                        <Skeleton className="h-8 w-8 rounded-full" />
-                      ) : (
-                        <Image
-                          className="h-8 w-8 rounded-full object-cover"
-                          width={0}
-                          unoptimized
-                          height={0}
-                          src={
-                            sessionData?.file ? sessionData.file.url : testAva
-                          }
-                          alt=""
-                        />
-                      )}
+                      <Image
+                        className="h-8 w-8 rounded-full object-cover"
+                        width={0}
+                        unoptimized
+                        height={0}
+                        src={sessionData?.file ? sessionData.file.url : testAva}
+                        alt=""
+                      />
                     </Menu.Button>
                   </div>
                   <Transition

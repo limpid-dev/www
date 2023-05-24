@@ -31,13 +31,13 @@ export default function Test() {
   const { register, handleSubmit, control } = useForm<FormValues>({});
 
   const onSubmit = async (data: FormValues) => {
-    // const { data: organization } = await api.organizations.store(data);
-    // if (organization) {
-    //   router.push({
-    //     pathname: "/app/organizations/create/experiences",
-    //     query: { organizationId: organization.id },
-    //   });
-    // }
+    const { data: profile } = await api.profiles.store(data);
+    if (profile) {
+      router.push({
+        pathname: "/app/profiles/create/experiences",
+        query: { profileId: profile.id },
+      });
+    }
   };
 
   return (
