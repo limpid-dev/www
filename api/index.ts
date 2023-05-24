@@ -428,9 +428,16 @@ class Api {
               ProjectMembership.Store["Data"],
               ProjectMembership.Store["Payload"]
             >(`${this.baseUrl}/projects/${projectID}/memberships`, payload),
-          update: (membershipId: number) =>
-            this.patch<ProjectMembership.Update["Data"]>(
-              `${this.baseUrl}/projects/${projectID}/memberships/${membershipId}`
+          update: (
+            membershipId: number,
+            payload: ProjectMembership.Update["Payload"]
+          ) =>
+            this.patch<
+              ProjectMembership.Update["Data"],
+              ProjectMembership.Update["Payload"]
+            >(
+              `${this.baseUrl}/projects/${projectID}/memberships/${membershipId}`,
+              payload
             ),
           destroy: (profileId: number, id: number) =>
             this.delete(
