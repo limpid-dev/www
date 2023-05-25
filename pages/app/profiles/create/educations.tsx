@@ -1,20 +1,10 @@
 import { Plus } from "@phosphor-icons/react";
 import { useRouter } from "next/router";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import api from "../../../../api";
 import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";
 import { Input } from "../../../../components/primitives/input";
-import { Options } from "../../../../components/primitives/options";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "../../../../components/primitives/select";
 import { TextArea } from "../../../../components/primitives/text-area";
 
 interface FormValues {
@@ -42,17 +32,18 @@ export default function Test() {
   });
 
   const onSubmit = async (data: FormValues) => {
-    // data.educations.forEach(async (post) => {
-    //   const { data: organization } = await api.organizations
-    //     .educations(Number.parseInt(router.query.organizationId as string, 10))
-    //     .store(post);
-    // });
-    // if (organization) {
-    //   router.push({
-    //     pathname: "/app/organizations/create/",
-    //     query: { organizationId: organization.id },
-    //   });
-    // }
+    data.educations.forEach(async (post) => {
+      const { data: education } = await api.educations.store(
+        post,
+        Number.parseInt(router.query.profileId as string, 10)
+      );
+      if (education) {
+        router.push({
+          pathname: "/app/profiles/create/",
+          query: { profileId: router.query.profileId},
+        });
+      }
+    });
   };
 
   const { fields, append, remove } = useFieldArray({
@@ -89,45 +80,51 @@ export default function Test() {
                   Соцсети
                 </div>
               </div>
-              <form onSubmit={handleSubmit(onSubmit)} className="p-12 mx-auto">
+              <form onSubmit={handleSubmit(onSubmit)} className="p-10 mx-auto">
                 <div className="m-auto border-none sm:w-4/6">
                   <div className="m-auto flex flex-col gap-5">
                     {fields.map((field, index) => {
                       return (
                         <div key={field.id} className="grid gap-5">
                           <div className="flex flex-col sm:flex-row justify-between gap-5">
-                            <Input
-                              className="w-full rounded-md border p-2"
-                              placeholder="Название"
-                              {...register(`educations.${index}.title`, {
-                                required: "Please enter your first name.",
-                              })}
-                            />
-                            {errors.educations?.[index]?.title && (
-                              <p className="ml-2 text-sm text-red-500">
-                                Обязательное поле
-                              </p>
-                            )}
+                            <div className="w-full">
+                              <Input
+                                placeholder="Название"
+                                {...register(`educations.${index}.title`, {
+                                  required: true,
+                                })}
+                              />
+                              {errors.educations?.[index]?.title && (
+                                <p className="ml-2 text-sm text-red-500">
+                                  Обязательное поле
+                                </p>
+                              )}
+                            </div>
 
-                            <Input
-                              className="w-full rounded-md border p-2"
-                              placeholder="Учебное заведение"
-                              {...register(`educations.${index}.institution`, {
-                                required: "Please enter your first name.",
-                              })}
-                            />
-                            {errors.educations?.[index]?.institution && (
-                              <p className="ml-2 text-sm text-red-500">
-                                Обязательное поле
-                              </p>
-                            )}
+                            <div className="w-full">
+                              <Input
+                                className="w-full rounded-md border p-2"
+                                placeholder="Учебное заведение"
+                                {...register(
+                                  `educations.${index}.institution`,
+                                  {
+                                    required: true,
+                                  }
+                                )}
+                              />
+                              {errors.educations?.[index]?.institution && (
+                                <p className="ml-2 text-sm text-red-500">
+                                  Обязательное поле
+                                </p>
+                              )}
+                            </div>
                           </div>
                           <div>
                             <TextArea
                               className="rounded-md"
                               placeholder="Описание деятельности"
                               {...register(`educations.${index}.description`, {
-                                required: "Please enter your first name.",
+                                required: true,
                               })}
                             />
                             {errors.educations?.[index]?.description && (
@@ -136,7 +133,7 @@ export default function Test() {
                               </p>
                             )}
                           </div>
-                          <div className="flex flex-col gap-5 md:flex-row">
+                          <div className="flex flex-col gap-5 md:flex-row justify-around">
                             <div className="flex items-center justify-between gap-3">
                               <p>Начало</p>
                               <div>
@@ -148,7 +145,7 @@ export default function Test() {
                                   {...register(
                                     `educations.${index}.startedAt`,
                                     {
-                                      required: "Please enter your first name.",
+                                      required: true,
                                       setValueAs: (value: string | undefined) =>
                                         value
                                           ? new Date(value).toISOString()
@@ -174,7 +171,7 @@ export default function Test() {
                                   {...register(
                                     `educations.${index}.finishedAt`,
                                     {
-                                      required: "Please enter your first name.",
+                                      required: true,
                                       setValueAs: (value: string | undefined) =>
                                         value
                                           ? new Date(value).toISOString()

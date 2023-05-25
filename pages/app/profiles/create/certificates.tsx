@@ -55,27 +55,31 @@ export default function Test() {
 
     const { data } = await api.certificateFile.store(
       formData,
-      Number.parseInt(router.query.organizationId as string, 10),
+      Number.parseInt(router.query.profileId as string, 10),
       fileId
     );
   };
 
   const onSubmit = async (data: CertificationValues) => {
-    // try {
-    //   data.certification.forEach(async (post) => {
-    //     const { data } = await api.certifications.store(
-    //       post,
-    //       Number.parseInt(router.query.organizationId as string, 10)
-    //     );
-    //     if (data) {
-    //       onSubmitFile(data.profileId);
-    //     } else {
-    //       throw new Error("Network response was not ok.");
-    //     }
-    //   });
-    // } catch (error) {
-    //   setError("Что то пошло не так, попробуйте позже");
-    // }
+    try {
+      data.certification.forEach(async (post) => {
+        const { data } = await api.certifications.store(
+          post,
+          Number.parseInt(router.query.profileId as string, 10)
+        );
+        if (data) {
+          onSubmitFile(data.id);
+        } else {
+          throw new Error("Что то пошло не так, попробуйте позже");
+        }
+      });
+      router.push({
+        pathname: "/app/profiles/create/contacts",
+        query: { profileId: router.query.profileId },
+      });
+    } catch (error) {
+      setError("Что то пошло не так, попробуйте позже");
+    }
   };
 
   return (
@@ -127,7 +131,7 @@ export default function Test() {
                           </div>
 
                           <Input id="fileInput" type="file" />
-                          <div className="flex flex-col  gap-5 md:flex-row">
+                          <div className="flex flex-col  gap-5 md:flex-row justify-around">
                             <div className="flex items-center justify-between gap-3">
                               <p>Начало</p>
                               <div>
@@ -139,7 +143,7 @@ export default function Test() {
                                   {...register(
                                     `certification.${index}.issuedAt`,
                                     {
-                                      required: "Please enter your first name.",
+                                      required: true,
                                       setValueAs: (value: string | undefined) =>
                                         value
                                           ? new Date(value).toISOString()
@@ -165,7 +169,7 @@ export default function Test() {
                                   {...register(
                                     `certification.${index}.expiredAt`,
                                     {
-                                      required: "Please enter your first name.",
+                                      required: true,
                                       setValueAs: (value: string | undefined) =>
                                         value
                                           ? new Date(value).toISOString()

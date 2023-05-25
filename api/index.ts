@@ -7,6 +7,7 @@ import * as OrganizationFile from "./organization-file";
 import * as Organizations from "./organizations";
 import * as ProfileSertificationFile from "./profile-certificate-files";
 import * as ProfileSertifications from "./profile-certificates";
+import * as ProFileContacts from "./profile-contacts";
 import * as ProfilesEducations from "./profile-educations";
 import * as ProfilesExperiences from "./profile-experiences";
 import * as ProfilesSkills from "./profile-skills";
@@ -355,6 +356,50 @@ class Api {
         >(`${this.baseUrl}/profiles/${profileId}/skills`, payload),
       destroy: (profileId: number, id: number) =>
         this.delete(`${this.baseUrl}/profiles/${profileId}/skills/${id}`),
+    };
+  }
+
+  get contacts() {
+    return {
+      index: (
+        profileId: number,
+        qp: Pick<QueryParams<ProFileContacts.Entity>, "page" | "perPage">,
+        init?: Helpers.FetchRequestInit
+      ) => {
+        const url = Helpers.buildQueryParamsUrl(
+          `${this.baseUrl}/profiles/${profileId}/contacts`,
+          qp
+        );
+
+        return this.get<ProFileContacts.Index["Data"]>(url.toString(), init);
+      },
+      store: (
+        profileId: number,
+        payload: ProFileContacts.Store["Payload"],
+        init?: Helpers.FetchRequestInit
+      ) =>
+        this.post<
+          ProFileContacts.Store["Data"],
+          ProFileContacts.Store["Payload"]
+        >(`${this.baseUrl}/profiles/${profileId}/contacts`, payload, init),
+      update: (
+        profileId: number,
+        payload: OrganizationContacts.Update["Payload"],
+        init?: Helpers.FetchRequestInit
+      ) =>
+        this.patch<
+          ProFileContacts.Update["Data"],
+          ProFileContacts.Update["Payload"]
+        >(`${this.baseUrl}/profiles/${profileId}/contacts`, payload, init),
+      destroy: (
+        profileId: number,
+        id: number,
+        init?: Helpers.FetchRequestInit
+      ) =>
+        this.delete(
+          `${this.baseUrl}/profiles/${profileId}/contacts/${id}`,
+          init
+        ),
     };
   }
 
@@ -777,6 +822,7 @@ class Api {
   }
 }
 
-const api = new Api("https://api.limpid.kz");
+const api = new Api(process.env.NEXT_PUBLIC_API_URL);
+// const api = new Api("https://api.limpid.kz");
 
 export default api;

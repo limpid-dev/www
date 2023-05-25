@@ -70,12 +70,12 @@ export default function Education({ data }: Props) {
     { name: "Ресурсы", href: `/app/profiles/${id}`, current: false },
     {
       name: "Образование",
-      href: `/app/profiles/${id}/education`,
+      href: `/app/profiles/${id}/educations`,
       current: true,
     },
     {
       name: "Сертификаты",
-      href: `/app/profiles/${id}/certification`,
+      href: `/app/profiles/${id}/certifications`,
       current: false,
     },
     {

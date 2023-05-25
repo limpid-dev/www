@@ -58,6 +58,7 @@ export function CertificationCreate({ certificateAdd, profileId }: any) {
     uppy.on("file-added", () => setFileCount(uppy.getFiles().length));
     uppy.on("file-removed", () => setFileCount(uppy.getFiles().length));
   }, []);
+
   const {
     register,
     handleSubmit,

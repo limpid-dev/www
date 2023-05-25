@@ -73,12 +73,12 @@ export default function OneProfile({ data }: Props) {
     { name: "Ресурсы", href: `/app/profiles/${id}/`, current: true },
     {
       name: "Образование",
-      href: `/app/profiles/${id}/education`,
+      href: `/app/profiles/${id}/educations`,
       current: false,
     },
     {
       name: "Сертификаты",
-      href: `/app/profiles/${id}/certification`,
+      href: `/app/profiles/${id}/certifications`,
       current: false,
     },
     {
@@ -88,7 +88,7 @@ export default function OneProfile({ data }: Props) {
     },
     {
       name: "Опыт работы",
-      href: `/app/profiles/${id}/experience`,
+      href: `/app/profiles/${id}/experiences`,
       current: false,
     },
   ];
@@ -229,23 +229,122 @@ export default function OneProfile({ data }: Props) {
                         />
                       </p>
                     </div>
-                    <div className="mt-5 flex justify-end gap-3 pt-4">
-                      <Button variant="outline" onClick={editGeneralInfo}>
-                        Отмена
-                      </Button>
-                      <Button variant="black" type="submit">
-                        Сохранить
-                      </Button>
-                    </div>
+
                     <div className="mb-5 mt-3" />
                     <div>
-                      <p className=" mb-4 text-lg font-semibold">
-                        Социальные сети
-                      </p>
-                      <div className="flex gap-6 pb-5">
-                        <LinkedinLogo />
-                        <WhatsappLogo />
-                        <InstagramLogo />
+                      <p className="text-lg font-semibold">Социальные сети</p>
+                      <div className="flex flex-col gap-2 pb-5">
+                        <div className="relative mt-4 flex items-center">
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/2gis.png"
+                            className="absolute left-5"
+                          />
+                          <Input
+                            type="url"
+                            name="2gis"
+                            onChange={(e) => {
+                              setData((prev: any) => ({
+                                ...prev,
+                                contacts: {
+                                  ...prev.contacts,
+                                  "2gis": e.target.value,
+                                },
+                              }));
+                            }}
+                            className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
+                            placeholder="Ссылка на 2ГИС"
+                            minLength={1}
+                            maxLength={255}
+                          />
+                        </div>
+                        <div className="relative mt-4 flex items-center">
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/instagram.png"
+                            className="absolute left-5"
+                          />
+                          <Input
+                            type="url"
+                            name="instagram"
+                            onChange={(e) => {
+                              setData((prev: any) => ({
+                                ...prev,
+                                contacts: {
+                                  ...prev.contacts,
+                                  instagram: e.target.value,
+                                },
+                              }));
+                            }}
+                            className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
+                            placeholder="Ссылка на Instagram"
+                            minLength={1}
+                            maxLength={255}
+                          />
+                        </div>
+                        <div className="relative mt-4 flex items-center">
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/whatsapp.png"
+                            className="absolute left-5"
+                          />
+                          <Input
+                            type="url"
+                            name="whatsapp"
+                            onChange={(e) => {
+                              setData((prev: any) => ({
+                                ...prev,
+                                contacts: {
+                                  ...prev.contacts,
+                                  whatsapp: e.target.value,
+                                },
+                              }));
+                            }}
+                            className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
+                            placeholder="Ссылка на WhatsApp"
+                            minLength={1}
+                            maxLength={255}
+                          />
+                        </div>
+                        <div className="relative mt-4 flex  items-center">
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/website.png"
+                            className="absolute left-5"
+                          />
+                          <Input
+                            type="url"
+                            name="website"
+                            className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
+                            placeholder="Ссылка на сайт"
+                            minLength={1}
+                            maxLength={255}
+                          />
+                        </div>
+                      </div>
+                      <div className="flex justify-end gap-3 pb-3">
+                        <Button variant="outline" onClick={editGeneralInfo}>
+                          Отмена
+                        </Button>
+                        <Button variant="black" type="submit">
+                          Сохранить
+                        </Button>
                       </div>
                     </div>
                   </div>
@@ -419,8 +518,12 @@ export default function OneProfile({ data }: Props) {
                       </div>
                     </div>
                     <div className="mt-5 flex justify-end gap-3 pt-4">
-                      <Button onClick={editResources}>Отмена</Button>
-                      <Button type="submit">Сохранить</Button>
+                      <Button variant="outline" onClick={editResources}>
+                        Отмена
+                      </Button>
+                      <Button variant="black" type="submit">
+                        Сохранить
+                      </Button>
                     </div>
                   </form>
                 ) : (

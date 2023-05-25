@@ -44,22 +44,22 @@ export default function One() {
     { name: "Ресурсы", href: `/app/profiles/${id}`, current: false },
     {
       name: "Образование",
-      href: `/app/profiles/${id}/education`,
+      href: `/app/profiles/${id}/educations`,
       current: false,
     },
     {
       name: "Сертификаты",
-      href: `/app/profiles/${id}/certification`,
+      href: `/app/profiles/${id}/certifications`,
       current: false,
     },
     {
       name: "Проекты",
-      href: `/app/profiles/${id}/projects`,
+      href: `/app/profiles/${id}/projectss`,
       current: true,
     },
     {
       name: "Опыт работы",
-      href: `/app/profiles/${id}/experience`,
+      href: `/app/profiles/${id}/experiences`,
       current: false,
     },
   ];

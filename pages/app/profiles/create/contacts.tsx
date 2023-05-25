@@ -3,20 +3,10 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import api from "../../../../api";
+import { buildFormData } from "../../../../api/files";
 import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";
 import { Input } from "../../../../components/primitives/input";
-import { Options } from "../../../../components/primitives/options";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "../../../../components/primitives/select";
-import { TextArea } from "../../../../components/primitives/text-area";
 
 interface FormValues {
   name: string;
@@ -35,47 +25,56 @@ export default function Test() {
   const [data, setData] = useState<any>({});
 
   const onSubmit = async () => {
-    // const { data: organization } = await api.organizations.store(data.general);
-    // if (organization) {
-    //   if (data.contacts) {
-    //     await Promise.all([
-    //       data.contacts.instagram &&
-    //         api.organizations.contacts(organization.id).store({
-    //           name: "Instagram",
-    //           value: data.contacts.instagram,
-    //           type: "URL",
-    //         }),
-    //       data.contacts.whatsapp &&
-    //         api.organizations.contacts(organization.id).store({
-    //           name: "WhatsApp",
-    //           value: data.contacts.whatsapp,
-    //           type: "URL",
-    //         }),
-    //       data.contacts["2gis"] &&
-    //         api.organizations.contacts(organization.id).store({
-    //           name: "2GIS",
-    //           value: data.contacts["2gis"],
-    //           type: "URL",
-    //         }),
-    //       data.contacts.website &&
-    //         api.organizations.contacts(organization.id).store({
-    //           name: "Вебсайт",
-    //           value: data.contacts.website,
-    //           type: "URL",
-    //         }),
-    //     ]);
-    //   }
-    //   if (data.files) {
-    //     await Promise.all(
-    //       [...data.files].map(async (file: File) => {
-    //         await api.organizations
-    //           .files(organization.id)
-    //           .store(buildFormData(file));
-    //       })
-    //     );
-    //   }
-    //   await router.push(`/app/organizations/${organization.id}`);
-    // }
+    if (data.contacts) {
+      await Promise.all([
+        data.contacts.instagram &&
+          api.contacts.store(
+            Number.parseInt(router.query.profileId as string, 10),
+            {
+              name: "Instagram",
+              value: data.contacts.instagram,
+              type: "URL",
+            }
+          ),
+        data.contacts.whatsapp &&
+          api.contacts.store(
+            Number.parseInt(router.query.profileId as string, 10),
+            {
+              name: "WhatsApp",
+              value: data.contacts.whatsapp,
+              type: "URL",
+            }
+          ),
+        data.contacts["2gis"] &&
+          api.contacts.store(
+            Number.parseInt(router.query.profileId as string, 10),
+            {
+              name: "2GIS",
+              value: data.contacts["2gis"],
+              type: "URL",
+            }
+          ),
+        data.contacts.website &&
+          api.contacts.store(
+            Number.parseInt(router.query.profileId as string, 10),
+            {
+              name: "Вебсайт",
+              value: data.contacts.website,
+              type: "URL",
+            }
+          ),
+      ]);
+    }
+    if (data.files) {
+      await Promise.all(
+        [...data.files].map(async (file: File) => {
+          await api.organizations
+            .files(Number.parseInt(router.query.profileId as string, 10))
+            .store(buildFormData(file));
+        })
+      );
+    }
+    // await router.push(`/app/profiles/${router.query.profileId}`);
   };
 
   return (

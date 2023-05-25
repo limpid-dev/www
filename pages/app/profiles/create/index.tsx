@@ -28,7 +28,12 @@ interface FormValues {
 
 export default function Test() {
   const router = useRouter();
-  const { register, handleSubmit, control } = useForm<FormValues>({});
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<FormValues>();
 
   const onSubmit = async (data: FormValues) => {
     const { data: profile } = await api.profiles.store(data);
@@ -80,51 +85,92 @@ export default function Test() {
                     </div>
                     <Input
                       type="text"
-                      {...register("title")}
-                      className="py-4 px-5 text-black rounded-md border border-slate-300 mt-6 w-1/2"
-                      placeholder="Cпециализация"
-                      minLength={1}
-                      maxLength={255}
+                      id="title"
+                      {...register("title", {
+                        required: true,
+                        minLength: 2,
+                        maxLength: 30,
+                      })}
+                      className="text-black rounded-md border border-slate-300 mt-6 w-1/2"
+                      placeholder="Вэб разработчик ..."
                     />
+                    {errors.title && (
+                      <span className="text-sm text-red-600">
+                        Введите вашу професию правильно
+                      </span>
+                    )}
                   </div>
 
                   <div className="font-semibold text-black text-lg sm:text-2xl">
                     Основная информация
                   </div>
                   <div className="flex flex-col sm:flex-row gap-5 sm:gap-8">
-                    <Input
-                      type="text"
-                      //   {...register("bin")}
-                      className="py-4 px-5 text-black rounded-md border border-slate-300 flex-1"
-                      {...register("location")}
-                      placeholder="Населенный пункт"
-                      required
-                    />
+                    <div className="grid">
+                      <Input
+                        type="text"
+                        className="text-black rounded-md border border-slate-300"
+                        {...register("location", {
+                          required: true,
+                        })}
+                        placeholder="Населенный пункт"
+                      />
+                      {errors.location && (
+                        <span className="text-sm text-red-600">
+                          Введите обязательное поле
+                        </span>
+                      )}
+                    </div>
 
                     <Controller
                       control={control}
                       name="industry"
+                      rules={{ required: true }}
                       render={({ field }) => (
-                        <Select
-                          value={field.value}
-                          onValueChange={field.onChange}
-                        >
-                          <SelectTrigger className="px-5 text-black rounded-md flex-1 max-w-full text-ellipsis whitespace-nowrap overflow-hidden w-full">
-                            <SelectValue placeholder="Выберите отрасль" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectGroup className="overflow-auto h-[300px]">
-                              <SelectLabel>Отрасль</SelectLabel>
-                              {Options.map((option) => (
-                                <SelectItem key={option.id} value={option.name}>
-                                  {option.name}
-                                </SelectItem>
-                              ))}
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
+                        <div className="flex flex-col w-2/3">
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger className="px-5 text-ellipsis whitespace-nowrap overflow-hidden">
+                              <SelectValue placeholder="Выберите отрасль" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup className="overflow-auto h-[300px]">
+                                <SelectLabel>Отрасль</SelectLabel>
+                                {Options.map((option) => (
+                                  <SelectItem
+                                    key={option.id}
+                                    value={option.name}
+                                  >
+                                    {option.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                          <p>
+                            {errors.industry && (
+                              <span className="text-sm text-red-600">
+                                Введите обязательное поле
+                              </span>
+                            )}
+                          </p>
+                        </div>
                       )}
                     />
+                  </div>
+                  <div>
+                    <TextArea
+                      {...register("description", {
+                        required: true,
+                      })}
+                      placeholder="Кратко опишите себя..."
+                    />
+                    {errors.description && (
+                      <span className="text-sm text-red-600">
+                        Введите обязательное поле
+                      </span>
+                    )}
                   </div>
 
                   <div>
@@ -133,13 +179,26 @@ export default function Test() {
                     </div>
                     <TextArea
                       className="mt-6"
-                      {...register("ownedMaterialResources")}
+                      {...register("ownedMaterialResources", {
+                        required: true,
+                        minLength: 1,
+                        maxLength: 1024,
+                      })}
                       rows={4}
-                      required
-                      minLength={1}
-                      maxLength={1024}
                       placeholder="Чем вы можете быть полезны ? (помещение, финансы другие материальные ресурсы)"
                     />
+                    {errors.ownedMaterialResources &&
+                      errors.ownedMaterialResources.type === "required" && (
+                        <span className="text-sm text-red-600">
+                          Обязательное поле
+                        </span>
+                      )}
+                    {errors.ownedMaterialResources &&
+                      errors.ownedMaterialResources.type === "maxLength" && (
+                        <span className="text-sm text-red-600">
+                          Текст не должен привышать 1024 символа
+                        </span>
+                      )}
                   </div>
                   <div>
                     <div className="font-semibold text-black text-lg sm:text-2xl">
@@ -148,12 +207,26 @@ export default function Test() {
                     <TextArea
                       className=" mt-6 "
                       rows={4}
-                      {...register("ownedIntellectualResources")}
-                      required
-                      minLength={1}
-                      maxLength={1024}
+                      {...register("ownedIntellectualResources", {
+                        required: true,
+                        minLength: 1,
+                        maxLength: 1024,
+                      })}
                       placeholder="Какимими навыками вы обладаете ? (Excel, логика, критическое мышление) "
                     />
+                    {errors.ownedIntellectualResources &&
+                      errors.ownedIntellectualResources.type === "required" && (
+                        <span className="text-sm text-red-600">
+                          Обязательное поле
+                        </span>
+                      )}
+                    {errors.ownedIntellectualResources &&
+                      errors.ownedIntellectualResources.type ===
+                        "maxLength" && (
+                        <span className="text-sm text-red-600">
+                          Текст не должен привышать 1024 символа
+                        </span>
+                      )}
                   </div>
                   <div className="mt-8 flex gap-5">
                     <Button
