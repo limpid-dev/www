@@ -2,11 +2,6 @@ import { GetStaticProps } from "next";
 import api from "../../../../api";
 import PaginatedMyProfiles from "./[page]";
 
-const tabs = [
-  { name: "Все профили", href: "/app/profiles/", current: false },
-  { name: "Мои профили", href: "/app/profiles/my", current: true },
-];
-
 export const getStaticProps: GetStaticProps = async () => {
   const profiles = await api.profiles.index({
     page: 1,
