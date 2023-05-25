@@ -14,6 +14,17 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import api from "../../../../api";
 import { Navigation } from "../../../../components/navigation";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../../../../components/primitives/alert-dialog";
 import { Button } from "../../../../components/primitives/button";
 import { Input } from "../../../../components/primitives/input";
 import { TextArea } from "../../../../components/primitives/text-area";
@@ -69,6 +80,7 @@ export default function OneProfile({ data }: Props) {
   const { id } = router.query as {
     id: string;
   };
+
   const tabs = [
     { name: "Ресурсы", href: `/app/profiles/${id}/`, current: true },
     {
@@ -95,6 +107,7 @@ export default function OneProfile({ data }: Props) {
   const parsedId = Number.parseInt(id as string, 10) as number;
 
   const [edit, setEdit] = useState(false);
+  const [contacts, setContacts] = useState({});
   const [error, setError] = useState("");
   const [editGeneral, setEditGeneral] = useState(false);
 
@@ -164,9 +177,27 @@ export default function OneProfile({ data }: Props) {
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
             {data.isAuthor ? (
               <div className="flex gap-5">
-                <Button variant="outline" onClick={() => handleDeleteProfile()}>
-                  <Trash className="h-6 w-6" />
-                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="outline">
+                      <Trash className="h-6 w-6" />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Удалить профиль?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Восстановить профиль будет невозможно
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Отмена</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => handleDeleteProfile()}>
+                        Удалить
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             ) : (
               <></>
@@ -248,12 +279,9 @@ export default function OneProfile({ data }: Props) {
                             type="url"
                             name="2gis"
                             onChange={(e) => {
-                              setData((prev: any) => ({
-                                ...prev,
-                                contacts: {
-                                  ...prev.contacts,
-                                  "2gis": e.target.value,
-                                },
+                              setContacts((prev: any) => ({
+                                ...prev.contacts,
+                                "2gis": e.target.value,
                               }));
                             }}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
@@ -276,12 +304,9 @@ export default function OneProfile({ data }: Props) {
                             type="url"
                             name="instagram"
                             onChange={(e) => {
-                              setData((prev: any) => ({
-                                ...prev,
-                                contacts: {
-                                  ...prev.contacts,
-                                  instagram: e.target.value,
-                                },
+                              setContacts((prev: any) => ({
+                                ...prev.contacts,
+                                instagram: e.target.value,
                               }));
                             }}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
@@ -304,12 +329,9 @@ export default function OneProfile({ data }: Props) {
                             type="url"
                             name="whatsapp"
                             onChange={(e) => {
-                              setData((prev: any) => ({
-                                ...prev,
-                                contacts: {
-                                  ...prev.contacts,
-                                  whatsapp: e.target.value,
-                                },
+                              setContacts((prev: any) => ({
+                                ...prev.contacts,
+                                whatsapp: e.target.value,
                               }));
                             }}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"

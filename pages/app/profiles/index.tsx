@@ -9,6 +9,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import api from "../../../api";
 import { GeneralLayout } from "../../../components/general-layout";
 import { Navigation } from "../../../components/navigation";
+import Pagination from "../../../components/pagination";
 import { Button } from "../../../components/primitives/button";
 import { Options } from "../../../components/primitives/options";
 import {
@@ -268,6 +269,6 @@ export default function Profiles({ data }: Props) {
           ))}
         </div>
       </GeneralLayout>
-    </div> 
+    </div>
   );
 }

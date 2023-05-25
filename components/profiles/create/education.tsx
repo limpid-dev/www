@@ -64,11 +64,13 @@ export function EducationCreate({ profileId, isAddHandler }: any) {
 
   useEffect(() => {
     if (Number.isNaN(parsedId)) return;
+
     async function fetchEducation() {
-      await api.educations.show(profileId, parsedId).then(({ data }) => {
-        setValue(`education.0.title`, data?.title);
-        setValue(`education.0.institution`, data?.institution);
-        setValue(`education.0.description`, data?.description);
+      const { data } = await api.educations.show(profileId, parsedId);
+      if (data) {
+        setValue(`education.0.title`, data.title);
+        setValue(`education.0.institution`, data.institution);
+        setValue(`education.0.description`, data.description);
         setValue(
           `education.0.startedAt`,
           new Date(data.startedAt).toISOString().slice(0, 10)
@@ -77,7 +79,7 @@ export function EducationCreate({ profileId, isAddHandler }: any) {
           `education.0.finishedAt`,
           new Date(data.finishedAt).toISOString().slice(0, 10)
         );
-      });
+      }
     }
     fetchEducation();
   }, [profileId, setValue, parsedId]);
@@ -214,17 +216,20 @@ export function EducationCreate({ profileId, isAddHandler }: any) {
 
           <div className="mt-5 flex justify-end gap-3 pt-4">
             <Button
+              variant="outline"
               onClick={() => {
                 isAddHandler();
                 router.push({
-                  pathname: `/app/profiles/${profileId}/education`,
+                  pathname: `/app/profiles/${profileId}/educations`,
                   query: {},
                 });
               }}
             >
               Отмена
             </Button>
-            <Button type="submit">Сохранить</Button>
+            <Button variant="black" type="submit">
+              Сохранить
+            </Button>
           </div>
         </form>
       </div>

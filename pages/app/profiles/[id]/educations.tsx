@@ -7,6 +7,17 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import api from "../../../../api";
 import { Navigation } from "../../../../components/navigation";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../../../../components/primitives/alert-dialog";
 import { Button } from "../../../../components/primitives/button";
 import { EducationCreate } from "../../../../components/profiles/create/education";
 import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
@@ -111,28 +122,35 @@ export default function Education({ data }: Props) {
     <div>
       <Navigation />
 
-      <div className=" min-h-[90vh] bg-slate-50">
-        <div className="mx-auto max-w-screen-xl px-5 pt-8">
+      <div className=" min-h-[90vh] bg-slate-50 px-5 pt-8">
+        <div className="mx-auto max-w-screen-xl">
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
             {data.isAuthor ? (
               <div className="flex gap-5">
-                {/* <Button className=" bg-slate-700 hover:bg-black">
-                  Редактировать
-                </Button> */}
-                <Button variant="outline" onClick={() => handleDeleteProfile()}>
-                  <Trash className="h-6 w-6" />
-                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="outline">
+                      <Trash className="h-6 w-6" />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Удалить профиль?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Восстановить профиль будет невозможно
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Отмена</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => handleDeleteProfile()}>
+                        Удалить
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             ) : (
-              <div className="flex gap-5">
-                {/* <Button
-                  className=" bg-black hover:bg-slate-600"
-                  variant="outline"
-                  color="white"
-                >
-                  Написать в чате
-                </Button> */}
-              </div>
+              <></>
             )}
           </div>
 
@@ -193,7 +211,7 @@ export default function Education({ data }: Props) {
                     id="tabs"
                     name="tabs"
                     className="block w-full  border-gray-300 focus:border-lime-500 focus:ring-lime-500"
-                    defaultValue={`/app/profiles/${id}/education`}
+                    defaultValue={`/app/profiles/${id}/educations`}
                   >
                     {tabs.map((tab) => (
                       <option key={tab.name} value={tab.href}>
@@ -272,19 +290,42 @@ export default function Education({ data }: Props) {
                                   onClick={() => {
                                     setIsAdd(false);
                                     router.push({
-                                      pathname: `/app/profiles/${id}/education`,
+                                      pathname: `/app/profiles/${id}/educations`,
                                       query: { itemId: item.id },
                                     });
                                   }}
                                 >
                                   <Pen className="h-6 w-6" />
                                 </Button>
-                                <Button
-                                  variant="outline"
-                                  onClick={() => handleDelete(item.id)}
-                                >
-                                  <Trash className="h-6 w-6" />
-                                </Button>
+
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <Button variant="outline">
+                                      <Trash className="h-6 w-6" />
+                                    </Button>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>
+                                        Удалить образование?
+                                      </AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        Восстановить образование будет
+                                        невозможно
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>
+                                        Отмена
+                                      </AlertDialogCancel>
+                                      <AlertDialogAction
+                                        onClick={() => handleDelete(item.id)}
+                                      >
+                                        Удалить
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
                               </div>
                             </div>
                           )}
@@ -307,7 +348,7 @@ export default function Education({ data }: Props) {
                           onClick={() => {
                             setIsAdd(false);
                             router.push({
-                              pathname: `/app/profiles/${id}/education`,
+                              pathname: `/app/profiles/${id}/educations`,
                               query: {},
                             });
                           }}

@@ -149,17 +149,18 @@ export function Navigation() {
             userId: sessionData.id || 0,
           },
         });
-
         if (profiles) {
-          setProfilesData(profiles);
-          if (!localStorage.getItem("profileId")) {
-            setProfession(profiles[0].title);
-          } else {
-            const myObject: MyObject = findById(
-              profiles,
-              Number.parseInt(localStorage.getItem("profileId") as string, 10)
-            )!;
-            setProfession(myObject.title);
+          if (profiles.length > 0) {
+            setProfilesData(profiles);
+            if (!localStorage.getItem("profileId")) {
+              setProfession(profiles[0].title);
+            } else {
+              const myObject: MyObject = findById(
+                profiles,
+                Number.parseInt(localStorage.getItem("profileId") as string, 10)
+              )!;
+              setProfession(myObject.title);
+            }
           }
         }
       }

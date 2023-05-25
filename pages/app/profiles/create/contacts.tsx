@@ -74,7 +74,7 @@ export default function Test() {
         })
       );
     }
-    // await router.push(`/app/profiles/${router.query.profileId}`);
+    await router.push(`/app/profiles/${router.query.profileId}`);
   };
 
   return (

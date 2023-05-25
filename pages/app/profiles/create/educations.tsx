@@ -39,8 +39,8 @@ export default function Test() {
       );
       if (education) {
         router.push({
-          pathname: "/app/profiles/create/",
-          query: { profileId: router.query.profileId},
+          pathname: "/app/profiles/create/certificates",
+          query: { profileId: router.query.profileId },
         });
       }
     });

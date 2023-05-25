@@ -5,17 +5,15 @@ import usePagination from "../hooks/usePagination";
 export interface PaginationProps {
   totalItems: number;
   currentPage: number;
-  renderPageLink: (page: number) => string;
-  itemsPerPage?: number;
+  itemsPerPage: number;
 }
 
-export const dotts = "...";
+export const dotts = -1;
 
 const Pagination = ({
   totalItems,
   currentPage,
-  itemsPerPage = 10,
-  renderPageLink,
+  itemsPerPage,
 }: PaginationProps) => {
   const pages = usePagination(totalItems, currentPage, itemsPerPage);
 
@@ -27,15 +25,15 @@ const Pagination = ({
             key={i}
             className="px-4 py-2 rounded-full text-sm font-semibold text-black"
           >
-            {pageNumber}
+            ...
           </span>
         ) : (
           <Link
             key={i}
-            href={renderPageLink(pageNumber as number)}
+            href={`/app/profiles/my?page=${pageNumber}`}
             className={`${
-              pageNumber === currentPage ? "text-red-400" : "text-black"
-            } px-4 py-2 mx-1 rounded-full text-sm font-semibold no-underline`}
+              pageNumber === currentPage ? "text-lime-500" : "text-black"
+            } px-4 py-2 mx-1 rounded-full text-lg font-semibold no-underline`}
           >
             {pageNumber}
           </Link>

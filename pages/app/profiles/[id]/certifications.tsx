@@ -14,6 +14,50 @@ import SkillsCreate from "../../../../components/profiles/create/skills";
 import { General } from "../../../../components/profiles/general";
 import Badge from "../../../../images/badge.svg";
 
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext<{
+    id: string;
+  }>
+) => {
+  const session = await api.session.show({
+    headers: {
+      Cookie: context.req.headers.cookie!,
+    },
+    credentials: "include",
+  });
+  const { data: profile } = await api.profiles.show(Number(context.params!.id));
+  const { data: education } = await api.educations.index(
+    Number(context.params!.id)
+  );
+
+  if (profile && education) {
+    const { data: user } = await api.users.show(profile.userId);
+    const updatedItems = education.map((item) => {
+      return {
+        ...item,
+        startedAt: dateFormatter(item.startedAt),
+        finishedAt: dateFormatter(item.finishedAt),
+      };
+    });
+    const isAuthor =
+      session.data?.id && profile.userId && session.data.id === profile.userId;
+
+    return {
+      props: {
+        data: {
+          ...session,
+          profile: profile!,
+          user: user!,
+          isAuthor: isAuthor!,
+          education: updatedItems!,
+        },
+      },
+    };
+  }
+};
+
+type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
+
 export default function One() {
   const router = useRouter();
   const { id } = router.query;
