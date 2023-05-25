@@ -1155,13 +1155,7 @@ export default function Home() {
                   расти быстрее и предоставлять более качественные услуги нашим
                   пользователям!
                 </p>
-                {/* <ul className="mt-10 grid grid-cols-1 gap-x-8 gap-y-3 text-base leading-7 text-white sm:grid-cols-2">
-                  {benefits.map((benefit) => (
-                    <li key={benefit} className="flex gap-x-3">
-                      {benefit}
-                    </li>
-                  ))}
-                </ul> */}
+
                 <div className="mt-10 flex">
                   <Link
                     target="_blank"

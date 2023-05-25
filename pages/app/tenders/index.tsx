@@ -1,6 +1,6 @@
 import { Check, Faders, SquaresFour } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { InferGetServerSidePropsType, InferGetStaticPropsType } from "next";
+import { InferGetServerSidePropsType } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import api from "../../../api";

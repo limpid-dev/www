@@ -1,78 +1,79 @@
 import { Plus } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ChangeEvent, useState } from "react";
-import api from "../../../api";
-import { GeneralLayout } from "../../../components/general-layout";
-import { Navigation } from "../../../components/navigation";
-import Pagination from "../../../components/pagination";
-import { Button } from "../../../components/primitives/button";
+import { ChangeEvent } from "react";
+import api from "../../../../api";
+import { GeneralLayout } from "../../../../components/general-layout";
+import { Navigation } from "../../../../components/navigation";
+import Pagination from "../../../../components/pagination";
+import { Button } from "../../../../components/primitives/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../../../components/primitives/dialog";
-import AnalyzingMarket from "../../../images/analyzingMarket.svg";
-import NoProfiles from "../../../images/noProfiles.svg";
-import onLaptop from "../../../images/onLaptop.svg";
-import ProfileDefault from "../../../images/profileDefault.svg";
+} from "../../../../components/primitives/dialog";
+import AnalyzingMarket from "../../../../images/analyzingMarket.svg";
+import NoProfiles from "../../../../images/noProfiles.svg";
+import onLaptop from "../../../../images/onLaptop.svg";
+import ProfileDefault from "../../../../images/profileDefault.svg";
 
 const tabs = [
   { name: "Все профили", href: "/app/profiles/", current: false },
   { name: "Мои профили", href: "/app/profiles/my", current: true },
 ];
 
-export const getServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const session = await api.session.show({
-    headers: {
-      Cookie: context.req.headers.cookie!,
-    },
-    credentials: "include",
-  });
-
+export const getStaticProps: GetStaticProps = async ({
+  params,
+}: GetStaticPropsContext) => {
+  const page = Number(params?.page) || 1;
   const profiles = await api.profiles.index({
-    page: 1,
-    perPage: 100,
-    filters: {
-      userId: session.data!.id,
-    },
+    page,
+    perPage: 9,
   });
 
-  if (!profiles.data) {
+  if (profiles.data?.length === 0) {
+    return {
+      notFound: true,
+    };
+  }
+
+  if (page === 1) {
     return {
       redirect: {
+        destination: "/app/profiles/my",
         permanent: false,
-        destination: "/",
       },
     };
   }
 
   return {
     props: {
-      data: {
-        MyProfiles: profiles.data!,
-      },
+      profiles: profiles.data,
+      totalProfiles: profiles.meta?.total,
+      currentPage: page,
     },
+    revalidate: 60 * 60 * 24,
   };
 };
 
-type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
-
-export default function MyProfiles({ data }: Props) {
-  const router = useRouter();
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 10; // Replace with the total number of pages in your data
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: Array.from({ length: 5 }).map((_, i) => `/app/profiles/my/${i + 2}`),
+    fallback: "blocking",
   };
+};
+
+export default function PaginatedMyProfiles({
+  profiles,
+  totalProfiles,
+  currentPage,
+}: any) {
+  const router = useRouter();
 
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>): void => {
     const selectedPage = event.target.value;
@@ -161,9 +162,9 @@ export default function MyProfiles({ data }: Props) {
             </DialogContent>
           </Dialog>
         </div>
-        {data.MyProfiles.length > 0 ? (
+        {profiles.length > 0 ? (
           <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-            {data.MyProfiles.map((profile) => (
+            {profiles.map((profile: any) => (
               <Link key={profile.id} href={`/app/profiles/${profile.id}`}>
                 <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-8 font-semibold hover:border-slate-700 sm:max-w-[400px]">
                   <Image
@@ -184,6 +185,11 @@ export default function MyProfiles({ data }: Props) {
             <p className=" text-2xl font-semibold">У вас нет профиля</p>
           </div>
         )}
+        <Pagination
+          totalItems={totalProfiles}
+          currentPage={currentPage}
+          renderPageLink={(page) => `/app/profiles/my/${page}`}
+        />
       </GeneralLayout>
     </div>
   );
