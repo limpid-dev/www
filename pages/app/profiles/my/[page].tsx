@@ -22,10 +22,6 @@ import NoProfiles from "../../../../images/noProfiles.svg";
 import onLaptop from "../../../../images/onLaptop.svg";
 import ProfileDefault from "../../../../images/profileDefault.svg";
 
-const tabs = [
-  { name: "Все профили", href: "/app/profiles/", current: false },
-  { name: "Мои профили", href: "/app/profiles/my", current: true },
-];
 
 export const getStaticProps: GetStaticProps = async ({
   params,
@@ -85,7 +81,7 @@ export default function PaginatedMyProfiles({
       <Navigation />
       <GeneralLayout>
         <p className="text-sm text-slate-300">Профили</p>
-        <div className="my-5 flex flex-col items-end justify-end gap-4 md:mb-12 md:flex-row md:justify-between">
+        {/* <div className="my-5 flex flex-col items-end justify-end gap-4 md:mb-12 md:flex-row md:justify-between">
           <div>
             <div className="sm:hidden">
               <select
@@ -161,7 +157,7 @@ export default function PaginatedMyProfiles({
               </div>
             </DialogContent>
           </Dialog>
-        </div>
+        </div> */}
         {profiles.length > 0 ? (
           <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
             {profiles.map((profile: any) => (
