@@ -1188,8 +1188,7 @@ export default function Home() {
             </h2>
             <p className="mt-4 text-lg tracking-tight text-zinc-700">
               Наше программное обеспечение настолько простое, что люди не могут
-              не влюбиться в него. Простота — это легко, когда вы просто
-              пропускаете множество критически важных функций.
+              не влюбиться в него.
             </p>
           </div>
           <ul className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-6 sm:gap-8 lg:mt-20 lg:max-w-none lg:grid-cols-3">
