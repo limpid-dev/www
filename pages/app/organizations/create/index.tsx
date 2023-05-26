@@ -1,5 +1,4 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import api from "../../../../api";
 import { Navigation } from "../../../../components/navigation";
@@ -30,7 +29,12 @@ interface FormValues {
 
 export default function Test() {
   const router = useRouter();
-  const { register, handleSubmit, control } = useForm<FormValues>({});
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<FormValues>({});
 
   const onSubmit = async (data: FormValues) => {
     const { data: organization } = await api.organizations.store(data);
@@ -82,86 +86,121 @@ export default function Test() {
                     </div>
                     <Input
                       type="text"
-                      {...register("name")}
+                      {...register("name", { required: true })}
                       className="py-4 px-5 text-black rounded-md border border-slate-300 mt-6 w-1/2"
                       placeholder="Название"
                       minLength={1}
                       maxLength={255}
                     />
+                    {errors.name && (
+                      <span className="ml-1 text-sm text-red-600">
+                        Обязательное поле
+                      </span>
+                    )}
                   </div>
 
                   <div className="font-semibold text-black text-lg sm:text-2xl">
                     Основная информация
                   </div>
-                  <div className="flex flex-col sm:flex-row gap-5 sm:gap-8">
-                    <Input
-                      type="text"
-                      {...register("bin")}
-                      className="py-4 px-5 text-black rounded-md border border-slate-300 flex-1"
-                      minLength={12}
-                      maxLength={12}
-                      placeholder="БИН/ИИН"
-                      pattern="[0-9]{12}"
-                      required
-                    />
-                    <Controller
-                      control={control}
-                      name="industry"
-                      render={({ field }) => (
-                        <Select
-                          value={field.value}
-                          onValueChange={field.onChange}
-                        >
-                          <SelectTrigger className="px-5 text-black rounded-md flex-1 max-w-full text-ellipsis whitespace-nowrap overflow-hidden w-full">
-                            <SelectValue placeholder="Выберите отрасль" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectGroup className="overflow-auto h-[300px]">
-                              <SelectLabel>Отрасль</SelectLabel>
-                              {Options.map((option) => (
-                                <SelectItem key={option.id} value={option.name}>
-                                  {option.name}
-                                </SelectItem>
-                              ))}
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
+                  <div className="flex flex-col sm:flex-row gap-5">
+                    <div className="w-full">
+                      <Input
+                        type="text"
+                        {...register("bin", { required: true })}
+                        className="py-4 px-5 text-black rounded-md border border-slate-300 flex-1"
+                        minLength={12}
+                        maxLength={12}
+                        placeholder="БИН/ИИН"
+                        pattern="[0-9]{12}"
+                      />
+                      {errors.bin && (
+                        <span className="ml-1 text-sm text-red-600">
+                          Обязательное поле
+                        </span>
                       )}
-                    />
+                    </div>
+                    <div className="w-full">
+                      <Controller
+                        control={control}
+                        name="industry"
+                        rules={{ required: true }}
+                        render={({ field }) => (
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger className="px-5 text-black rounded-md flex-1 max-w-full text-ellipsis whitespace-nowrap overflow-hidden w-full">
+                              <SelectValue placeholder="Выберите отрасль" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup className="overflow-auto h-[300px]">
+                                <SelectLabel>Отрасль</SelectLabel>
+                                {Options.map((option) => (
+                                  <SelectItem
+                                    key={option.id}
+                                    value={option.name}
+                                  >
+                                    {option.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
+                      {errors.industry && (
+                        <span className="ml-1 text-sm text-red-600">
+                          Обязательное поле
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  <div className="flex flex-col sm:flex-row gap-5 sm:gap-8">
-                    <Controller
-                      control={control}
-                      name="type"
-                      render={({ field }) => (
-                        <Select
-                          value={field.value}
-                          onValueChange={field.onChange}
-                          required
-                        >
-                          <SelectTrigger className="px-5 text-black rounded-md flex-1 max-w-full text-ellipsis whitespace-nowrap overflow-hidden w-full">
-                            <SelectValue placeholder="Выберите тип компании" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectGroup>
-                              <SelectLabel>Выберите тип компании</SelectLabel>
-                              <SelectItem value="ИП">ИП</SelectItem>
-                              <SelectItem value="ТОО">ТОО</SelectItem>
-                              <SelectItem value="АО">АО</SelectItem>
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
+                  <div className="flex flex-col sm:flex-row gap-5">
+                    <div className="w-full">
+                      <Controller
+                        control={control}
+                        name="type"
+                        rules={{ required: true }}
+                        render={({ field }) => (
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger className="px-5 text-black rounded-md flex-1 max-w-full text-ellipsis whitespace-nowrap overflow-hidden w-full">
+                              <SelectValue placeholder="Выберите тип компании" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup>
+                                <SelectLabel>Выберите тип компании</SelectLabel>
+                                <SelectItem value="ИП">ИП</SelectItem>
+                                <SelectItem value="ТОО">ТОО</SelectItem>
+                                <SelectItem value="АО">АО</SelectItem>
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
+                      {errors.type && (
+                        <span className="ml-1 text-sm text-red-600">
+                          Обязательное поле
+                        </span>
                       )}
-                    />
-                    <Input
-                      type="text"
-                      {...register("perfomance")}
-                      className="py-4 px-5 text-black rounded-md border border-slate-300 flex-1"
-                      minLength={1}
-                      maxLength={255}
-                      required
-                      placeholder="Производственная мощность предприятия (при наличии)"
-                    />
+                    </div>
+                    <div className="w-full">
+                      <Input
+                        type="text"
+                        {...register("perfomance", { required: true })}
+                        className="py-4 px-5 text-black rounded-md border border-slate-300 flex-1"
+                        minLength={1}
+                        maxLength={255}
+                        placeholder="Производственная мощность предприятия (при наличии)"
+                      />
+                      {errors.perfomance && (
+                        <span className="ml-1 text-sm text-red-600">
+                          Обязательное поле
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   <div>
@@ -170,13 +209,17 @@ export default function Test() {
                     </div>
                     <TextArea
                       className="mt-6 text-black"
-                      {...register("description")}
+                      {...register("description", { required: true })}
                       rows={4}
-                      required
                       minLength={1}
                       maxLength={1024}
                       placeholder="Что будущему партнеру стоит знать? Что  будет полезно другим людям?"
                     />
+                    {errors.description && (
+                      <span className="ml-1 text-sm text-red-600">
+                        Обязательное поле
+                      </span>
+                    )}
                   </div>
                   <div>
                     <div className="font-semibold text-black text-lg sm:text-2xl">
@@ -184,13 +227,19 @@ export default function Test() {
                     </div>
                     <TextArea
                       className="mt-6"
-                      {...register("ownedMaterialResources")}
+                      {...register("ownedMaterialResources", {
+                        required: true,
+                      })}
                       rows={4}
-                      required
                       minLength={1}
                       maxLength={1024}
                       placeholder="Что  будет полезно другим людям о материальных ресурсах компании?"
                     />
+                    {errors.ownedMaterialResources && (
+                      <span className="ml-1 text-sm text-red-600">
+                        Обязательное поле
+                      </span>
+                    )}
                   </div>
                   <div>
                     <div className="font-semibold text-black text-lg sm:text-2xl">
@@ -199,12 +248,18 @@ export default function Test() {
                     <TextArea
                       className=" mt-6 "
                       rows={4}
-                      {...register("ownedIntellectualResources")}
-                      required
+                      {...register("ownedIntellectualResources", {
+                        required: true,
+                      })}
                       minLength={1}
                       maxLength={1024}
                       placeholder="Что  будет полезно другим людям о интеллектуальных ресурсах компании?"
                     />
+                    {errors.ownedIntellectualResources && (
+                      <span className="ml-1 text-sm text-red-600">
+                        Обязательное поле
+                      </span>
+                    )}
                   </div>
                   <div className="mt-8 flex gap-5">
                     <Button

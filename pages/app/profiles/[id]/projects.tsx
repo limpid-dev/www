@@ -67,13 +67,14 @@ export const getServerSideProps = async (
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 export default function ProfileProjects({ data }: Props) {
+  const router = useRouter();
+  const { id } = router.query;
+  const parsedId = Number.parseInt(id as string, 10) as number;
+
   const [first, setfirst] = useState(1);
   const [second, setsecond] = useState(1);
   const [contacts, setContacts] = useState({});
 
-  const router = useRouter();
-  const { id } = router.query;
-  const parsedId = Number.parseInt(id as string, 10) as number;
   const [editGeneral, setEditGeneral] = useState(false);
   const [error, setError] = useState("");
 

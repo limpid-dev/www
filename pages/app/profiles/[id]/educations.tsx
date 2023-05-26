@@ -82,26 +82,6 @@ type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 export default function Education({ data }: Props) {
   const router = useRouter();
   const { id } = router.query;
-  const {
-    register: register2,
-    formState: { errors: errors2 },
-    handleSubmit: handleSubmit2,
-  } = useForm<FormValuesGeneral>();
-  const [error, setError] = useState("");
-
-  const [editGeneral, setEditGeneral] = useState(false);
-  const editGeneralInfo = () => {
-    setEditGeneral((current: boolean) => !current);
-  };
-  const onSubmit2 = async (data1: FormValuesGeneral) => {
-    try {
-      const { data } = await api.profiles.update(parsedId, data1);
-      router.reload();
-    } catch (error) {
-      setError("Что то пошло не так, попробуйте позже");
-    }
-  };
-  const [isAdd, setIsAdd] = useState(true);
   const parsedId = Number.parseInt(id as string, 10) as number;
 
   const tabs = [
@@ -128,19 +108,41 @@ export default function Education({ data }: Props) {
     },
   ];
 
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<FormValuesGeneral>();
+  const [error, setError] = useState("");
+
+  const onSubmit = async (data1: FormValuesGeneral) => {
+    try {
+      const { data } = await api.profiles.update(parsedId, data1);
+      router.reload();
+    } catch (error) {
+      setError("Что то пошло не так, попробуйте позже");
+    }
+  };
+
+  const [editGeneral, setEditGeneral] = useState(false);
+  const [isAdd, setIsAdd] = useState(true);
+  const [contacts, setContacts] = useState({});
+
+  const editGeneralInfo = () => {
+    setEditGeneral((current: boolean) => !current);
+  };
+
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
   };
 
-  const [contacts, setContacts] = useState({});
+  const handleDeleteProfile = () => {
+    api.profiles.destroy(parsedId);
+  };
 
   const isAddHandler = () => {
     setIsAdd((current: boolean) => !current);
-  };
-
-  const handleDeleteProfile = () => {
-    api.profiles.destroy(parsedId);
   };
 
   const handleDelete = (itemId: any) => {
@@ -187,7 +189,7 @@ export default function Education({ data }: Props) {
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-10 ">
             <div className="rounded-lg border sm:col-span-3">
               {editGeneral ? (
-                <form onSubmit={handleSubmit2(onSubmit2)}>
+                <form onSubmit={handleSubmit(onSubmit)}>
                   <div className="h-full bg-white px-6">
                     <div className="flex flex-col items-center justify-center pt-12">
                       <Image
@@ -203,7 +205,7 @@ export default function Education({ data }: Props) {
                       </p>
                       <p className=" text-sm">
                         <Input
-                          {...register2("industry")}
+                          {...register("industry")}
                           placeholder={data.profile.industry}
                         />
                       </p>
@@ -214,7 +216,7 @@ export default function Education({ data }: Props) {
                         <p className="text-sm text-slate-400 mb-2">Локация</p>
                         <p className="text-sm ">
                           <Input
-                            {...register2("location")}
+                            {...register("location")}
                             placeholder={data.profile.location}
                           />
                         </p>
@@ -223,7 +225,7 @@ export default function Education({ data }: Props) {
                         <p className="text-sm text-slate-400 mb-2">Профессия</p>
                         <p className="text-sm">
                           <Input
-                            {...register2("title")}
+                            {...register("title")}
                             placeholder={data.profile.title}
                           />
                         </p>
@@ -234,7 +236,7 @@ export default function Education({ data }: Props) {
                       <p className="text-lg font-semibold">Обо мне</p>
                       <p className="pt-3 text-sm">
                         <TextArea
-                          {...register2("description")}
+                          {...register("description")}
                           className=" h-"
                           placeholder={data.profile.description}
                         />
@@ -448,7 +450,6 @@ export default function Education({ data }: Props) {
                   <label htmlFor="tabs" className="sr-only">
                     Select a tab
                   </label>
-                  {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
                   <select
                     onChange={handleSelectChange}
                     id="tabs"

@@ -317,9 +317,9 @@ export default function ProjectView({ data }: Props) {
                       onClick={handleClick}
                     >
                       <div className="flex w-full items-center gap-3 text-sm font-semibold">
-                        <Chat /> Обсуждение проекта
-                      </div>{" "}
-                      <TagChevron />
+                        <Chat className="w-6 h-6" /> Обсуждение проекта
+                      </div>
+                      <ArrowRight className="w-6 h-6" />
                     </Button>
                   )}
                 </div>

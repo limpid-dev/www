@@ -105,7 +105,7 @@ export default function Test() {
                     Основная информация
                   </div>
                   <div className="flex flex-col sm:flex-row gap-5 sm:gap-8">
-                    <div className="grid">
+                    <div className="grid w-full">
                       <Input
                         type="text"
                         className="text-black rounded-md border border-slate-300"
@@ -126,7 +126,7 @@ export default function Test() {
                       name="industry"
                       rules={{ required: true }}
                       render={({ field }) => (
-                        <div className="flex flex-col w-2/3">
+                        <div className="flex flex-col w-full">
                           <Select
                             value={field.value}
                             onValueChange={field.onChange}

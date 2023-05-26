@@ -1,19 +1,17 @@
 import "@uppy/core/dist/style.css";
 import "@uppy/dashboard/dist/style.css";
 import "@uppy/drag-drop/dist/style.css";
-import { Paperclip, Plus } from "@phosphor-icons/react";
+import { Paperclip } from "@phosphor-icons/react";
 import Uppy from "@uppy/core";
 import Russian from "@uppy/locales/lib/ru_RU";
 import { DashboardModal } from "@uppy/react";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import api from "../../../../api";
 import { buildFormData } from "../../../../api/files";
 import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";
-import { Input } from "../../../../components/primitives/input";
-import { TextArea } from "../../../../components/primitives/text-area";
 
 const uppy = new Uppy({
   locale: Russian,
@@ -39,6 +37,8 @@ export default function Create() {
   const [tab, setTab] = useState("general");
   const router = useRouter();
   const { projectId } = router.query;
+  const parsedProjectId = Number.parseInt(projectId as string, 10) as number;
+
   const [fileDashboardOpen, setFileDashboardOpen] = useState(false);
 
   const {
@@ -61,7 +61,7 @@ export default function Create() {
     try {
       const files = uppy.getFiles().map((file) => {
         const formData = buildFormData(file.data);
-        return api.projects.files(projectId).store(formData);
+        return api.projects.files(parsedProjectId).store(formData);
       });
 
       await router.push({
@@ -86,7 +86,7 @@ export default function Create() {
                 Документация
               </div>
             </div>
-            <div className="m-auto grid min-h-[500px] items-center justify-center border-none sm:w-7/12">
+            <div className="grid min-h-[500px] items-center justify-center border-none p-10 max-w-screen-md mx-auto">
               <form onSubmit={handleSubmit(onSubmit)} className="pb-4">
                 <div className="grid items-center justify-center gap-6">
                   <p className="text-lg font-medium">
@@ -116,8 +116,10 @@ export default function Create() {
                 </div>
 
                 <div className="flex justify-end gap-3 pt-4 ">
-                  <Button>Отмена</Button>
-                  <Button type="submit">Сохранить</Button>
+                  <Button variant="outline">Отмена</Button>
+                  <Button variant="black" type="submit">
+                    Сохранить
+                  </Button>
                 </div>
               </form>
             </div>

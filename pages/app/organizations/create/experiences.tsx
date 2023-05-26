@@ -96,32 +96,36 @@ export default function Test() {
                     {fields.map((field, index) => {
                       return (
                         <div key={field.id} className="grid gap-5">
-                          <div className="flex flex-col sm:flex-row justify-between gap-5 sm:flex-row">
-                            <Input
-                              className="w-full rounded-md border p-2"
-                              placeholder="Название"
-                              {...register(`experiences.${index}.title`, {
-                                required: "Please enter your first name.",
-                              })}
-                            />
-                            {errors.experiences?.[index]?.title && (
-                              <p className="ml-2 text-sm text-red-500">
-                                Обязательное поле
-                              </p>
-                            )}
+                          <div className="flex flex-col sm:flex-row justify-between gap-5">
+                            <div className="w-full">
+                              <Input
+                                className="w-full rounded-md border p-2"
+                                placeholder="Название"
+                                {...register(`experiences.${index}.title`, {
+                                  required: "Please enter your first name.",
+                                })}
+                              />
+                              {errors.experiences?.[index]?.title && (
+                                <p className="ml-2 text-sm text-red-500">
+                                  Обязательное поле
+                                </p>
+                              )}
+                            </div>
 
-                            <Input
-                              className="w-full rounded-md border p-2"
-                              placeholder="Организация"
-                              {...register(`experiences.${index}.company`, {
-                                required: "Please enter your first name.",
-                              })}
-                            />
-                            {errors.experiences?.[index]?.company && (
-                              <p className="ml-2 text-sm text-red-500">
-                                Обязательное поле
-                              </p>
-                            )}
+                            <div className="w-full">
+                              <Input
+                                className="w-full rounded-md border p-2"
+                                placeholder="Организация"
+                                {...register(`experiences.${index}.company`, {
+                                  required: "Please enter your first name.",
+                                })}
+                              />
+                              {errors.experiences?.[index]?.company && (
+                                <p className="ml-2 text-sm text-red-500">
+                                  Обязательное поле
+                                </p>
+                              )}
+                            </div>
                           </div>
                           <div>
                             <TextArea
@@ -137,8 +141,8 @@ export default function Test() {
                               </p>
                             )}
                           </div>
-                          <div className="flex flex-col gap-5 md:flex-row">
-                            <div className="flex items-center justify-between gap-3">
+                          <div className="flex flex-col justify-around gap-5 md:flex-row">
+                            <div className="flex items-center gap-3 justify-between">
                               <p>Начало</p>
                               <div>
                                 <Input
@@ -164,7 +168,7 @@ export default function Test() {
                                 )}
                               </div>
                             </div>
-                            <div className="flex items-center justify-between gap-3">
+                            <div className="flex items-center gap-3 justify-between">
                               <p>Конец</p>
                               <div>
                                 <Input

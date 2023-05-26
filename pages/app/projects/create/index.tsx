@@ -35,8 +35,8 @@ export default function Create() {
     };
     const { data } = await api.projects.store(fullObject);
     if (data) {
-      router.push({
-        pathname: "/app/projects/files",
+      await router.push({
+        pathname: "/app/projects/create/files",
         query: { projectId: data.id },
       });
     }
@@ -65,9 +65,9 @@ export default function Create() {
                 Документация
               </div>
             </div>
-            <div className="m-auto min-h-[500px] border-none sm:w-7/12">
+            <div className="p-10 max-w-screen-md mx-auto">
               <form onSubmit={handleSubmit(onSubmit)} className="pb-4">
-                <div className="pt-5">
+                <div className="">
                   <div className="mb-5 text-lg font-semibold sm:text-2xl">
                     Название проекта
                   </div>
@@ -235,9 +235,11 @@ export default function Create() {
                 </div>
                 <div className="flex justify-end gap-3 pt-4 ">
                   <Link href="/app/projects/my">
-                    <Button>Отмена</Button>
+                    <Button variant="outline">Отмена</Button>
                   </Link>
-                  <Button type="submit">Далее</Button>
+                  <Button variant="black" type="submit">
+                    Далее
+                  </Button>
                 </div>
               </form>
             </div>

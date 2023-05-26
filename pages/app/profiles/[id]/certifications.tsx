@@ -24,7 +24,6 @@ import { Input } from "../../../../components/primitives/input";
 import { TextArea } from "../../../../components/primitives/text-area";
 import { CertificationCreate } from "../../../../components/profiles/create/certification";
 import SkillsCreate from "../../../../components/profiles/create/skills";
-import { General } from "../../../../components/profiles/general";
 import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
 import Badge from "../../../../images/badge.svg";
 
@@ -91,6 +90,8 @@ type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 export default function Certifications({ data }: Props) {
   const router = useRouter();
   const { id } = router.query;
+  const parsedId = Number.parseInt(id as string, 10) as number;
+
   const tabs = [
     { name: "Ресурсы", href: `/app/profiles/${id}/`, current: false },
     {
@@ -117,7 +118,6 @@ export default function Certifications({ data }: Props) {
 
   const [certificate, setCertificate] = useState(true);
   const [skill, setSkill] = useState(true);
-  const parsedId = Number.parseInt(id as string, 10) as number;
   const [editGeneral, setEditGeneral] = useState(false);
   const [contacts, setContacts] = useState({});
 
@@ -143,21 +143,20 @@ export default function Certifications({ data }: Props) {
 
     router.reload();
   };
+
   const editGeneralInfo = () => {
     setEditGeneral((current: boolean) => !current);
   };
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValuesGeneral>();
 
-  const onSubmit = async (data1: FormValuesGeneral) => {
+  const onSubmit = async (data: FormValuesGeneral) => {
     try {
-      const { data } = await api.profiles.update(
-        Number.parseInt(id as string, 10),
-        data1
-      );
+      await api.profiles.update(Number.parseInt(id as string, 10), data);
       router.reload();
     } catch (error) {
       console.log("Что то пошло не так, попробуйте позже");

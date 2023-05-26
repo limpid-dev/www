@@ -4,24 +4,24 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ChangeEvent, useEffect, useState } from "react";
-import api from "../../../../api";
-import { Entity as Profiles } from "../../../../api/profiles";
-import { GeneralLayout } from "../../../../components/general-layout";
-import { Navigation } from "../../../../components/navigation";
-import Pagination from "../../../../components/pagination";
-import { Button } from "../../../../components/primitives/button";
+import api from "../../../api";
+import { Entity as Profiles } from "../../../api/profiles";
+import { GeneralLayout } from "../../../components/general-layout";
+import { Navigation } from "../../../components/navigation";
+import Pagination from "../../../components/pagination";
+import { Button } from "../../../components/primitives/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../../../../components/primitives/dialog";
-import { Skeleton } from "../../../../components/primitives/skeleton";
-import AnalyzingMarket from "../../../../images/analyzingMarket.svg";
-import NoProfiles from "../../../../images/noProfiles.svg";
-import onLaptop from "../../../../images/onLaptop.svg";
-import ProfileDefault from "../../../../images/profileDefault.svg";
+} from "../../../components/primitives/dialog";
+import { Skeleton } from "../../../components/primitives/skeleton";
+import AnalyzingMarket from "../../../images/analyzingMarket.svg";
+import NoProfiles from "../../../images/noProfiles.svg";
+import onLaptop from "../../../images/onLaptop.svg";
+import ProfileDefault from "../../../images/profileDefault.svg";
 
 function Profiles() {
   const tabs = [
