@@ -47,13 +47,15 @@ export default function Test() {
         .experiences(Number.parseInt(router.query.organizationId as string, 10))
         .store(post);
     });
-
-    // if (organization) {
-    //   router.push({
-    //     pathname: "/app/organizations/create/",
-    //     query: { organizationId: organization.id },
-    //   });
-    // }
+    router.push({
+      pathname: "/app/organizations/create/certificates",
+      query: {
+        organizationId: Number.parseInt(
+          router.query.organizationId as string,
+          10
+        ),
+      },
+    });
   };
 
   const { fields, append, remove } = useFieldArray({

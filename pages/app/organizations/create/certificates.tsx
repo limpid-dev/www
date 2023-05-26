@@ -115,20 +115,40 @@ export default function Test() {
                       return (
                         <div key={field.id} className="flex flex-col gap-5">
                           <div className="flex gap-5 flex-col sm:flex-row">
-                            <Input
-                              placeholder="Название сертификата"
-                              {...register(`certification.${index}.title`)}
-                            />
-                            <Input
-                              placeholder="Название организации"
-                              {...register(
-                                `certification.${index}.institution`
+                            <div className="w-full">
+                              <Input
+                                placeholder="Название сертификата"
+                                {...register(`certification.${index}.title`, {
+                                  required: true,
+                                })}
+                              />
+                              {errors.certification?.[index]?.title && (
+                                <span className="ml-1 text-sm text-red-600">
+                                  Обязательное поле
+                                </span>
                               )}
-                            />
+                            </div>
+                            <div className="w-full">
+                              <Input
+                                placeholder="Название организации"
+                                {...register(
+                                  `certification.${index}.institution`,
+                                  {
+                                    required: true,
+                                  }
+                                )}
+                              />
+                              {errors.certification?.[index]?.title && (
+                                <span className="ml-1 text-sm text-red-600">
+                                  Обязательное поле
+                                </span>
+                              )}
+                            </div>
                           </div>
 
-                          <Input id="fileInput" type="file" />
-                          <div className="flex flex-col  gap-5 md:flex-row">
+                          <Input id="fileInput" type="file" required />
+
+                          <div className="flex flex-col justify-around gap-5 md:flex-row">
                             <div className="flex items-center justify-between gap-3">
                               <p>Начало</p>
                               <div>
@@ -140,7 +160,7 @@ export default function Test() {
                                   {...register(
                                     `certification.${index}.issuedAt`,
                                     {
-                                      required: "Please enter your first name.",
+                                      required: true,
                                       setValueAs: (value: string | undefined) =>
                                         value
                                           ? new Date(value).toISOString()
@@ -166,7 +186,7 @@ export default function Test() {
                                   {...register(
                                     `certification.${index}.expiredAt`,
                                     {
-                                      required: "Please enter your first name.",
+                                      required: true,
                                       setValueAs: (value: string | undefined) =>
                                         value
                                           ? new Date(value).toISOString()
@@ -182,11 +202,23 @@ export default function Test() {
                               </div>
                             </div>
                           </div>
-                          <TextArea
-                            className="bg-slate-100"
-                            placeholder="За что получен сертификат? За какое достижение получена награда?"
-                            {...register(`certification.${index}.description`)}
-                          />
+                          <div>
+                            <TextArea
+                              className="bg-slate-100"
+                              placeholder="За что получен сертификат? За какое достижение получена награда?"
+                              {...register(
+                                `certification.${index}.description`,
+                                {
+                                  required: true,
+                                }
+                              )}
+                            />
+                            {errors.certification?.[index]?.description && (
+                              <span className="ml-1 text-sm text-red-600">
+                                Обязательное поле
+                              </span>
+                            )}
+                          </div>
                           <div className="relative py-6">
                             <div
                               className="absolute inset-0 flex items-center"

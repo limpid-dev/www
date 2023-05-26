@@ -44,10 +44,12 @@ export default function Test() {
     //     pathname: "/app/organizations/create/experiences",
     //     query: { organizationId: organization.id },
     //   });
-    // }
+
     const files = uppy.getFiles().map((file) => {
       const formData = buildFormData(file.data);
-      return formData;
+      return api.projects
+        .files(Number.parseInt(router.query.organizationId as string, 10))
+        .store(formData);
     });
   };
   const [fileCount, setFileCount] = useState(0);

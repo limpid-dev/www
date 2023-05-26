@@ -819,14 +819,14 @@ class Api {
         return {
           index: () =>
             this.get<ProfilesExperiences.Index["Data"]>(
-              `${this.baseUrl}/organization/${organizationId}/experiences?page=1`
+              `${this.baseUrl}/organizations/${organizationId}/experiences?page=1`
             ),
           store: (payload: ProfilesExperiences.Store["Payload"]) =>
             this.post<
               ProfilesExperiences.Store["Data"],
               ProfilesExperiences.Store["Payload"]
             >(
-              `${this.baseUrl}/organization/${organizationId}/experiences`,
+              `${this.baseUrl}/organizations/${organizationId}/experiences`,
               payload
             ),
         };
@@ -835,7 +835,7 @@ class Api {
   }
 }
 
-// const api = new Api(process.env.NEXT_PUBLIC_API_URL);
-const api = new Api("https://api.limpid.kz");
+const api = new Api(process.env.NEXT_PUBLIC_API_URL);
+// const api = new Api("https://api.limpid.kz");
 
 export default api;
