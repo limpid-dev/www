@@ -315,6 +315,10 @@ class Api {
         this.get<ProfilesExperiences.Index["Data"]>(
           `${this.baseUrl}/profiles/${profileId}/experiences?page=1&perPage=20`
         ),
+      show: (profileId: number, id: number) =>
+        this.get<ProfilesExperiences.Show["Data"]>(
+          `${this.baseUrl}/profiles/${profileId}/experiences/${id}`
+        ),
       store: (
         payload: ProfilesExperiences.Store["Payload"],
         profileId: number
@@ -323,6 +327,15 @@ class Api {
           ProfilesExperiences.Store["Data"],
           ProfilesExperiences.Store["Payload"]
         >(`${this.baseUrl}/profiles/${profileId}/experiences`, payload),
+      update: (
+        profileId: number,
+        id: number,
+        payload: ProfilesExperiences.Update["Payload"]
+      ) =>
+        this.patch<
+          ProfilesExperiences.Update["Data"],
+          ProfilesExperiences.Update["Payload"]
+        >(`${this.baseUrl}/profiles/${profileId}/experiences/${id}`, payload),
     };
   }
 

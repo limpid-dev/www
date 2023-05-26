@@ -104,6 +104,7 @@ export default function OneProfile({ data }: Props) {
       current: false,
     },
   ];
+
   const parsedId = Number.parseInt(id as string, 10) as number;
 
   const [edit, setEdit] = useState(false);

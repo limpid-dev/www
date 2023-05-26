@@ -17,6 +17,7 @@ interface CertificationValues {
     expiredAt: string;
   }[];
 }
+
 export default function Test() {
   const router = useRouter();
   const [error, setError] = useState("");
@@ -118,16 +119,35 @@ export default function Test() {
                       return (
                         <div key={field.id} className="flex flex-col gap-5">
                           <div className="flex gap-5 flex-col sm:flex-row">
-                            <Input
-                              placeholder="Название сертификата"
-                              {...register(`certification.${index}.title`)}
-                            />
-                            <Input
-                              placeholder="Выдано кем?"
-                              {...register(
-                                `certification.${index}.institution`
+                            <div className="w-full">
+                              <Input
+                                placeholder="Название сертификата"
+                                {...register(`certification.${index}.title`, {
+                                  required: true,
+                                })}
+                              />
+                              {errors.certification?.[index]?.title && (
+                                <p className="ml-2 text-sm text-red-500">
+                                  Обязательное поле
+                                </p>
                               )}
-                            />
+                            </div>
+                            <div className="w-full">
+                              <Input
+                                placeholder="Выдано кем?"
+                                {...register(
+                                  `certification.${index}.institution`,
+                                  {
+                                    required: true,
+                                  }
+                                )}
+                              />
+                              {errors.certification?.[index]?.institution && (
+                                <p className="ml-2 text-sm text-red-500">
+                                  Обязательное поле
+                                </p>
+                              )}
+                            </div>
                           </div>
 
                           <Input id="fileInput" type="file" />
@@ -185,11 +205,22 @@ export default function Test() {
                               </div>
                             </div>
                           </div>
-                          <TextArea
-                            className="bg-slate-100"
-                            placeholder="За что получен сертификат? За какое достижение получена награда?"
-                            {...register(`certification.${index}.description`)}
-                          />
+                          <div>
+                            <TextArea
+                              className="bg-slate-100"
+                              placeholder="За что получен сертификат? За какое достижение получена награда?"
+                              {...register(
+                                `certification.${index}.description`,
+                                {
+                                  required: true,
+                                }
+                              )}
+                            />
+                            {errors.certification?.[index]?.description && (
+                              <p className="ml-2 text-sm text-red-500">
+                                Обязательное поле                              </p>
+                            )}
+                          </div>
                           <div className="relative py-6">
                             <div
                               className="absolute inset-0 flex items-center"

@@ -45,9 +45,7 @@ const uppy = new Uppy({
 
 export function CertificationCreate({ certificateAdd, profileId }: any) {
   const [error, setError] = useState("");
-  const [fileId, setFileId] = useState(1);
   const [fileDashboardOpen, setFileDashboardOpen] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     uppy.on("dashboard:modal-closed", () => setFileDashboardOpen(false));
@@ -78,7 +76,7 @@ export function CertificationCreate({ certificateAdd, profileId }: any) {
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields } = useFieldArray({
     name: "certification",
     control,
   });
@@ -188,27 +186,14 @@ export function CertificationCreate({ certificateAdd, profileId }: any) {
               </div>
             );
           })}
-          {/* <div className="mt-4 flex flex-col gap-4">
-            <Button
-              type="button"
-              onClick={() => {
-                append({
-                  institution: "",
-                  title: "",
-                  description: "",
-                  issuedAt: "",
-                  expiredAt: "",
-                });
-              }}
-              variant="outline"
-            >
-                            <Plus className="h-4 w-4" />
- Добавить сертификат
-            </Button>
-          </div> */}
+
           <div className="mt-5 flex justify-end gap-3 pt-4">
-            <Button onClick={certificateAdd}>Отмена</Button>
-            <Button type="submit">Сохранить</Button>
+            <Button variant="outline" onClick={certificateAdd}>
+              Отмена
+            </Button>
+            <Button variant="black" type="submit">
+              Сохранить
+            </Button>
           </div>
         </form>
       </div>

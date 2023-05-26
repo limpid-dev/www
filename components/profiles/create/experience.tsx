@@ -1,6 +1,6 @@
 import { Plus } from "@phosphor-icons/react";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import api from "../../../api";
 import { Button } from "../../primitives/button";
@@ -16,11 +16,15 @@ interface FormValues {
   }[];
 }
 
-export function ExperienceCreate({ profileId, experienceAdd }: any) {
+export function ExperienceCreate({ profileId, isAddHandler }: any) {
   const [error, setError] = useState("");
   const router = useRouter();
+  const { itemId } = router.query;
+  const isEdit = !itemId;
+  const parsedId = Number.parseInt(itemId as string, 10) as number;
 
   const {
+    setValue,
     register,
     handleSubmit,
     formState: { errors },
@@ -31,17 +35,50 @@ export function ExperienceCreate({ profileId, experienceAdd }: any) {
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append } = useFieldArray({
     name: "experiences",
     control,
   });
 
+  useEffect(() => {
+    if (Number.isNaN(parsedId)) return;
+
+    async function fetchEducation() {
+      const { data } = await api.experiences.show(profileId, parsedId);
+      if (data) {
+        setValue(`experiences.0.title`, data.title);
+        setValue(`experiences.0.company`, data.company);
+        setValue(`experiences.0.description`, data.description);
+        setValue(
+          `experiences.0.startedAt`,
+          new Date(data.startedAt).toISOString().slice(0, 10)
+        );
+        setValue(
+          `experiences.0.finishedAt`,
+          new Date(data.finishedAt).toISOString().slice(0, 10)
+        );
+      }
+    }
+    fetchEducation();
+  }, [profileId, setValue, parsedId]);
+
   const onSubmit = async (data: FormValues) => {
     try {
-      data.experiences.forEach(async (post) => {
-        const { data } = await api.experiences.store(post, profileId);
-      });
-      router.reload();
+      if (isEdit === false) {
+        await api.experiences.update(profileId, parsedId, data.experiences[0]);
+        await router.push({
+          pathname: `/app/profiles/${profileId}/education`,
+          query: {},
+        });
+        router.reload();
+      } else {
+        data.experiences.forEach(async (post) => {
+          const { data } = await api.experiences.store(post, profileId);
+        });
+        if (data) {
+          router.reload();
+        }
+      }
     } catch (error) {
       setError("Что то пошло не так, попробуйте позже");
     }
@@ -156,27 +193,44 @@ export function ExperienceCreate({ profileId, experienceAdd }: any) {
             );
           })}
 
-          <div className="mt-4 flex flex-col gap-4">
-            <Button
-              type="button"
-              onClick={() => {
-                append({
-                  company: "",
-                  title: "",
-                  description: "",
-                  startedAt: "",
-                  finishedAt: "",
-                });
-              }}
-              variant="outline"
-            >
-              <Plus /> Добавить образование
-            </Button>
-          </div>
+          {isEdit && (
+            <div className="mt-4 flex flex-col gap-4">
+              <Button
+                type="button"
+                onClick={() => {
+                  append({
+                    company: "",
+                    title: "",
+                    description: "",
+                    startedAt: "",
+                    finishedAt: "",
+                  });
+                }}
+                variant="outline"
+                className="flex gap-3"
+              >
+                <Plus className="h-4 w-4" />
+                Добавить образование
+              </Button>
+            </div>
+          )}
 
           <div className="mt-5 flex justify-end gap-3 pt-4">
-            <Button onClick={experienceAdd}>Отмена</Button>
-            <Button type="submit">Сохранить</Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                isAddHandler();
+                router.push({
+                  pathname: `/app/profiles/${profileId}/experiences`,
+                  query: {},
+                });
+              }}
+            >
+              Отмена
+            </Button>
+            <Button variant="black" type="submit">
+              Сохранить
+            </Button>
           </div>
         </form>
       </div>

@@ -1,18 +1,39 @@
-import { Plus, Power, Trash } from "@phosphor-icons/react";
+import { Pen, Plus, Power, Trash } from "@phosphor-icons/react";
 import clsx from "clsx";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import api from "../../../../api";
-import { Entity as CertificateEntity } from "../../../../api/profile-certificates";
-import { Entity as SkillsEntity } from "../../../../api/profile-skills";
 import { Navigation } from "../../../../components/navigation";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../../../../components/primitives/alert-dialog";
 import { Button } from "../../../../components/primitives/button";
+import { Input } from "../../../../components/primitives/input";
+import { TextArea } from "../../../../components/primitives/text-area";
 import { CertificationCreate } from "../../../../components/profiles/create/certification";
 import SkillsCreate from "../../../../components/profiles/create/skills";
 import { General } from "../../../../components/profiles/general";
+import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
 import Badge from "../../../../images/badge.svg";
+
+interface FormValuesGeneral {
+  industry: string;
+  location: string;
+  description: string;
+  title: string;
+}
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext<{
@@ -25,31 +46,40 @@ export const getServerSideProps = async (
     },
     credentials: "include",
   });
+
   const { data: profile } = await api.profiles.show(Number(context.params!.id));
-  const { data: education } = await api.educations.index(
+
+  const { data: certifications } = await api.certifications.index(
     Number(context.params!.id)
   );
 
-  if (profile && education) {
-    const { data: user } = await api.users.show(profile.userId);
-    const updatedItems = education.map((item) => {
-      return {
-        ...item,
-        startedAt: dateFormatter(item.startedAt),
-        finishedAt: dateFormatter(item.finishedAt),
-      };
+  const { data: skills } = await api.skills.index(Number(context.params!.id));
+  const isAuthor =
+    session.data?.id && profile?.userId && session.data.id === profile.userId;
+
+  if (certifications && profile) {
+    const withFiles = certifications!.map(async (d) => {
+      const certificate = await api.certificateFile.index(
+        Number(context.params!.id),
+        d.id,
+        {
+          page: 1,
+          perPage: 100,
+        }
+      );
+      return { ...d, certificate: certificate.data! };
     });
-    const isAuthor =
-      session.data?.id && profile.userId && session.data.id === profile.userId;
+    const wCertifications = await Promise.all(withFiles);
+    const { data: user } = await api.users.show(profile.userId);
 
     return {
       props: {
         data: {
-          ...session,
-          profile: profile!,
-          user: user!,
           isAuthor: isAuthor!,
-          education: updatedItems!,
+          certifications: certifications!,
+          skills: skills!,
+          user: user!,
+          profile: profile!,
         },
       },
     };
@@ -58,10 +88,9 @@ export const getServerSideProps = async (
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-export default function One() {
+export default function Certifications({ data }: Props) {
   const router = useRouter();
   const { id } = router.query;
-
   const tabs = [
     { name: "Ресурсы", href: `/app/profiles/${id}/`, current: false },
     {
@@ -85,21 +114,17 @@ export default function One() {
       current: false,
     },
   ];
-  const [first, setfirst] = useState(1);
-  const [second, setsecond] = useState(1);
+
   const [certificate, setCertificate] = useState(true);
   const [skill, setSkill] = useState(true);
   const parsedId = Number.parseInt(id as string, 10) as number;
-  const [certificateData, setCertificateData] = useState<CertificateEntity[]>(
-    []
-  );
-  const [skillsData, setSkillsData] = useState<SkillsEntity[]>([]);
-  const [testFile, setTestFile] = useState();
+  const [editGeneral, setEditGeneral] = useState(false);
+  const [contacts, setContacts] = useState({});
+
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
   };
-  const isAuthor = first && second && first === second;
 
   const skillAdd = () => {
     setSkill((current: boolean) => !current);
@@ -114,94 +139,323 @@ export default function One() {
   };
 
   const handleDeleteSkill = (skillId: number) => {
-    api.skills.destroy(id, skillId);
+    api.skills.destroy(parsedId, skillId);
 
     router.reload();
   };
+  const editGeneralInfo = () => {
+    setEditGeneral((current: boolean) => !current);
+  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValuesGeneral>();
 
-  useEffect(() => {
-    async function fetchProfiles() {
-      const { data } = await api.profiles.show(parsedId);
-      if (data) {
-        setsecond(data.userId);
-      }
+  const onSubmit = async (data1: FormValuesGeneral) => {
+    try {
+      const { data } = await api.profiles.update(
+        Number.parseInt(id as string, 10),
+        data1
+      );
+      router.reload();
+    } catch (error) {
+      console.log("Что то пошло не так, попробуйте позже");
     }
-    fetchProfiles();
-  }, [parsedId]);
-
-  useEffect(() => {
-    async function getSession() {
-      const { data } = await api.session.show();
-      if (data) {
-        setfirst(data.id);
-      }
-    }
-    getSession();
-  }, [id]);
-
-  useEffect(() => {
-    async function fetchCertifications() {
-      const { data } = await api.certifications.index(parsedId);
-
-      if (data) {
-        const withFiles = data!.map(async (d) => {
-          const certificate = await api.certificateFile.index(parsedId, d.id, {
-            page: 1,
-            perPage: 100,
-          });
-          return { ...d, certificate: certificate.data! };
-        });
-        const w = await Promise.all(withFiles);
-        if (w) {
-          setCertificateData(w);
-        }
-      }
-    }
-    fetchCertifications();
-  }, [parsedId]);
-
-  useEffect(() => {
-    async function fetchSkills() {
-      const { data } = await api.skills.index(parsedId);
-      if (data) {
-        setSkillsData(data);
-      }
-    }
-    fetchSkills();
-  }, [parsedId]);
+  };
 
   return (
     <div>
       <Navigation />
 
-      <div className=" min-h-[90vh] bg-slate-50">
-        <div className="mx-auto max-w-screen-xl px-5 pt-8">
+      <div className=" min-h-[90vh] bg-slate-50 px-5 pt-8">
+        <div className="mx-auto max-w-screen-xl">
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
-            {isAuthor ? (
+            {data.isAuthor ? (
               <div className="flex gap-5">
-                {/* <Button className=" bg-slate-700 hover:bg-black">
-                  Редактировать
-                </Button> */}
-                <Button variant="outline" onClick={() => handleDeleteProfile()}>
-                  <Trash className="h-6 w-6" />
-                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="outline">
+                      <Trash className="h-6 w-6" />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Удалить профиль?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Восстановить профиль будет невозможно
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Отмена</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => handleDeleteProfile()}>
+                        Удалить
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             ) : (
-              <div className="flex gap-5">
-                {/* <Button
-                  className=" bg-black hover:bg-slate-600"
-                  variant="outline"
-                  color="white"
-                >
-                  Написать в чате
-                </Button> */}
-              </div>
+              <></>
             )}
           </div>
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-10 ">
             <div className="rounded-lg border sm:col-span-3">
-              <General profileId={id} />
+              {editGeneral ? (
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <div className="h-full bg-white px-6">
+                    <div className="flex flex-col items-center justify-center pt-12">
+                      <Image
+                        src={data.user.file ? data.user.file.url : DefaultAva}
+                        width={0}
+                        height={0}
+                        unoptimized
+                        alt="Profile image"
+                        className="mb-3 h-[106px] w-auto rounded-md object-cover"
+                      />
+                      <p className="text-2xl font-semibold mb-2">
+                        {data.user.firstName} {data.user.lastName}
+                      </p>
+                      <p className=" text-sm">
+                        <Input
+                          {...register("industry")}
+                          placeholder={data.profile.industry}
+                        />
+                      </p>
+                    </div>
+                    <div className="mb-6 mt-3" />
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm text-slate-400 mb-2">Локация</p>
+                        <p className="text-sm ">
+                          <Input
+                            {...register("location")}
+                            placeholder={data.profile.location}
+                          />
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-slate-400 mb-2">Профессия</p>
+                        <p className="text-sm">
+                          <Input
+                            {...register("title")}
+                            placeholder={data.profile.title}
+                          />
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mb-6 mt-4" />
+                    <div>
+                      <p className="text-lg font-semibold">Обо мне</p>
+                      <p className="pt-3 text-sm">
+                        <TextArea
+                          {...register("description")}
+                          className=" h-"
+                          placeholder={data.profile.description}
+                        />
+                      </p>
+                    </div>
+
+                    <div className="mb-5 mt-3" />
+                    <div>
+                      <p className="text-lg font-semibold">Социальные сети</p>
+                      <div className="flex flex-col gap-2 pb-5">
+                        <div className="relative mt-4 flex items-center">
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/2gis.png"
+                            className="absolute left-5"
+                          />
+                          <Input
+                            type="url"
+                            name="2gis"
+                            onChange={(e) => {
+                              setContacts((prev: any) => ({
+                                ...prev.contacts,
+                                "2gis": e.target.value,
+                              }));
+                            }}
+                            className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
+                            placeholder="Ссылка на 2ГИС"
+                            minLength={1}
+                            maxLength={255}
+                          />
+                        </div>
+                        <div className="relative mt-4 flex items-center">
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/instagram.png"
+                            className="absolute left-5"
+                          />
+                          <Input
+                            type="url"
+                            name="instagram"
+                            onChange={(e) => {
+                              setContacts((prev: any) => ({
+                                ...prev.contacts,
+                                instagram: e.target.value,
+                              }));
+                            }}
+                            className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
+                            placeholder="Ссылка на Instagram"
+                            minLength={1}
+                            maxLength={255}
+                          />
+                        </div>
+                        <div className="relative mt-4 flex items-center">
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/whatsapp.png"
+                            className="absolute left-5"
+                          />
+                          <Input
+                            type="url"
+                            name="whatsapp"
+                            onChange={(e) => {
+                              setContacts((prev: any) => ({
+                                ...prev.contacts,
+                                whatsapp: e.target.value,
+                              }));
+                            }}
+                            className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
+                            placeholder="Ссылка на WhatsApp"
+                            minLength={1}
+                            maxLength={255}
+                          />
+                        </div>
+                        <div className="relative mt-4 flex  items-center">
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/website.png"
+                            className="absolute left-5"
+                          />
+                          <Input
+                            type="url"
+                            name="website"
+                            className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
+                            placeholder="Ссылка на сайт"
+                            minLength={1}
+                            maxLength={255}
+                          />
+                        </div>
+                      </div>
+                      <div className="flex justify-end gap-3 pb-3">
+                        <Button variant="outline" onClick={editGeneralInfo}>
+                          Отмена
+                        </Button>
+                        <Button variant="black" type="submit">
+                          Сохранить
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              ) : (
+                <div className="h-full bg-white px-6">
+                  <div className="flex flex-col items-center justify-center pt-12">
+                    <Image
+                      src={data.user.file ? data.user.file.url : DefaultAva}
+                      width={0}
+                      height={0}
+                      unoptimized
+                      alt="Profile image"
+                      className="mb-3 h-[106px] w-auto rounded-md object-cover"
+                    />
+                    <p className="text-2xl font-semibold">
+                      {data.user.firstName} {data.user.lastName}
+                    </p>
+                    <p className=" text-sm">{data.profile.industry}</p>
+                  </div>
+                  <div className="mb-6 mt-3" />
+                  <div className="grid grid-cols-2 gap-y-4">
+                    <div>
+                      <p className="text-sm text-slate-400">Локация</p>
+                      <p className="text-sm ">{data.profile.location}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-slate-400">Профессия</p>
+                      <p className="text-sm">{data.profile.title}</p>
+                    </div>
+                  </div>
+                  <div className="mb-6 mt-4" />
+                  <div>
+                    <p className="text-lg font-semibold">Обо мне</p>
+                    <p className="pt-3 text-sm">{data.profile.description}</p>
+                  </div>
+                  {data.isAuthor ? (
+                    <div className="col-span-2">
+                      <div className="flex justify-end gap-6 mt-4">
+                        <Button
+                          variant="outline"
+                          color="zinc"
+                          onClick={editGeneralInfo}
+                        >
+                          <Pen className="h-6 w-6" />
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+                  <div className="mb-5 mt-3" />
+                  <div>
+                    <p className=" mb-4 text-lg font-semibold">
+                      Социальные сети
+                    </p>
+                    <div className="flex gap-6 pb-5">
+                      <Image
+                        width={24}
+                        height={24}
+                        alt=""
+                        unoptimized
+                        quality={100}
+                        src="/2gis.png"
+                      />
+                      <Image
+                        width={24}
+                        height={24}
+                        alt=""
+                        unoptimized
+                        quality={100}
+                        src="/instagram.png"
+                      />
+                      <Image
+                        width={24}
+                        height={24}
+                        alt=""
+                        unoptimized
+                        quality={100}
+                        src="/whatsapp.png"
+                      />
+                      <Image
+                        width={24}
+                        height={24}
+                        alt=""
+                        unoptimized
+                        quality={100}
+                        src="/website.png"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="rounded-lg border bg-white sm:col-span-7">
@@ -262,34 +516,36 @@ export default function One() {
                 </p>
                 {certificate ? (
                   <>
-                    {certificateData.map((certificate, certificateIndex) => (
-                      <div key={certificateIndex} className="mb-7">
-                        <div className="w-full rounded-xl bg-slate-100 pb-6 pt-4">
-                          <div className="flex flex-col items-center justify-center p-3 sm:p-0">
-                            <Image
-                              src={Badge}
-                              alt="Sertificate"
-                              className="m-auto"
-                            />
-                            <p className="text-center text-base font-semibold sm:text-xl">
-                              {certificate.title}
-                            </p>
-                            <p className="text-center text-xs  font-normal sm:text-sm">
-                              {certificate.description}
-                            </p>
-                            <a
-                              target="_blank"
-                              href={certificate.certificate[0]?.url}
-                            >
-                              <p className="text-sm font-medium text-sky-500">
-                                Смотреть сертификат
+                    {data.certifications.map(
+                      (certificate, certificateIndex) => (
+                        <div key={certificateIndex} className="mb-7">
+                          <div className="w-full rounded-xl bg-slate-100 pb-6 pt-4">
+                            <div className="flex flex-col items-center justify-center p-3 sm:p-0">
+                              <Image
+                                src={Badge}
+                                alt="Sertificate"
+                                className="m-auto"
+                              />
+                              <p className="text-center text-base font-semibold sm:text-xl">
+                                {certificate.title}
                               </p>
-                            </a>
+                              <p className="text-center text-xs  font-normal sm:text-sm">
+                                {certificate.description}
+                              </p>
+                              {/* <a
+                                target="_blank"
+                                href={certificate.certificate[0]?.url}
+                              >
+                                <p className="text-sm font-medium text-sky-500">
+                                  Смотреть сертификат
+                                </p>
+                              </a> */}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                    {isAuthor && (
+                      )
+                    )}
+                    {data.isAuthor && (
                       <div className="mt-7 flex items-center justify-end text-sm text-sky-500 underline">
                         <Plus />
                         <button onClick={certificateAdd}>
@@ -312,7 +568,7 @@ export default function One() {
                 {skill ? (
                   <>
                     <div className="mt-8 flex flex-wrap gap-7">
-                      {skillsData.map((skill, skillIndex) => (
+                      {data.skills.map((skill, skillIndex) => (
                         <div
                           key={skillIndex}
                           className="flex items-center gap-3"
@@ -321,7 +577,7 @@ export default function One() {
                             <Power />
                             <p>{skill.name}</p>
                           </div>
-                          {isAuthor && (
+                          {data.isAuthor && (
                             <Button
                               variant="outline"
                               color="zinc"
@@ -333,7 +589,7 @@ export default function One() {
                         </div>
                       ))}
                     </div>
-                    {isAuthor && (
+                    {data.isAuthor && (
                       <div className="mt-7 flex items-center justify-end text-sm text-sky-500 underline">
                         <Plus />
                         <button onClick={skillAdd}>Добавить навык</button>

@@ -70,8 +70,12 @@ export default function SkillsCreate({ skillAdd, profileId }: any) {
         </Button>
       </div>
       <div className="mt-5 flex w-full justify-end gap-3 pt-4">
-        <Button onClick={skillAdd}>Отмена</Button>
-        <Button type="submit">Сохранить</Button>
+        <Button variant="outline" onClick={skillAdd}>
+          Отмена
+        </Button>
+        <Button variant="black" type="submit">
+          Сохранить
+        </Button>
       </div>
     </form>
   );

@@ -112,7 +112,11 @@ export default function Test() {
                     Социальные сети
                   </div>
                   <p className="text-sm text-black mt-3">
-                    Укажите ссылки на аккаунты компании в социальных сетях
+                    Укажите ссылки на аккаунты компании в социальных сетях{" "}
+                    <br />
+                    <span className="text-xs text-slate-500">
+                      (опционально)*
+                    </span>
                   </p>
                   <div className="relative mt-4 flex items-center">
                     <Image
