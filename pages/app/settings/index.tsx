@@ -9,9 +9,19 @@ import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import api from "../../../api";
 import { buildFormData } from "../../../api/files";
-import {} from "../../../api/user-file";
 import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../../../components/primitives/dialog";
+import { Input } from "../../../components/primitives/input";
+import { Label } from "../../../components/primitives/label";
 import DefaultAva from "../../../images/avatars/defaultProfile.svg";
 
 function classNames(...classes: string[]): string {
@@ -165,12 +175,50 @@ export default function Settings({ data }: Props) {
                   </dt>
                   <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
                     <div className="text-gray-900">Iheardthatwas@gmail.com</div>
-                    <button
-                      type="button"
-                      className="font-semibold text-lime-600 hover:text-lime-500"
-                    >
-                      Изменить
-                    </button>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <button
+                          type="button"
+                          className="font-semibold text-lime-600 hover:text-lime-500"
+                        >
+                          Изменить
+                        </button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px] p-10">
+                        <DialogHeader>
+                          <DialogTitle>Edit profile</DialogTitle>
+                          <DialogDescription>
+                            Make changes to your profile here. Click save when
+                            you're done.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="name" className="text-right">
+                              Name
+                            </Label>
+                            <Input
+                              id="name"
+                              value="Pedro Duarte"
+                              className="col-span-3"
+                            />
+                          </div>
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="username" className="text-right">
+                              Username
+                            </Label>
+                            <Input
+                              id="username"
+                              value="@peduarte"
+                              className="col-span-3"
+                            />
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button type="submit">Save changes</Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </dd>
                 </div>
               </dl>

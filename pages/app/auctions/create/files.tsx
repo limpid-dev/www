@@ -6,7 +6,7 @@ import Uppy from "@uppy/core";
 import Russian from "@uppy/locales/lib/ru_RU";
 import { DashboardModal } from "@uppy/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { buildFormData } from "../../../../api/files";
 import TechBuilder from "../../../../components/auctions/techBuilder";
@@ -64,10 +64,12 @@ export default function Create() {
   useEffect(() => {
     uppy.on("dashboard:modal-closed", () => setFileDashboardOpen(false));
   }, []);
+
   useEffect(() => {
     uppy.on("file-added", () => setFileCount(uppy.getFiles().length));
     uppy.on("file-removed", () => setFileCount(uppy.getFiles().length));
   }, []);
+
   return (
     <>
       <div className="min-h-screen h-auto bg-slate-50">
