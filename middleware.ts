@@ -4,6 +4,8 @@ import { getIronSession } from "iron-session/edge";
 import { ironSessionConfig } from "./iron-session-config";
 
 export async function middleware(req: NextRequest) {
+  
+  
   if (req.nextUrl.pathname.startsWith('/app')) {
     const res = NextResponse.next();
 
@@ -54,4 +56,6 @@ export async function middleware(req: NextRequest) {
       url: response.url
     })
   }
+
+  return NextResponse.next()
 }
