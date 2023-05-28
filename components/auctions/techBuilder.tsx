@@ -13,6 +13,7 @@ import {
   DialogTrigger,
 } from "../primitives/dialog";
 import { Input } from "../primitives/input";
+import { TextArea } from "../primitives/text-area";
 
 interface ExperienceFormValues {
   experiences: {
@@ -87,42 +88,33 @@ export default function TechBuilder() {
               onSubmit={handleSubmit(onSubmit)}
             >
               <div className="flex h-[90%] flex-col justify-center items-center gap-6">
-                <div className="flex justify-between items-center border p-4 w-full sm:max-w-[330px]">
-                  <div className="flex gap-3 items-center">
-                    <input
-                      type="checkbox"
-                      {...register("January")}
-                      className="rounded-lg"
-                    />
-                    <p>Услуга</p>
-                  </div>
-                  <Question className="w-6 h-6" />
+                <div className="flex gap-3 items-center border rounded-md p-4 w-full sm:max-w-[330px]">
+                  <input
+                    type="checkbox"
+                    {...register("January")}
+                    className="rounded-lg"
+                  />
+                  <p>Услуга</p>
                 </div>
-                <div className="flex justify-between items-center border p-4 w-full sm:max-w-[330px]">
-                  <div className="flex gap-3 items-center">
-                    <input
-                      type="checkbox"
-                      {...register("January")}
-                      className="rounded-lg"
-                    />
-                    <p>Работа</p>
-                  </div>
-                  <Question className="w-6 h-6" />
+                <div className="flex gap-3 items-center border rounded-md p-4 w-full sm:max-w-[330px]">
+                  <input
+                    type="checkbox"
+                    {...register("January")}
+                    className="rounded-lg"
+                  />
+                  <p>Работа</p>
                 </div>
-                <div className="flex justify-between items-center border p-4 w-full sm:max-w-[330px]">
-                  <div className="flex gap-3 items-center">
-                    <input
-                      type="checkbox"
-                      {...register("January")}
-                      className="rounded-lg"
-                    />
-                    <p>Товар</p>
-                  </div>
-                  <Question className="w-6 h-6" />
+                <div className="flex gap-3 items-center border rounded-md p-4 w-full sm:max-w-[330px]">
+                  <input
+                    type="checkbox"
+                    {...register("January")}
+                    className="rounded-lg"
+                  />
+                  <p>Товар</p>
                 </div>
               </div>
               <div className="flex justify-between px-10 w-full">
-                <Button type="reset" variant="subtle">
+                <Button type="reset" variant="outline">
                   Отмена
                 </Button>
                 <Button
@@ -132,9 +124,6 @@ export default function TechBuilder() {
                 >
                   Далее
                 </Button>
-                {/* <Button onClick={() => goToStep("general")} variant="black">
-                  Далее
-                </Button> */}
               </div>
             </form>
           </div>
@@ -177,59 +166,49 @@ export default function TechBuilder() {
                 </div>
               </div>
               <div className="flex justify-between px-10">
-                <Button onClick={() => goToStep("type")} variant="subtle">
+                <Button onClick={() => goToStep("type")} variant="outline">
                   Назад
                 </Button>
-                <Button onClick={() => goToStep("additional")} variant="black">Далее</Button>
+                <Button onClick={() => goToStep("additional")} variant="black">
+                  Далее
+                </Button>
               </div>
             </form>
           </div>
         )}
         {step === "additional" && (
-          <div className="grid grid-cols-10">
-            <div className="col-span-3 bg-slate-900 p-6 rounded-md">
+          <div className="grid sm:grid-cols-10">
+            <div className="sm:col-span-3 bg-slate-900 p-6 sm:rounded-md">
               <p className="text-md sm:text-3xl font-semibold text-white">
                 Создание технического задания
               </p>
-              <div className="grid gap-11 mt-11">
-                <span className="font-semibold text-white">Вид закупки</span>
+              <div className="flex gap-5 sm:grid sm:gap-11 mt-5 sm:mt-11">
+                <span className="font-semibold text-slate-500">
+                  Вид закупки
+                </span>
                 <span className="font-semibold text-slate-500">
                   Основная информация
                 </span>
-                <span className="font-semibold text-slate-500">
-                  Дополнительно
-                </span>
+                <span className="font-semibold text-white">Дополнительно</span>
               </div>
             </div>
-            <div className="col-span-7">
-              <div className="flex flex-col justify-center items-center h-[90%] gap-6">
-                <div className="flex justify-between items-center border p-4 min-w-[330px]">
-                  <div className="flex gap-3 items-center">
-                    <input type="checkbox" className=" rounded-lg" />{" "}
-                    <p>Услуга</p>{" "}
-                  </div>
-                  <Question className="w-6 h-6" />
-                </div>
-                <div className="flex justify-between items-center border p-4 min-w-[330px]">
-                  <div className="flex gap-3 items-center">
-                    <input type="checkbox" className=" rounded-lg" />{" "}
-                    <p>Работа</p>
-                  </div>
-                  <Question className="w-6 h-6" />
-                </div>
-                <div className="flex justify-between items-center border p-4 min-w-[330px]">
-                  <div className="flex gap-3 items-center">
-                    <input type="checkbox" className=" rounded-lg" />{" "}
-                    <p>Товар</p>
-                  </div>
-                  <Question className="w-6 h-6" />
+            <form className="sm:col-span-7 flex flex-col gap-6 p-10 sm:p-10">
+              <div className="h-[90%] flex justify-center items-center">
+                <div className="grid sm:grid-cols-2 items-center gap-7 w-full">
+                  <TextArea placeholder="Подробное описание работ" />
+                  <TextArea placeholder="Обеспечение исполнения договора (указывается размер в % при необходимости)" />
+                  <TextArea placeholder="Исходные данные" />
+                  <TextArea placeholder="Специальные условия договора (при необходимости)" />
+                  <TextArea placeholder="Квалификационные требования к Потенциальным поставщикам (при необходимости)" />
                 </div>
               </div>
               <div className="flex justify-between px-10">
-                <Button variant="subtle">Отмена</Button>
-                <Button variant="black">Далее</Button>
+                <Button onClick={() => goToStep("general")} variant="outline">
+                  Назад
+                </Button>
+                <Button onClick={() => goToStep("additional")}>Создать</Button>
               </div>
-            </div>
+            </form>
           </div>
         )}
       </DialogContent>

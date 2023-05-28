@@ -1,10 +1,10 @@
-import "focus-visible";
 import "../tailwind.css";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import Script from "next/script";
+import { appWithTranslation } from "next-i18next";
 
-export default function App({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
   return (
     <div className="min-h-full">
       <Head>
@@ -15,3 +15,5 @@ export default function App({ Component, pageProps }: AppProps) {
     </div>
   );
 }
+
+export default appWithTranslation(App);

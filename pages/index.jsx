@@ -8,6 +8,9 @@ import {
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { Fragment, useEffect, useId, useState } from "react";
 import api from "../api";
 import { Button } from "../components/primitives/button";
@@ -24,6 +27,11 @@ import screenshotInventory from "../images/screenshots/chat.png";
 import screenshotContacts from "../images/screenshots/invoice.png";
 import screenshotProfitLoss from "../images/screenshots/myProjects.png";
 
+export const getStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale, ["common"])),
+  },
+});
 const benefits = [
   "Competitive salaries",
   "Flexible work hours",
@@ -1075,6 +1083,8 @@ function MobileNavigation() {
 export function Header() {
   const [session, setSession] = useState(null);
 
+  const router = useRouter();
+
   useEffect(() => {
     (async () => {
       const { data } = await api.session.show();
@@ -1084,6 +1094,7 @@ export function Header() {
       }
     })();
   }, []);
+  const { t, i18n } = useTranslation("common");
 
   return (
     <header className="py-10">
@@ -1108,12 +1119,30 @@ export function Header() {
               ) : (
                 <NavLink href="/login">Войти</NavLink>
               )}
+              {/* </div>
+            <div>
+              <select
+                onChange={(e) =>
+                  router.push(
+                    {
+                      pathname: router.pathname,
+                      query: router.query,
+                    },
+                    null,
+                    { locale: e.target.value }
+                  )
+                }
+              >
+                <option value="en">English</option>
+                <option value="ru">Russian</option>
+              </select>
+              <p>{t("app_title")}</p>*/}
             </div>
             {!session && (
               <NavLink href="/register">
                 <Button color="lime" className="rounded-lg">
                   <span>
-                    Зарегистрируйтесь{" "}
+                    Зарегистрируйтесь
                     <span className="hidden lg:inline">сегодня</span>
                   </span>
                 </Button>

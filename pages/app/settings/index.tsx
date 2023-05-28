@@ -10,6 +10,17 @@ import { useRef, useState } from "react";
 import api from "../../../api";
 import { buildFormData } from "../../../api/files";
 import { Navigation } from "../../../components/navigation";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../../../components/primitives/alert-dialog";
 import { Button } from "../../../components/primitives/button";
 import {
   Dialog,
@@ -50,6 +61,7 @@ export const getServerSideProps = async (
 
   if (session) {
     const { data: user } = await api.users.show(session.id);
+
     return {
       props: {
         data: {
@@ -78,6 +90,24 @@ export default function Settings({ data }: Props) {
     }
     api.users.avatar(data.userInfo.id, buildFormData(fileObj));
     router.reload();
+  };
+
+  const [inputValue, setInputValue] = useState("");
+
+  const handleChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  const sendRequest = async () => {
+    const { data: userUpdate } = await api.users.update(data.userInfo.id, {
+      email: inputValue,
+    });
+    if (userUpdate) {
+      await api.session.destroy();
+      await router.push({
+        pathname: "/",
+      });
+    }
   };
 
   return (
@@ -160,7 +190,9 @@ export default function Settings({ data }: Props) {
                     Полное имя
                   </dt>
                   <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                    <div className="text-gray-900">Nurgali Almaz</div>
+                    <div className="text-gray-900">
+                      {data.userInfo.lastName} {data.userInfo.firstName}
+                    </div>
                     <button
                       type="button"
                       className="font-semibold text-lime-600 hover:text-lime-500"
@@ -174,7 +206,7 @@ export default function Settings({ data }: Props) {
                     Электронная почта
                   </dt>
                   <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                    <div className="text-gray-900">Iheardthatwas@gmail.com</div>
+                    <div className="text-gray-900">{data.userInfo.email}</div>
                     <Dialog>
                       <DialogTrigger asChild>
                         <button
@@ -186,36 +218,46 @@ export default function Settings({ data }: Props) {
                       </DialogTrigger>
                       <DialogContent className="sm:max-w-[425px] p-10">
                         <DialogHeader>
-                          <DialogTitle>Edit profile</DialogTitle>
-                          <DialogDescription>
-                            Make changes to your profile here. Click save when
-                            you're done.
-                          </DialogDescription>
+                          <DialogTitle>Изменить почту</DialogTitle>
                         </DialogHeader>
-                        <div className="grid gap-4 py-4">
+                        <form className="grid gap-4 py-4">
                           <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="name" className="text-right">
-                              Name
+                              Почта
                             </Label>
                             <Input
                               id="name"
-                              value="Pedro Duarte"
+                              value={inputValue}
+                              onChange={handleChange}
+                              placeholder="Новая почта"
                               className="col-span-3"
                             />
                           </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="username" className="text-right">
-                              Username
-                            </Label>
-                            <Input
-                              id="username"
-                              value="@peduarte"
-                              className="col-span-3"
-                            />
-                          </div>
-                        </div>
+                        </form>
                         <DialogFooter>
-                          <Button type="submit">Save changes</Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button variant="black">Изменить</Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  Изменить почту?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Вы будете должны верифицировать почту
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Отмена</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => sendRequest()}
+                                >
+                                  Изменить
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
                         </DialogFooter>
                       </DialogContent>
                     </Dialog>
