@@ -199,7 +199,7 @@ class Api {
       update: (id: number, payload: Users.Update["Payload"]) =>
         this.patch<Users.Update["Data"], Users.Update["Payload"]>(
           `${this.baseUrl}/users/${id}`,
-          payload 
+          payload
         ),
       avatar: (id: number, payload: UserFiles.Store["Payload"]) => {
         this.patch<UserFiles.Store["Data"], UserFiles.Store["Payload"]>(
@@ -835,7 +835,7 @@ class Api {
   }
 }
 
-const api = new Api(process.env.NEXT_PUBLIC_API_URL);
-// const api = new Api("https://api.limpid.kz");
+// const api = new Api(process.env.NEXT_PUBLIC_API_URL);
+const api = new Api("https://api.limpid.kz");
 
 export default api;
