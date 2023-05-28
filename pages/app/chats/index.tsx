@@ -25,7 +25,7 @@ import {
   SheetTrigger,
 } from "../../../components/primitives/sheet";
 import { TextArea } from "../../../components/primitives/text-area";
-import testAva from "../../../images/avatars/avatar-2.jpg";
+import testAva from "../../../images/avatars/avatar-2.webp";
 import DefaultAvatar from "../../../images/avatars/defaultProfile.svg";
 
 const tabs = [
