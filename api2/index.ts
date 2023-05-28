@@ -19,18 +19,6 @@ class Api {
     return null;
   }
 
-  public get xsrf() {
-    if (typeof window !== "undefined") {
-      const xsrf = this.parse(window.document.cookie);
-
-      if (xsrf) {
-        return xsrf;
-      }
-    }
-
-    return "UNDEFINED";
-  }
-
   constructor(private readonly baseUrl: string) {}
 
   async handle<D>(request: Promise<Response>): Promise<{
