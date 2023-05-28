@@ -1,27 +1,7 @@
 import * as Errors from "./errors";
-import * as Health from "./health";
 import * as Helpers from "./helpers";
-import { QueryParams } from "./helpers";
-import * as OrganizationContacts from "./organization-contacts";
-import * as OrganizationFile from "./organization-file";
-import * as Organizations from "./organizations";
-import * as ProfileSertificationFile from "./profile-certificate-files";
-import * as ProfileSertifications from "./profile-certificates";
-import * as ProFileContacts from "./profile-contacts";
-import * as ProfilesEducations from "./profile-educations";
-import * as ProfilesExperiences from "./profile-experiences";
-import * as ProfilesSkills from "./profile-skills";
-import * as Profiles from "./profiles";
-import * as ProjectFiles from "./project-file";
-import * as ProjectMembership from "./project-membership";
-import * as Projects from "./projects";
 import * as Recovery from "./recovery";
 import * as Session from "./session";
-import * as TenderBids from "./tender-bid";
-import * as TenderFiles from "./tender-file";
-import * as Tenders from "./tenders";
-import * as UserFiles from "./user-file";
-import * as Users from "./users";
 import * as Verification from "./verification";
 
 class Api {
@@ -125,14 +105,12 @@ class Api {
     payload?: P,
     init?: Helpers.FetchRequestInit
   ) {
-    await this.csrf();
     return this.handle<D>(
       fetch(input, {
         method: "POST",
         headers: {
           Accept: this.json,
           "Content-Type": this.json,
-          "X-XSRF-TOKEN": this.xsrf,
           ...init?.headers,
         },
         body: JSON.stringify(payload),
@@ -147,14 +125,12 @@ class Api {
     payload: P,
     init?: Helpers.FetchRequestInit
   ) {
-    await this.csrf();
     return this.handle<D>(
       fetch(input, {
         method: "PATCH",
         headers: {
           Accept: this.json,
           "Content-Type": this.json,
-          "X-XSRF-TOKEN": this.xsrf,
           ...init?.headers,
         },
         body: JSON.stringify(payload),
@@ -165,57 +141,16 @@ class Api {
   }
 
   async delete(input: string, init?: Helpers.FetchRequestInit) {
-    await this.csrf();
     return this.handle(
       fetch(input, {
         method: "DELETE",
         headers: {
-          "X-XSRF-TOKEN": this.xsrf,
           ...init?.headers,
         },
         credentials: "include",
         ...init,
       })
     );
-  }
-
-  async health() {
-    return this.get<Health.Show["Data"]>(`${this.baseUrl}/health`);
-  }
-
-  async csrf() {
-    await fetch(`${this.baseUrl}/csrf`);
-  }
-
-  get users() {
-    return {
-      show: (id: number) =>
-        this.get<Users.Show["Data"]>(`${this.baseUrl}/users/${id}`),
-      store: (payload: Users.Store["Payload"]) =>
-        this.post<Users.Store["Data"], Users.Store["Payload"]>(
-          `${this.baseUrl}/users`,
-          payload
-        ),
-      update: (id: number, payload: Users.Update["Payload"]) =>
-        this.patch<Users.Update["Data"], Users.Update["Payload"]>(
-          `${this.baseUrl}/users/${id}`,
-          payload
-        ),
-      avatar: (id: number, payload: UserFiles.Store["Payload"]) => {
-        this.patch<UserFiles.Store["Data"], UserFiles.Store["Payload"]>(
-          `${this.baseUrl}/users/${id}/`,
-          payload,
-          {
-            headers: {
-              ContentType: "multipart/form-data",
-              Accept: "application/json",
-            },
-            body: payload,
-            credentials: "include",
-          }
-        );
-      },
-    };
   }
 
   get verification() {
