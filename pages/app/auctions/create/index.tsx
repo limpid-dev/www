@@ -20,6 +20,8 @@ interface FormValues {
   title: string;
   description: string;
   finishedAt: string;
+  industry: string;
+  type: string;
   startingPrice: number;
   purchasePrice: number;
 }
@@ -85,7 +87,7 @@ export default function Create() {
                 <div className="grid gap-4 sm:grid-cols-2 mt-4">
                   <Controller
                     control={control}
-                    name="industry"
+                    name="type"
                     render={({ field }) => (
                       <Select
                         value={field.value}

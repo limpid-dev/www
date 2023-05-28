@@ -15,17 +15,17 @@ import { Fragment, useEffect, useId, useState } from "react";
 import api from "../api";
 import { Button } from "../components/primitives/button";
 import AstanaHub from "../images/astanaHub.png";
-import avatarImage1 from "../images/avatars/avatar-1.jpg";
-import avatarImage2 from "../images/avatars/avatar-2.jpg";
-import avatarImage3 from "../images/avatars/avatar-3.jpg";
-import backgroundImage from "../images/background-features.jpg";
-import screenshotVatReturns from "../images/screenshots/allAuctions.png";
-import screenshotPayroll from "../images/screenshots/allProfiles.png";
-import screenshotExpenses from "../images/screenshots/allProjects.png";
-import screenshotReporting from "../images/screenshots/allTenders.png";
-import screenshotInventory from "../images/screenshots/chat.png";
-import screenshotContacts from "../images/screenshots/invoice.png";
-import screenshotProfitLoss from "../images/screenshots/myProjects.png";
+import avatarImage1 from "../images/avatars/avatar-1.webp";
+import avatarImage2 from "../images/avatars/avatar-2.webp";
+import avatarImage3 from "../images/avatars/avatar-3.webp";
+import backgroundImage from "../images/background-features.webp";
+import screenshotVatReturns from "../images/screenshots/allAuctions.webp";
+import screenshotPayroll from "../images/screenshots/allProfiles.webp";
+import screenshotExpenses from "../images/screenshots/allProjects.webp";
+import screenshotReporting from "../images/screenshots/allTenders.webp";
+import screenshotInventory from "../images/screenshots/chat.webp";
+import screenshotContacts from "../images/screenshots/invoice.webp";
+import screenshotProfitLoss from "../images/screenshots/myProjects.webp";
 
 export const getStaticProps = async ({ locale }) => ({
   props: {
@@ -783,7 +783,7 @@ function Plan({ name, price, description, href, features, featured = false }) {
 }
 
 export function Pricing() {
-  const [frequency, setFrequency] = useState(frequencies[0]);
+  const [frequency, setFrequency] = useState(frequencies[1]);
 
   return (
     <section
@@ -796,7 +796,7 @@ export function Pricing() {
           <h2 className=" text-3xl tracking-tight text-white sm:text-4xl">
             <span className="relative whitespace-nowrap">
               <SwirlyDoodle className="absolute left-0 top-1/2 h-[1em] w-full fill-lime-400" />
-              <span className="relative">Простая цена,</span>
+              <span className="relative">Простая цена, </span>
             </span>
             для всех.
           </h2>
