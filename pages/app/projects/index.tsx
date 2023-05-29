@@ -14,6 +14,7 @@ import { GeneralLayout } from "../../../components/general-layout";
 import { Navigation } from "../../../components/navigation";
 import Pagination from "../../../components/pagination";
 import { Button } from "../../../components/primitives/button";
+import { Skeleton } from "../../../components/primitives/skeleton";
 import testAva from "../../../images/projectDefault.svg";
 
 const tabs = [
@@ -22,21 +23,23 @@ const tabs = [
 ];
 
 export default function All() {
-  const [search, setSearch] = useState("");
   const router = useRouter();
+
+  const currentPage =
+    (Number.parseInt(router.query.page as string, 10) as number) || 1;
+
+  const [search, setSearch] = useState("");
   const [totalItems, setTotalItems] = useState(1);
+  const [data, setData] = useState<Projects[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const OPTIONS: EmblaOptionsType = { align: "center", loop: true };
   const [emblaRef] = useEmblaCarousel(OPTIONS, [Autoplay()]);
-  const currentPage =
-    (Number.parseInt(router.query.page as string, 10) as number) || 1;
 
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
   };
-
-  const [data, setData] = useState<Projects[]>([]);
 
   useEffect(() => {
     async function fetchProjects() {
@@ -45,9 +48,10 @@ export default function All() {
         per_page: 6,
       });
 
-      if (data.data) {
+      if (data.data && data.meta) {
         setData(data.data);
-        setTotalItems(data.meta?.total);
+        setTotalItems(data.meta.total);
+        setLoading(false);
       }
     }
     fetchProjects();
@@ -137,16 +141,27 @@ export default function All() {
           </div>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2">
-          {data.map((project, projectIndex) => (
-            <Link key={projectIndex} href={`/app/projects/${project.id}`}>
-              <div className=" rounded-2xl border border-slate-200 bg-white hover:border-black">
-                <div className="p-4">
-                  <div className="grid w-full grid-cols-10 gap-4">
-                    <div className="col-span-2">
-                      <div className="overflow-hidden" ref={emblaRef}>
-                        <div className="flex">
-                          {/* {project.images.map((data, index) => (
+        {loading ? (
+          <div className="grid gap-6 sm:grid-cols-2">
+            <Skeleton className=" h-[150px] rounded-full" />
+            <Skeleton className=" h-[150px] rounded-full" />
+            <Skeleton className=" h-[150px] rounded-full" />
+            <Skeleton className=" h-[150px] rounded-full" />
+            <Skeleton className=" h-[150px] rounded-full" />
+            <Skeleton className=" h-[150px] rounded-full" />
+          </div>
+        ) : (
+          <>
+            <div className="grid gap-6 sm:grid-cols-2">
+              {data.map((project, projectIndex) => (
+                <Link key={projectIndex} href={`/app/projects/${project.id}`}>
+                  <div className=" rounded-2xl border border-slate-200 bg-white hover:border-black">
+                    <div className="p-4">
+                      <div className="grid w-full grid-cols-10 gap-4">
+                        <div className="col-span-2">
+                          <div className="overflow-hidden" ref={emblaRef}>
+                            <div className="flex">
+                              {/* {project.images.map((data, index) => (
                             <div
                               key={index}
                               className="relative h-28 flex-[0_0_100%]"
@@ -162,51 +177,55 @@ export default function All() {
                               />
                             </div>
                           ))} */}
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                    <div className="col-span-8 flex flex-col gap-1">
-                      <div className="flex justify-between">
-                        <p className="text-xs font-semibold sm:text-base">
-                          {project.title}
-                        </p>
-                      </div>
-                      <div className="flex justify-between">
-                        <p className="max-w-[300px] text-xs sm:text-sm">
-                          {project.industry}
-                        </p>
-                        <p className="flex items-center rounded-2xl bg-lime-500 px-2 py-1 text-[9px] font-bold text-slate-100 sm:text-xs">
-                          в ТОПе
-                        </p>
-                      </div>
-                      <p className="line-clamp-3 w-auto text-xs">
-                        {project.description}
-                      </p>
-                      <div className="mt-2 flex gap-4 text-xs">
-                        <div className="flex w-fit items-center gap-4 rounded-lg bg-slate-100 p-2">
-                          <Image
-                            src={testAva}
-                            alt="test"
-                            width={20}
-                            height={20}
-                            className="rounded-lg"
-                          />
-                          <p className="text-xs sm:text-sm">Сара Алтыбекова</p>
+                        <div className="col-span-8 flex flex-col gap-1">
+                          <div className="flex justify-between">
+                            <p className="text-xs font-semibold sm:text-base">
+                              {project.title}
+                            </p>
+                          </div>
+                          <div className="flex justify-between">
+                            <p className="max-w-[300px] text-xs sm:text-sm">
+                              {project.industry}
+                            </p>
+                            <p className="flex items-center rounded-2xl bg-lime-500 px-2 py-1 text-[9px] font-bold text-slate-100 sm:text-xs">
+                              в ТОПе
+                            </p>
+                          </div>
+                          <p className="line-clamp-3 w-auto text-xs">
+                            {project.description}
+                          </p>
+                          <div className="mt-2 flex gap-4 text-xs">
+                            <div className="flex w-fit items-center gap-4 rounded-lg bg-slate-100 p-2">
+                              <Image
+                                src={testAva}
+                                alt="test"
+                                width={20}
+                                height={20}
+                                className="rounded-lg"
+                              />
+                              <p className="text-xs sm:text-sm">
+                                Сара Алтыбекова
+                              </p>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-        <Pagination
-          renderPageLink={(page) => `/app/projects/?page=${page}`}
-          itemsPerPage={6}
-          totalItems={totalItems}
-          currentPage={currentPage}
-        />
+                </Link>
+              ))}
+            </div>
+            <Pagination
+              renderPageLink={(page) => `/app/projects/?page=${page}`}
+              itemsPerPage={6}
+              totalItems={totalItems}
+              currentPage={currentPage}
+            />
+          </>
+        )}
       </GeneralLayout>
     </>
   );

@@ -20,7 +20,7 @@ const Pagination = ({
   const pages = usePagination(totalItems, currentPage, itemsPerPage);
 
   return (
-    <div className="flex items-center justify-center my-8">
+    <div className="flex items-center justify-center my-8 fixed inset-x-0 bottom-0">
       {pages.map((pageNumber, i) =>
         pageNumber === dotts ? (
           <span

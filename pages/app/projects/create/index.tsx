@@ -1,10 +1,20 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import api from "../../../../api";
 import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";
 import { Input } from "../../../../components/primitives/input";
+import { Options } from "../../../../components/primitives/options";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "../../../../components/primitives/select";
 import { TextArea } from "../../../../components/primitives/text-area";
 
 interface FormValues {
@@ -25,11 +35,15 @@ interface FormValues {
 export default function Create() {
   const router = useRouter();
 
-  const { register, handleSubmit } = useForm<FormValues>({});
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<FormValues>({});
 
   const onSubmit = async (post: FormValues) => {
     const { data } = await api.projects.store(post);
-    console.log(data);
     if (data) {
       await router.push({
         // pathname: "/app/projects/create/files",
@@ -67,7 +81,19 @@ export default function Create() {
                   <div className="mb-5 text-lg font-semibold sm:text-2xl">
                     Название проекта
                   </div>
-                  <Input placeholder="Название" {...register("title")} />
+                  <Input
+                    placeholder="Название"
+                    {...register("title", {
+                      required: true,
+                      minLength: 2,
+                      maxLength: 30,
+                    })}
+                  />
+                  {errors.title && (
+                    <span className="text-sm text-red-600 ml-2">
+                      Введите название проекта
+                    </span>
+                  )}
                 </div>
                 <div className="relative py-6">
                   <div
@@ -82,12 +108,60 @@ export default function Create() {
                     Основная информация о проекте
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <Input placeholder="Локация" {...register("location")} />
-                    <Input
-                      placeholder="Стадия проекта"
-                      {...register("stage")}
+                    <div>
+                      <Input
+                        placeholder="Локация"
+                        {...register("location", {
+                          required: true,
+                          minLength: 2,
+                          maxLength: 30,
+                        })}
+                      />
+                      {errors.location && (
+                        <span className="text-sm text-red-600 ml-2">
+                          Введите название проекта
+                        </span>
+                      )}
+                    </div>
+                    <Controller
+                      control={control}
+                      name="industry"
+                      render={({ field }) => (
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
+                          <SelectTrigger className="px-5 text-black rounded-md flex-1 max-w-full text-ellipsis whitespace-nowrap overflow-hidden w-full">
+                            <SelectValue placeholder="Сфера деятельности" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup className="overflow-auto h-[300px]">
+                              <SelectLabel>Сфера деятельности</SelectLabel>
+                              {Options.map((option) => (
+                                <SelectItem key={option.id} value={option.name}>
+                                  {option.name}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      )}
                     />
-                    <Input placeholder="Категория" {...register("industry")} />
+                    <div>
+                      <Input
+                        placeholder="Стадия проекта"
+                        {...register("stage", {
+                          required: true,
+                          minLength: 2,
+                          maxLength: 30,
+                        })}
+                      />
+                      {errors.stage && (
+                        <span className="text-sm text-red-600 ml-2">
+                          Введите стадию проекта
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
                 <div className="relative py-6">
@@ -104,12 +178,14 @@ export default function Create() {
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2">
                     <Input
+                      type="number"
                       placeholder="Требуемая сумма"
                       {...register("required_money_amount", {
                         setValueAs(value) {
                           return value ? Number(value) : 0;
                         },
                       })}
+                      defaultValue={0}
                     />
                     <Input
                       placeholder="Сумма в собственности"
@@ -118,6 +194,7 @@ export default function Create() {
                           return value ? Number(value) : 0;
                         },
                       })}
+                      defaultValue={0}
                     />
                   </div>
                 </div>
@@ -134,10 +211,20 @@ export default function Create() {
                     О проекте
                   </div>
                   <TextArea
-                    {...register("description")}
+                    {...register("description", {
+                      setValueAs(value) {
+                        return value ? Number(value) : 0;
+                      },
+                      required: true,
+                    })}
                     className="bg-slate-100"
                     placeholder="Что будущему партнеру стоит знать о проекте? Опишите ваши цели, идеи и т.д."
                   />
+                  {errors.description && (
+                    <span className="text-sm text-red-600 ml-2">
+                      Введите описание проекта
+                    </span>
+                  )}
                 </div>
                 <div className="relative py-6">
                   <div
@@ -159,9 +246,16 @@ export default function Create() {
                         </p>
                         <TextArea
                           className="bg-slate-100"
-                          {...register("owned_material_resources")}
+                          {...register("owned_material_resources", {
+                            required: true,
+                          })}
                           placeholder="Укажите какие материальные ресурсы у вас уже имеются"
                         />
+                        {errors.owned_material_resources && (
+                          <span className="text-sm text-red-600 ml-2">
+                            Обязательно поле
+                          </span>
+                        )}
                       </div>
                       <div>
                         <p className="mb-2 text-lg font-semibold">
@@ -169,9 +263,16 @@ export default function Create() {
                         </p>
                         <TextArea
                           className="bg-slate-100"
-                          {...register("owned_intellectual_resources")}
+                          {...register("owned_intellectual_resources", {
+                            required: true,
+                          })}
                           placeholder="Укажите какие интеллектуальные ресурсы у вас уже имеются"
                         />
+                        {errors.owned_intellectual_resources && (
+                          <span className="text-sm text-red-600 ml-2">
+                            Обязательно поле
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -195,8 +296,15 @@ export default function Create() {
                         <TextArea
                           className="bg-slate-100"
                           placeholder="Укажите какие материальные ресурсы вам нужны"
-                          {...register("required_material_resources")}
+                          {...register("required_material_resources", {
+                            required: true,
+                          })}
                         />
+                        {errors.required_material_resources && (
+                          <span className="text-sm text-red-600 ml-2">
+                            Обязательно поле
+                          </span>
+                        )}
                       </div>
                       <div>
                         <p className="mb-2  text-lg font-semibold">
@@ -205,8 +313,15 @@ export default function Create() {
                         <TextArea
                           className="bg-slate-100"
                           placeholder="Укажите какие интеллектуальные ресурсы вам нужны"
-                          {...register("required_intellectual_resources")}
+                          {...register("required_intellectual_resources", {
+                            required: true,
+                          })}
                         />
+                        {errors.required_intellectual_resources && (
+                          <span className="text-sm text-red-600 ml-2">
+                            Обязательно поле
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -226,8 +341,13 @@ export default function Create() {
                   <TextArea
                     placeholder="Опишите ожидаемую рентабельность"
                     className="bg-slate-100"
-                    {...register("profitability")}
+                    {...register("profitability", { required: true })}
                   />
+                  {errors.profitability && (
+                    <span className="text-sm text-red-600 ml-2">
+                      Обязательно поле
+                    </span>
+                  )}
                 </div>
                 <div className="flex justify-end gap-3 pt-4 ">
                   <Link href="/app/projects/my">
