@@ -1,7 +1,6 @@
 import * as Errors from "./errors";
 import * as Health from "./health";
 import * as Helpers from "./helpers";
-import { QueryParams } from "./helpers";
 import * as OrganizationContacts from "./organization-contacts";
 import * as OrganizationFile from "./organization-file";
 import * as Organizations from "./organizations";
@@ -39,18 +38,6 @@ class Api {
     return null;
   }
 
-  public get xsrf() {
-    if (typeof window !== "undefined") {
-      const xsrf = this.parse(window.document.cookie);
-
-      if (xsrf) {
-        return xsrf;
-      }
-    }
-
-    return "UNDEFINED";
-  }
-
   constructor(private readonly baseUrl: string) {}
 
   async handle<D>(request: Promise<Response>): Promise<{
@@ -61,7 +48,7 @@ class Api {
     try {
       const response = await request;
 
-      if (response.status === 200) {
+      if (response.ok) {
         const contentType = response.headers.get("Content-Type");
 
         if (contentType?.includes(this.json)) {
@@ -125,14 +112,12 @@ class Api {
     payload?: P,
     init?: Helpers.FetchRequestInit
   ) {
-    await this.csrf();
     return this.handle<D>(
       fetch(input, {
         method: "POST",
         headers: {
           Accept: this.json,
           "Content-Type": this.json,
-          "X-XSRF-TOKEN": this.xsrf,
           ...init?.headers,
         },
         body: JSON.stringify(payload),
@@ -147,14 +132,12 @@ class Api {
     payload: P,
     init?: Helpers.FetchRequestInit
   ) {
-    await this.csrf();
     return this.handle<D>(
       fetch(input, {
         method: "PATCH",
         headers: {
           Accept: this.json,
           "Content-Type": this.json,
-          "X-XSRF-TOKEN": this.xsrf,
           ...init?.headers,
         },
         body: JSON.stringify(payload),
@@ -165,12 +148,10 @@ class Api {
   }
 
   async delete(input: string, init?: Helpers.FetchRequestInit) {
-    await this.csrf();
     return this.handle(
       fetch(input, {
         method: "DELETE",
         headers: {
-          "X-XSRF-TOKEN": this.xsrf,
           ...init?.headers,
         },
         credentials: "include",
@@ -183,8 +164,33 @@ class Api {
     return this.get<Health.Show["Data"]>(`${this.baseUrl}/health`);
   }
 
-  async csrf() {
-    await fetch(`${this.baseUrl}/csrf`);
+  get verification() {
+    return {
+      store: () => this.post(`${this.baseUrl}/email-verification`),
+      update: (payload: Verification.Update["Payload"]) =>
+        this.patch<never, Verification.Update["Payload"]>(
+          `${this.baseUrl}/email-verification`,
+          payload
+        ),
+    };
+  }
+
+  get session() {
+    return {
+      show: (init?: Helpers.FetchRequestInit) =>
+        this.get<Session.Show["Data"]>(`${this.baseUrl}/session`, init),
+      store: (
+        payload: Session.Store["Payload"],
+        init?: Helpers.FetchRequestInit
+      ) =>
+        this.post<Session.Store["Data"], Session.Store["Payload"]>(
+          `${this.baseUrl}/session`,
+          payload,
+          init
+        ),
+      destroy: (init?: Helpers.FetchRequestInit) =>
+        this.delete(`${this.baseUrl}/session`, init),
+    };
   }
 
   get users() {
@@ -218,43 +224,10 @@ class Api {
     };
   }
 
-  get verification() {
-    return {
-      store: (payload: Verification.Store["Payload"]) =>
-        this.post<never, Verification.Store["Payload"]>(
-          `${this.baseUrl}/verification`,
-          payload
-        ),
-      update: (payload: Verification.Update["Payload"]) =>
-        this.patch<never, Verification.Update["Payload"]>(
-          `${this.baseUrl}/verification`,
-          payload
-        ),
-    };
-  }
-
-  get session() {
-    return {
-      show: (init?: Helpers.FetchRequestInit) =>
-        this.get<Session.Show["Data"]>(`${this.baseUrl}/session`, init),
-      store: <M extends "api" | "web">(
-        payload: Session.Store<M>["Payload"],
-        init?: Helpers.FetchRequestInit
-      ) =>
-        this.post<Session.Store<M>["Data"], Session.Store<M>["Payload"]>(
-          `${this.baseUrl}/session`,
-          payload,
-          init
-        ),
-      destroy: (init?: Helpers.FetchRequestInit) =>
-        this.delete(`${this.baseUrl}/session`, init),
-    };
-  }
-
   get profiles() {
     return {
       index: (
-        qp: QueryParams<Profiles.Entity>,
+        qp: { user_id: number; page: number },
         init?: Helpers.FetchRequestInit
       ) => {
         const url = Helpers.buildQueryParamsUrl(`${this.baseUrl}/profiles`, qp);
@@ -835,7 +808,7 @@ class Api {
   }
 }
 
-const api = new Api(process.env.NEXT_PUBLIC_API_URL);
+const api = new Api(process.env.NEXT_PUBLIC_DOMAIN_URL + "/api");
 // const api = new Api("https://api.limpid.kz");
 
 export default api;

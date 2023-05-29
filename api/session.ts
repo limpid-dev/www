@@ -4,16 +4,13 @@ export interface Show {
   Data: Users.Show["Data"];
 }
 
-export interface Store<M extends "api" | "web"> {
+export interface Store {
   Payload: {
     email: string;
     password: string;
-    mode: M;
   };
-  Data: M extends "api"
-    ? {
-        type: "bearer";
-        token: string;
-      }
-    : never;
+  Data: {
+    type: "bearer";
+    token: string;
+  };
 }

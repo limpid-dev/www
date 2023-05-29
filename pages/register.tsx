@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 import api from "../api";
-import * as Errors from "../api/errors";
+import { BadRequest, Unauthorized, Validation } from "../api/errors";
 import { AuthLayout } from "../components/auth-layout";
 import {
   Field,
@@ -24,25 +24,49 @@ export default function Register() {
     const form = new FormData(event.currentTarget);
     const values = Object.fromEntries(form.entries()) as Record<string, string>;
 
-    const { data, error } = await api.users.store({
-      firstName: values.firstName,
-      lastName: values.lastName,
+    const { data: users, error: users_error } = await api.users.store({
+      first_name: values.firstName,
+      last_name: values.lastName,
       email: values.email,
       password: values.password,
     });
 
-    if (data) {
-      await api.verification.store({
-        email: data.email,
+    if (users) {
+      const { error: session_error } = await api.session.store({
+        email: values.email,
+        password: values.password,
       });
+      if (Validation.is(session_error)) {
+        setErrors((prev) => ({
+          ...prev,
+          email: true,
+        }));
+        return;
+      }
+
+      if (BadRequest.is(session_error)) {
+        setErrors((prev) => ({
+          ...prev,
+          password: true,
+        }));
+        return;
+      }
+
+      if (Unauthorized.is(session_error)) {
+        setErrors((prev) => ({
+          ...prev,
+          email: true,
+        }));
+      }
+
+      localStorage.clear();
 
       await router.push({
-        pathname: "/verification",
-        query: { email: data.email },
+        pathname: "/app/projects",
       });
     }
 
-    if (Errors.Validation.is(error)) {
+    if (Validation.is(users_error)) {
       setErrors((prev) => ({ ...prev, email: true }));
     }
   };

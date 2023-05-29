@@ -6,7 +6,6 @@ export interface Store {
 
 export interface Update {
   Payload: {
-    email: string;
     token: string;
   };
 }

@@ -39,7 +39,6 @@ export default function Login() {
     const { error } = await api.session.store({
       email: values.email,
       password: values.password,
-      mode: "web",
     });
 
     if (Validation.is(error)) {
@@ -63,16 +62,6 @@ export default function Login() {
         ...prev,
         email: true,
       }));
-
-      setTimeout(async () => {
-        await api.verification.store({
-          email: values.email,
-        });
-        await router.push({
-          pathname: "/verification",
-          query: { email: values.email },
-        });
-      }, 1000);
     }
 
     localStorage.clear();

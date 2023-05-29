@@ -4,11 +4,13 @@ export interface Entity {
   id: number;
   email: string;
   password?: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   createdAt: string;
   updatedAt: string;
-  verifiedAt: null;
+  patronymic: string;
+  email_verified_at: null;
+  selected_profile_id: number;
   fileId: number | null;
   file: File.Entity;
 }
@@ -19,12 +21,12 @@ export interface Show {
 
 export interface Store {
   Data: Omit<Entity, "password">;
-  Payload: Pick<Entity, "email" | "firstName" | "lastName" | "password">;
+  Payload: Pick<Entity, "email" | "first_name" | "last_name" | "password">;
 }
 
 export interface Update {
   Data: Omit<Entity, "password">;
   Payload: Partial<
-    Pick<Entity, "email" | "firstName" | "lastName" | "password">
+    Pick<Entity, "email" | "first_name" | "last_name" | "password">
   >;
 }

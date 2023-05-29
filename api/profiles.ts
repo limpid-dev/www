@@ -1,15 +1,16 @@
 export interface Entity {
-  id: number;
-  userId: number;
-  title: string;
-  description: string;
-  location: string;
-  industry: string;
-  verifiedAt: string | null;
-  createdAt: string;
-  updatedAt: string;
-  ownedIntellectualResources: string;
-  ownedMaterialResources: string;
+  profile: {
+    id: number;
+    user_id: number;
+    display_name: string;
+    description: string;
+    location: string;
+    industry: string;
+    createdAt: string;
+    updatedAt: string;
+    ownedIntellectualResources: string;
+    ownedMaterialResources: string;
+  };
 }
 
 export interface Index {
@@ -23,8 +24,8 @@ export interface Show {
 export interface Store {
   Data: Entity;
   Payload: Pick<
-    Entity,
-    | "title"
+    Entity["profile"],
+    | "display_name"
     | "description"
     | "location"
     | "industry"
@@ -37,8 +38,8 @@ export interface Update {
   Data: Entity;
   Payload: Partial<
     Pick<
-      Entity,
-      | "title"
+      Entity["profile"],
+      | "display_name"
       | "description"
       | "location"
       | "industry"

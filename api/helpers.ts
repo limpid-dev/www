@@ -2,50 +2,25 @@ import { NonUndefined } from "react-hook-form";
 
 export interface Meta {
   total: number;
-  perPage: number;
-  currentPage: number;
-  lastPage: number;
-  firstPage: number;
-  firstPageUrl: string;
-  lastPageUrl: string;
-  nextPageUrl: string | null;
-  previousPageUrl: string | null;
+  per_page: number;
+  current_page: number;
+  last_page: number;
+  first_page: number;
+  first_page_url: string;
+  last_page_url: string;
+  next_page_url: string | null;
+  previous_page_url: string | null;
 }
 
-export interface QueryParams<E> {
-  page: number;
-  perPage?: number;
-  filters?: Partial<E>;
-  sort?: Record<keyof E, "asc" | "desc">;
-  search?: string;
-}
-
-export const buildQueryParamsUrl = <E>(
+export const buildQueryParamsUrl = (
   url: string | URL,
-  { page, perPage, filters, sort, search }: QueryParams<E>
+  query: Record<string, string | number | boolean>
 ) => {
   const _url = new URL(url);
 
-  _url.searchParams.append("page", page.toString());
-  if (perPage) {
-    _url.searchParams.append("perPage", perPage.toString());
-  }
-
-  if (filters) {
-    Object.entries(filters).forEach(([key, value]) => {
-      _url.searchParams.append(`filter[${key}]`, `${value}`);
-    });
-  }
-
-  if (sort) {
-    Object.entries(sort).forEach(([key, value]) => {
-      _url.searchParams.append(`sort[]`, value === "asc" ? key : `-${key}`);
-    });
-  }
-
-  if (search) {
-    _url.searchParams.append("search", search);
-  }
+  Object.entries(query).forEach(([key, value]) => {
+    _url.searchParams.append(key, value.toString());
+  });
 
   return _url;
 };

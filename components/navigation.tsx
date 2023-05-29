@@ -139,29 +139,15 @@ export function Navigation() {
   useEffect(() => {
     async function fetchProfiles() {
       const { data: sessionData } = await api.session.show();
-
       if (sessionData) {
         setSessionData(sessionData);
         const { data: profiles } = await api.profiles.index({
+          user_id: sessionData.id,
           page: 1,
-          perPage: 100,
-          filters: {
-            userId: sessionData.id || 0,
-          },
         });
         if (profiles) {
-          if (profiles.length > 0) {
-            setProfilesData(profiles);
-            if (!localStorage.getItem("profileId")) {
-              setProfession(profiles[0].title);
-            } else {
-              const myObject: MyObject = findById(
-                profiles,
-                Number.parseInt(localStorage.getItem("profileId") as string, 10)
-              )!;
-              setProfession(myObject.title);
-            }
-          }
+          setProfilesData(profiles);
+          setProfession(profiles[0].profile.display_name);
         }
       }
     }
@@ -260,7 +246,7 @@ export function Navigation() {
                 </Disclosure.Button>
               </div>
               <div className="hidden lg:relative lg:z-10 lg:ml-4 lg:flex lg:items-center">
-                {profilesData[0]?.title.length > 0 ? (
+                {profilesData[0]?.profile.display_name ? (
                   <p className="mr-3 rounded-md bg-slate-100 p-2 text-sm text-slate-700 px-4 text-ellipsis w-24 whitespace-nowrap overflow-hidden">
                     {profession}
                   </p>
@@ -294,7 +280,7 @@ export function Navigation() {
                   >
                     <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right  bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                       {profilesData.map((item) => (
-                        <Menu.Item key={item.id}>
+                        <Menu.Item key={item.profile.id}>
                           {({ active }) => (
                             <button
                               className={clsx(
@@ -304,12 +290,12 @@ export function Navigation() {
                               onClick={() => {
                                 localStorage.setItem(
                                   "profileId",
-                                  JSON.stringify(item.id)
+                                  JSON.stringify(item.profile.id)
                                 );
-                                setProfession(item.title);
+                                setProfession(item.profile.display_name);
                               }}
                             >
-                              {item.title}
+                              {item.profile.display_name}
                             </button>
                           )}
                         </Menu.Item>
@@ -360,7 +346,7 @@ export function Navigation() {
                 </div>
                 <div className="ml-3">
                   <div className="text-base font-medium text-zinc-800">
-                    {sessionData?.firstName} {sessionData?.lastName}
+                    {sessionData?.first_name} {sessionData?.last_name}
                   </div>
                   <div className="text-sm font-medium text-zinc-500">
                     {sessionData?.email}

@@ -7,8 +7,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import api from "../../../api";
-import { Entity } from "../../../api/projects";
+// import api from "../../../api";
+// import { Entity } from "../../../api/projects";
 import { GeneralLayout } from "../../../components/general-layout";
 import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
@@ -19,38 +19,38 @@ const tabs = [
   { name: "Мои проекты", href: "/app/projects/my", current: false },
 ];
 
-export const getServerSideProps = async () => {
-  const { data } = await api.projects.index();
+// export const getServerSideProps = async () => {
+//   const { data } = await api.projects.index();
 
-  const withFiles = data!.map(async (d) => {
-    const file = await api.projects.files(d.id).index({
-      page: 1,
-      perPage: 100,
-    });
-    return { ...d, file: file.data! };
-  });
+//   const withFiles = data!.map(async (d) => {
+//     const file = await api.projects.files(d.id).index({
+//       page: 1,
+//       perPage: 100,
+//     });
+//     return { ...d, file: file.data! };
+//   });
 
-  const w = await Promise.all(withFiles);
+//   const w = await Promise.all(withFiles);
 
-  const filteredImages = w.map((withFiles, index) => {
-    const images = withFiles.file.filter((item) => {
-      return item.extname === ".jpg" || item.extname === ".png";
-    });
-    return { ...withFiles, images };
-  });
+//   const filteredImages = w.map((withFiles, index) => {
+//     const images = withFiles.file.filter((item) => {
+//       return item.extname === ".jpg" || item.extname === ".png";
+//     });
+//     return { ...withFiles, images };
+//   });
 
-  return {
-    props: {
-      data: {
-        projects: filteredImages!,
-      },
-    },
-  };
-};
+//   return {
+//     props: {
+//       data: {
+//         projects: filteredImages!,
+//       },
+//     },
+//   };
+// };
 
-type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
+// type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-export default function All({ data }: Props) {
+export default function All() {
   const [search, setSearch] = useState("");
   const router = useRouter();
   const OPTIONS: EmblaOptionsType = { align: "center", loop: true };
@@ -147,7 +147,7 @@ export default function All({ data }: Props) {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2">
-          {data.projects.map((project, projectIndex) => (
+          {/* {data.projects.map((project, projectIndex) => (
             <Link key={projectIndex} href={`/app/projects/${project.id}`}>
               <div className=" rounded-2xl border border-slate-200 bg-white hover:border-black">
                 <div className="p-4">
@@ -208,7 +208,7 @@ export default function All({ data }: Props) {
                 </div>
               </div>
             </Link>
-          ))}
+          ))} */}
         </div>
       </GeneralLayout>
     </>
