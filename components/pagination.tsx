@@ -6,6 +6,7 @@ export interface PaginationProps {
   totalItems: number;
   currentPage: number;
   itemsPerPage: number;
+  renderPageLink: (page: number) => string;
 }
 
 export const dotts = -1;
@@ -14,6 +15,7 @@ const Pagination = ({
   totalItems,
   currentPage,
   itemsPerPage,
+  renderPageLink,
 }: PaginationProps) => {
   const pages = usePagination(totalItems, currentPage, itemsPerPage);
 
@@ -30,7 +32,7 @@ const Pagination = ({
         ) : (
           <Link
             key={i}
-            href={`/app/profiles/my?page=${pageNumber}`}
+            href={renderPageLink(pageNumber as number)}
             className={`${
               pageNumber === currentPage ? "text-lime-500" : "text-black"
             } px-4 py-2 mx-1 rounded-full text-lg font-semibold no-underline`}

@@ -79,53 +79,13 @@ export const getServerSideProps = async (
 
   const { data: project } = await api.projects.show(Number(context.params!.id));
 
-  const { data: file } = await api.projects
-    .files(Number(context.params!.id))
-    .index({
-      page: 1,
-      perPage: 100,
-    });
-
-  const { data: membershipData } = await api.projects
-    .memberships(Number(context.params!.id))
-    .index({
-      page: 1,
-      perPage: 100,
-    });
-
-  const isAuthor = membershipData?.some((item) => {
-    return item.type === "owner" && item.profileId === session.data?.id;
-  });
-
-  const acceptMembers = membershipData?.filter((item) => {
-    return item.type === "member" && !item.acceptedAt;
-  });
-
-  const activeMember = membershipData?.some((item) => {
-    return item.profileId === session.data?.id;
-  });
-
-  const withProfiles = membershipData!.map(async (d) => {
-    const profile = await api.profiles.show(d.profileId!);
-    return { ...d, profile: profile.data! };
-  });
-
-  const w = await Promise.all(withProfiles);
-
-  if (file) {
-    const images = file.filter((item) => {
-      return item.extname === ".jpg" || item.extname === ".png";
-    });
+  if (project) {
+    const isAuthor = session.data?.id && project.profile_id;
     return {
       props: {
         data: {
           project: project!,
-          file: file!,
-          images: images!,
-          membershipData: w!,
           isAuthor: isAuthor!,
-          acceptMembers: acceptMembers!,
-          activeMember: activeMember!,
         },
       },
     };
@@ -150,25 +110,26 @@ export default function ProjectView({ data }: Props) {
   } = useForm<FormValues>();
 
   const onSubmit = async (data1: FormValues) => {
-    try {
-      const profileId = localStorage.getItem("profileId");
-      const w = { profileId, ...data1 };
-      const { data } = await api.projects.memberships(parsedId).store(w);
-      if (data) {
-        setSent(true);
-      }
-    } catch (error) {}
+    console.log(data1);
+    // try {
+    //   const profileId = localStorage.getItem("profileId");
+    //   const w = { profileId, ...data1 };
+    //   const { data } = await api.projects.memberships(parsedId).store(w);
+    //   if (data) {
+    //     setSent(true);
+    //   }
+    // } catch (error) {}
   };
 
   const handleClick = (event: any) => {
     setIsShown((current: boolean) => !current);
   };
 
-  const handleAccept = async () => {
-    const { data } = await api.projects
-      .memberships(parsedId)
-      .update(accept[0].id);
-  };
+  // const handleAccept = async () => {
+  //   const { data } = await api.projects
+  //     .memberships(parsedId)
+  //     .update(accept[0].id);
+  // };
   return (
     <div>
       <Navigation />
@@ -189,7 +150,7 @@ export default function ProjectView({ data }: Props) {
                   <AlertDialogTrigger className="rounded-lg border p-2 hover:bg-slate-100">
                     <Trash />
                   </AlertDialogTrigger>
-                  <AlertDialogContent className="flex flex-col items-center justify-center">
+                  <AlertDialogContent className="flex flex-col items-center justify-center p-6">
                     <AlertDialogHeader className="mb-3">
                       <AlertDialogTitle className="text-center">
                         Удалить проект?
@@ -215,7 +176,7 @@ export default function ProjectView({ data }: Props) {
                   <DialogTrigger className="rounded-md bg-slate-700 p-2 text-sm text-white hover:bg-black">
                     Заинтересоваться проектом
                   </DialogTrigger>
-                  <DialogContent>
+                  <DialogContent className="p-6">
                     {sent ? (
                       <div className="flex flex-col items-center justify-center gap-3">
                         <Image src={SentImage} alt="s" />
@@ -289,7 +250,7 @@ export default function ProjectView({ data }: Props) {
                         <SheetTitle>Фото</SheetTitle>
                       </SheetHeader>
                       <div className="m-auto mt-16 grid w-4/5 grid-cols-1 sm:grid-cols-3 gap-6">
-                        {data.images.map((img, index) => (
+                        {/* {data.images.map((img, index) => (
                           <Image
                             key={index}
                             className="h-auto w-auto object-cover rounded-md"
@@ -299,7 +260,7 @@ export default function ProjectView({ data }: Props) {
                             src={img.url}
                             alt="test"
                           />
-                        ))}
+                        ))} */}
                       </div>
                       <Separator className="my-7" />
                       <p>Видео</p>
@@ -310,7 +271,7 @@ export default function ProjectView({ data }: Props) {
                     </SheetContent>
                   </Sheet>
 
-                  {data.activeMember && (
+                  {/* {data.activeMember && (
                     <Button
                       variant="ghost"
                       className="w-full"
@@ -321,7 +282,7 @@ export default function ProjectView({ data }: Props) {
                       </div>
                       <ArrowRight className="w-6 h-6" />
                     </Button>
-                  )}
+                  )} */}
                 </div>
                 <div />
               </div>
@@ -357,19 +318,37 @@ export default function ProjectView({ data }: Props) {
                     <div className="flex flex-col gap-6">
                       <div className="flex flex-col gap-3">
                         <p className=" text-xl font-semibold text-slate-400">
-                          Материальный ресурс
+                          Материальные ресурсы проекта
                         </p>
                         <p className="text-sm">
-                          {data.project.ownedMaterialResources}
+                          {data.project.owned_material_resources}
                         </p>
                       </div>
                       <Separator />
                       <div className="flex flex-col gap-3">
                         <p className=" text-xl font-semibold text-slate-400">
-                          Интеллектуальный ресурс
+                          Требуемые материальные ресурсы проекту
                         </p>
                         <p className="text-sm">
-                          {data.project.ownedIntellectualResources}
+                          {data.project.required_material_resources}
+                        </p>
+                      </div>
+                      <Separator />
+                      <div className="flex flex-col gap-3">
+                        <p className=" text-xl font-semibold text-slate-400">
+                          Интеллектуальные ресурсы проекта
+                        </p>
+                        <p className="text-sm">
+                          {data.project.owned_intellectual_resources}
+                        </p>
+                      </div>
+                      <Separator />
+                      <div className="flex flex-col gap-3">
+                        <p className=" text-xl font-semibold text-slate-400">
+                          Требуемые интеллектуальные ресурсы проекту
+                        </p>
+                        <p className="text-sm">
+                          {data.project.owned_intellectual_resources}
                         </p>
                       </div>
                     </div>
@@ -384,7 +363,7 @@ export default function ProjectView({ data }: Props) {
                       <div>
                         <div className="flex flex-col gap-3">
                           <p className=" text-xl font-semibold text-slate-400">
-                            Ожидаемая рентабельность
+                            Ожидаемая рентабельность по проекту
                           </p>
                           <p className="text-sm">
                             {data.project.profitability}
@@ -415,15 +394,15 @@ export default function ProjectView({ data }: Props) {
                           <DialogTrigger className="text-base w-full p-2">
                             Участники проекта
                           </DialogTrigger>
-                          <DialogContent>
+                          <DialogContent className="p-6">
                             <DialogHeader>
                               <DialogTitle>Участники Обсуждения</DialogTitle>
                             </DialogHeader>
-                            {data.membershipData.map((member) => (
+                            {/* {data.membershipData.map((member) => (
                               <div key={member.id}>
                                 <p>{member.profile.title}</p>
                               </div>
-                            ))}
+                            ))} */}
                           </DialogContent>
                         </Dialog>
                       </DropdownMenuContent>
@@ -435,7 +414,7 @@ export default function ProjectView({ data }: Props) {
                         isTrue ? "items-end self-end" : "items-start"
                       }`}
                     >
-                      <div
+                      {/* <div
                         className={`mt-2 w-96 rounded-lg px-2 py-1 ${
                           isTrue ? "bg-lime-400 " : "flex items-end gap-3"
                         }`}
@@ -474,7 +453,7 @@ export default function ProjectView({ data }: Props) {
                             </div>
                           )}
                         </div>
-                      </div>
+                      </div> */}
                     </div>
                   </ScrollArea>
                   <div className="flex items-center justify-around px-6 pb-3">

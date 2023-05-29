@@ -1,6 +1,6 @@
 const dotts = -1;
 
-const getPages = (length: number, inc = 0) =>
+const getPages = (length: number, inc = 1) =>
   Array.from({ length }, (_, i) => i + inc);
 
 export default function usePagination(

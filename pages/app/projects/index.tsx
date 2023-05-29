@@ -7,10 +7,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-// import api from "../../../api";
+import api from "../../../api";
+import { Entity as Projects } from "../../../api/projects";
 // import { Entity } from "../../../api/projects";
 import { GeneralLayout } from "../../../components/general-layout";
 import { Navigation } from "../../../components/navigation";
+import Pagination from "../../../components/pagination";
 import { Button } from "../../../components/primitives/button";
 import testAva from "../../../images/projectDefault.svg";
 
@@ -19,54 +21,43 @@ const tabs = [
   { name: "Мои проекты", href: "/app/projects/my", current: false },
 ];
 
-// export const getServerSideProps = async () => {
-//   const { data } = await api.projects.index();
-
-//   const withFiles = data!.map(async (d) => {
-//     const file = await api.projects.files(d.id).index({
-//       page: 1,
-//       perPage: 100,
-//     });
-//     return { ...d, file: file.data! };
-//   });
-
-//   const w = await Promise.all(withFiles);
-
-//   const filteredImages = w.map((withFiles, index) => {
-//     const images = withFiles.file.filter((item) => {
-//       return item.extname === ".jpg" || item.extname === ".png";
-//     });
-//     return { ...withFiles, images };
-//   });
-
-//   return {
-//     props: {
-//       data: {
-//         projects: filteredImages!,
-//       },
-//     },
-//   };
-// };
-
-// type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
-
 export default function All() {
   const [search, setSearch] = useState("");
   const router = useRouter();
+  const [totalItems, setTotalItems] = useState(1);
+
   const OPTIONS: EmblaOptionsType = { align: "center", loop: true };
   const [emblaRef] = useEmblaCarousel(OPTIONS, [Autoplay()]);
+  const currentPage =
+    (Number.parseInt(router.query.page as string, 10) as number) || 1;
 
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
   };
 
+  const [data, setData] = useState<Projects[]>([]);
+
+  useEffect(() => {
+    async function fetchProjects() {
+      const data = await api.projects.index({
+        page: currentPage,
+        per_page: 6,
+      });
+
+      if (data.data) {
+        setData(data.data);
+        setTotalItems(data.meta?.total);
+      }
+    }
+    fetchProjects();
+  }, [currentPage]);
   return (
     <>
       <Navigation />
       <GeneralLayout>
         <p className="text-sm text-slate-300">Проекты</p>
-        <div className="my-5 flex flex-col items-end  justify-end gap-4 md:mb-12 md:flex-row md:items-center  md:justify-between">
+        <div className="my-5 flex flex-col items-end justify-end gap-4 md:mb-12 md:flex-row md:items-center md:justify-between">
           <div>
             <div className="sm:hidden">
               <label htmlFor="tabs" className="sr-only">
@@ -147,7 +138,7 @@ export default function All() {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2">
-          {/* {data.projects.map((project, projectIndex) => (
+          {data.map((project, projectIndex) => (
             <Link key={projectIndex} href={`/app/projects/${project.id}`}>
               <div className=" rounded-2xl border border-slate-200 bg-white hover:border-black">
                 <div className="p-4">
@@ -155,7 +146,7 @@ export default function All() {
                     <div className="col-span-2">
                       <div className="overflow-hidden" ref={emblaRef}>
                         <div className="flex">
-                          {project.images.map((data, index) => (
+                          {/* {project.images.map((data, index) => (
                             <div
                               key={index}
                               className="relative h-28 flex-[0_0_100%]"
@@ -170,7 +161,7 @@ export default function All() {
                                 alt="Your alt text"
                               />
                             </div>
-                          ))}
+                          ))} */}
                         </div>
                       </div>
                     </div>
@@ -208,8 +199,14 @@ export default function All() {
                 </div>
               </div>
             </Link>
-          ))} */}
+          ))}
         </div>
+        <Pagination
+          renderPageLink={(page) => `/app/projects/?page=${page}`}
+          itemsPerPage={6}
+          totalItems={totalItems}
+          currentPage={currentPage}
+        />
       </GeneralLayout>
     </>
   );

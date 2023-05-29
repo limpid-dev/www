@@ -12,13 +12,13 @@ interface FormValues {
   location: string;
   industry: string;
   stage: string;
-  requiredMoneyAmount: number;
-  ownedMoneyAmount: number;
+  required_money_amount: number;
+  owned_money_amount: number;
   description: string;
-  requiredIntellectualResources: string;
-  ownedIntellectualResources: string;
-  requiredMaterialResources: string;
-  ownedMaterialResources: string;
+  required_intellectual_resources: string;
+  owned_intellectual_resources: string;
+  required_material_resources: string;
+  owned_material_resources: string;
   profitability: string;
 }
 
@@ -28,16 +28,12 @@ export default function Create() {
   const { register, handleSubmit } = useForm<FormValues>({});
 
   const onSubmit = async (post: FormValues) => {
-    const profileId = localStorage.getItem("profileId");
-    const fullObject = {
-      ...post,
-      profileId,
-    };
-    const { data } = await api.projects.store(fullObject);
+    const { data } = await api.projects.store(post);
+    console.log(data);
     if (data) {
       await router.push({
-        pathname: "/app/projects/create/files",
-        query: { projectId: data.id },
+        // pathname: "/app/projects/create/files",
+        // query: { projectId: data.id },
       });
     }
   };
@@ -109,7 +105,7 @@ export default function Create() {
                   <div className="grid gap-4 sm:grid-cols-2">
                     <Input
                       placeholder="Требуемая сумма"
-                      {...register("requiredMoneyAmount", {
+                      {...register("required_money_amount", {
                         setValueAs(value) {
                           return value ? Number(value) : 0;
                         },
@@ -117,7 +113,7 @@ export default function Create() {
                     />
                     <Input
                       placeholder="Сумма в собственности"
-                      {...register("ownedMoneyAmount", {
+                      {...register("owned_money_amount", {
                         setValueAs(value) {
                           return value ? Number(value) : 0;
                         },
@@ -163,7 +159,7 @@ export default function Create() {
                         </p>
                         <TextArea
                           className="bg-slate-100"
-                          {...register("ownedMaterialResources")}
+                          {...register("owned_material_resources")}
                           placeholder="Укажите какие материальные ресурсы у вас уже имеются"
                         />
                       </div>
@@ -173,7 +169,7 @@ export default function Create() {
                         </p>
                         <TextArea
                           className="bg-slate-100"
-                          {...register("ownedIntellectualResources")}
+                          {...register("owned_intellectual_resources")}
                           placeholder="Укажите какие интеллектуальные ресурсы у вас уже имеются"
                         />
                       </div>
@@ -199,7 +195,7 @@ export default function Create() {
                         <TextArea
                           className="bg-slate-100"
                           placeholder="Укажите какие материальные ресурсы вам нужны"
-                          {...register("requiredMaterialResources")}
+                          {...register("required_material_resources")}
                         />
                       </div>
                       <div>
@@ -209,7 +205,7 @@ export default function Create() {
                         <TextArea
                           className="bg-slate-100"
                           placeholder="Укажите какие интеллектуальные ресурсы вам нужны"
-                          {...register("requiredIntellectualResources")}
+                          {...register("required_intellectual_resources")}
                         />
                       </div>
                     </div>

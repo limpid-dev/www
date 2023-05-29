@@ -160,10 +160,6 @@ class Api {
     );
   }
 
-  async health() {
-    return this.get<Health.Show["Data"]>(`${this.baseUrl}/health`);
-  }
-
   get verification() {
     return {
       store: () => this.post(`${this.baseUrl}/email-verification`),
@@ -220,6 +216,100 @@ class Api {
             credentials: "include",
           }
         );
+      },
+    };
+  }
+
+  get projects() {
+    return {
+      index: (
+        qp: { per_page: number; page: number },
+        init?: Helpers.FetchRequestInit
+      ) => {
+        const url = Helpers.buildQueryParamsUrl(`${this.baseUrl}/projects`, qp);
+
+        return this.get<Projects.Index["Data"]>(url.toString(), init);
+      },
+      show: (id: number) =>
+        this.get<Projects.Show["Data"]>(`${this.baseUrl}/projects/${id}`),
+      store: (payload: Projects.Store["Payload"]) =>
+        this.post<Projects.Store["Data"], Projects.Store["Payload"]>(
+          `${this.baseUrl}/projects`,
+          payload
+        ),
+      destroy: (id: number) => this.delete(`${this.baseUrl}/profiles/${id}`),
+      files: (projectID: number) => {
+        return {
+          index: (
+            qp: Pick<QueryParams<ProjectFiles.Entity>, "page" | "perPage">,
+            init?: Helpers.FetchRequestInit
+          ) => {
+            const url = Helpers.buildQueryParamsUrl(
+              `${this.baseUrl}/projects/${projectID}/files`,
+              qp
+            );
+
+            return this.get<ProjectFiles.Index["Data"]>(url.toString(), init);
+          },
+          store: (
+            payload: ProjectFiles.Store["Payload"],
+            init?: Helpers.FetchRequestInit
+          ) =>
+            this.post<
+              ProjectFiles.Store["Data"],
+              ProjectFiles.Store["Payload"]
+            >(`${this.baseUrl}/projects/${projectID}/files`, payload, {
+              headers: {
+                ContentType: "multipart/form-data",
+                Accept: "application/json",
+              },
+              body: payload,
+              credentials: "include",
+              ...init,
+            }),
+          delete: (id: number, init?: Helpers.FetchRequestInit) =>
+            this.delete(
+              `${this.baseUrl}/projects/${projectID}/files/${id}`,
+              init
+            ),
+        };
+      },
+      memberships: (projectID: number) => {
+        return {
+          index: (
+            qp: QueryParams<ProjectMembership.Entity>,
+            init?: Helpers.FetchRequestInit
+          ) => {
+            const url = Helpers.buildQueryParamsUrl(
+              `${this.baseUrl}/projects/${projectID}/memberships`,
+              qp
+            );
+            return this.get<ProjectMembership.Index["Data"]>(
+              url.toString(),
+              init
+            );
+          },
+          store: (payload: ProjectMembership.Store["Payload"]) =>
+            this.post<
+              ProjectMembership.Store["Data"],
+              ProjectMembership.Store["Payload"]
+            >(`${this.baseUrl}/projects/${projectID}/memberships`, payload),
+          update: (
+            membershipId: number,
+            payload: ProjectMembership.Update["Payload"]
+          ) =>
+            this.patch<
+              ProjectMembership.Update["Data"],
+              ProjectMembership.Update["Payload"]
+            >(
+              `${this.baseUrl}/projects/${projectID}/memberships/${membershipId}`,
+              payload
+            ),
+          destroy: (profileId: number, id: number) =>
+            this.delete(
+              `${this.baseUrl}/profiles/${profileId}/educations/${id}`
+            ),
+        };
       },
     };
   }
@@ -389,106 +479,16 @@ class Api {
     };
   }
 
-  get projects() {
-    return {
-      index: () =>
-        this.get<Projects.Index["Data"]>(
-          `${this.baseUrl}/projects?page=1&perPage=100`
-        ),
-      show: (id: number) =>
-        this.get<Projects.Show["Data"]>(`${this.baseUrl}/projects/${id}`),
-      store: (payload: Profiles.Store["Payload"]) =>
-        this.post<Profiles.Store["Data"], Profiles.Store["Payload"]>(
-          `${this.baseUrl}/projects`,
-          payload
-        ),
-      destroy: (id: number) => this.delete(`${this.baseUrl}/profiles/${id}`),
-      files: (projectID: number) => {
-        return {
-          index: (
-            qp: Pick<QueryParams<ProjectFiles.Entity>, "page" | "perPage">,
-            init?: Helpers.FetchRequestInit
-          ) => {
-            const url = Helpers.buildQueryParamsUrl(
-              `${this.baseUrl}/projects/${projectID}/files`,
-              qp
-            );
-
-            return this.get<ProjectFiles.Index["Data"]>(url.toString(), init);
-          },
-          store: (
-            payload: ProjectFiles.Store["Payload"],
-            init?: Helpers.FetchRequestInit
-          ) =>
-            this.post<
-              ProjectFiles.Store["Data"],
-              ProjectFiles.Store["Payload"]
-            >(`${this.baseUrl}/projects/${projectID}/files`, payload, {
-              headers: {
-                ContentType: "multipart/form-data",
-                Accept: "application/json",
-              },
-              body: payload,
-              credentials: "include",
-              ...init,
-            }),
-          delete: (id: number, init?: Helpers.FetchRequestInit) =>
-            this.delete(
-              `${this.baseUrl}/projects/${projectID}/files/${id}`,
-              init
-            ),
-        };
-      },
-      memberships: (projectID: number) => {
-        return {
-          index: (
-            qp: QueryParams<ProjectMembership.Entity>,
-            init?: Helpers.FetchRequestInit
-          ) => {
-            const url = Helpers.buildQueryParamsUrl(
-              `${this.baseUrl}/projects/${projectID}/memberships`,
-              qp
-            );
-            return this.get<ProjectMembership.Index["Data"]>(
-              url.toString(),
-              init
-            );
-          },
-          store: (payload: ProjectMembership.Store["Payload"]) =>
-            this.post<
-              ProjectMembership.Store["Data"],
-              ProjectMembership.Store["Payload"]
-            >(`${this.baseUrl}/projects/${projectID}/memberships`, payload),
-          update: (
-            membershipId: number,
-            payload: ProjectMembership.Update["Payload"]
-          ) =>
-            this.patch<
-              ProjectMembership.Update["Data"],
-              ProjectMembership.Update["Payload"]
-            >(
-              `${this.baseUrl}/projects/${projectID}/memberships/${membershipId}`,
-              payload
-            ),
-          destroy: (profileId: number, id: number) =>
-            this.delete(
-              `${this.baseUrl}/profiles/${profileId}/educations/${id}`
-            ),
-        };
-      },
-    };
-  }
-
   get recovery() {
     return {
       store: (payload: Recovery.Store["Payload"]) =>
         this.post<never, Recovery.Store["Payload"]>(
-          `${this.baseUrl}/recovery`,
+          `${this.baseUrl}/password-recovery`,
           payload
         ),
       update: (payload: Recovery.Update["Payload"]) =>
         this.patch<never, Recovery.Update["Payload"]>(
-          `${this.baseUrl}/recovery`,
+          `${this.baseUrl}/password-recovery`,
           payload
         ),
     };

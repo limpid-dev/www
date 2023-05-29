@@ -145,9 +145,19 @@ export function Navigation() {
           user_id: sessionData.id,
           page: 1,
         });
+
         if (profiles) {
           setProfilesData(profiles);
-          setProfession(profiles[0].profile.display_name);
+          if (sessionData.selected_profile_id !== null) {
+            setProfession(sessionData.selected_profile_id);
+          }
+
+          if (sessionData.selected_profile_id === null) {
+            await api.users.update(sessionData.id, {
+              selected_profile_id: profiles[0].profile.id,
+            });
+            setProfession(profiles[0].profile.display_name);
+          }
         }
       }
     }

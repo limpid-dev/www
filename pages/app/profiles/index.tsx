@@ -33,30 +33,30 @@ const tabs = [
   { name: "Мои профили", href: "/app/profiles/my", current: false },
 ];
 
-export const getServerSideProps = async () => {
-  const { data: profiles } = await api.profiles.index({
-    page: 1,
-    perPage: 100,
-  });
+// export const getServerSideProps = async () => {
+//   const { data: profiles } = await api.profiles.index({
+//     page: 1,
+//     perPage: 100,
+//   });
 
-  const withUsers = profiles!.map(async (d) => {
-    const user = await api.users.show(d.userId);
+//   const withUsers = profiles!.map(async (d) => {
+//     const user = await api.users.show(d.userId);
 
-    return { ...d, user: user.data! };
-  });
+//     return { ...d, user: user.data! };
+//   });
 
-  const w = await Promise.all(withUsers);
+//   const w = await Promise.all(withUsers);
 
-  return {
-    props: {
-      data: {
-        profilesWithUser: w!,
-      },
-    },
-  };
-};
+//   return {
+//     props: {
+//       data: {
+//         profilesWithUser: w!,
+//       },
+//     },
+//   };
+// };
 
-type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
+// type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 export default function Profiles({ data }: Props) {
   const router = useRouter();
@@ -228,7 +228,7 @@ export default function Profiles({ data }: Props) {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-3">
-          {data.profilesWithUser.map((profile) => (
+          {/* {data.profilesWithUser.map((profile) => (
             <Link key={profile.id} href={`/app/profiles/${profile.id}`}>
               <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
                 <div className="grid grid-cols-10 h-[130px]">
@@ -266,7 +266,7 @@ export default function Profiles({ data }: Props) {
                 </div>
               </div>
             </Link>
-          ))}
+          ))} */}
         </div>
       </GeneralLayout>
     </div>

@@ -1,5 +1,6 @@
 import { Plus } from "@phosphor-icons/react";
 import clsx from "clsx";
+import { InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -17,6 +18,22 @@ const tabs = [
   { name: "Мои проекты", href: "/app/projects/my", current: true },
 ];
 
+// export const getServerSideProps = async () => {
+//   const data = await api.session.show();
+//   console.log(data);
+//   // const { data: projects } = await api.projects.index(2);
+
+//   return {
+//     props: {
+//       data: {
+//         projects: data!,
+//       },
+//     },
+//   };
+// };
+
+// type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
+
 export default function All() {
   const [projectsData, setProjectsData] = useState<Entity[]>([]);
   const router = useRouter();
@@ -31,20 +48,6 @@ export default function All() {
     }
   };
 
-  useEffect(() => {
-    async function fetchProfiles() {
-      const data1 = await api.session.show();
-      const userId = data1.data?.id;
-      const { data } = await api.projects.index(userId);
-
-      if (data) {
-        setProjectsData(data);
-        setLoading(false);
-      }
-    }
-    fetchProfiles();
-  }, []);
-
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
@@ -52,7 +55,7 @@ export default function All() {
   return (
     <div>
       <Navigation />
-      <div className="h-screen bg-slate-50">
+      <div className="h-[90vh] bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
           <p className=" text-sm text-slate-300">Мои проекты</p>
           <div className="my-5 flex flex-col items-end justify-end gap-4 md:mb-12 md:flex-row md:items-center  md:justify-between">

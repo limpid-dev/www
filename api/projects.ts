@@ -1,21 +1,20 @@
 export interface Entity {
   id: number;
-  profileId: number | null;
-  organizationId: number | null;
+  profile_id: number;
   title: string;
   description: string;
   location: string;
   industry: string;
+  stage: string;
   createdAt: string;
   updatedAt: string;
-  ownedIntellectualResources: string;
-  ownedMaterialResources: string;
-  requiredMaterialResources: string;
-  requiredIntellectualResources: string;
+  required_money_amount: number;
+  owned_money_amount: number;
+  required_intellectual_resources: string;
+  owned_intellectual_resources: string;
+  required_material_resources: string;
+  owned_material_resources: string;
   profitability: string;
-  ownedMoneyAmount: number;
-  requiredMoneyAmount: number;
-  stage: string;
 }
 
 export interface Index {
@@ -32,16 +31,15 @@ export interface Store {
     Entity,
     | "title"
     | "description"
-    | "profileId"
     | "location"
     | "industry"
-    | "ownedIntellectualResources"
-    | "ownedMaterialResources"
-    | "requiredMaterialResources"
-    | "requiredIntellectualResources"
+    | "owned_intellectual_resources"
+    | "owned_material_resources"
+    | "required_material_resources"
+    | "required_intellectual_resources"
     | "profitability"
-    | "ownedMoneyAmount"
-    | "requiredMoneyAmount"
+    | "owned_money_amount"
+    | "required_money_amount"
     | "stage"
   >;
 }
@@ -55,13 +53,13 @@ export interface Update {
       | "description"
       | "location"
       | "industry"
-      | "ownedIntellectualResources"
-      | "ownedMaterialResources"
-      | "requiredMaterialResources"
-      | "requiredIntellectualResources"
+      | "owned_intellectual_resources"
+      | "owned_material_resources"
+      | "required_material_resources"
+      | "required_intellectual_resources"
       | "profitability"
-      | "ownedMoneyAmount"
-      | "requiredMoneyAmount"
+      | "owned_money_amount"
+      | "required_money_amount"
       | "stage"
     >
   >;
