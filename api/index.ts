@@ -324,8 +324,8 @@ class Api {
 
         return this.get<Profiles.Index["Data"]>(url.toString(), init);
       },
-      show: (id: number) =>
-        this.get<Profiles.Show["Data"]>(`${this.baseUrl}/profiles/${id}`),
+      show: () =>
+        this.get<Profiles.Show["Data"]>(`${this.baseUrl}/profiles/  `),
       store: (payload: Profiles.Store["Payload"]) =>
         this.post<Profiles.Store["Data"], Profiles.Store["Payload"]>(
           `${this.baseUrl}/profiles`,

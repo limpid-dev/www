@@ -4,7 +4,7 @@ import { InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import api from "../../../api";
 import { Entity } from "../../../api/projects";
 import { Navigation } from "../../../components/navigation";

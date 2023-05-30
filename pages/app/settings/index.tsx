@@ -6,7 +6,7 @@ import clsx from "clsx";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import api from "../../../api";
 import { buildFormData } from "../../../api/files";
 import { Navigation } from "../../../components/navigation";
@@ -94,7 +94,7 @@ export default function Settings({ data }: Props) {
 
   const [inputValue, setInputValue] = useState("");
 
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setInputValue(event.target.value);
   };
 

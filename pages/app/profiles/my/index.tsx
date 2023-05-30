@@ -53,7 +53,7 @@ export const getServerSideProps = async (
     },
     credentials: "include",
   });
-  const { data: profile } = await api.profiles.show(Number(context.params!.id));
+  const { data: profile } = await api.profiles.show();
 
   if (profile) {
     const { data: user } = await api.users.show(profile.userId);

@@ -108,15 +108,6 @@ export function Logo(props: SVGProps<SVGSVGElement>) {
   );
 }
 
-function findById(array: Array<{ id: number }>, id: number) {
-  for (const element of array) {
-    if (element.id === id) {
-      return element;
-    }
-  }
-  return null;
-}
-
 const navigation = [
   { name: "Проекты", href: "/app/projects" },
   { name: "Профили", href: "/app/profiles" },
@@ -141,6 +132,7 @@ export function Navigation() {
       const { data: sessionData } = await api.session.show();
       if (sessionData) {
         setSessionData(sessionData);
+
         const { data: profiles } = await api.profiles.index({
           user_id: sessionData.id,
           page: 1,
@@ -148,14 +140,20 @@ export function Navigation() {
 
         if (profiles) {
           setProfilesData(profiles);
+
           if (sessionData.selected_profile_id !== null) {
-            setProfession(sessionData.selected_profile_id);
+            const foundObject = profiles.find(
+              (item) => item.profile.id === sessionData.selected_profile_id
+            );
+
+            setProfession(foundObject?.profile.display_name);
           }
 
           if (sessionData.selected_profile_id === null) {
             await api.users.update(sessionData.id, {
               selected_profile_id: profiles[0].profile.id,
             });
+
             setProfession(profiles[0].profile.display_name);
           }
         }

@@ -28,6 +28,7 @@ interface FormValues {
 
 export default function Test() {
   const router = useRouter();
+
   const {
     register,
     handleSubmit,
