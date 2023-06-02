@@ -43,12 +43,6 @@ export const getStaticProps = async ({ locale }) => ({
   },
 });
 
-const frequencies = [
-  { value: "monthly", label: "Месяц", priceSuffix: "/мес" },
-  { value: "kvartal", label: "Квартал", priceSuffix: "/квартал" },
-  { value: "annually", label: "Год", priceSuffix: "/год" },
-];
-
 const tiers = [
   {
     name: "START",
@@ -781,7 +775,27 @@ function CheckIcon({ className }) {
 }
 
 export function Pricing() {
+  const { t } = useTranslation("common");
+
+  const frequencies = [
+    { value: "monthly", label: t("month"), priceSuffix: "/мес" },
+    { value: "kvartal", label: "Квартал", priceSuffix: "/квартал" },
+    { value: "annually", label: "Год", priceSuffix: "/год" },
+  ];
+
   const [frequency, setFrequency] = useState(frequencies[1]);
+
+  const handleChangeFrequency = (newFrequency) => {
+    setFrequency(newFrequency);
+  };
+
+  // useEffect(() => {
+  //   first
+
+  //   return () => {
+  //     second
+  //   }
+  // }, [third])
 
   return (
     <section
@@ -792,20 +806,19 @@ export function Pricing() {
       <Container>
         <div className="md:text-center">
           <h2 className=" text-3xl tracking-tight text-white sm:text-4xl">
+            {t("pay_phrase_3")}
             <span className="relative whitespace-nowrap">
               <SwirlyDoodle className="absolute left-0 top-1/2 h-[1em] w-full fill-lime-400" />
-              <span className="relative">Простая цена, </span>
+              <span className="relative">{t("pay_phrase_1")}</span>
             </span>
-            для всех.
+            {t("pay_phrase_2")}
           </h2>
-          <p className="mt-4 text-lg text-zinc-400">
-            Гарантия справедливого и прозрачного партнёрства
-          </p>
+          <p className="mt-4 text-lg text-zinc-400">{t("pay_warranty")}</p>
         </div>
         <div className="mt-10 flex justify-center">
           <RadioGroup
             value={frequency}
-            onChange={setFrequency}
+            onChange={handleChangeFrequency}
             className="grid grid-cols-3 gap-x-1 rounded-full bg-white/5 p-1 text-center text-xs font-semibold leading-5 text-white"
           >
             <RadioGroup.Label className="sr-only">
@@ -1145,6 +1158,7 @@ export function Header() {
                   <SelectGroup>
                     <SelectItem value="ru">Русский язык</SelectItem>
                     <SelectItem value="kz">Қазақ тілі</SelectItem>
+                    <SelectItem value="en">English</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -1165,8 +1179,7 @@ export default function Home() {
   const testimonials = [
     [
       {
-        content:
-          "Limpid - это настоящий прорыв для меня в создании моего бизнеса, благодаря возможности создания проектов и формирования сообщества. Интуитивный интерфейс и мощные функции платформы позволили мне эффективно управлять своими инициативами, налаживать контакты и обмениваться идеями с единомышленниками. Благодаря Limpid моя бизнес-идея стала реальностью!",
+        content: t("testimonials_content_1"),
         author: {
           name: "Абзал Игиссин",
           role: "CEO KZGBKR",
@@ -1176,8 +1189,7 @@ export default function Home() {
     ],
     [
       {
-        content:
-          "Я искренне благодарен Limpid за поддержку в создании и управлении проектами и сообществом для моего бизнеса. Инструменты управления проектами и функции формирования сообщества платформы позволили мне находиться на одной волне с другими предпринимателями, обмениваться идеями и получать обратную связь, чтобы совершенствовать мою бизнес-концепцию. Limpid действительно помог мне воплотить свою мечту в жизнь!",
+        content: t("testimonials_content_2"),
         author: {
           name: "Нұрбақыт Жүсіпәлиев",
           role: "Director SMART INVESTOR",
@@ -1187,8 +1199,7 @@ export default function Home() {
     ],
     [
       {
-        content:
-          "Limpid - это незаменимая платформа для меня в создании и развитии моих бизнес-проектов и сообщества. Простой в использовании интерфейс и мощные функции платформы позволяют мне эффективно планировать и воплощать свои инициативы, а также налаживать контакты с другими предпринимателями. Я искренне благодарен Limpid за его влияние на мой предпринимательский путь.",
+        content: t("testimonials_content_3"),
         author: {
           name: "Куаныш Асембай",
           role: "Director Design Sensei",
@@ -1242,11 +1253,10 @@ export default function Home() {
         <Container>
           <div className="mx-auto max-w-2xl md:text-center">
             <h2 className=" text-3xl tracking-tight text-zinc-900 sm:text-4xl">
-              Любимый людьми по всей стране.
+              {t("slogan_2")}
             </h2>
             <p className="mt-4 text-lg tracking-tight text-zinc-700">
-              Наше программное обеспечение настолько простое, что люди не могут
-              не влюбиться в него.
+              {t("slogan_2_content")}
             </p>
           </div>
           <ul className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-6 sm:gap-8 lg:mt-20 lg:max-w-none lg:grid-cols-3">
