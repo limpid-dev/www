@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "../../../../components/primitives/select";
 import { TextArea } from "../../../../components/primitives/text-area";
+import { useToast } from "../../../../hooks/useToast";
 
 interface FormValues {
   title: string;
@@ -34,6 +35,7 @@ interface FormValues {
 
 export default function Create() {
   const router = useRouter();
+  const { toast } = useToast();
 
   const {
     register,
@@ -44,7 +46,12 @@ export default function Create() {
 
   const onSubmit = async (post: FormValues) => {
     const { data } = await api.projects.store(post);
+
     if (data) {
+      toast({
+        title: "API Call Success",
+        description: "The API call was successful!",
+      });
       await router.push({
         // pathname: "/app/projects/create/files",
         // query: { projectId: data.id },
@@ -211,12 +218,7 @@ export default function Create() {
                     О проекте
                   </div>
                   <TextArea
-                    {...register("description", {
-                      setValueAs(value) {
-                        return value ? Number(value) : 0;
-                      },
-                      required: true,
-                    })}
+                    {...register("description")}
                     className="bg-slate-100"
                     placeholder="Что будущему партнеру стоит знать о проекте? Опишите ваши цели, идеи и т.д."
                   />

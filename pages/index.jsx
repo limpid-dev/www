@@ -6,6 +6,7 @@ import {
   YoutubeLogo,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
+import { t } from "i18next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -14,6 +15,15 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { Fragment, useEffect, useId, useState } from "react";
 import api from "../api";
 import { Button } from "../components/primitives/button";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "../components/primitives/select";
 import AstanaHub from "../images/astanaHub.png";
 import avatarImage1 from "../images/avatars/avatar-1.webp";
 import avatarImage2 from "../images/avatars/avatar-2.webp";
@@ -32,14 +42,6 @@ export const getStaticProps = async ({ locale }) => ({
     ...(await serverSideTranslations(locale, ["common"])),
   },
 });
-const benefits = [
-  "Competitive salaries",
-  "Flexible work hours",
-  "30 days of paid vacation",
-  "Annual team retreats",
-  "Benefits for you and your family",
-  "A great work environment",
-];
 
 const frequencies = [
   { value: "monthly", label: "Месяц", priceSuffix: "/мес" },
@@ -175,152 +177,6 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const features = [
-  {
-    title: "Профили",
-    description: "Создавайте свой профиль и будьте частью бизнес-сообщества",
-    image: screenshotPayroll,
-  },
-  {
-    title: "Создайте проект!",
-    description:
-      "Есть идея? Не откладывайте! У кого-то есть то, что тебе нужно! Найдите друг друга в LIM",
-    image: screenshotExpenses,
-  },
-  {
-    title: "Участвуйте в аукционах!",
-    description: "Закупайте и участвуйте в закупках без комиссий!",
-    image: screenshotVatReturns,
-  },
-  {
-    title: "Маркетплейс",
-    description:
-      "Продавайте на нашем маркетплэйсе без комиссий и выбирайте лучшие предложения!",
-    image: screenshotReporting,
-  },
-];
-
-const secondaryFeatures = [
-  {
-    name: "Множества проектов",
-    summary: "Воплащайте свои мечты в 1 клик",
-    description:
-      "Вы можете воплатить свою идею в жизнь! Найдите партнеров, и начните действовать",
-    image: screenshotProfitLoss,
-    icon: function ReportingIcon() {
-      const id = useId();
-      return (
-        <>
-          <defs>
-            <linearGradient
-              id={id}
-              x1="11.5"
-              y1={18}
-              x2={36}
-              y2="15.5"
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop offset=".194" stopColor="#fff" />
-              <stop offset={1} stopColor="#6692F1" />
-            </linearGradient>
-          </defs>
-          <path
-            d="m30 15-4 5-4-11-4 18-4-11-4 7-4-5"
-            stroke={`url(#${id})`}
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </>
-      );
-    },
-  },
-  {
-    name: "Коммуникация ключ к успеху",
-    summary: "Каждый проект имеет личное обсуждение",
-    description:
-      "В обсуждении проекта могут принять неограниченное количество пользователей",
-    image: screenshotInventory,
-    icon: function InventoryIcon() {
-      return (
-        <>
-          <path
-            opacity=".5"
-            d="M8 17a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2Z"
-            fill="#fff"
-          />
-          <path
-            opacity=".3"
-            d="M8 24a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2Z"
-            fill="#fff"
-          />
-          <path
-            d="M8 10a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2Z"
-            fill="#fff"
-          />
-        </>
-      );
-    },
-  },
-  {
-    name: "Делитесь вашим опытом, либо ресурсами",
-    summary: "Создавайте объявления",
-    description: "Наша платформа поддерживает все возможные пути заработка",
-    image: screenshotContacts,
-    icon: function ContactsIcon() {
-      return (
-        <>
-          <path
-            opacity=".5"
-            d="M25.778 25.778c.39.39 1.027.393 1.384-.028A11.952 11.952 0 0 0 30 18c0-6.627-5.373-12-12-12S6 11.373 6 18c0 2.954 1.067 5.659 2.838 7.75.357.421.993.419 1.384.028.39-.39.386-1.02.036-1.448A9.959 9.959 0 0 1 8 18c0-5.523 4.477-10 10-10s10 4.477 10 10a9.959 9.959 0 0 1-2.258 6.33c-.35.427-.354 1.058.036 1.448Z"
-            fill="#fff"
-          />
-          <path
-            d="M12 28.395V28a6 6 0 0 1 12 0v.395A11.945 11.945 0 0 1 18 30c-2.186 0-4.235-.584-6-1.605ZM21 16.5c0-1.933-.5-3.5-3-3.5s-3 1.567-3 3.5 1.343 3.5 3 3.5 3-1.567 3-3.5Z"
-            fill="#fff"
-          />
-        </>
-      );
-    },
-  },
-];
-
-const testimonials = [
-  [
-    {
-      content:
-        "Limpid - это настоящий прорыв для меня в создании моего бизнеса, благодаря возможности создания проектов и формирования сообщества. Интуитивный интерфейс и мощные функции платформы позволили мне эффективно управлять своими инициативами, налаживать контакты и обмениваться идеями с единомышленниками. Благодаря Limpid моя бизнес-идея стала реальностью!",
-      author: {
-        name: "Абзал Игиссин",
-        role: "CEO KZGBKR",
-        image: avatarImage1,
-      },
-    },
-  ],
-  [
-    {
-      content:
-        "Я искренне благодарен Limpid за поддержку в создании и управлении проектами и сообществом для моего бизнеса. Инструменты управления проектами и функции формирования сообщества платформы позволили мне находиться на одной волне с другими предпринимателями, обмениваться идеями и получать обратную связь, чтобы совершенствовать мою бизнес-концепцию. Limpid действительно помог мне воплотить свою мечту в жизнь!",
-      author: {
-        name: "Нұрбақыт Жүсіпәлиев",
-        role: "Director SMART INVESTOR",
-        image: avatarImage2,
-      },
-    },
-  ],
-  [
-    {
-      content:
-        "Limpid - это незаменимая платформа для меня в создании и развитии моих бизнес-проектов и сообщества. Простой в использовании интерфейс и мощные функции платформы позволяют мне эффективно планировать и воплощать свои инициативы, а также налаживать контакты с другими предпринимателями. Я искренне благодарен Limpid за его влияние на мой предпринимательский путь.",
-      author: {
-        name: "Куаныш Асембай",
-        role: "Director Design Sensei",
-        image: avatarImage3,
-      },
-    },
-  ],
-];
-
 function QuoteIcon(props) {
   return (
     <svg aria-hidden="true" width={105} height={78} {...props}>
@@ -341,6 +197,8 @@ export function Container({ className, ...props }) {
 export function PrimaryFeatures() {
   const [tabOrientation, setTabOrientation] = useState("horizontal");
 
+  const { t } = useTranslation("common");
+
   useEffect(() => {
     const lgMediaQuery = window.matchMedia("(min-width: 1024px)");
 
@@ -355,6 +213,29 @@ export function PrimaryFeatures() {
       lgMediaQuery.removeEventListener("change", onMediaQueryChange);
     };
   }, []);
+
+  const features = [
+    {
+      title: t("feat_t_1"),
+      description: t("feat_d_1"),
+      image: screenshotPayroll,
+    },
+    {
+      title: t("feat_t_2"),
+      description: t("feat_d_2"),
+      image: screenshotExpenses,
+    },
+    {
+      title: t("feat_t_3"),
+      description: t("feat_d_3"),
+      image: screenshotVatReturns,
+    },
+    {
+      title: t("feat_t_4"),
+      description: t("feat_d_4"),
+      image: screenshotReporting,
+    },
+  ];
 
   return (
     <section
@@ -373,11 +254,10 @@ export function PrimaryFeatures() {
       <Container className="relative">
         <div className="max-w-2xl md:mx-auto md:text-center xl:max-w-none">
           <h2 className=" text-3xl tracking-tight text-white sm:text-4xl md:text-5xl">
-            Чем вам поможет платформа LIM?
+            {t("pf_1")}
           </h2>
           <p className="mt-6 text-lg tracking-tight text-lime-100">
-            Публикуйте идею, ищите единомышленников, берите их в долю и
-            начинайте действовать.
+            {t("pf_2")}
           </p>
         </div>
         <Tab.Group
@@ -486,6 +366,91 @@ function Feature({ feature, isActive, className, ...props }) {
 }
 
 function FeaturesMobile() {
+  const { t } = useTranslation("common");
+  const secondaryFeatures = [
+    {
+      name: "Множества проектов",
+      summary: "Воплащайте свои мечты в 1 клик",
+      description:
+        "Вы можете воплатить свою идею в жизнь! Найдите партнеров, и начните действовать",
+      image: screenshotProfitLoss,
+      icon: function ReportingIcon() {
+        const id = useId();
+        return (
+          <>
+            <defs>
+              <linearGradient
+                id={id}
+                x1="11.5"
+                y1={18}
+                x2={36}
+                y2="15.5"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop offset=".194" stopColor="#fff" />
+                <stop offset={1} stopColor="#6692F1" />
+              </linearGradient>
+            </defs>
+            <path
+              d="m30 15-4 5-4-11-4 18-4-11-4 7-4-5"
+              stroke={`url(#${id})`}
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </>
+        );
+      },
+    },
+    {
+      name: "Коммуникация ключ к успеху",
+      summary: "Каждый проект имеет личное обсуждение",
+      description:
+        "В обсуждении проекта могут принять неограниченное количество пользователей",
+      image: screenshotInventory,
+      icon: function InventoryIcon() {
+        return (
+          <>
+            <path
+              opacity=".5"
+              d="M8 17a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2Z"
+              fill="#fff"
+            />
+            <path
+              opacity=".3"
+              d="M8 24a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2Z"
+              fill="#fff"
+            />
+            <path
+              d="M8 10a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2Z"
+              fill="#fff"
+            />
+          </>
+        );
+      },
+    },
+    {
+      name: "Делитесь вашим опытом, либо ресурсами",
+      summary: "Создавайте объявления",
+      description: "Наша платформа поддерживает все возможные пути заработка",
+      image: screenshotContacts,
+      icon: function ContactsIcon() {
+        return (
+          <>
+            <path
+              opacity=".5"
+              d="M25.778 25.778c.39.39 1.027.393 1.384-.028A11.952 11.952 0 0 0 30 18c0-6.627-5.373-12-12-12S6 11.373 6 18c0 2.954 1.067 5.659 2.838 7.75.357.421.993.419 1.384.028.39-.39.386-1.02.036-1.448A9.959 9.959 0 0 1 8 18c0-5.523 4.477-10 10-10s10 4.477 10 10a9.959 9.959 0 0 1-2.258 6.33c-.35.427-.354 1.058.036 1.448Z"
+              fill="#fff"
+            />
+            <path
+              d="M12 28.395V28a6 6 0 0 1 12 0v.395A11.945 11.945 0 0 1 18 30c-2.186 0-4.235-.584-6-1.605ZM21 16.5c0-1.933-.5-3.5-3-3.5s-3 1.567-3 3.5 1.343 3.5 3 3.5 3-1.567 3-3.5Z"
+              fill="#fff"
+            />
+          </>
+        );
+      },
+    },
+  ];
   return (
     <div className="-mx-4 mt-20 flex flex-col gap-y-10 overflow-hidden px-4 sm:-mx-6 sm:px-6 lg:hidden">
       {secondaryFeatures.map((feature) => (
@@ -509,6 +474,90 @@ function FeaturesMobile() {
 }
 
 function FeaturesDesktop() {
+  const { t } = useTranslation("common");
+
+  const secondaryFeatures = [
+    {
+      name: t("sfeat_t_1"),
+      summary: t("sfeat_s_1"),
+      description: t("sfeat_d_1"),
+      image: screenshotProfitLoss,
+      icon: function ReportingIcon() {
+        const id = useId();
+        return (
+          <>
+            <defs>
+              <linearGradient
+                id={id}
+                x1="11.5"
+                y1={18}
+                x2={36}
+                y2="15.5"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop offset=".194" stopColor="#fff" />
+                <stop offset={1} stopColor="#6692F1" />
+              </linearGradient>
+            </defs>
+            <path
+              d="m30 15-4 5-4-11-4 18-4-11-4 7-4-5"
+              stroke={`url(#${id})`}
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </>
+        );
+      },
+    },
+    {
+      name: t("sfeat_t_2"),
+      summary: t("sfeat_s_2"),
+      description: t("sfeat_d_2"),
+      image: screenshotInventory,
+      icon: function InventoryIcon() {
+        return (
+          <>
+            <path
+              opacity=".5"
+              d="M8 17a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2Z"
+              fill="#fff"
+            />
+            <path
+              opacity=".3"
+              d="M8 24a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2Z"
+              fill="#fff"
+            />
+            <path
+              d="M8 10a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2Z"
+              fill="#fff"
+            />
+          </>
+        );
+      },
+    },
+    {
+      name: t("sfeat_t_3"),
+      summary: t("sfeat_s_3"),
+      description: t("sfeat_d_3"),
+      image: screenshotContacts,
+      icon: function ContactsIcon() {
+        return (
+          <>
+            <path
+              opacity=".5"
+              d="M25.778 25.778c.39.39 1.027.393 1.384-.028A11.952 11.952 0 0 0 30 18c0-6.627-5.373-12-12-12S6 11.373 6 18c0 2.954 1.067 5.659 2.838 7.75.357.421.993.419 1.384.028.39-.39.386-1.02.036-1.448A9.959 9.959 0 0 1 8 18c0-5.523 4.477-10 10-10s10 4.477 10 10a9.959 9.959 0 0 1-2.258 6.33c-.35.427-.354 1.058.036 1.448Z"
+              fill="#fff"
+            />
+            <path
+              d="M12 28.395V28a6 6 0 0 1 12 0v.395A11.945 11.945 0 0 1 18 30c-2.186 0-4.235-.584-6-1.605ZM21 16.5c0-1.933-.5-3.5-3-3.5s-3 1.567-3 3.5 1.343 3.5 3 3.5 3-1.567 3-3.5Z"
+              fill="#fff"
+            />
+          </>
+        );
+      },
+    },
+  ];
   return (
     <Tab.Group as="div" className="hidden lg:mt-20 lg:block">
       {({ selectedIndex }) => (
@@ -564,6 +613,7 @@ function FeaturesDesktop() {
 }
 
 export function SecondaryFeatures() {
+  const { t } = useTranslation("common");
   return (
     <section
       id="secondary-features"
@@ -573,10 +623,10 @@ export function SecondaryFeatures() {
       <Container>
         <div className="mx-auto max-w-2xl md:text-center">
           <h2 className=" text-3xl tracking-tight text-zinc-900 sm:text-4xl">
-            LIM - ты не один !
+            {t("slogan")}
           </h2>
           <p className="mt-4 text-lg tracking-tight text-zinc-700">
-            Наша платформа позволяет открыть свой бизнес совместными усилиями
+            {t("slogan_desc")}
           </p>
         </div>
         <FeaturesMobile />
@@ -587,10 +637,12 @@ export function SecondaryFeatures() {
 }
 
 export function Hero() {
+  const { t } = useTranslation("common");
+
   return (
     <Container className="pb-20 pt-20 text-center lg:pb-32 lg:pt-32">
       <h1 className="mx-auto max-w-4xl text-4xl font-medium tracking-tight text-zinc-900 sm:text-6xl">
-        Найди{" "}
+        {t("hero1")}{" "}
         <span className="relative whitespace-nowrap text-lime-600">
           <svg
             aria-hidden="true"
@@ -600,21 +652,16 @@ export function Hero() {
           >
             <path d="M203.371.916c-26.013-2.078-76.686 1.963-124.73 9.946L67.3 12.749C35.421 18.062 18.2 21.766 6.004 25.934 1.244 27.561.828 27.778.874 28.61c.07 1.214.828 1.121 9.595-1.176 9.072-2.377 17.15-3.92 39.246-7.496C123.565 7.986 157.869 4.492 195.942 5.046c7.461.108 19.25 1.696 19.17 2.582-.107 1.183-7.874 4.31-25.75 10.366-21.992 7.45-35.43 12.534-36.701 13.884-2.173 2.308-.202 4.407 4.442 4.734 2.654.187 3.263.157 15.593-.78 35.401-2.686 57.944-3.488 88.365-3.143 46.327.526 75.721 2.23 130.788 7.584 19.787 1.924 20.814 1.98 24.557 1.332l.066-.011c1.201-.203 1.53-1.825.399-2.335-2.911-1.31-4.893-1.604-22.048-3.261-57.509-5.556-87.871-7.36-132.059-7.842-23.239-.254-33.617-.116-50.627.674-11.629.54-42.371 2.494-46.696 2.967-2.359.259 8.133-3.625 26.504-9.81 23.239-7.825 27.934-10.149 28.304-14.005.417-4.348-3.529-6-16.878-7.066Z" />
           </svg>
-          <span className="relative">единомышленников</span> <br />
+          <span className="relative">{t("hero2")}</span> <br />
         </span>{" "}
-        и начни свой бизнес
+        {t("hero3")}
       </h1>
       <p className="mx-auto mt-6 max-w-2xl text-lg tracking-tight text-zinc-700">
-        Инструмент для предпринимателей по поиску и работе с партнёрами
+        {t("find_mates")}
       </p>
       <div className="mt-10 flex justify-center gap-x-6">
         <Link href="/register">
-          <Button
-            variant="default"
-            className="bg-slate-900 text-white hover:bg-black"
-          >
-            Начать бесплатно
-          </Button>
+          <Button variant="black">{t("start_free")}</Button>
         </Link>
         <a target="_blank" href="https://youtu.be/fPko2SHDnv8">
           <Button variant="outline">
@@ -624,7 +671,7 @@ export function Hero() {
             >
               <path d="m9.997 6.91-7.583 3.447A1 1 0 0 1 1 9.447V2.553a1 1 0 0 1 1.414-.91L9.997 5.09c.782.355.782 1.465 0 1.82Z" />
             </svg>
-            <span className="ml-3">Открыть видео</span>
+            <span className="ml-3">{t("open_video")}</span>
           </Button>
         </a>
       </div>
@@ -730,55 +777,6 @@ function CheckIcon({ className }) {
         strokeLinejoin="round"
       />
     </svg>
-  );
-}
-
-function Plan({ name, price, description, href, features, featured = false }) {
-  return (
-    <section
-      className={clsx(
-        "flex flex-col rounded-3xl px-6 sm:px-8",
-        featured ? "order-first bg-lime-600 py-8 lg:order-none" : "lg:py-8"
-      )}
-    >
-      <h3 className="mt-5  text-lg text-white">{name}</h3>
-      <p
-        className={clsx(
-          "mt-2 text-base",
-          featured ? "text-white" : "text-zinc-400"
-        )}
-      >
-        {description}
-      </p>
-      <p className="order-first  text-5xl font-light tracking-tight text-white">
-        {price}
-      </p>
-      <ul
-        className={clsx(
-          "order-last mt-10 flex flex-col gap-y-3 text-sm",
-          featured ? "text-white" : "text-zinc-200"
-        )}
-      >
-        {features.map((feature) => (
-          <li key={feature} className="flex">
-            <CheckIcon className={featured ? "text-white" : "text-zinc-400"} />
-            <span className="ml-4">{feature}</span>
-          </li>
-        ))}
-      </ul>
-      <Link href="/register">
-        <Button
-          href={href}
-          variant={featured ? "subtle" : "outline"}
-          className={
-            featured ? "mt-8 text-black" : "mt-8 text-white hover:text-black"
-          }
-          aria-label={`Get started with the ${name} plan for ${price}`}
-        >
-          Начни сейчас
-        </Button>
-      </Link>
-    </section>
   );
 }
 
@@ -1082,7 +1080,6 @@ function MobileNavigation() {
 
 export function Header() {
   const [session, setSession] = useState(null);
-
   const router = useRouter();
 
   useEffect(() => {
@@ -1094,7 +1091,7 @@ export function Header() {
       }
     })();
   }, []);
-  const { t, i18n } = useTranslation("common");
+  const { t } = useTranslation("common");
 
   return (
     <header className="py-10">
@@ -1105,49 +1102,53 @@ export function Header() {
               <Logo className="h-10 w-auto" />
             </Link>
             <div className="hidden md:flex md:gap-x-6">
-              <NavLink href="#features">Возможности</NavLink>
-              <NavLink href="#testimonials">Отзывы</NavLink>
-              <NavLink href="#pricing">Цены</NavLink>
+              <NavLink href="#features">{t("opportunities")}</NavLink>
+              <NavLink href="#testimonials">{t("reviews")}</NavLink>
+              <NavLink href="#pricing">{t("prices")}</NavLink>
             </div>
           </div>
           <div className="flex items-center gap-x-5 md:gap-x-8">
             <div className="hidden md:block">
               {session ? (
                 <NavLink href="/app/projects">
-                  {session.firstName} {session.lastName}
+                  {session.first_name} {session.last_name}
                 </NavLink>
               ) : (
-                <NavLink href="/login">Войти</NavLink>
+                <NavLink href="/login">{t("log_in")}</NavLink>
               )}
-              {/* </div>
+            </div>
+
+            {!session && (
+              <NavLink href="/register">
+                <Button color="lime" className="hidden lg:inline rounded-lg">
+                  {t("signup_today")}
+                </Button>
+              </NavLink>
+            )}
             <div>
-              <select
-                onChange={(e) =>
+              <Select
+                onValueChange={(newValue) =>
                   router.push(
                     {
                       pathname: router.pathname,
                       query: router.query,
                     },
                     null,
-                    { locale: e.target.value }
+                    { locale: newValue }
                   )
                 }
               >
-                <option value="en">English</option>
-                <option value="ru">Russian</option>
-              </select>
-              <p>{t("app_title")}</p>*/}
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder={t("chooseLanguage")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="ru">Русский язык</SelectItem>
+                    <SelectItem value="kz">Қазақ тілі</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
-            {!session && (
-              <NavLink href="/register">
-                <Button color="lime" className="rounded-lg">
-                  <span>
-                    Зарегистрируйтесь
-                    <span className="hidden lg:inline">сегодня</span>
-                  </span>
-                </Button>
-              </NavLink>
-            )}
             <div className="-mr-1 md:hidden">
               <MobileNavigation />
             </div>
@@ -1159,6 +1160,43 @@ export function Header() {
 }
 
 export default function Home() {
+  const { t } = useTranslation("common");
+
+  const testimonials = [
+    [
+      {
+        content:
+          "Limpid - это настоящий прорыв для меня в создании моего бизнеса, благодаря возможности создания проектов и формирования сообщества. Интуитивный интерфейс и мощные функции платформы позволили мне эффективно управлять своими инициативами, налаживать контакты и обмениваться идеями с единомышленниками. Благодаря Limpid моя бизнес-идея стала реальностью!",
+        author: {
+          name: "Абзал Игиссин",
+          role: "CEO KZGBKR",
+          image: avatarImage1,
+        },
+      },
+    ],
+    [
+      {
+        content:
+          "Я искренне благодарен Limpid за поддержку в создании и управлении проектами и сообществом для моего бизнеса. Инструменты управления проектами и функции формирования сообщества платформы позволили мне находиться на одной волне с другими предпринимателями, обмениваться идеями и получать обратную связь, чтобы совершенствовать мою бизнес-концепцию. Limpid действительно помог мне воплотить свою мечту в жизнь!",
+        author: {
+          name: "Нұрбақыт Жүсіпәлиев",
+          role: "Director SMART INVESTOR",
+          image: avatarImage2,
+        },
+      },
+    ],
+    [
+      {
+        content:
+          "Limpid - это незаменимая платформа для меня в создании и развитии моих бизнес-проектов и сообщества. Простой в использовании интерфейс и мощные функции платформы позволяют мне эффективно планировать и воплощать свои инициативы, а также налаживать контакты с другими предпринимателями. Я искренне благодарен Limpid за его влияние на мой предпринимательский путь.",
+        author: {
+          name: "Куаныш Асембай",
+          role: "Director Design Sensei",
+          image: avatarImage3,
+        },
+      },
+    ],
+  ];
   return (
     <>
       <Header />
@@ -1176,13 +1214,10 @@ export default function Home() {
               />
               <div className="w-full flex-auto">
                 <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                  Спешим поделиться новостью !
+                  {t("hub_title")}
                 </h2>
                 <p className="mt-6 text-lg leading-8 text-gray-300">
-                  Платформа LIM стала участником крупнейшего технопарка
-                  IT-стартапов в Центральной Азии - Astana HUB, что позволит нам
-                  расти быстрее и предоставлять более качественные услуги нашим
-                  пользователям!
+                  {t("hub_content")}
                 </p>
 
                 <div className="mt-10 flex">
@@ -1191,7 +1226,7 @@ export default function Home() {
                     href="https://astanahub.com/ru/"
                     className="text-sm font-semibold leading-6 text-lime-400"
                   >
-                    Перейти на сайт <span aria-hidden="true">&rarr;</span>
+                    {t("hub_action")} <span aria-hidden="true">&rarr;</span>
                   </Link>
                 </div>
               </div>

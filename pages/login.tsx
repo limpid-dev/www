@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 import { FormEvent, useState } from "react";
 import api from "../api";
 import { BadRequest, Unauthorized, Validation } from "../api/errors";
@@ -12,6 +13,7 @@ import {
   Message,
   Submit,
 } from "../components/primitives/form";
+import { toast } from "../hooks/useToast";
 
 export default function Login() {
   const [errors, setErrors] = useState({
@@ -70,11 +72,12 @@ export default function Login() {
       pathname: "/app/projects",
     });
   };
+  const { t } = useTranslation("common");
 
   return (
     <AuthLayout>
       <h2 className="text-lg font-semibold text-zinc-900">
-        Войдите в свой аккаунт
+        Войдите в свой аккаунт <p>{t("app_title")}</p>
       </h2>
       <p className="mt-2 text-sm text-zinc-700">
         Еще нет аккаунта?{" "}

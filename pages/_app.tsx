@@ -20,6 +20,7 @@ import {
 import { Form } from "../components/primitives/form";
 import { Input } from "../components/primitives/input";
 import { Label } from "../components/primitives/label";
+import { Toaster } from "../components/primitives/toaster";
 
 function App({ Component, pageProps }: AppProps) {
   const [verification, setVerification] = useState(false);
@@ -56,7 +57,7 @@ function App({ Component, pageProps }: AppProps) {
   return (
     <div className="min-h-full">
       <Head>
-        <title>LIM - все для бизнеса</title>
+        <title>LIM - все для людей</title>
       </Head>
       <Component {...pageProps} />
       {/* <Script defer data-domain="limpid.kz" src="/js/script.js" /> */}
@@ -96,6 +97,7 @@ function App({ Component, pageProps }: AppProps) {
           </Form>
         </DialogContent>
       </Dialog>
+      <Toaster />
     </div>
   );
 }

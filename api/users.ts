@@ -10,7 +10,7 @@ export interface Entity {
   updatedAt: string;
   patronymic: string;
   email_verified_at: null;
-  selected_profile_id: number | null;
+  selected_profile_id?: number | null;
   fileId: number | null;
   file: File.Entity;
 }
