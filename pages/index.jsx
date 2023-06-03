@@ -652,7 +652,7 @@ export function Pricing() {
 
   const frequencies = [
     { value: "monthly", label: t("month"), priceSuffix: t("monthSuffix") },
-    { value: "kvartal", label: "Квартал", priceSuffix: "/квартал" },
+    { value: "kvartal", label: t("quarter"), priceSuffix: t("quarterSuffix") },
     { value: "annually", label: t("year"), priceSuffix: t("yearSuffix") },
   ];
 
