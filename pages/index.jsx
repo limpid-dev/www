@@ -43,130 +43,6 @@ export const getStaticProps = async ({ locale }) => ({
   },
 });
 
-const tiers = [
-  {
-    name: "START",
-    id: "tier-start",
-    href: "#",
-    price: {},
-    description: "Подходит для всех!",
-    features: {
-      monthly: [
-        "Просмотр детальной информации проектов",
-        "Cоздание 1го проекта",
-        "1 участие на аукционе, стоимостью одного лота не более 1 000 000₸",
-      ],
-      annually: [
-        "Просмотр детальной информации проектов",
-        "Cоздание 1го проекта",
-        "1 участие на аукционе, стоимостью одного лота не более 1 000 000₸",
-      ],
-      kvartal: [
-        "Просмотр детальной информации проектов",
-        "Cоздание 1го проекта",
-        "1 участие на аукционе, стоимостью одного лота не более 1 000 000₸",
-      ],
-    },
-    mostPopular: false,
-  },
-  {
-    name: "LIGHT",
-    id: "tier-light",
-    href: "#",
-    price: { monthly: "4990₸", annually: "37 990₸", kvartal: "12 990₸" },
-    description: "Начинающим",
-    features: {
-      monthly: [
-        "Просмотр детальной информации проектов",
-        "Cоздание 3 проектов",
-        "7 участий на аукционах, стоимостью одного лота не более 1 000 000₸",
-      ],
-      annually: [
-        "Просмотр детальной информации проектов",
-        "Cоздание 36 проектов",
-        "84 участие на аукционах, стоимостью одного лота не более 1 000 000₸",
-      ],
-      kvartal: [
-        "Просмотр детальной информации проектов",
-        "Cоздание 9 проектов",
-        "21 участия на аукционах, стоимостью одного лота не более 1 000 000₸",
-      ],
-    },
-    mostPopular: false,
-  },
-  {
-    name: "STANDART",
-    id: "tier-standart",
-    href: "#",
-    price: { monthly: "8990", annually: "59 900₸", kvartal: "20 990₸" },
-    description: "На пути к успеху",
-    features: {
-      monthly: [
-        "Просмотр детальной информации проектов",
-        "Создание 5 проектов",
-        "15 участий на аукционах, стоимостью одного лота не более 5 000 000₸",
-        "Бесплатная верификация",
-        "Настройка видимости Профиля",
-      ],
-      annually: [
-        "Просмотр детальной информации проектов",
-        "Создание 60 проектов",
-        "180 участий на аукционах, стоимостью одного лота не более 5 000 000₸",
-        "Бесплатная верификация",
-        "Настройка видимости Профиля",
-      ],
-      kvartal: [
-        "Просмотр детальной информации проектов",
-        "Создание 15 проектов",
-        "45 участий на аукционах, стоимостью одного лота не более 5 000 000₸",
-        "Бесплатная верификация",
-        "Настройка видимости Профиля",
-      ],
-    },
-    mostPopular: true,
-  },
-  {
-    name: "VIP",
-    id: "tier-VIP",
-    href: "#",
-    price: { monthly: "", annually: "639 900₸", kvartal: "199900₸" },
-    description: "Без границ",
-    features: {
-      monthly: [
-        "Просмотр детальной информации проектов",
-        "Создание неограниченного количества проектов",
-        "Неограниченный доступ",
-        "Бесплатная верификация",
-        "Настройка видимости Профиля",
-        "Персональные консультации команды Платформы LIM",
-        "Приоритетная поддержкa",
-        "Личные встречи с Основателем Платформы LIM",
-      ],
-      annually: [
-        "Просмотр детальной информации проектов",
-        "Создание неограниченного количества проектов",
-        "Неограниченный доступ",
-        "Бесплатная верификация",
-        "Настройка видимости Профиля",
-        "Персональные консультации команды Платформы LIM",
-        "Приоритетная поддержкa",
-        "Личные встречи с Основателем Платформы LIM",
-      ],
-      kvartal: [
-        "Просмотр детальной информации проектов",
-        "Создание неограниченного количества проектов",
-        "Неограниченный доступ",
-        "Бесплатная верификация",
-        "Настройка видимости Профиля",
-        "Персональные консультации команды Платформы LIM",
-        "Приоритетная поддержкa",
-        "Личные встречи с Основателем Платформы LIM",
-      ],
-    },
-    mostPopular: false,
-  },
-];
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -363,10 +239,9 @@ function FeaturesMobile() {
   const { t } = useTranslation("common");
   const secondaryFeatures = [
     {
-      name: "Множества проектов",
-      summary: "Воплащайте свои мечты в 1 клик",
-      description:
-        "Вы можете воплатить свою идею в жизнь! Найдите партнеров, и начните действовать",
+      name: t("sfeat_t_1"),
+      summary: t("sfeat_s_1"),
+      description: t("sfeat_d_1"),
       image: screenshotProfitLoss,
       icon: function ReportingIcon() {
         const id = useId();
@@ -397,10 +272,9 @@ function FeaturesMobile() {
       },
     },
     {
-      name: "Коммуникация ключ к успеху",
-      summary: "Каждый проект имеет личное обсуждение",
-      description:
-        "В обсуждении проекта могут принять неограниченное количество пользователей",
+      name: t("sfeat_t_2"),
+      summary: t("sfeat_s_2"),
+      description: t("sfeat_d_2"),
       image: screenshotInventory,
       icon: function InventoryIcon() {
         return (
@@ -424,9 +298,9 @@ function FeaturesMobile() {
       },
     },
     {
-      name: "Делитесь вашим опытом, либо ресурсами",
-      summary: "Создавайте объявления",
-      description: "Наша платформа поддерживает все возможные пути заработка",
+      name: t("sfeat_t_3"),
+      summary: t("sfeat_s_3"),
+      description: t("sfeat_d_3"),
       image: screenshotContacts,
       icon: function ContactsIcon() {
         return (
@@ -674,6 +548,7 @@ export function Hero() {
 }
 
 export function Footer() {
+  const { t } = useTranslation("common");
   return (
     <footer className="bg-zinc-50">
       <Container>
@@ -681,9 +556,9 @@ export function Footer() {
           <Logo className="mx-auto h-10 w-auto" />
           <nav className="mt-10 text-sm" aria-label="quick links">
             <div className="-my-1 flex justify-center gap-x-6">
-              <NavLink href="#features">Возможности</NavLink>
-              <NavLink href="#testimonials">Отзывы</NavLink>
-              <NavLink href="#pricing">Цены</NavLink>
+              <NavLink href="#features">{t("opportunities")}</NavLink>
+              <NavLink href="#testimonials">{t("reviews")}</NavLink>
+              <NavLink href="#pricing">{t("prices")}</NavLink>
             </div>
           </nav>
         </div>
@@ -719,11 +594,9 @@ export function Footer() {
             </Link>
           </div>
           <p className="mt-6 text-sm text-zinc-500 sm:mt-0">
-            Copyright &copy; {new Date().getFullYear()} Limpid. Все права
-            защищены. <br /> Республика Казахстан, город Астана, улица Шолпан
-            Иманбаева, 5В
+            {t("copy_right")} <br /> {t("address")}
             <br />
-            Бин: 210740020835
+            {t("IIN")}
           </p>
         </div>
       </Container>
@@ -778,24 +651,166 @@ export function Pricing() {
   const { t } = useTranslation("common");
 
   const frequencies = [
-    { value: "monthly", label: t("month"), priceSuffix: "/мес" },
+    { value: "monthly", label: t("month"), priceSuffix: t("monthSuffix") },
     { value: "kvartal", label: "Квартал", priceSuffix: "/квартал" },
-    { value: "annually", label: "Год", priceSuffix: "/год" },
+    { value: "annually", label: t("year"), priceSuffix: t("yearSuffix") },
+  ];
+
+  const tiers = [
+    {
+      name: "START",
+      id: "tier-start",
+      href: "#",
+      price: {},
+      description: t("price_start_desc"),
+      features: {
+        monthly: [
+          t("price_start_feat_1"),
+          t("price_start_feat_2"),
+          t("price_start_feat_3"),
+        ],
+        annually: [
+          t("price_start_feat_1"),
+          t("price_start_feat_2"),
+          t("price_start_feat_3"),
+        ],
+        kvartal: [
+          t("price_start_feat_1"),
+          t("price_start_feat_2"),
+          t("price_start_feat_3"),
+        ],
+      },
+      mostPopular: false,
+    },
+    {
+      name: "LIGHT",
+      id: "tier-light",
+      href: "#",
+      price: { monthly: "4990₸", annually: "37 990₸", kvartal: "12 990₸" },
+      description: t("for_beginners"),
+      features: {
+        monthly: [
+          t("price_start_feat_1"),
+          t("price_start_feat_2_d", {
+            project_count: "3",
+          }),
+          t("price_start_feat_3_d", {
+            participation_count: "7",
+            value_volume: "1 000 000",
+          }),
+        ],
+        annually: [
+          t("price_start_feat_1"),
+          t("price_start_feat_2_d", {
+            project_count: "3",
+          }),
+          t("price_start_feat_3_d", {
+            participation_count: "84",
+            value_volume: "1 000 000",
+          }),
+        ],
+        kvartal: [
+          t("price_start_feat_1"),
+          t("price_start_feat_2_d", {
+            project_count: "9",
+          }),
+          t("price_start_feat_3_d", {
+            participation_count: "21",
+            value_volume: "1 000 000",
+          }),
+        ],
+      },
+      mostPopular: false,
+    },
+    {
+      name: "STANDART",
+      id: "tier-standart",
+      href: "#",
+      price: { monthly: "8990", annually: "59 900₸", kvartal: "20 990₸" },
+      description: t("strieve"),
+      features: {
+        monthly: [
+          t("price_start_feat_1"),
+          t("price_start_feat_2_d", {
+            project_count: "5",
+          }),
+          t("price_start_feat_3_d", {
+            participation_count: "15",
+            value_volume: "5 000 000",
+          }),
+          "Бесплатная верификация",
+          "Настройка видимости Профиля",
+        ],
+        annually: [
+          t("price_start_feat_1"),
+          t("price_start_feat_2_d", {
+            project_count: "60",
+          }),
+          t("price_start_feat_3_d", {
+            participation_count: "180",
+            value_volume: "5 000 000",
+          }),
+          t("free_verification"),
+          t("visibility"),
+        ],
+        kvartal: [
+          t("price_start_feat_1"),
+          t("price_start_feat_2_d", {
+            project_count: "15",
+          }),
+          t("price_start_feat_3_d", {
+            participation_count: "45",
+            value_volume: "5 000 000",
+          }),
+          t("free_verification"),
+          t("visibility"),
+        ],
+      },
+      mostPopular: true,
+    },
+    {
+      name: "VIP",
+      id: "tier-VIP",
+      href: "#",
+      price: { monthly: "", annually: "639 900₸", kvartal: "199900₸" },
+      description: t("unlimit"),
+      features: {
+        monthly: [
+          t("price_start_feat_1"),
+          t("unlimit_project_create"),
+          t("unlimited_access"),
+          t("free_verification"),
+          t("visibility"),
+          t("personal_consult"),
+          t("priority_support"),
+          t("private_meet_SEO"),
+        ],
+        annually: [
+          t("price_start_feat_1"),
+          t("unlimit_project_create"),
+          t("unlimited_access"),
+          t("free_verification"),
+          t("visibility"),
+          t("personal_consult"),
+          t("priority_support"),
+          t("private_meet_SEO"),
+        ],
+        kvartal: [
+          t("price_start_feat_1"),
+          t("unlimit_project_create"),
+          t("unlimited_access"),
+          t("free_verification"),
+          t("visibility"),
+          t("personal_consult"),
+          t("priority_support"),
+          t("private_meet_SEO"),
+        ],
+      },
+      mostPopular: false,
+    },
   ];
 
   const [frequency, setFrequency] = useState(frequencies[1]);
-
-  const handleChangeFrequency = (newFrequency) => {
-    setFrequency(newFrequency);
-  };
-
-  // useEffect(() => {
-  //   first
-
-  //   return () => {
-  //     second
-  //   }
-  // }, [third])
 
   return (
     <section
@@ -818,7 +833,7 @@ export function Pricing() {
         <div className="mt-10 flex justify-center">
           <RadioGroup
             value={frequency}
-            onChange={handleChangeFrequency}
+            onChange={setFrequency}
             className="grid grid-cols-3 gap-x-1 rounded-full bg-white/5 p-1 text-center text-xs font-semibold leading-5 text-white"
           >
             <RadioGroup.Label className="sr-only">
@@ -826,7 +841,7 @@ export function Pricing() {
             </RadioGroup.Label>
             {frequencies.map((option) => (
               <RadioGroup.Option
-                key={option.value}
+                key={option.priceSuffix}
                 value={option}
                 className={({ checked }) =>
                   classNames(
@@ -930,7 +945,7 @@ export function Pricing() {
                       "mt-6 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                     )}
                   >
-                    Начни сейчас
+                    {t("start_now")}
                   </a>
                 )}
                 <ul className="mt-8 space-y-3 text-sm leading-6 text-gray-300 xl:mt-10">
@@ -1046,6 +1061,7 @@ function MobileNavIcon({ open }) {
 }
 
 function MobileNavigation() {
+  const { t } = useTranslation("common");
   return (
     <Popover>
       <Popover.Button
@@ -1079,11 +1095,11 @@ function MobileNavigation() {
             as="div"
             className="absolute inset-x-0 top-full mt-4 flex origin-top flex-col rounded-2xl bg-white p-4 text-lg tracking-tight text-zinc-900 shadow-xl ring-1 ring-zinc-900/5"
           >
-            <MobileNavLink href="#features">Возможности</MobileNavLink>
-            <MobileNavLink href="#testimonials">Отзывы</MobileNavLink>
-            <MobileNavLink href="#pricing">Цены</MobileNavLink>
+            <MobileNavLink href="#features">{t("opportunities")}</MobileNavLink>
+            <MobileNavLink href="#testimonials">{t("reviews")}</MobileNavLink>
+            <MobileNavLink href="#pricing">{t("prices")}</MobileNavLink>
             <hr className="m-2 border-zinc-300/40" />
-            <MobileNavLink href="/login">Войти</MobileNavLink>
+            <MobileNavLink href="/login">{t("log_in")}</MobileNavLink>
           </Popover.Panel>
         </Transition.Child>
       </Transition.Root>
