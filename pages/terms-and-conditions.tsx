@@ -36,7 +36,7 @@ export default function TermsAndConditions() {
     setPageNumber(pageNumber + 1 >= numPages! ? numPages! : pageNumber + 1);
   return (
     <>
-      <div className="flex flex-col justify-center items-center max-h-[95vh]">
+      <div className="flex flex-col justify-center items-center">
         <Document
           file="/terms-and-conditions.pdf"
           onLoadSuccess={onDocumentLoadSuccess}
