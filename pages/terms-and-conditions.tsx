@@ -16,7 +16,8 @@ export default function TermsAndConditions() {
 
       setLargeScreen(newScreenWidth > 896);
     };
-    handleResize(); // Initial setup
+
+    handleResize();
 
     window.addEventListener("resize", handleResize);
 
@@ -43,7 +44,6 @@ export default function TermsAndConditions() {
           onLoadSuccess={onDocumentLoadSuccess}
         >
           <Page
-            className="max-w-[380px]"
             width={largeScreen ? 596 : 330}
             renderTextLayer={false}
             renderAnnotationLayer={false}

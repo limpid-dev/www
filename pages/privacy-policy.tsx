@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { Button } from "../components/primitives/button";
 
@@ -11,6 +11,24 @@ export default function PrivacyPolicy() {
   const onDocumentLoadSuccess = ({ numPages }: any) => {
     setNumPages(numPages);
   };
+
+  const [largeScreen, setLargeScreen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const newScreenWidth = window.innerWidth;
+
+      setLargeScreen(newScreenWidth > 896);
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const goToPrevPage = () =>
     setPageNumber(pageNumber - 1 <= 1 ? 1 : pageNumber - 1);
@@ -26,6 +44,7 @@ export default function PrivacyPolicy() {
         >
           <Page
             renderTextLayer={false}
+            width={largeScreen ? 596 : 330}
             renderAnnotationLayer={false}
             pageNumber={pageNumber}
           />
