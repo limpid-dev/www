@@ -6,7 +6,6 @@ import {
   YoutubeLogo,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { t } from "i18next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -15,17 +14,12 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { Fragment, useEffect, useId, useState } from "react";
 import api from "../api";
 import { Button } from "../components/primitives/button";
-import { Label } from "../components/primitives/label";
-import {
-  RadioGroup,
-  RadioGroupItem,
-} from "../components/primitives/radio-group";
+import { RadioGroup } from "../components/primitives/radio-group";
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "../components/primitives/select";

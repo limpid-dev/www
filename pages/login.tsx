@@ -1,6 +1,8 @@
+import { GetStaticProps } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { FormEvent, useState } from "react";
 import api from "../api";
 import { BadRequest, Unauthorized, Validation } from "../api/errors";
@@ -13,7 +15,12 @@ import {
   Message,
   Submit,
 } from "../components/primitives/form";
-import { toast } from "../hooks/useToast";
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale as string, ["common"])),
+  },
+});
 
 export default function Login() {
   const [errors, setErrors] = useState({
@@ -76,18 +83,16 @@ export default function Login() {
 
   return (
     <AuthLayout>
-      <h2 className="text-lg font-semibold text-zinc-900">
-        Войдите в свой аккаунт <p>{t("app_title")}</p>
-      </h2>
+      <h2 className="text-lg font-semibold text-zinc-900">{t("log_in_1")}</h2>
       <p className="mt-2 text-sm text-zinc-700">
-        Еще нет аккаунта?{" "}
+        {t("no_account")}{" "}
         <Link
           href="/register"
           className="font-medium text-lime-600 hover:underline"
         >
-          Зарегистрируйтесь
+          {t("register")}
         </Link>{" "}
-        сейчас.
+        {t("now")}
       </p>
       <Form
         onSubmit={onSubmit}
@@ -95,7 +100,7 @@ export default function Login() {
         onClearServerErrors={clearErrors}
       >
         <Field name="email">
-          <Label>Электронная почта</Label>
+          <Label>{t("mail")}</Label>
           <Input
             type="email"
             autoComplete="email"
@@ -103,11 +108,11 @@ export default function Login() {
             required
           />
           <Message match="badInput" forceMatch={errors.email}>
-            Адрес не найден или не верифицирован
+            {t("mail_error")}
           </Message>
         </Field>
         <Field name="password">
-          <Label>Пароль</Label>
+          <Label>{t("password")}</Label>
           <Input
             type="password"
             minLength={8}
@@ -115,25 +120,22 @@ export default function Login() {
             pattern="(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+"
             required
           />
-          <Message match="patternMismatch">
-            Пароль должен содержать как минимум одну цифру, одну букву и один
-            спецсимвол
-          </Message>
+          <Message match="patternMismatch">{t("password_error")}</Message>
           <Message
             onChange={clearErrors}
             match="badInput"
             forceMatch={errors.password}
           >
-            Неверный пароль
+            {t("incorrect_password")}
           </Message>
         </Field>
         <Link
           href="./recovery"
           className="font-medium text-sm text-right text-lime-600 hover:underline"
         >
-          Забыли пароль?
+          {t("forget_password")}
         </Link>
-        <Submit>Войти</Submit>
+        <Submit>{t("log_in")}</Submit>
       </Form>
     </AuthLayout>
   );

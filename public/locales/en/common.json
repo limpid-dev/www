@@ -69,5 +69,15 @@
   "start_now": "Start now",
   "copy_right": "Copyright © 2203 Limpid. ",
   "address": "Republic of Kazakhstan, Astana city, Sholpan Imanbaev street, 5B",
-  "IIN": "BIN: 210740020835"
+  "IIN": "BIN: 210740020835",
+  "log_in_1": "Login to your account",
+  "no_account": "Don't have an account yet?",
+  "register": "Register",
+  "now": "Now.",
+  "mail": "Email",
+  "mail_error": "Email not found or not verified",
+  "password": "Password",
+  "forget_password": "Forgot your password?",
+  "password_error": "Password must contain at least one number, one letter and one special character",
+  "incorrect_password": "Incorrect password"
 }
