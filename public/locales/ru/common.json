@@ -103,5 +103,8 @@
   "password_tooShort": "Пароль должен содержать минимум 8 символов",
   "mail_token": "Код пришедший на почту",
   "mail_token_required": "Пожалуйста введите код",
-  "new_password": "Новый пароль"
+  "new_password": "Новый пароль",
+  "page_counter": "страница из",
+  "back": "Назад",
+  "forward": "Далее"
 }

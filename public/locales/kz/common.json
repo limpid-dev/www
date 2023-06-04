@@ -103,5 +103,6 @@
   "password_tooShort": "Кілтсөз кем дегенде 8 таңба болуы керек",
   "mail_token": "Поштаға келген код",
   "mail_token_required": "Кодты енгізіңіз",
-  "new_password": "Жаңа кілтсөз"
+  "new_password": "Жаңа кілтсөз",
+  "page_counter": "бет"
 }

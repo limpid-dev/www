@@ -1,14 +1,24 @@
+import { GetStaticProps } from "next";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useEffect, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { Button } from "../components/primitives/button";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale as string, ["common"])),
+  },
+});
+
 export default function TermsAndConditions() {
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
-
   const [largeScreen, setLargeScreen] = useState(false);
+
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     const handleResize = () => {
@@ -53,11 +63,11 @@ export default function TermsAndConditions() {
 
         <div className="py-2 flex justify-center items-center gap-2 flex-col fixed bottom-0">
           <p className="mt-3">
-            {pageNumber} страница из {numPages}
+            {pageNumber} {t("page_counter")} {numPages}
           </p>
           <div className="gap-4 flex">
-            <Button onClick={goToPrevPage}>Назад</Button>
-            <Button onClick={goToNextPage}>Далее</Button>
+            <Button onClick={goToPrevPage}>{t("back")}</Button>
+            <Button onClick={goToNextPage}>{t("forward")}</Button>
           </div>
         </div>
       </div>
