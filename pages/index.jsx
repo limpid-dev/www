@@ -1,4 +1,4 @@
-import { Popover, RadioGroup, Tab, Transition } from "@headlessui/react";
+import { Popover, Tab, Transition } from "@headlessui/react";
 import {
   FacebookLogo,
   InstagramLogo,
@@ -15,6 +15,11 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { Fragment, useEffect, useId, useState } from "react";
 import api from "../api";
 import { Button } from "../components/primitives/button";
+import { Label } from "../components/primitives/label";
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from "../components/primitives/radio-group";
 import {
   Select,
   SelectContent,
@@ -809,6 +814,12 @@ export function Pricing() {
       mostPopular: false,
     },
   ];
+  const handleFrequencyChange = (event) => {
+    const selectedFrequency = frequencies.find(
+      (freq) => freq.value === event.target.value
+    );
+    setFrequency(selectedFrequency);
+  };
 
   const [frequency, setFrequency] = useState(frequencies[1]);
 
@@ -831,27 +842,30 @@ export function Pricing() {
           <p className="mt-4 text-lg text-zinc-400">{t("pay_warranty")}</p>
         </div>
         <div className="mt-10 flex justify-center">
-          <RadioGroup
-            value={frequency}
-            onChange={setFrequency}
-            className="grid grid-cols-3 gap-x-1 rounded-full bg-white/5 p-1 text-center text-xs font-semibold leading-5 text-white"
-          >
-            <RadioGroup.Label className="sr-only">
-              Payment frequency
-            </RadioGroup.Label>
-            {frequencies.map((option) => (
-              <RadioGroup.Option
-                key={option.priceSuffix}
-                value={option}
-                className={({ checked }) =>
-                  classNames(
-                    checked ? "bg-lime-500" : "",
-                    "cursor-pointer rounded-full px-2.5 py-1"
-                  )
-                }
+          <RadioGroup className="grid grid-cols-3 gap-x-1 rounded-full bg-white/5 p-1 text-center text-xs font-semibold leading-5 text-white">
+            {frequencies.map((freq) => (
+              <label
+                key={freq.value}
+                className="flex items-center justify-around gap-2"
               >
-                <span>{option.label}</span>
-              </RadioGroup.Option>
+                <input
+                  type="radio"
+                  name="frequency"
+                  value={freq.value}
+                  checked={frequency.value === freq.value}
+                  className="hidden"
+                  onChange={handleFrequencyChange}
+                />
+                <span
+                  className={`flex items-center ${
+                    frequency.value === freq.value
+                      ? "text-white bg-lime-600 py-1 px-2  rounded-xl"
+                      : "py-1 px-2 rounded-xl"
+                  }`}
+                >
+                  {freq.label}
+                </span>
+              </label>
             ))}
           </RadioGroup>
         </div>
