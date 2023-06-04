@@ -1,6 +1,9 @@
+import { GetStaticProps } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { FormEvent, useState } from "react";
+import { useTranslation } from "react-i18next";
 import api from "../api";
 import { BadRequest, Unauthorized, Validation } from "../api/errors";
 import { AuthLayout } from "../components/auth-layout";
@@ -13,8 +16,15 @@ import {
   Submit,
 } from "../components/primitives/form";
 
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale as string, ["common"])),
+  },
+});
 export default function Register() {
   const router = useRouter();
+  const { t } = useTranslation("common");
+
   const [errors, setErrors] = useState<Record<string, boolean>>({
     email: false,
   });
@@ -73,9 +83,11 @@ export default function Register() {
 
   return (
     <AuthLayout>
-      <h2 className="text-lg font-semibold text-zinc-900">Начните бесплатно</h2>
+      <h2 className="text-lg font-semibold text-zinc-900">
+        {t("start_free_r")}
+      </h2>
       <p className="mt-2 text-sm text-zinc-700">
-        Уже есть аккаунт?{" "}
+        {t("have_account")} {t("r_log_in")}{" "}
         <Link
           href="/login"
           className="font-medium text-lime-600 hover:underline"

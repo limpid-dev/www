@@ -7,6 +7,7 @@
   "chooseLanguage": "Choose language",
   "find_mates": "A tool for entrepreneurs to find and work with partners",
   "start_free": "Start for free",
+  "start_free_r": "Get started for free",
   "open_video": "Open video",
   "hero1": "Find",
   "hero2": "like-minded people",
@@ -79,5 +80,9 @@
   "password": "Password",
   "forget_password": "Forgot your password?",
   "password_error": "Password must contain at least one number, one letter and one special character",
-  "incorrect_password": "Incorrect password"
+  "incorrect_password": "Incorrect password",
+  "have_account": "Уже есть аккаунт ?",
+  "r_log_in_r":"",
+  "r_log_in": "Войдите",
+  "r_ur_account": "в ваш аккаунт."
 }
