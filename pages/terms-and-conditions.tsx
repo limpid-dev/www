@@ -34,6 +34,7 @@ export default function TermsAndConditions() {
 
   const goToNextPage = () =>
     setPageNumber(pageNumber + 1 >= numPages! ? numPages! : pageNumber + 1);
+
   return (
     <>
       <div className="flex flex-col justify-center items-center">
@@ -43,7 +44,7 @@ export default function TermsAndConditions() {
         >
           <Page
             className="max-w-[380px]"
-            width={largeScreen ? 596 : 390}
+            width={largeScreen ? 596 : 290}
             renderTextLayer={false}
             renderAnnotationLayer={false}
             pageNumber={pageNumber}
