@@ -553,7 +553,7 @@ export function Hero() {
           </DialogTrigger>
           <DialogContent className="p-6 sm:w-[600px] sm:h-[412px]">
             <iframe
-              className="rounded-lg m-auto sm:w-[512px] w-[320px] sm:h-[360px] h-[370px]"
+              className="rounded-lg m-auto sm:w-[512px] w-[320px] sm:h-[360px] h-[370px] bg-slate-300"
               allowfullscreen="allowfullscreen"
               src="https://www.youtube.com/embed/fPko2SHDnv8"
               title="YouTube video player"
