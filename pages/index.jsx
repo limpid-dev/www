@@ -14,6 +14,15 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { Fragment, useEffect, useId, useState } from "react";
 import api from "../api";
 import { Button } from "../components/primitives/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../components/primitives/dialog";
 import { RadioGroup } from "../components/primitives/radio-group";
 import {
   Select,
@@ -530,17 +539,28 @@ export function Hero() {
         <Link href="/register">
           <Button variant="black">{t("start_free")}</Button>
         </Link>
-        <a target="_blank" href="https://youtu.be/fPko2SHDnv8">
-          <Button variant="outline">
-            <svg
-              aria-hidden="true"
-              className="h-3 w-3 flex-none fill-lime-600 group-active:fill-current"
-            >
-              <path d="m9.997 6.91-7.583 3.447A1 1 0 0 1 1 9.447V2.553a1 1 0 0 1 1.414-.91L9.997 5.09c.782.355.782 1.465 0 1.82Z" />
-            </svg>
-            <span className="ml-3">{t("open_video")}</span>
-          </Button>
-        </a>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline">
+              <svg
+                aria-hidden="true"
+                className="h-3 w-3 flex-none fill-lime-600 group-active:fill-current"
+              >
+                <path d="m9.997 6.91-7.583 3.447A1 1 0 0 1 1 9.447V2.553a1 1 0 0 1 1.414-.91L9.997 5.09c.782.355.782 1.465 0 1.82Z" />
+              </svg>
+              <span className="ml-3">{t("open_video")}</span>
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="p-6 sm:w-[600px] sm:h-[412px]">
+            <iframe
+              className="rounded-lg m-auto sm:w-[512px] w-[320px] sm:h-[360px] h-[370px]"
+              allowfullscreen="allowfullscreen"
+              src="https://www.youtube.com/embed/fPko2SHDnv8"
+              title="YouTube video player"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            />
+          </DialogContent>
+        </Dialog>
       </div>
     </Container>
   );
