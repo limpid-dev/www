@@ -44,12 +44,13 @@ export default function TermsAndConditions() {
         >
           <Page
             className="max-w-[380px]"
-            width={largeScreen ? 596 : 290}
+            width={largeScreen ? 596 : 330}
             renderTextLayer={false}
             renderAnnotationLayer={false}
             pageNumber={pageNumber}
           />
         </Document>
+
         <div className="py-2 flex justify-center items-center gap-2 flex-col fixed bottom-0">
           <p className="mt-3">
             {pageNumber} страница из {numPages}
