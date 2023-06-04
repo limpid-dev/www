@@ -1,5 +1,7 @@
-import Link from "next/link";
+import { GetStaticProps } from "next";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { FormEvent, useState } from "react";
 import api from "../api";
 import { BadRequest, Validation } from "../api/errors";
@@ -12,6 +14,12 @@ import {
   Message,
   Submit,
 } from "../components/primitives/form";
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale as string, ["common"])),
+  },
+});
 
 export default function Recovery() {
   const [errors, setErrors] = useState({
@@ -58,10 +66,12 @@ export default function Recovery() {
     });
   };
 
+  const { t } = useTranslation("common");
+
   return (
     <AuthLayout>
       <h2 className="text-lg font-semibold text-zinc-900">
-        Восстановление пароля
+        {t("password_recovery")}
       </h2>
       <Form
         onSubmit={onSubmit}
@@ -69,15 +79,15 @@ export default function Recovery() {
         onClearServerErrors={clearErrors}
       >
         <Field name="email">
-          <Label>Электронная почта</Label>
+          <Label>{t("email")}</Label>
           <Input type="email" autoComplete="email" required />
-          <Message match="valueMissing">Введите пожалуйста вашу почту</Message>
-          <Message match="typeMismatch">Введите валидную почту</Message>
+          <Message match="valueMissing">{t("email_required")}</Message>
+          <Message match="typeMismatch">{t("invalid_email")}</Message>
           <Message match="badInput" forceMatch={errors.email}>
-            Адрес не найден или не верифицирован
+            {t("mail_error")}
           </Message>
         </Field>
-        <Submit>Восстановить пароль</Submit>
+        <Submit>{t("recover_password")}</Submit>
       </Form>
     </AuthLayout>
   );

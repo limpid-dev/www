@@ -1,9 +1,9 @@
 import { GetStaticProps } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { FormEvent, useState } from "react";
-import { useTranslation } from "react-i18next";
 import api from "../api";
 import { BadRequest, Unauthorized, Validation } from "../api/errors";
 import { AuthLayout } from "../components/auth-layout";
@@ -21,9 +21,9 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => ({
     ...(await serverSideTranslations(locale as string, ["common"])),
   },
 });
+
 export default function Register() {
   const router = useRouter();
-  const { t } = useTranslation("common");
 
   const [errors, setErrors] = useState<Record<string, boolean>>({
     email: false,
@@ -81,41 +81,43 @@ export default function Register() {
     }
   };
 
+  const { t } = useTranslation("common");
   return (
     <AuthLayout>
       <h2 className="text-lg font-semibold text-zinc-900">
         {t("start_free_r")}
       </h2>
       <p className="mt-2 text-sm text-zinc-700">
-        {t("have_account")} {t("r_log_in")}{" "}
+        {t("have_account")} {t("r_log_in_r")}{" "}
         <Link
           href="/login"
           className="font-medium text-lime-600 hover:underline"
         >
-          Войдите
+          {t("r_log_in")}
         </Link>{" "}
-        в ваш аккаунт.
+        {t("r_ur_account")}
       </p>
       <Form onSubmit={onSubmit} className="mt-10">
         <Field name="firstName">
-          <Label>Имя</Label>
+          <Label>{t("name")}</Label>
           <Input type="text" autoComplete="name" required />
-          <Message match="valueMissing">Введите ваше имя</Message>
+          <Message match="valueMissing">{t("name_required")}</Message>
         </Field>
         <Field name="lastName">
-          <Label>Фамилия</Label>
+          <Label>{t("surname")}</Label>
           <Input type="text" autoComplete="lastName" required />
-          <Message match="valueMissing">Введите вашу фамилию</Message>
+          <Message match="valueMissing">{t("surname_required")}</Message>
         </Field>
         <Field name="email">
-          <Label>Электронная почта</Label>
+          <Label>{t("email")}</Label>
           <Input type="email" autoComplete="email" required />
+          <Message match="valueMissing">{t("email_required")}</Message>
           <Message match="badInput" forceMatch={errors.email}>
-            Адрес уже используется
+            {t("address_in_use_error")}
           </Message>
         </Field>
         <Field name="password">
-          <Label>Пароль</Label>
+          <Label>{t("password")}</Label>
           <Input
             type="password"
             pattern="(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+"
@@ -123,28 +125,27 @@ export default function Register() {
             minLength={8}
             required
           />
-          <Message match="patternMismatch">
-            Пароль должен содержать как минимум одну цифру, одну букву и один
-          </Message>
+          <Message match="valueMissing">{t("password_required")}</Message>
+          <Message match="patternMismatch">{t("password_error")}</Message>
+          <Message match="tooShort">{t("password_tooShort")}</Message>
         </Field>
         <div className="text-xs">
-          Регистрируясь в Limpid, вы соглашаетесь с{" "}
+          {t("terms")}{" "}
           <Link
             href="/terms-and-conditions"
             className="focus inline-block w-fit cursor-pointer font-semibold text-lime-600 hover:underline"
           >
-            Условиями предоставления услуг
+            {t("terms_2")}
           </Link>{" "}
-          и{" "}
+          {t("and")}{" "}
           <Link
             href="/privacy-policy"
             className="inline-block w-fit cursor-pointer font-semibold text-lime-600 hover:underline"
           >
-            Политикой конфиденциальности
-          </Link>{" "}
-          Limpid.
+            {t("terms_3")}
+          </Link>
         </div>
-        <Submit>Зарегистрироваться</Submit>
+        <Submit>{t("to_register")}</Submit>
       </Form>
     </AuthLayout>
   );

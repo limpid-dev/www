@@ -1,5 +1,8 @@
+import { GetStaticProps } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { FormEvent, useState } from "react";
 import api from "../api";
 import { BadRequest, Validation } from "../api/errors";
@@ -12,6 +15,12 @@ import {
   Message,
   Submit,
 } from "../components/primitives/form";
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale as string, ["common"])),
+  },
+});
 
 export default function Recovery() {
   const [errors, setErrors] = useState({
@@ -66,10 +75,12 @@ export default function Recovery() {
     });
   };
 
+  const { t } = useTranslation("common");
+
   return (
     <AuthLayout>
       <h2 className="text-lg font-semibold text-zinc-900">
-        Восстановление пароля
+        {t("password_recovery")}
       </h2>
       <Form
         onSubmit={onSubmit}
@@ -77,32 +88,27 @@ export default function Recovery() {
         onClearServerErrors={clearErrors}
       >
         <Field name="email">
-          <Label>Электронная почта</Label>
+          <Label>{t("email")}</Label>
           <Input type="email" autoComplete="email" required />
-          <Message match="valueMissing">Введите пожалуйста вашу почту</Message>
-          <Message match="typeMismatch">Введите валидную почту</Message>
+          <Message match="valueMissing">{t("email_required")}</Message>
+          <Message match="typeMismatch">{t("invalid_email")}</Message>
           <Message match="badInput" forceMatch={errors.email}>
-            Адрес не найден или не верифицирован
+            {t("email_error")}
           </Message>
         </Field>
         <Field name="password">
-          <Label>Новый пароль</Label>
+          <Label>{t("new_password")}</Label>
           <Input type="password" autoComplete="email" required />
-          <Message match="valueMissing">Введите пожалуйста ваш пароль</Message>
-          <Message match="tooShort">
-            Пароль должен содержать минимум 8 символов
-          </Message>
-          <Message match="patternMismatch">
-            Пароль должен содержать как минимум одну цифру, одну букву и один
-            спецсимвол
-          </Message>
+          <Message match="valueMissing">{t("password_required")}</Message>
+          <Message match="tooShort">{t("password_tooShort")}</Message>
+          <Message match="patternMismatch">{t("password_error")}</Message>
         </Field>
         <Field name="token">
-          <Label>Код пришедший на почту</Label>
+          <Label>{t("mail_token")}</Label>
           <Input required minLength={6} />
-          <Message match="valueMissing">Пожалуйста введите код</Message>
+          <Message match="valueMissing">{t("mail_token_required")}</Message>
         </Field>
-        <Submit>Восстановить</Submit>
+        <Submit>{t("recover_password")}</Submit>
       </Form>
     </AuthLayout>
   );

@@ -100,7 +100,7 @@ export default function Login() {
         onClearServerErrors={clearErrors}
       >
         <Field name="email">
-          <Label>{t("mail")}</Label>
+          <Label>{t("email")}</Label>
           <Input
             type="email"
             autoComplete="email"
