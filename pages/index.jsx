@@ -1144,7 +1144,7 @@ export function Header() {
         }
       } catch (error) {
         if (error.response && error.response.status === 401) {
-          console.log("Unauthorized access. Please log in again.");
+          console.log("Unauthorized access. Please Log In");
         } else {
           console.error("An error occurred:", error);
         }
