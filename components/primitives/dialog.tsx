@@ -50,7 +50,7 @@ const DialogContent = forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={clsx(
-        "fixed z-50 grid w-full gap-4 rounded-b-xl bg-white sm:max-w-2xl sm:rounded-xl",
+        "fixed z-50 grid w-full gap-4 rounded-b-xl bg-white sm:rounded-xl",
         className
       )}
       {...props}

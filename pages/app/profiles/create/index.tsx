@@ -18,12 +18,14 @@ import {
 import { TextArea } from "../../../../components/primitives/text-area";
 
 interface FormValues {
-  title: string;
+  display_name: string;
   description: string;
   location: string;
   industry: string;
-  ownedIntellectualResources: string;
-  ownedMaterialResources: string;
+  owned_intellectual_resources: string;
+  owned_material_resources: string;
+  tin: string;
+  is_visible: string;
 }
 
 export default function Test() {
@@ -37,7 +39,7 @@ export default function Test() {
   } = useForm<FormValues>();
 
   const onSubmit = async (data: FormValues) => {
-    const { data: profile } = await api.profiles.store(data);
+    const { data: profile } = await api.createProfile(data);
     if (profile) {
       router.push({
         pathname: "/app/profiles/create/experiences",
@@ -86,8 +88,8 @@ export default function Test() {
                     </div>
                     <Input
                       type="text"
-                      id="title"
-                      {...register("title", {
+                      id="display_name"
+                      {...register("display_name", {
                         required: true,
                         minLength: 2,
                         maxLength: 30,
@@ -95,7 +97,7 @@ export default function Test() {
                       className="text-black rounded-md border border-slate-300 mt-6 w-1/2"
                       placeholder="Вэб разработчик ..."
                     />
-                    {errors.title && (
+                    {errors.display_name && (
                       <span className="text-sm text-red-600">
                         Введите вашу професию правильно
                       </span>
@@ -105,7 +107,7 @@ export default function Test() {
                   <div className="font-semibold text-black text-lg sm:text-2xl">
                     Основная информация
                   </div>
-                  <div className="flex flex-col sm:flex-row gap-5 sm:gap-8">
+                  <div className="grid sm:grid-cols-2  gap-5 sm:gap-8">
                     <div className="grid w-full">
                       <Input
                         type="text"
@@ -159,6 +161,54 @@ export default function Test() {
                         </div>
                       )}
                     />
+                    <div className="grid w-full">
+                      <Input
+                        type="text"
+                        className="text-black rounded-md border border-slate-300"
+                        {...register("tin", {
+                          required: true,
+                          maxLength: 12,
+                          minLength: 12,
+                        })}
+                        placeholder="ИИН"
+                      />
+                      {errors.tin && (
+                        <span className="text-sm text-red-600">
+                          Введите обязательное поле
+                        </span>
+                      )}
+                    </div>
+                    <Controller
+                      control={control}
+                      name="is_visible"
+                      rules={{ required: true }}
+                      render={({ field }) => (
+                        <div className="flex flex-col w-full">
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger className="px-5 text-ellipsis whitespace-nowrap overflow-hidden">
+                              <SelectValue placeholder="Инкогнито" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup>
+                                <SelectLabel>Видимость профиля</SelectLabel>
+                                <SelectItem value="true">Да</SelectItem>
+                                <SelectItem value="false">Нет</SelectItem>
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                          <p>
+                            {errors.is_visible && (
+                              <span className="text-sm text-red-600">
+                                Введите обязательное поле
+                              </span>
+                            )}
+                          </p>
+                        </div>
+                      )}
+                    />
                   </div>
                   <div>
                     <TextArea
@@ -180,7 +230,7 @@ export default function Test() {
                     </div>
                     <TextArea
                       className="mt-6"
-                      {...register("ownedMaterialResources", {
+                      {...register("owned_material_resources", {
                         required: true,
                         minLength: 1,
                         maxLength: 1024,
@@ -188,14 +238,14 @@ export default function Test() {
                       rows={4}
                       placeholder="Чем вы можете быть полезны ? (помещение, финансы другие материальные ресурсы)"
                     />
-                    {errors.ownedMaterialResources &&
-                      errors.ownedMaterialResources.type === "required" && (
+                    {errors.owned_material_resources &&
+                      errors.owned_material_resources.type === "required" && (
                         <span className="text-sm text-red-600">
                           Обязательное поле
                         </span>
                       )}
-                    {errors.ownedMaterialResources &&
-                      errors.ownedMaterialResources.type === "maxLength" && (
+                    {errors.owned_material_resources &&
+                      errors.owned_material_resources.type === "maxLength" && (
                         <span className="text-sm text-red-600">
                           Текст не должен привышать 1024 символа
                         </span>
@@ -208,21 +258,22 @@ export default function Test() {
                     <TextArea
                       className=" mt-6 "
                       rows={4}
-                      {...register("ownedIntellectualResources", {
+                      {...register("owned_intellectual_resources", {
                         required: true,
                         minLength: 1,
                         maxLength: 1024,
                       })}
                       placeholder="Какимими навыками вы обладаете ? (Excel, логика, критическое мышление) "
                     />
-                    {errors.ownedIntellectualResources &&
-                      errors.ownedIntellectualResources.type === "required" && (
+                    {errors.owned_intellectual_resources &&
+                      errors.owned_intellectual_resources.type ===
+                        "required" && (
                         <span className="text-sm text-red-600">
                           Обязательное поле
                         </span>
                       )}
-                    {errors.ownedIntellectualResources &&
-                      errors.ownedIntellectualResources.type ===
+                    {errors.owned_intellectual_resources &&
+                      errors.owned_intellectual_resources.type ===
                         "maxLength" && (
                         <span className="text-sm text-red-600">
                           Текст не должен привышать 1024 символа

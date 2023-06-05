@@ -115,7 +115,7 @@ function Profiles() {
                   <Plus className="w-5 h-5" /> Создать профиль
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:min-w-[775px] p-6">
+              <DialogContent className="sm:max-w-3xl p-6">
                 <DialogHeader>
                   <DialogTitle className="text-center">
                     Выберите вид профиля

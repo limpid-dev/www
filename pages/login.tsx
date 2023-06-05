@@ -46,29 +46,6 @@ export default function Login() {
 
     await api.loginUser(values.email, values.password);
 
-    // if (Validation.is(error)) {
-    //   setErrors((prev) => ({
-    //     ...prev,
-    //     email: true,
-    //   }));
-    //   return;
-    // }
-
-    // if (BadRequest.is(error)) {
-    //   setErrors((prev) => ({
-    //     ...prev,
-    //     password: true,
-    //   }));
-    //   return;
-    // }
-
-    // if (Unauthorized.is(error)) {
-    //   setErrors((prev) => ({
-    //     ...prev,
-    //     email: true,
-    //   }));
-    // }
-
     localStorage.clear();
 
     await router.push({

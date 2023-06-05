@@ -551,9 +551,9 @@ export function Hero() {
               <span className="ml-3">{t("open_video")}</span>
             </Button>
           </DialogTrigger>
-          <DialogContent className="p-6 sm:w-[600px] sm:h-[412px]">
+          <DialogContent className="p-6 sm:max-w-6xl sm:w-[1200px] sm:h-[812px]">
             <iframe
-              className="rounded-lg m-auto sm:w-[512px] w-[320px] sm:h-[360px] h-[370px] bg-slate-300"
+              className="rounded-lg m-auto sm:w-[1024px]  w-[305px] sm:h-[712px] h-[370px] bg-slate-300"
               allowfullscreen="allowfullscreen"
               src="https://www.youtube.com/embed/fPko2SHDnv8"
               title="YouTube video player"

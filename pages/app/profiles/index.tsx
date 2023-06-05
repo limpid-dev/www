@@ -34,13 +34,13 @@ const tabs = [
 ];
 
 // export const getServerSideProps = async () => {
-//   const { data: profiles } = await api.profiles.index({
+//   const { data: profiles } = await api.getProfiles({
 //     page: 1,
-//     perPage: 100,
+//     per_page: 100,
 //   });
 
 //   const withUsers = profiles!.map(async (d) => {
-//     const user = await api.users.show(d.userId);
+//     const user = await api.getUser(d.userId);
 
 //     return { ...d, user: user.data! };
 //   });
@@ -50,7 +50,7 @@ const tabs = [
 //   return {
 //     props: {
 //       data: {
-//         profilesWithUser: w!,
+//         profilesWithUser: profiles,
 //       },
 //     },
 //   };
@@ -58,7 +58,7 @@ const tabs = [
 
 // type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-export default function Profiles({ data }: Props) {
+export default function Profiles() {
   const router = useRouter();
 
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>): void => {
@@ -81,6 +81,18 @@ export default function Profiles({ data }: Props) {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
+  }, []);
+
+  useEffect(() => {
+    async function getProfiles() {
+      const { data: profiles } = await api.getProfiles({
+        page: 1,
+        per_page: 100,
+      });
+      console.log(profiles);
+    }
+
+    getProfiles();
   }, []);
 
   return (
