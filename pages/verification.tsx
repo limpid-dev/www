@@ -11,7 +11,6 @@ export default function Verification() {
 
   const sendVerificationEmail = async () => {
     if (typeof router.query.email !== "string") return;
-    console.log(router.query.email);
     await api.verifyEmailRequest(router.query.email);
   };
 

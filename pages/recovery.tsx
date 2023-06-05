@@ -4,7 +4,6 @@ import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { FormEvent, useState } from "react";
 import api from "../api";
-import { BadRequest, Validation } from "../api/errors";
 import { AuthLayout } from "../components/auth-layout";
 import {
   Field,

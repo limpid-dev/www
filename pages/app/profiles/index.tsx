@@ -74,7 +74,7 @@ export default function Profiles({ data }: Props) {
 
       setLargeScreen(newScreenWidth > 896);
     };
-    handleResize(); // Initial setup
+    handleResize();
 
     window.addEventListener("resize", handleResize);
 

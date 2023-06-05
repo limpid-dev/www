@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { ChangeEvent, useEffect, useState } from "react";
 import api from "../../../api";
-import { Entity as Profiles } from "../../../api/profiles";
 import { GeneralLayout } from "../../../components/general-layout";
 import { Navigation } from "../../../components/navigation";
 import Pagination from "../../../components/pagination";
@@ -46,18 +45,16 @@ function Profiles() {
 
   useEffect(() => {
     async function fetchProfiles() {
-      const { data: session } = await api.session.show();
+      const { data: session } = await api.getUser();
       if (session) {
-        const profiles = await api.profiles.index({
+        const profiles = await api.getProfiles({
           page: currentPage,
-          perPage: 9,
-          filters: {
-            userId: session.id || 0,
-          },
+          per_page: 9,
+          user_id: session.id,
         });
         if (profiles.data) {
           setData(profiles.data);
-          const totalCount = profiles.meta?.total || 0;
+          const totalCount = profiles.data.meta?.total;
           setTotalItems(totalCount);
           setLoading(false);
         }
@@ -178,6 +175,7 @@ function Profiles() {
                     ))}
                   </div>
                   <Pagination
+                    renderPageLink={(page) => `/app/profiles/my/?page=${page}`}
                     itemsPerPage={9}
                     totalItems={totalItems}
                     currentPage={currentPage}

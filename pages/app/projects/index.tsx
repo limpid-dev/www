@@ -8,8 +8,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import api from "../../../api";
-import { Entity as Projects } from "../../../api/projects";
-// import { Entity } from "../../../api/projects";
 import { GeneralLayout } from "../../../components/general-layout";
 import { Navigation } from "../../../components/navigation";
 import Pagination from "../../../components/pagination";
@@ -30,7 +28,7 @@ export default function All() {
 
   const [search, setSearch] = useState("");
   const [totalItems, setTotalItems] = useState(1);
-  const [data, setData] = useState<Projects[]>([]);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const OPTIONS: EmblaOptionsType = { align: "center", loop: true };
@@ -43,7 +41,7 @@ export default function All() {
 
   useEffect(() => {
     async function fetchProjects() {
-      const data = await api.projects.index({
+      const data = await api.getProfiles({
         page: currentPage,
         per_page: 6,
       });
