@@ -5,7 +5,6 @@ import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { FormEvent, useState } from "react";
 import api from "../api";
-import { BadRequest, Unauthorized, Validation } from "../api/errors";
 import { AuthLayout } from "../components/auth-layout";
 import {
   Field,
@@ -34,54 +33,67 @@ export default function Register() {
     const form = new FormData(event.currentTarget);
     const values = Object.fromEntries(form.entries()) as Record<string, string>;
 
-    const { data: users, error: users_error } = await api.users.store({
-      first_name: values.firstName,
-      last_name: values.lastName,
-      email: values.email,
-      password: values.password,
-    });
-
-    if (users) {
-      const { error: session_error } = await api.session.store({
+    api
+      .createUser({
+        first_name: values.firstName,
+        last_name: values.lastName,
         email: values.email,
         password: values.password,
+        patronymic: values.patronymic,
+        born_at: values.born_at,
+      })
+      .then((response) => {
+        if (response.status === 201) {
+          api.verifyEmailRequest(values.email);
+          router.push({
+            pathname: "/verification",
+            query: { email: values.email },
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error creating user:", error);
       });
-      if (Validation.is(session_error)) {
-        setErrors((prev) => ({
-          ...prev,
-          email: true,
-        }));
-        return;
-      }
 
-      if (BadRequest.is(session_error)) {
-        setErrors((prev) => ({
-          ...prev,
-          password: true,
-        }));
-        return;
-      }
+    // if (users) {
 
-      if (Unauthorized.is(session_error)) {
-        setErrors((prev) => ({
-          ...prev,
-          email: true,
-        }));
-      }
+    //   if (Validation.is(session_error)) {
+    //     setErrors((prev) => ({
+    //       ...prev,
+    //       email: true,
+    //     }));
+    //     return;
+    //   }
 
-      localStorage.clear();
+    //   if (BadRequest.is(session_error)) {
+    //     setErrors((prev) => ({
+    //       ...prev,
+    //       password: true,
+    //     }));
+    //     return;
+    //   }
 
-      await router.push({
-        pathname: "/app/projects",
-      });
-    }
+    //   if (Unauthorized.is(session_error)) {
+    //     setErrors((prev) => ({
+    //       ...prev,
+    //       email: true,
+    //     }));
+    //   }
 
-    if (Validation.is(users_error)) {
-      setErrors((prev) => ({ ...prev, email: true }));
-    }
+    //   localStorage.clear();
+
+    //   await router.push({
+    //     pathname: "/app/projects",
+    //   });
+    // }
+
+    // if (Validation.is(users_error)) {
+    //   setErrors((prev) => ({ ...prev, email: true }));
+    // }
   };
 
   const { t } = useTranslation("common");
+
   return (
     <AuthLayout>
       <h2 className="text-lg font-semibold text-zinc-900">
@@ -108,6 +120,11 @@ export default function Register() {
           <Input type="text" autoComplete="lastName" required />
           <Message match="valueMissing">{t("surname_required")}</Message>
         </Field>
+        <Field name="patronymic">
+          <Label>Очество</Label>
+          <Input type="text" autoComplete="lastName" required />
+          <Message match="valueMissing">{t("surname_required")}</Message>
+        </Field>
         <Field name="email">
           <Label>{t("email")}</Label>
           <Input type="email" autoComplete="email" required />
@@ -124,6 +141,18 @@ export default function Register() {
             autoComplete="new-password"
             minLength={8}
             required
+          />
+          <Message match="valueMissing">{t("password_required")}</Message>
+          <Message match="patternMismatch">{t("password_error")}</Message>
+          <Message match="tooShort">{t("password_tooShort")}</Message>
+        </Field>
+        <Field name="born_at">
+          <Label>born at</Label>
+          <Input
+            className="rounded-lg border p-1"
+            placeholder="начало"
+            type="date"
+            id="birthday"
           />
           <Message match="valueMissing">{t("password_required")}</Message>
           <Message match="patternMismatch">{t("password_error")}</Message>

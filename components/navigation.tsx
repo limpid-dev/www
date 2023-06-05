@@ -6,8 +6,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { Fragment, SVGProps, useEffect, useState } from "react";
 import api from "../api";
-import { Entity as ProfileEntity } from "../api/profiles";
-import { Entity as UserEntity } from "../api/users";
 import testAva from "../images/avatars/defaultProfile.svg";
 import { Button } from "./primitives/button";
 import {
@@ -127,43 +125,43 @@ export function Navigation() {
   const [profession, setProfession] = useState<string>();
   const [sessionData, setSessionData] = useState<UserEntity>();
 
-  useEffect(() => {
-    async function fetchProfiles() {
-      const { data: sessionData } = await api.session.show();
-      if (sessionData) {
-        setSessionData(sessionData);
+  // useEffect(() => {
+  //   async function fetchProfiles() {
+  //     const { data: sessionData } = await api.session.show();
+  //     if (sessionData) {
+  //       setSessionData(sessionData);
 
-        const { data: profiles } = await api.profiles.index({
-          user_id: sessionData.id,
-          page: 1,
-        });
+  //       const { data: profiles } = await api.profiles.index({
+  //         user_id: sessionData.id,
+  //         page: 1,
+  //       });
 
-        if (profiles) {
-          setProfilesData(profiles);
+  //       if (profiles) {
+  //         setProfilesData(profiles);
 
-          if (sessionData.selected_profile_id !== null) {
-            const foundObject = profiles.find(
-              (item) => item.profile.id === sessionData.selected_profile_id
-            );
+  //         if (sessionData.selected_profile_id !== null) {
+  //           const foundObject = profiles.find(
+  //             (item) => item.profile.id === sessionData.selected_profile_id
+  //           );
 
-            setProfession(foundObject?.profile.display_name);
-          }
+  //           setProfession(foundObject?.profile.display_name);
+  //         }
 
-          if (sessionData.selected_profile_id === null) {
-            await api.users.update(sessionData.id, {
-              selected_profile_id: profiles[0].profile.id,
-            });
+  //         if (sessionData.selected_profile_id === null) {
+  //           await api.users.update(sessionData.id, {
+  //             selected_profile_id: profiles[0].profile.id,
+  //           });
 
-            setProfession(profiles[0].profile.display_name);
-          }
-        }
-      }
-    }
-    fetchProfiles();
-  }, []);
+  //           setProfession(profiles[0].profile.display_name);
+  //         }
+  //       }
+  //     }
+  //   }
+  //   fetchProfiles();
+  // }, []);
 
   const handleLogout = async () => {
-    await api.session.destroy();
+    // await api.session.destroy();
     await router.push({
       pathname: "/",
     });

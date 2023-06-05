@@ -25,18 +25,18 @@ import { Toaster } from "../components/primitives/toaster";
 function App({ Component, pageProps }: AppProps) {
   const [verification, setVerification] = useState(false);
   const [session, setSession] = useState<Entity>();
-  useEffect(() => {
-    async function fetchProfiles() {
-      const { data } = await api.session.show();
-      if (data) {
-        setSession(data);
-      }
-      if (data?.email_verified_at === null) {
-        setVerification(true);
-      }
-    }
-    fetchProfiles();
-  }, []);
+  // useEffect(() => {
+  //   async function fetchProfiles() {
+  //     const { data } = await api.session.show();
+  //     if (data) {
+  //       setSession(data);
+  //     }
+  //     if (data?.email_verified_at === null) {
+  //       setVerification(true);
+  //     }
+  //   }
+  //   fetchProfiles();
+  // }, []);
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

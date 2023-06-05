@@ -5,7 +5,6 @@ import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { FormEvent, useState } from "react";
 import api from "../api";
-import { BadRequest, Unauthorized, Validation } from "../api/errors";
 import { AuthLayout } from "../components/auth-layout";
 import {
   Field,
@@ -45,33 +44,30 @@ export default function Login() {
       password: string;
     };
 
-    const { error } = await api.session.store({
-      email: values.email,
-      password: values.password,
-    });
+    await api.loginUser(values.email, values.password);
 
-    if (Validation.is(error)) {
-      setErrors((prev) => ({
-        ...prev,
-        email: true,
-      }));
-      return;
-    }
+    // if (Validation.is(error)) {
+    //   setErrors((prev) => ({
+    //     ...prev,
+    //     email: true,
+    //   }));
+    //   return;
+    // }
 
-    if (BadRequest.is(error)) {
-      setErrors((prev) => ({
-        ...prev,
-        password: true,
-      }));
-      return;
-    }
+    // if (BadRequest.is(error)) {
+    //   setErrors((prev) => ({
+    //     ...prev,
+    //     password: true,
+    //   }));
+    //   return;
+    // }
 
-    if (Unauthorized.is(error)) {
-      setErrors((prev) => ({
-        ...prev,
-        email: true,
-      }));
-    }
+    // if (Unauthorized.is(error)) {
+    //   setErrors((prev) => ({
+    //     ...prev,
+    //     email: true,
+    //   }));
+    // }
 
     localStorage.clear();
 
