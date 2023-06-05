@@ -33,7 +33,7 @@ export default function Register() {
     const form = new FormData(event.currentTarget);
     const values = Object.fromEntries(form.entries()) as Record<string, string>;
 
-    api
+    await api
       .createUser({
         first_name: values.firstName,
         last_name: values.lastName,
@@ -54,42 +54,6 @@ export default function Register() {
       .catch((error) => {
         console.error("Error creating user:", error);
       });
-
-    // if (users) {
-
-    //   if (Validation.is(session_error)) {
-    //     setErrors((prev) => ({
-    //       ...prev,
-    //       email: true,
-    //     }));
-    //     return;
-    //   }
-
-    //   if (BadRequest.is(session_error)) {
-    //     setErrors((prev) => ({
-    //       ...prev,
-    //       password: true,
-    //     }));
-    //     return;
-    //   }
-
-    //   if (Unauthorized.is(session_error)) {
-    //     setErrors((prev) => ({
-    //       ...prev,
-    //       email: true,
-    //     }));
-    //   }
-
-    //   localStorage.clear();
-
-    //   await router.push({
-    //     pathname: "/app/projects",
-    //   });
-    // }
-
-    // if (Validation.is(users_error)) {
-    //   setErrors((prev) => ({ ...prev, email: true }));
-    // }
   };
 
   const { t } = useTranslation("common");

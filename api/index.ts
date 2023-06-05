@@ -8,12 +8,14 @@ class APIClient {
     baseURL: API_BASE_URL,
   });
 
+  // Users
   async createUser(
-    userData: components["schemas"]["User"]
+    userData: paths["/users"]["post"]["requestBody"]["content"]["multipart/form-data"]
   ): Promise<AxiosResponse<components["schemas"]["User"]>> {
     return this.axiosInstance.post("/users", userData);
   }
 
+  // Session
   async loginUser(
     email: string,
     password: string
@@ -26,6 +28,12 @@ class APIClient {
     });
   }
 
+  // Session
+  async logoutUser(): Promise<AxiosResponse> {
+    return this.axiosInstance.delete("/session");
+  }
+
+  // Email Verification
   async verifyEmailRequest(email: string): Promise<AxiosResponse> {
     return this.axiosInstance.post("/email-verification", {
       email,
@@ -39,10 +47,20 @@ class APIClient {
     });
   }
 
-  async logoutUser(): Promise<AxiosResponse> {
-    return this.axiosInstance.delete("/session");
+  //Password recovery
+  async recoverPassword(
+    recoveryData: paths["/password-recovery"]["post"]["requestBody"]["content"]["multipart/form-data"]
+  ): Promise<void> {
+    await this.axiosInstance.post("/password-recovery", recoveryData);
   }
 
+  async updateRecoveredPassword(
+    passwordData: paths["/password-recovery"]["patch"]["requestBody"]["content"]["multipart/form-data"]
+  ): Promise<void> {
+    await this.axiosInstance.patch("/password-recovery", passwordData);
+  }
+
+  // User
   async getUser(): Promise<AxiosResponse<components["schemas"]["User"]>> {
     return this.axiosInstance.get("/user");
   }
@@ -53,6 +71,7 @@ class APIClient {
     return this.axiosInstance.patch("/user", userData);
   }
 
+  // Profiles
   async getProfiles(
     queryParams: paths["/profiles"]["get"]["parameters"]["query"]
   ): Promise<AxiosResponse<components["schemas"]["Profile"][]>> {

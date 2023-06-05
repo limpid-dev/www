@@ -17,10 +17,6 @@ import { Button } from "../components/primitives/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "../components/primitives/dialog";
 import { RadioGroup } from "../components/primitives/radio-group";
@@ -1136,15 +1132,22 @@ function MobileNavigation() {
 }
 
 export function Header() {
-  const [session, setSession] = useState(null);
+  const [userData, setUserData] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
     (async () => {
-      const { data } = await api.session.show();
-
-      if (data) {
-        setSession(data);
+      try {
+        const { data } = await api.getUser();
+        if (data) {
+          setUserData(data.data);
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          console.log("Unauthorized access. Please log in again.");
+        } else {
+          console.error("An error occurred:", error);
+        }
       }
     })();
   }, []);
@@ -1166,16 +1169,16 @@ export function Header() {
           </div>
           <div className="flex items-center gap-x-5 md:gap-x-8">
             <div className="hidden md:block">
-              {session ? (
+              {userData ? (
                 <NavLink href="/app/projects">
-                  {session.first_name} {session.last_name}
+                  {userData.first_name} {userData.last_name}
                 </NavLink>
               ) : (
                 <NavLink href="/login">{t("log_in")}</NavLink>
               )}
             </div>
 
-            {!session && (
+            {!userData && (
               <NavLink href="/register">
                 <Button color="lime" className="hidden lg:inline rounded-lg">
                   {t("signup_today")}

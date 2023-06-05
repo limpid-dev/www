@@ -161,7 +161,7 @@ export function Navigation() {
   // }, []);
 
   const handleLogout = async () => {
-    // await api.session.destroy();
+    await api.logoutUser();
     await router.push({
       pathname: "/",
     });
