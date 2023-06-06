@@ -54,6 +54,8 @@ export async function middleware(req: NextRequest) {
     try {
       const data = await response.json();
 
+      console.log(response.status);
+
       return NextResponse.json(data, {
         headers: {
           ...response.headers,
@@ -63,16 +65,7 @@ export async function middleware(req: NextRequest) {
       });
     } catch (error) {
       console.error(error);
-      return NextResponse.json(
-        {},
-        {
-          headers: {
-            ...response.headers,
-          },
-          status: response.status,
-          url: response.url,
-        }
-      );
+      return NextResponse.json({});
     }
   }
 

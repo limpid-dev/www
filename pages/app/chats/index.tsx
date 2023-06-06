@@ -33,32 +33,32 @@ const tabs = [
   { name: "Проекты", href: "/app/auctions/my", current: false },
 ];
 
-export const getServerSideProps = async () => {
-  const { data: profiles } = await api.profiles.index({
-    page: 1,
-    perPage: 100,
-  });
+// export const getServerSideProps = async () => {
+//   const { data: profiles } = await api.profiles.index({
+//     page: 1,
+//     perPage: 100,
+//   });
 
-  const withUsers = profiles!.map(async (d) => {
-    const user = await api.users.show(d.userId);
+//   const withUsers = profiles!.map(async (d) => {
+//     const user = await api.users.show(d.userId);
 
-    return { ...d, user: user.data! };
-  });
+//     return { ...d, user: user.data! };
+//   });
 
-  const w = await Promise.all(withUsers);
+//   const w = await Promise.all(withUsers);
 
-  return {
-    props: {
-      data: {
-        profilesWithUser: w!,
-      },
-    },
-  };
-};
+//   return {
+//     props: {
+//       data: {
+//         profilesWithUser: w!,
+//       },
+//     },
+//   };
+// };
 
-type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
+// type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-export default function Chats({ data }: Props) {
+export default function Chats() {
   const router = useRouter();
 
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>): void => {

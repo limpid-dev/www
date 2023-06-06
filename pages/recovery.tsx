@@ -40,25 +40,9 @@ export default function Recovery() {
       email: string;
     };
 
-    const { error } = await api.recovery.store({
+    await api.recoverPassword({
       email: values.email,
     });
-
-    if (Validation.is(error)) {
-      setErrors((prev) => ({
-        ...prev,
-        email: true,
-      }));
-      return;
-    }
-
-    if (BadRequest.is(error)) {
-      setErrors((prev) => ({
-        ...prev,
-        password: true,
-      }));
-      return;
-    }
 
     await router.push({
       pathname: "/recovery-pass",

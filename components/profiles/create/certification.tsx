@@ -2,6 +2,8 @@ import "@uppy/core/dist/style.min.css";
 import "@uppy/dashboard/dist/style.min.css";
 import { Paperclip, Plus } from "@phosphor-icons/react";
 import Uppy from "@uppy/core";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import Russian from "@uppy/locales/lib/ru_RU";
 import { Dashboard, DashboardModal } from "@uppy/react";
 import { useRouter } from "next/router";
@@ -82,20 +84,21 @@ export function CertificationCreate({ certificateAdd, profileId }: any) {
   });
 
   const onSubmit = async (data: CertificationValues) => {
-    try {
-      data.certification.forEach(async (post) => {
-        const { data } = await api.certifications.store(post, profileId);
-        if (data) {
-          const files = uppy.getFiles();
-          const formData = buildFormData(files[0].data);
-          const fileId = data.id;
-          return api.certificateFile.store(formData, profileId, fileId);
-        }
-      });
-      // router.reload();
-    } catch (error) {
-      setError("Что то пошло не так, попробуйте позже");
-    }
+    console.log(data);
+    // try {
+    //   data.certification.forEach(async (post) => {
+    //     const { data } = await api.certifications.store(post, profileId);
+    //     if (data) {
+    //       const files = uppy.getFiles();
+    //       const formData = buildFormData(files[0].data);
+    //       const fileId = data.id;
+    //       return api.certificateFile.store(formData, profileId, fileId);
+    //     }
+    //   });
+    //   // router.reload();
+    // } catch (error) {
+    //   setError("Что то пошло не так, попробуйте позже");
+    // }
   };
 
   return (

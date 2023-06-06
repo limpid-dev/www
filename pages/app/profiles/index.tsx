@@ -60,6 +60,7 @@ const tabs = [
 
 export default function Profiles() {
   const router = useRouter();
+  const [profilesData, setProfilesData] = useState<any[]>([]);
 
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>): void => {
     const selectedPage = event.target.value;
@@ -85,13 +86,18 @@ export default function Profiles() {
 
   useEffect(() => {
     async function getProfiles() {
-      const { data: profiles } = await api.getProfiles({
-        page: 1,
-        per_page: 100,
-      });
-      console.log(profiles);
+      try {
+        const { data } = await api.getProfiles({
+          page: 1,
+          per_page: 100,
+        });
+        if (data && data.length > 0) {
+          setProfilesData(data);
+        }
+      } catch (error) {
+        console.error("Error fetching profiles:", error);
+      }
     }
-
     getProfiles();
   }, []);
 
@@ -240,7 +246,7 @@ export default function Profiles() {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-3">
-          {/* {data.profilesWithUser.map((profile) => (
+          {profilesData.map((profile) => (
             <Link key={profile.id} href={`/app/profiles/${profile.id}`}>
               <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
                 <div className="grid grid-cols-10 h-[130px]">
@@ -278,7 +284,7 @@ export default function Profiles() {
                 </div>
               </div>
             </Link>
-          ))} */}
+          ))}
         </div>
       </GeneralLayout>
     </div>

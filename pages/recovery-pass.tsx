@@ -1,5 +1,4 @@
 import { GetStaticProps } from "next";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
@@ -47,7 +46,7 @@ export default function Recovery() {
       token: string;
     };
 
-    const { error } = await api.recovery.update({
+    await api.updateRecoveredPassword({
       email: values.email,
       password: values.password,
       token: values.token,
