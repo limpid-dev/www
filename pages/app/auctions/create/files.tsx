@@ -8,7 +8,7 @@ import { DashboardModal } from "@uppy/react";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { buildFormData } from "../../../../api/files";
+// import { buildFormData } from "../../../../api/files";
 import TechBuilder from "../../../../components/auctions/techBuilder";
 import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";

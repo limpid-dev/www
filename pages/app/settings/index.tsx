@@ -8,7 +8,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { ChangeEvent, useRef, useState } from "react";
 import api from "../../../api";
-import { buildFormData } from "../../../api/files";
+// import { buildFormData } from "../../../api/files";
 import { Navigation } from "../../../components/navigation";
 import {
   AlertDialog,

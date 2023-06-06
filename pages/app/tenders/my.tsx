@@ -16,7 +16,7 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 import api from "../../../api";
-import { buildFormData } from "../../../api/files";
+// import { buildFormData } from "../../../api/files";
 import { Entity } from "../../../api/tenders";
 import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";

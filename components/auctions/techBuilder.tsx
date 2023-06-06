@@ -1,17 +1,8 @@
-import { Question } from "@phosphor-icons/react";
 import clsx from "clsx";
-import React, { FormEvent, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../primitives/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../primitives/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "../primitives/dialog";
 import { Input } from "../primitives/input";
 import { TextArea } from "../primitives/text-area";
 

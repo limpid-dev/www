@@ -85,7 +85,7 @@ export default function Register() {
           <Message match="valueMissing">{t("surname_required")}</Message>
         </Field>
         <Field name="patronymic">
-          <Label>Очество</Label>
+          <Label>{t("patronymic")}</Label>
           <Input type="text" autoComplete="lastName" required />
           <Message match="valueMissing">{t("surname_required")}</Message>
         </Field>
@@ -111,7 +111,7 @@ export default function Register() {
           <Message match="tooShort">{t("password_tooShort")}</Message>
         </Field>
         <Field name="born_at">
-          <Label>born at</Label>
+          <Label>{t("born_at")}</Label>
           <Input
             className="rounded-lg border p-1"
             placeholder="начало"

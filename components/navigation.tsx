@@ -121,9 +121,9 @@ interface MyObject {
 }
 export function Navigation() {
   const router = useRouter();
-  const [profilesData, setProfilesData] = useState<ProfileEntity[]>([]);
-  const [profession, setProfession] = useState<string>();
-  const [sessionData, setSessionData] = useState<UserEntity>();
+  const [profilesData, setProfilesData] = useState([]);
+  const [profession, setProfession] = useState();
+  const [sessionData, setSessionData] = useState();
 
   // useEffect(() => {
   //   async function fetchProfiles() {

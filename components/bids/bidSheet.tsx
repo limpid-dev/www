@@ -1,10 +1,7 @@
 import { Sun } from "@phosphor-icons/react";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import Image from "next/image";
-import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import api from "../../api";
-import { Entity } from "../../api/tender-bid";
 import {
   Sheet,
   SheetContent,
@@ -51,7 +48,7 @@ const calcTime = (date: string) => {
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 export function TenderBids({ data, tender }: Props) {
-  const [a, setData] = useState<Entity[]>(data);
+  const [a, setData] = useState(data);
 
   useEffect(() => {
     const interval = setInterval(() => {
