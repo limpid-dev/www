@@ -5,7 +5,6 @@ import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { FormEvent, useState } from "react";
 import api from "../api";
-import { BadRequest, Validation } from "../api/errors";
 import { AuthLayout } from "../components/auth-layout";
 import {
   Field,
@@ -53,22 +52,6 @@ export default function Recovery() {
       password: values.password,
       token: values.token,
     });
-
-    if (Validation.is(error)) {
-      setErrors((prev) => ({
-        ...prev,
-        email: true,
-      }));
-      return;
-    }
-
-    if (BadRequest.is(error)) {
-      setErrors((prev) => ({
-        ...prev,
-        password: true,
-      }));
-      return;
-    }
 
     await router.push({
       pathname: "/login",
