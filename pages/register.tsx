@@ -39,8 +39,8 @@ export default function Register() {
         last_name: values.lastName,
         email: values.email,
         password: values.password,
-        patronymic: values.patronymic,
-        born_at: values.born_at,
+        born_at:'',
+        patronymic:''
       })
       .then((response) => {
         if (response.status === 201) {
@@ -84,11 +84,6 @@ export default function Register() {
           <Input type="text" autoComplete="lastName" required />
           <Message match="valueMissing">{t("surname_required")}</Message>
         </Field>
-        <Field name="patronymic">
-          <Label>{t("patronymic")}</Label>
-          <Input type="text" autoComplete="lastName" required />
-          <Message match="valueMissing">{t("surname_required")}</Message>
-        </Field>
         <Field name="email">
           <Label>{t("email")}</Label>
           <Input type="email" autoComplete="email" required />
@@ -105,18 +100,6 @@ export default function Register() {
             autoComplete="new-password"
             minLength={8}
             required
-          />
-          <Message match="valueMissing">{t("password_required")}</Message>
-          <Message match="patternMismatch">{t("password_error")}</Message>
-          <Message match="tooShort">{t("password_tooShort")}</Message>
-        </Field>
-        <Field name="born_at">
-          <Label>{t("born_at")}</Label>
-          <Input
-            className="rounded-lg border p-1"
-            placeholder="начало"
-            type="date"
-            id="birthday"
           />
           <Message match="valueMissing">{t("password_required")}</Message>
           <Message match="patternMismatch">{t("password_error")}</Message>
