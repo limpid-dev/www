@@ -106,5 +106,5 @@
   "mail_token_required": "Please enter the code",
   "new_password": "New password",
   "page_counter": "page of",
-  "born at": "Date of birth"
+  "born_at": "Date of birth"
 }
