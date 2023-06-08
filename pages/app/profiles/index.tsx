@@ -33,52 +33,28 @@ const tabs = [
   { name: "Мои профили", href: "/app/profiles/my", current: false },
 ];
 
-// export const getServerSideProps = async () => {
-//   const { data: profiles } = await api.getProfiles({
-//     page: 1,
-//     per_page: 100,
-//   });
-
-//   const withUsers = profiles!.map(async (d) => {
-//     const user = await api.getUser(d.userId);
-
-//     return { ...d, user: user.data! };
-//   });
-
-//   const w = await Promise.all(withUsers);
-
-//   return {
-//     props: {
-//       data: {
-//         profilesWithUser: profiles,
-//       },
-//     },
-//   };
-// };
-
-// type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
-
 export default function Profiles() {
   const router = useRouter();
   const [profilesData, setProfilesData] = useState<any[]>([]);
-
+  const [totalItems, setTotalItems] = useState(1);
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>): void => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
   };
+  const currentPage =
+    (Number.parseInt(router.query.page as string, 10) as number) || 1;
 
   const [largeScreen, setLargeScreen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
       const newScreenWidth = window.innerWidth;
-
       setLargeScreen(newScreenWidth > 896);
     };
+
     handleResize();
 
     window.addEventListener("resize", handleResize);
-
     return () => {
       window.removeEventListener("resize", handleResize);
     };
@@ -87,19 +63,21 @@ export default function Profiles() {
   useEffect(() => {
     async function getProfiles() {
       try {
-        const { data } = await api.getProfiles({
-          page: 1,
-          per_page: 100,
+        const response = await api.getProfiles({
+          page: currentPage,
+          per_page: 9,
         });
+        const data = response.data.data;
         if (data && data.length > 0) {
           setProfilesData(data);
+          setTotalItems(response.data.meta.total);
         }
       } catch (error) {
         console.error("Error fetching profiles:", error);
       }
     }
     getProfiles();
-  }, []);
+  }, [currentPage]);
 
   return (
     <div>
@@ -253,7 +231,7 @@ export default function Profiles() {
                   <div className="col-span-4 mr-3">
                     <Image
                       src={
-                        profile.user.fileId
+                        profile.user.avatar
                           ? profile.user.file.url
                           : DefaultAvatar
                       }
@@ -265,8 +243,9 @@ export default function Profiles() {
                     />
                   </div>
                   <div className="col-span-6 flex flex-col gap-1">
+                    <p>{profile.display_name}</p>
                     <p>
-                      {profile.user.firstName} {profile.user.lastName}
+                      {profile.user.first_name} {profile.user.last_name}
                     </p>
                     <p className="line-clamp-2 w-auto text-xs text-slate-600">
                       {profile.industry}
@@ -286,6 +265,12 @@ export default function Profiles() {
             </Link>
           ))}
         </div>
+        <Pagination
+          renderPageLink={(page) => `/app/profiles/?page=${page}`}
+          itemsPerPage={9}
+          totalItems={totalItems}
+          currentPage={currentPage}
+        />
       </GeneralLayout>
     </div>
   );

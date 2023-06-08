@@ -39,11 +39,11 @@ export default function Register() {
         last_name: values.lastName,
         email: values.email,
         password: values.password,
-        born_at:'',
-        patronymic:''
+        born_at: "",
+        patronymic: "",
       })
       .then((response) => {
-        if (response.status === 201) {
+        if (response.status === 200) {
           api.verifyEmailRequest(values.email);
           router.push({
             pathname: "/verification",

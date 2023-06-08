@@ -74,13 +74,13 @@ class APIClient {
   // Profiles
   async getProfiles(
     queryParams: paths["/profiles"]["get"]["parameters"]["query"]
-  ): Promise<AxiosResponse<components["schemas"]["Profile"][]>> {
+  ): Promise<AxiosResponse<{ data: components["schemas"]["Profile"][] }>> {
     return this.axiosInstance.get("/profiles", { params: queryParams });
   }
 
   async createProfile(
     profileData: paths["/profiles"]["post"]["requestBody"]["content"]["multipart/form-data"]
-  ): Promise<AxiosResponse<components["schemas"]["Profile"]>> {
+  ): Promise<AxiosResponse<{ data: components["schemas"]["Profile"] }>> {
     return this.axiosInstance.post("/profiles", profileData);
   }
 

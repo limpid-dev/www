@@ -7,8 +7,8 @@ export default withIronSessionApiRoute(async (req, res) => {
       new URL("session", process.env.NEXT_PUBLIC_API_URL),
       {
         method: req.method,
-        headers:{
-          'Content-Type':'application/json'
+        headers: {
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(req.body),
       }
@@ -21,8 +21,8 @@ export default withIronSessionApiRoute(async (req, res) => {
 
       await req.session.save();
     }
-    
-    return res.status(response.status).json(body)
+
+    return res.status(response.status).json(body);
   }
   if (req.method === "DELETE") {
     const response = await fetch(
@@ -40,6 +40,6 @@ export default withIronSessionApiRoute(async (req, res) => {
       req.session.destroy();
     }
 
-    return res.status(response.status).end(response.body);
+    return res.status(response.status).end();
   }
 }, ironSessionConfig);

@@ -25,7 +25,8 @@ interface FormValues {
   owned_intellectual_resources: string;
   owned_material_resources: string;
   tin: string;
-  is_visible: string;
+  is_visible: boolean;
+  avatar?: string;
 }
 
 export default function Test() {
@@ -40,10 +41,10 @@ export default function Test() {
 
   const onSubmit = async (data: FormValues) => {
     const { data: profile } = await api.createProfile(data);
-    if (profile) {
+    if (profile.data.id) {
       router.push({
         pathname: "/app/profiles/create/experiences",
-        query: { profileId: profile.id },
+        query: { profileId: profile.data.id },
       });
     }
   };
