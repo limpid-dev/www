@@ -12,8 +12,8 @@ interface FormValues {
     institution: string;
     title: string;
     description: string;
-    startedAt: string;
-    finishedAt: string;
+    started_at: string;
+    finished_at: string;
   }[];
 }
 
@@ -33,11 +33,11 @@ export default function Test() {
 
   const onSubmit = async (data: FormValues) => {
     data.educations.forEach(async (post) => {
-      const { data: education } = await api.educations.store(
-        post,
-        Number.parseInt(router.query.profileId as string, 10)
+      const { data: education } = await api.createEducation(
+        Number.parseInt(router.query.profileId as string, 10),
+        post
       );
-      if (education) {
+      if (education.data.id) {
         router.push({
           pathname: "/app/profiles/create/certificates",
           query: { profileId: router.query.profileId },
@@ -143,17 +143,13 @@ export default function Test() {
                                   type="date"
                                   id="birthday"
                                   {...register(
-                                    `educations.${index}.startedAt`,
+                                    `educations.${index}.started_at`,
                                     {
                                       required: true,
-                                      setValueAs: (value: string | undefined) =>
-                                        value
-                                          ? new Date(value).toISOString()
-                                          : undefined,
                                     }
                                   )}
                                 />
-                                {errors.educations?.[index]?.startedAt && (
+                                {errors.educations?.[index]?.started_at && (
                                   <p className="ml-2 text-sm text-red-500">
                                     Выберите дату
                                   </p>
@@ -169,17 +165,13 @@ export default function Test() {
                                   type="date"
                                   id="birthday"
                                   {...register(
-                                    `educations.${index}.finishedAt`,
+                                    `educations.${index}.finished_at`,
                                     {
                                       required: true,
-                                      setValueAs: (value: string | undefined) =>
-                                        value
-                                          ? new Date(value).toISOString()
-                                          : undefined,
                                     }
                                   )}
                                 />
-                                {errors.educations?.[index]?.finishedAt && (
+                                {errors.educations?.[index]?.finished_at && (
                                   <p className="ml-2 text-sm text-red-500">
                                     Выберите дату
                                   </p>
@@ -207,8 +199,8 @@ export default function Test() {
                             institution: "",
                             title: "",
                             description: "",
-                            startedAt: "",
-                            finishedAt: "",
+                            started_at: "",
+                            finished_at: "",
                           });
                         }}
                         variant="outline"

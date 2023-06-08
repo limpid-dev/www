@@ -9,11 +9,11 @@ import { TextArea } from "../../../../components/primitives/text-area";
 
 interface FormValues {
   experiences: {
-    company: string;
+    institution: string;
     title: string;
     description: string;
-    startedAt: string;
-    finishedAt: string;
+    started_at: string;
+    finished_at: string;
   }[];
 }
 
@@ -33,9 +33,9 @@ export default function Test() {
 
   const onSubmit = async (data: FormValues) => {
     data.experiences.forEach(async (post) => {
-      await api.experiences.store(
-        post,
-        Number.parseInt(router.query.profileId as string, 10)
+      await api.createExperience(
+        Number.parseInt(router.query.profileId as string, 10),
+        post
       );
     });
 
@@ -104,11 +104,11 @@ export default function Test() {
                           <div className="w-full ">
                             <Input
                               placeholder="Организация"
-                              {...register(`experiences.${index}.company`, {
+                              {...register(`experiences.${index}.institution`, {
                                 required: true,
                               })}
                             />
-                            {errors.experiences?.[index]?.company && (
+                            {errors.experiences?.[index]?.institution && (
                               <p className="ml-2 text-sm text-red-500">
                                 Обязательное поле
                               </p>
@@ -138,15 +138,14 @@ export default function Test() {
                                 placeholder="начало"
                                 type="date"
                                 id="birthday"
-                                {...register(`experiences.${index}.startedAt`, {
-                                  required: true,
-                                  setValueAs: (value: string | undefined) =>
-                                    value
-                                      ? new Date(value).toISOString()
-                                      : undefined,
-                                })}
+                                {...register(
+                                  `experiences.${index}.started_at`,
+                                  {
+                                    required: true,
+                                  }
+                                )}
                               />
-                              {errors.experiences?.[index]?.startedAt && (
+                              {errors.experiences?.[index]?.started_at && (
                                 <p className="ml-2 text-sm text-red-500">
                                   Выберите дату
                                 </p>
@@ -162,17 +161,13 @@ export default function Test() {
                                 type="date"
                                 id="birthday"
                                 {...register(
-                                  `experiences.${index}.finishedAt`,
+                                  `experiences.${index}.finished_at`,
                                   {
                                     required: true,
-                                    setValueAs: (value: string | undefined) =>
-                                      value
-                                        ? new Date(value).toISOString()
-                                        : undefined,
                                   }
                                 )}
                               />
-                              {errors.experiences?.[index]?.finishedAt && (
+                              {errors.experiences?.[index]?.finished_at && (
                                 <p className="ml-2 text-sm text-red-500">
                                   Выберите дату
                                 </p>
@@ -198,11 +193,11 @@ export default function Test() {
                       className="flex gap-3"
                       onClick={() => {
                         append({
-                          company: "",
+                          institution: "",
                           title: "",
                           description: "",
-                          startedAt: "",
-                          finishedAt: "",
+                          started_at: "",
+                          finished_at: "",
                         });
                       }}
                       variant="outline"

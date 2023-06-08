@@ -35,7 +35,7 @@ const tabs = [
 export default function Profiles() {
   const router = useRouter();
   const [profilesData, setProfilesData] = useState<any[]>([]);
-  const [totalItems, setTotalItems] = useState(1);
+  const [totalItems, setTotalItems] = useState<number>(1);
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>): void => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
@@ -67,7 +67,7 @@ export default function Profiles() {
           per_page: 9,
         });
         const data = response.data.data;
-        if (data && data.length > 0) {
+        if (data.length > 0) {
           setProfilesData(data);
           setTotalItems(response.data.meta.total);
         }

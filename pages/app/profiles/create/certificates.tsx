@@ -13,8 +13,9 @@ interface CertificationValues {
     institution: string;
     title: string;
     description: string;
-    issuedAt: string;
-    expiredAt: string;
+    issued_at: string;
+    expired_at: string;
+    attachment: FileList;
   }[];
 }
 
@@ -26,54 +27,26 @@ export default function Test() {
     handleSubmit,
     formState: { errors },
     control,
-  } = useForm<CertificationValues>({
-    defaultValues: {
-      certification: [
-        {
-          institution: "",
-          title: "",
-          description: "",
-          issuedAt: "",
-          expiredAt: "",
-        },
-      ],
-    },
-  });
+  } = useForm<CertificationValues>({});
 
   const { fields, append, remove } = useFieldArray({
     name: "certification",
     control,
   });
 
-  const onSubmitFile = async (fileId: number) => {
-    const inputFile = document.querySelector("#fileInput") as HTMLInputElement;
-    const formData = new FormData();
-
-    const files = inputFile.files ? Array.from(inputFile.files) : [];
-    for (const f of files) {
-      formData.set("file", f);
-    }
-
-    const { data } = await api.certificateFile.store(
-      formData,
-      Number.parseInt(router.query.profileId as string, 10),
-      fileId
-    );
-  };
-
   const onSubmit = async (data: CertificationValues) => {
     try {
-      data.certification.forEach(async (post) => {
-        const { data } = await api.certifications.store(
-          post,
-          Number.parseInt(router.query.profileId as string, 10)
-        );
-        if (data) {
-          onSubmitFile(data.id);
-        } else {
-          throw new Error("Что то пошло не так, попробуйте позже");
-        }
-      });
+      await Promise.all(
+        data.certification.map((post) =>
+          api.createCertificate(
+            Number.parseInt(router.query.profileId as string, 10),
+            {
+              ...post,
+              attachment: post.attachment[0],
+            }
+          )
+        )
+      );
       router.push({
         pathname: "/app/profiles/create/contacts",
         query: { profileId: router.query.profileId },
@@ -150,7 +123,13 @@ export default function Test() {
                             </div>
                           </div>
 
-                          <Input id="fileInput" type="file" />
+                          <Input
+                            id="fileInput"
+                            type="file"
+                            {...register(`certification.${index}.attachment`, {
+                              required: true,
+                            })}
+                          />
                           <div className="flex flex-col  gap-5 md:flex-row justify-around">
                             <div className="flex items-center justify-between gap-3">
                               <p>Начало</p>
@@ -161,17 +140,13 @@ export default function Test() {
                                   type="date"
                                   id="birthday"
                                   {...register(
-                                    `certification.${index}.issuedAt`,
+                                    `certification.${index}.issued_at`,
                                     {
                                       required: true,
-                                      setValueAs: (value: string | undefined) =>
-                                        value
-                                          ? new Date(value).toISOString()
-                                          : undefined,
                                     }
                                   )}
                                 />
-                                {errors.certification?.[index]?.issuedAt && (
+                                {errors.certification?.[index]?.issued_at && (
                                   <p className="ml-2 text-sm text-red-500">
                                     Выберите дату
                                   </p>
@@ -187,17 +162,13 @@ export default function Test() {
                                   type="date"
                                   id="birthday"
                                   {...register(
-                                    `certification.${index}.expiredAt`,
+                                    `certification.${index}.expired_at`,
                                     {
                                       required: true,
-                                      setValueAs: (value: string | undefined) =>
-                                        value
-                                          ? new Date(value).toISOString()
-                                          : undefined,
                                     }
                                   )}
                                 />
-                                {errors.certification?.[index]?.expiredAt && (
+                                {errors.certification?.[index]?.expired_at && (
                                   <p className="ml-2 text-sm text-red-500">
                                     Выберите дату
                                   </p>
@@ -218,7 +189,8 @@ export default function Test() {
                             />
                             {errors.certification?.[index]?.description && (
                               <p className="ml-2 text-sm text-red-500">
-                                Обязательное поле                              </p>
+                                Обязательное поле{" "}
+                              </p>
                             )}
                           </div>
                           <div className="relative py-6">
@@ -240,8 +212,9 @@ export default function Test() {
                             institution: "",
                             title: "",
                             description: "",
-                            issuedAt: "",
-                            expiredAt: "",
+                            issued_at: "",
+                            expired_at: "",
+                            attachment: "",
                           });
                         }}
                         variant="outline"
