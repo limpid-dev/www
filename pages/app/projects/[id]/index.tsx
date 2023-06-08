@@ -110,7 +110,6 @@ export default function ProjectView({ data }: Props) {
   } = useForm<FormValues>();
 
   const onSubmit = async (data1: FormValues) => {
-    console.log(data1);
     // try {
     //   const profileId = localStorage.getItem("profileId");
     //   const w = { profileId, ...data1 };

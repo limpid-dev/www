@@ -1,11 +1,12 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { components, paths } from "./api-paths";
 
-const API_BASE_URL = "http://localhost:3000/api";
+const API_BASE_URL = "https://limpid.kz/api";
 
 class APIClient {
   private axiosInstance = axios.create({
     baseURL: API_BASE_URL,
+    withCredentials: true,
   });
 
   // Users
@@ -61,8 +62,10 @@ class APIClient {
   }
 
   // User
-  async getUser(): Promise<AxiosResponse<components["schemas"]["User"]>> {
-    return this.axiosInstance.get("/user");
+  async getUser(
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse<{ data: components["schemas"]["User"] }>> {
+    return this.axiosInstance.get("/user", config);
   }
 
   async updateUser(
@@ -85,9 +88,10 @@ class APIClient {
   }
 
   async getProfileById(
-    profileId: number
-  ): Promise<AxiosResponse<components["schemas"]["Profile"]>> {
-    return this.axiosInstance.get(`/profiles/${profileId}`);
+    profileId: number,
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse<{ data: components["schemas"]["Profile"] }>> {
+    return this.axiosInstance.get(`/profiles/${profileId}`, config);
   }
 
   async updateProfile(

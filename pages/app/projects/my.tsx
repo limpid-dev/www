@@ -20,7 +20,7 @@ const tabs = [
 
 // export const getServerSideProps = async () => {
 //   const data = await api.session.show();
-//   console.log(data);
+//
 //   // const { data: projects } = await api.projects.index(2);
 
 //   return {

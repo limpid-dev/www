@@ -296,6 +296,7 @@ export interface components {
       email?: string;
       first_name?: string;
       last_name?: string;
+      selected_profile_id?: number;
       password?: string;
       patronymic?: string;
       born_at?: string;

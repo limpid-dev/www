@@ -84,7 +84,6 @@ export function CertificationCreate({ certificateAdd, profileId }: any) {
   });
 
   const onSubmit = async (data: CertificationValues) => {
-    console.log(data);
     // try {
     //   data.certification.forEach(async (post) => {
     //     const { data } = await api.certifications.store(post, profileId);

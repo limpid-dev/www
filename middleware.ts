@@ -28,7 +28,7 @@ export async function middleware(req: NextRequest) {
       return NextResponse.next();
     }
 
-    const {token} = await getIronSession(
+    const { token } = await getIronSession(
       req,
       NextResponse.next(),
       ironSessionConfig
@@ -36,25 +36,28 @@ export async function middleware(req: NextRequest) {
 
     const url = req.url.match(/\/api\/(.*)/)![1];
 
-      const response = await fetch(
-        new URL(url, process.env.NEXT_PUBLIC_API_URL),
-        {
-          method: req.method,
-          headers: {
-            ...req.headers,
-            Authorization: `Bearer ${token}`,
-          },
-          credentials: "include",
-          body: req.method === "GET" ? undefined : await req.blob(),
-        }
-      )
+    const response = await fetch(
+      new URL(url, process.env.NEXT_PUBLIC_API_URL),
+      {
+        method: req.method,
+        headers: {
+          ...req.headers,
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: "include",
+        body:
+          req.method === "POST" || req.method === "PATCH"
+            ? await req.blob()
+            : undefined,
+      }
+    );
 
-      return new NextResponse(response.body,{
-        headers:response.headers,
-        status:response.status,
-        statusText:response.statusText,
-        url:response.url
-      })
+    return new NextResponse(response.body, {
+      headers: response.headers,
+      status: response.status,
+      statusText: response.statusText,
+      url: response.url,
+    });
   }
 
   return NextResponse.next();

@@ -1,10 +1,4 @@
-import {
-  InstagramLogo,
-  LinkedinLogo,
-  Pen,
-  Trash,
-  WhatsappLogo,
-} from "@phosphor-icons/react";
+import { Pen, Trash } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
@@ -31,15 +25,15 @@ import { TextArea } from "../../../../components/primitives/text-area";
 import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
 
 interface FormValues {
-  ownedMaterialResources: string;
-  ownedIntellectualResources: string;
+  owned_material_resources: string;
+  owned_intellectual_resources: string;
 }
 
 interface FormValuesGeneral {
   industry: string;
   location: string;
   description: string;
-  title: string;
+  display_name: string;
 }
 
 export const getServerSideProps = async (
@@ -47,25 +41,32 @@ export const getServerSideProps = async (
     id: string;
   }>
 ) => {
-  const session = await api.session.show({
+  const { data: session } = await api.getUser({
     headers: {
-      Cookie: context.req.headers.cookie!,
+      Cookie: context.req.headers.cookie,
     },
-    credentials: "include",
   });
-  const { data: profile } = await api.profiles.show();
 
-  if (profile) {
-    const { data: user } = await api.users.show(profile.userId);
+  const { data: profile } = await api.getProfileById(
+    Number.parseInt(context!.params!.id as string, 10),
+    {
+      headers: {
+        cookie: context.req.headers.cookie,
+      },
+    }
+  );
+
+  if (profile.data.id) {
     const isAuthor =
-      session.data?.id && profile.userId && session.data.id === profile.userId;
+      session.data.id &&
+      profile.data.user_id &&
+      session.data.id === profile.data.user_id;
 
     return {
       props: {
         data: {
           ...session,
           profile: profile!,
-          user: user!,
           isAuthor: isAuthor!,
         },
       },
@@ -118,7 +119,7 @@ export default function OneProfile({ data }: Props) {
   };
 
   const handleDeleteProfile = async () => {
-    api.profiles.destroy(parsedId);
+    await api.deleteProfile(parsedId);
 
     await router.push({
       pathname: "/app/profiles/my",
@@ -139,10 +140,7 @@ export default function OneProfile({ data }: Props) {
 
   const onSubmit = async (data1: FormValues) => {
     try {
-      const { data } = await api.profiles.update(
-        Number.parseInt(id, 10),
-        data1
-      );
+      const { data } = await api.updateProfile(Number.parseInt(id, 10), data1);
       router.reload();
     } catch (error) {
       setError("Что то пошло не так, попробуйте позже");
@@ -151,10 +149,7 @@ export default function OneProfile({ data }: Props) {
 
   const onSubmit2 = async (data1: FormValuesGeneral) => {
     try {
-      const { data } = await api.profiles.update(
-        Number.parseInt(id, 10),
-        data1
-      );
+      const { data } = await api.updateProfile(Number.parseInt(id, 10), data1);
       router.reload();
     } catch (error) {
       setError("Что то пошло не так, попробуйте позже");
@@ -212,7 +207,11 @@ export default function OneProfile({ data }: Props) {
                   <div className="h-full bg-white px-6">
                     <div className="flex flex-col items-center justify-center pt-12">
                       <Image
-                        src={data.user.file ? data.user.file.url : DefaultAva}
+                        src={
+                          data.profile.data.avatar
+                            ? data.profile.data.avatar
+                            : DefaultAva
+                        }
                         width={0}
                         height={0}
                         unoptimized
@@ -220,12 +219,12 @@ export default function OneProfile({ data }: Props) {
                         className="mb-3 h-[106px] w-auto rounded-md object-cover"
                       />
                       <p className="text-2xl font-semibold mb-2">
-                        {data.user.firstName} {data.user.lastName}
+                        {data.data.first_name} {data.data.last_name}
                       </p>
                       <p className=" text-sm">
                         <Input
                           {...register2("industry")}
-                          placeholder={data.profile.industry}
+                          placeholder={data.profile.data.industry}
                         />
                       </p>
                     </div>
@@ -236,7 +235,7 @@ export default function OneProfile({ data }: Props) {
                         <p className="text-sm ">
                           <Input
                             {...register2("location")}
-                            placeholder={data.profile.location}
+                            placeholder={data.profile.data.location}
                           />
                         </p>
                       </div>
@@ -244,8 +243,8 @@ export default function OneProfile({ data }: Props) {
                         <p className="text-sm text-slate-400 mb-2">Профессия</p>
                         <p className="text-sm">
                           <Input
-                            {...register2("title")}
-                            placeholder={data.profile.title}
+                            {...register2("display_name")}
+                            placeholder={data.profile.data.display_name}
                           />
                         </p>
                       </div>
@@ -257,7 +256,7 @@ export default function OneProfile({ data }: Props) {
                         <TextArea
                           {...register2("description")}
                           className=" h-"
-                          placeholder={data.profile.description}
+                          placeholder={data.profile.data.description}
                         />
                       </p>
                     </div>
@@ -376,7 +375,11 @@ export default function OneProfile({ data }: Props) {
                 <div className="h-full bg-white px-6">
                   <div className="flex flex-col items-center justify-center pt-12">
                     <Image
-                      src={data.user.file ? data.user.file.url : DefaultAva}
+                      src={
+                        data.profile.data.avatar
+                          ? data.profile.data.avatar
+                          : DefaultAva
+                      }
                       width={0}
                       height={0}
                       unoptimized
@@ -384,25 +387,29 @@ export default function OneProfile({ data }: Props) {
                       className="mb-3 h-[106px] w-auto rounded-md object-cover"
                     />
                     <p className="text-2xl font-semibold">
-                      {data.user.firstName} {data.user.lastName}
+                      {data.data.first_name} {data.data.last_name}
                     </p>
-                    <p className=" text-sm">{data.profile.industry}</p>
+                    <p className=" text-sm">{data.profile.data.industry}</p>
                   </div>
                   <div className="mb-6 mt-3" />
                   <div className="grid grid-cols-2 gap-y-4">
                     <div>
                       <p className="text-sm text-slate-400">Локация</p>
-                      <p className="text-sm ">{data.profile.location}</p>
+                      <p className="text-sm ">{data.profile.data.location}</p>
                     </div>
                     <div>
                       <p className="text-sm text-slate-400">Профессия</p>
-                      <p className="text-sm">{data.profile.title}</p>
+                      <p className="text-sm">
+                        {data.profile.data.display_name}
+                      </p>
                     </div>
                   </div>
                   <div className="mb-6 mt-4" />
                   <div>
                     <p className="text-lg font-semibold">Обо мне</p>
-                    <p className="pt-3 text-sm">{data.profile.description}</p>
+                    <p className="pt-3 text-sm">
+                      {data.profile.data.description}
+                    </p>
                   </div>
                   {data.isAuthor ? (
                     <div className="col-span-2">
@@ -524,8 +531,10 @@ export default function OneProfile({ data }: Props) {
                           Материальный ресурс
                         </p>
                         <TextArea
-                          placeholder={data.profile.ownedMaterialResources}
-                          {...register("ownedMaterialResources")}
+                          placeholder={
+                            data.profile.data.owned_material_resources!
+                          }
+                          {...register("owned_material_resources")}
                         />
                       </div>
 
@@ -535,8 +544,10 @@ export default function OneProfile({ data }: Props) {
                           Интеллектуальный ресурс
                         </p>
                         <TextArea
-                          {...register("ownedIntellectualResources")}
-                          placeholder={data.profile.ownedIntellectualResources}
+                          {...register("owned_intellectual_resources")}
+                          placeholder={
+                            data.profile.data.owned_intellectual_resources!
+                          }
                         />
                       </div>
                     </div>
@@ -557,7 +568,7 @@ export default function OneProfile({ data }: Props) {
                           Материальный ресурс
                         </p>
                         <p className="text-sm">
-                          {data.profile.ownedMaterialResources}
+                          {data.profile.data.owned_material_resources}
                         </p>
                       </div>
 
@@ -567,7 +578,7 @@ export default function OneProfile({ data }: Props) {
                           Интеллектуальный ресурс
                         </p>
                         <p className="text-sm">
-                          {data.profile.ownedIntellectualResources}
+                          {data.profile.data.owned_intellectual_resources}
                         </p>
                       </div>
                     </div>

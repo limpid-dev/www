@@ -19,6 +19,8 @@ export default withIronSessionApiRoute(async (req, res) => {
     if (response.ok) {
       req.session.token = body.data.token;
 
+      req.session.token;
+
       await req.session.save();
     }
 

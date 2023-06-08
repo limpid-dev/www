@@ -5,6 +5,7 @@ import api from "../../../../api";
 import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";
 import { Input } from "../../../../components/primitives/input";
+import { Label } from "../../../../components/primitives/label";
 import { Options } from "../../../../components/primitives/options";
 import {
   Select,
@@ -15,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../../../components/primitives/select";
+import { Switch } from "../../../../components/primitives/switch";
 import { TextArea } from "../../../../components/primitives/text-area";
 
 interface FormValues {
@@ -179,37 +181,15 @@ export default function Test() {
                         </span>
                       )}
                     </div>
-                    <Controller
-                      control={control}
-                      name="is_visible"
-                      rules={{ required: true }}
-                      render={({ field }) => (
-                        <div className="flex flex-col w-full">
-                          <Select
-                            value={field.value}
-                            onValueChange={field.onChange}
-                          >
-                            <SelectTrigger className="px-5 text-ellipsis whitespace-nowrap overflow-hidden">
-                              <SelectValue placeholder="Инкогнито" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectGroup>
-                                <SelectLabel>Видимость профиля</SelectLabel>
-                                <SelectItem value="true">Да</SelectItem>
-                                <SelectItem value="false">Нет</SelectItem>
-                              </SelectGroup>
-                            </SelectContent>
-                          </Select>
-                          <p>
-                            {errors.is_visible && (
-                              <span className="text-sm text-red-600">
-                                Введите обязательное поле
-                              </span>
-                            )}
-                          </p>
-                        </div>
-                      )}
-                    />
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        id="is_visible"
+                        {...register("is_visible", {
+                          required: true,
+                        })}
+                      />
+                      <Label htmlFor="is_visible">Видимость профиля</Label>
+                    </div>
                   </div>
                   <div>
                     <TextArea

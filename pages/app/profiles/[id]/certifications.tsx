@@ -158,9 +158,7 @@ export default function Certifications({ data }: Props) {
     try {
       await api.profiles.update(Number.parseInt(id as string, 10), data);
       router.reload();
-    } catch (error) {
-      console.log("Что то пошло не так, попробуйте позже");
-    }
+    } catch (error) {}
   };
 
   return (

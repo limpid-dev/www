@@ -43,9 +43,7 @@ export default function TechBuilder() {
     "additional",
   ] as const);
 
-  const onSubmit = async (data: any) => {
-    console.log(data);
-  };
+  const onSubmit = async (data: any) => {};
   const {
     register,
     handleSubmit,

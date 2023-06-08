@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { ChangeEvent, useEffect, useState } from "react";
 import api from "../../../api";
+import { components } from "../../../api/api-paths";
 import { GeneralLayout } from "../../../components/general-layout";
 import { Navigation } from "../../../components/navigation";
 import Pagination from "../../../components/pagination";
@@ -33,7 +34,7 @@ function Profiles() {
   const currentPage =
     (Number.parseInt(router.query.page as string, 10) as number) || 1;
 
-  const [data, setData] = useState<Profiles[]>([]);
+  const [data, setData] = useState<components["schemas"]["Profile"][]>([]);
   const [loading, setLoading] = useState(true);
 
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>): void => {
@@ -46,19 +47,21 @@ function Profiles() {
   useEffect(() => {
     async function fetchProfiles() {
       const { data: session } = await api.getUser();
-      if (session) {
-        const profiles = await api.getProfiles({
+      try {
+        const response = await api.getProfiles({
           page: currentPage,
           per_page: 9,
           user_id: session.id,
         });
-        if (profiles.data) {
-          setData(profiles.data);
-          const totalCount = profiles.data.meta?.total;
-          setTotalItems(totalCount);
-          setLoading(false);
+        const data = response.data.data;
+        if (data && data.length > 0) {
+          setData(data);
+          setTotalItems(response.data.meta.total);
         }
+      } catch (error) {
+        console.error("Error fetching profiles:", error);
       }
+      setLoading(false);
     }
     fetchProfiles();
   }, [currentPage]);
@@ -168,7 +171,7 @@ function Profiles() {
                             alt="some"
                           />
                           <p className="mt-3 text-center text-base sm:text-xl ">
-                            {profile.title}
+                            {profile.display_name}
                           </p>
                         </div>
                       </Link>
