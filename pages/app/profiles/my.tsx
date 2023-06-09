@@ -51,7 +51,7 @@ function Profiles() {
         const response = await api.getProfiles({
           page: currentPage,
           per_page: 9,
-          user_id: session.id,
+          user_id: session.data.id,
         });
         const data = response.data.data;
         if (data && data.length > 0) {
