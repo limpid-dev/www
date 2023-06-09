@@ -55,11 +55,18 @@ export default function All() {
         page: currentPage,
         per_page: 6,
       });
-      if (data.data && data.meta) {
-        setData(data.data);
-        setTotalItems(data.meta.total);
-        setLoading(false);
-      }
+      const profileDataArray = await Promise.all(
+        data.data.map(async (project) => {
+          const { data: sessionData } = await api.getProfileById(
+            project.profile_id
+          );
+          return { ...project, profile_data: sessionData };
+        })
+      );
+      console.log(profileDataArray);
+      setData(profileDataArray);
+      setTotalItems(data.meta.total);
+      setLoading(false);
     }
     fetchProjects();
   }, [currentPage]);
@@ -206,18 +213,26 @@ export default function All() {
                             {project.description}
                           </p>
                           <div className="mt-2 flex gap-4 text-xs">
-                            <div className="flex w-fit items-center gap-4 rounded-lg bg-slate-100 p-2">
-                              <Image
-                                src={testAva}
-                                alt="test"
-                                width={20}
-                                height={20}
-                                className="rounded-lg"
-                              />
-                              <p className="text-xs sm:text-sm">
-                                Сара Алтыбекова
-                              </p>
-                            </div>
+                            <Link
+                              href={`/app/profiles/${project.profile_data.data.id}`}
+                            >
+                              <div className="flex w-fit items-center gap-4 rounded-lg bg-slate-100 p-2 hover:bg-lime-200">
+                                <Image
+                                  src={
+                                    project.profile_data?.data?.avatar
+                                      ? `${process.env.NEXT_PUBLIC_FILE_DOWNLOAD}${project.profile_data.data.avatar.url}`
+                                      : testAva
+                                  }
+                                  alt="test"
+                                  width={20}
+                                  height={20}
+                                  className="rounded-lg"
+                                />
+                                <p className="text-xs sm:text-sm">
+                                  {project.profile_data.data.display_name}
+                                </p>
+                              </div>
+                            </Link>
                           </div>
                         </div>
                       </div>
