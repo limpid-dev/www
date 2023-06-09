@@ -215,7 +215,7 @@ export default function OneProfile({ data }: Props) {
                       <Image
                         src={
                           data.profile.data.avatar
-                            ? `https://api.limpid.kz${data.profile.data.avatar.url}`
+                            ? `http://localhost:3333${data.profile.data.avatar.url}`
                             : DefaultAva
                         }
                         width={0}
@@ -365,7 +365,7 @@ export default function OneProfile({ data }: Props) {
                     <Image
                       src={
                         data.profile.data.avatar
-                          ? `https://api.limpid.kz${data.profile.data.avatar.url}`
+                          ? `http://localhost:3333${data.profile.data.avatar.url}`
                           : DefaultAva
                       }
                       width={0}
@@ -470,7 +470,7 @@ export default function OneProfile({ data }: Props) {
                             alt=""
                             unoptimized
                             quality={100}
-                            src="/whatsapp.png"
+                            src="/telegram.png"
                           />
                         </Link>
                       ) : (

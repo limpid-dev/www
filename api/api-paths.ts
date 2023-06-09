@@ -608,7 +608,7 @@ export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
     Pagination: {
-      total?: number;
+      total: number;
       per_page?: number;
       current_page?: number;
       last_page?: number;

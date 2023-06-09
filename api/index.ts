@@ -1,8 +1,8 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { components, paths } from "./api-paths";
 
-const API_BASE_URL = "https://limpid.kz/api";
-// const API_BASE_URL = "http://localhost:3000/api";
+// const API_BASE_URL = "https://limpid.kz/api";
+const API_BASE_URL = "http://localhost:3000/api";
 
 class APIClient {
   private axiosInstance = axios.create({
@@ -131,6 +131,52 @@ class APIClient {
     return this.axiosInstance.post(
       `/profiles/${profile_id}/educations`,
       educationData
+    );
+  }
+
+  async getEducations(
+    profile_id: number,
+    params?: paths["/profiles/{profile_id}/educations"]["get"]["parameters"]["query"],
+    config?: AxiosRequestConfig
+  ): Promise<
+    AxiosResponse<{
+      meta: components["schemas"]["Pagination"];
+      data: components["schemas"]["Education"][];
+    }>
+  > {
+    return this.axiosInstance.get(`/profiles/${profile_id}/educations`, {
+      params,
+      ...config,
+    });
+  }
+
+  //Profile Education
+  async getEducation(
+    pathParams: paths["/profiles/{profile_id}/educations/{education_id}"]["get"]["parameters"]["path"]
+  ): Promise<AxiosResponse<{ data: components["schemas"]["Education"] }>> {
+    const { profile_id, education_id } = pathParams;
+    return this.axiosInstance.get(
+      `/profiles/${profile_id}/educations/${education_id}`
+    );
+  }
+
+  async updateEducation(
+    pathParams: paths["/profiles/{profile_id}/educations/{education_id}"]["patch"]["parameters"]["path"],
+    educationData: paths["/profiles/{profile_id}/educations/{education_id}"]["patch"]["requestBody"]["content"]["multipart/form-data"]
+  ): Promise<AxiosResponse<{ data: components["schemas"]["Education"] }>> {
+    const { profile_id, education_id } = pathParams;
+    return this.axiosInstance.patch(
+      `/profiles/${profile_id}/educations/${education_id}`,
+      educationData
+    );
+  }
+
+  async deleteEducation(
+    pathParams: paths["/profiles/{profile_id}/educations/{education_id}"]["delete"]["parameters"]["path"]
+  ): Promise<AxiosResponse<void>> {
+    const { profile_id, education_id } = pathParams;
+    return this.axiosInstance.delete(
+      `/profiles/${profile_id}/educations/${education_id}`
     );
   }
 

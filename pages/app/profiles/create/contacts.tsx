@@ -95,7 +95,7 @@ export default function Test() {
                   <Image
                     src={
                       data.avatar
-                        ? `https://api.limpid.kz${data.avatar.url}`
+                        ? `http://localhost:3333${data.avatar.url}`
                         : DefaultAva
                     }
                     width={0}

@@ -11,8 +11,8 @@ interface FormValues {
     institution: string;
     title: string;
     description: string;
-    startedAt: string;
-    finishedAt: string;
+    started_at: string;
+    finished_at: string;
   }[];
 }
 
@@ -43,7 +43,10 @@ export function EducationCreate({ profileId, isAddHandler }: any) {
   const onSubmit = async (data: FormValues) => {
     try {
       if (isEdit === false) {
-        await api.educations.update(profileId, parsedId, data.education[0]);
+        await api.updateEducation(
+          { profile_id: profileId, education_id: parsedId },
+          data.education[0]
+        );
         await router.push({
           pathname: `/app/profiles/${profileId}/education`,
           query: {},
@@ -51,7 +54,7 @@ export function EducationCreate({ profileId, isAddHandler }: any) {
         router.reload();
       } else {
         data.education.forEach(async (post) => {
-          const { data } = await api.educations.store(post, profileId);
+          const { data } = await api.createEducation(profileId, post);
         });
         if (data) {
           router.reload();
@@ -66,18 +69,22 @@ export function EducationCreate({ profileId, isAddHandler }: any) {
     if (Number.isNaN(parsedId)) return;
 
     async function fetchEducation() {
-      const { data } = await api.educations.show(profileId, parsedId);
-      if (data) {
-        setValue(`education.0.title`, data.title);
-        setValue(`education.0.institution`, data.institution);
-        setValue(`education.0.description`, data.description);
+      const response = await api.getEducation({
+        profile_id: profileId,
+        education_id: parsedId,
+      });
+
+      if (response.data.data !== null && response.data.data.description) {
+        setValue(`education.0.title`, response.data.data.title);
+        setValue(`education.0.institution`, response.data.data.institution);
+        setValue(`education.0.description`, response.data.data.description);
         setValue(
-          `education.0.startedAt`,
-          new Date(data.startedAt).toISOString().slice(0, 10)
+          `education.0.started_at`,
+          new Date(response.data.data.started_at).toISOString().slice(0, 10)
         );
         setValue(
-          `education.0.finishedAt`,
-          new Date(data.finishedAt).toISOString().slice(0, 10)
+          `education.0.finished_at`,
+          new Date(response.data.data.finished_at).toISOString().slice(0, 10)
         );
       }
     }
@@ -146,13 +153,11 @@ export function EducationCreate({ profileId, isAddHandler }: any) {
                         placeholder="начало"
                         type="date"
                         id="birthday"
-                        {...register(`education.${index}.startedAt`, {
+                        {...register(`education.${index}.started_at`, {
                           required: "Please enter your first name.",
-                          setValueAs: (value: string | undefined) =>
-                            value ? new Date(value).toISOString() : undefined,
                         })}
                       />
-                      {errors.education?.[index]?.startedAt && (
+                      {errors.education?.[index]?.started_at && (
                         <p className="ml-2 text-sm text-red-500">
                           Выберите дату
                         </p>
@@ -167,13 +172,11 @@ export function EducationCreate({ profileId, isAddHandler }: any) {
                         placeholder="начало"
                         type="date"
                         id="birthday"
-                        {...register(`education.${index}.finishedAt`, {
+                        {...register(`education.${index}.finished_at`, {
                           required: "Please enter your first name.",
-                          setValueAs: (value: string | undefined) =>
-                            value ? new Date(value).toISOString() : undefined,
                         })}
                       />
-                      {errors.education?.[index]?.finishedAt && (
+                      {errors.education?.[index]?.finished_at && (
                         <p className="ml-2 text-sm text-red-500">
                           Выберите дату
                         </p>
@@ -201,8 +204,8 @@ export function EducationCreate({ profileId, isAddHandler }: any) {
                     institution: "",
                     title: "",
                     description: "",
-                    startedAt: "",
-                    finishedAt: "",
+                    started_at: "",
+                    finished_at: "",
                   });
                 }}
                 variant="outline"

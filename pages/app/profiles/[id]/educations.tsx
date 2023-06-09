@@ -32,7 +32,12 @@ interface FormValuesGeneral {
   industry: string;
   location: string;
   description: string;
-  title: string;
+  display_name: string;
+  instagram_url: string;
+  whatsapp_url: string;
+  website_url: string;
+  telegram_url: string;
+  two_gis_url: string;
 }
 
 export const getServerSideProps = async (
@@ -40,41 +45,56 @@ export const getServerSideProps = async (
     id: string;
   }>
 ) => {
-  const session = await api.session.show({
+  const { data: session } = await api.getUser({
     headers: {
-      Cookie: context.req.headers.cookie!,
+      Cookie: context.req.headers.cookie,
     },
-    credentials: "include",
   });
-  const { data: profile } = await api.profiles.show(Number(context.params!.id));
-  const { data: education } = await api.educations.index(
-    Number(context.params!.id)
+
+  const { data: profile } = await api.getProfileById(
+    Number.parseInt(context!.params!.id as string, 10),
+    {
+      headers: {
+        cookie: context.req.headers.cookie,
+      },
+    }
   );
 
-  if (profile && education) {
-    const { data: user } = await api.users.show(profile.userId);
-    const updatedItems = education.map((item) => {
-      return {
-        ...item,
-        startedAt: dateFormatter(item.startedAt),
-        finishedAt: dateFormatter(item.finishedAt),
-      };
-    });
-    const isAuthor =
-      session.data?.id && profile.userId && session.data.id === profile.userId;
-
-    return {
-      props: {
-        data: {
-          ...session,
-          profile: profile!,
-          user: user!,
-          isAuthor: isAuthor!,
-          education: updatedItems!,
-        },
+  const { data: education } = await api.getEducations(
+    Number(context.params!.id),
+    {
+      page: 1,
+      per_page: 10,
+    },
+    {
+      headers: {
+        cookie: context.req.headers.cookie,
       },
+    }
+  );
+  const updatedItems = education.data.map((item) => {
+    return {
+      ...item,
+      started_at: dateFormatter(item.started_at),
+      finished_at: dateFormatter(item.finished_at),
     };
-  }
+  });
+
+  const isAuthor =
+    session.data.id &&
+    profile.data.user_id &&
+    session.data.id === profile.data.user_id;
+
+  return {
+    props: {
+      data: {
+        ...session,
+        profile: profile!,
+        isAuthor: isAuthor!,
+        education: updatedItems!,
+      },
+    },
+  };
 };
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
@@ -117,7 +137,7 @@ export default function Education({ data }: Props) {
 
   const onSubmit = async (data1: FormValuesGeneral) => {
     try {
-      const { data } = await api.profiles.update(parsedId, data1);
+      await api.updateProfile(parsedId, data1);
       router.reload();
     } catch (error) {
       setError("Что то пошло не так, попробуйте позже");
@@ -126,7 +146,6 @@ export default function Education({ data }: Props) {
 
   const [editGeneral, setEditGeneral] = useState(false);
   const [isAdd, setIsAdd] = useState(true);
-  const [contacts, setContacts] = useState({});
 
   const editGeneralInfo = () => {
     setEditGeneral((current: boolean) => !current);
@@ -137,8 +156,12 @@ export default function Education({ data }: Props) {
     router.push(selectedPage);
   };
 
-  const handleDeleteProfile = () => {
-    api.profiles.destroy(parsedId);
+  const handleDeleteProfile = async () => {
+    await api.deleteProfile(parsedId);
+
+    await router.push({
+      pathname: "/app/profiles/my",
+    });
   };
 
   const isAddHandler = () => {
@@ -146,7 +169,7 @@ export default function Education({ data }: Props) {
   };
 
   const handleDelete = (itemId: any) => {
-    api.educations.destroy(parsedId, itemId);
+    api.deleteEducation({ profile_id: parsedId, education_id: itemId });
     router.reload();
   };
 
@@ -193,7 +216,11 @@ export default function Education({ data }: Props) {
                   <div className="h-full bg-white px-6">
                     <div className="flex flex-col items-center justify-center pt-12">
                       <Image
-                        src={data.user.file ? data.user.file.url : DefaultAva}
+                        src={
+                          data.profile.data.avatar
+                            ? `http://localhost:3333${data.profile.data.avatar.url}`
+                            : DefaultAva
+                        }
                         width={0}
                         height={0}
                         unoptimized
@@ -201,12 +228,12 @@ export default function Education({ data }: Props) {
                         className="mb-3 h-[106px] w-auto rounded-md object-cover"
                       />
                       <p className="text-2xl font-semibold mb-2">
-                        {data.user.firstName} {data.user.lastName}
+                        {data.data.first_name} {data.data.last_name}
                       </p>
                       <p className=" text-sm">
                         <Input
                           {...register("industry")}
-                          placeholder={data.profile.industry}
+                          placeholder={data.profile.data.industry}
                         />
                       </p>
                     </div>
@@ -217,7 +244,7 @@ export default function Education({ data }: Props) {
                         <p className="text-sm ">
                           <Input
                             {...register("location")}
-                            placeholder={data.profile.location}
+                            placeholder={data.profile.data.location}
                           />
                         </p>
                       </div>
@@ -225,8 +252,8 @@ export default function Education({ data }: Props) {
                         <p className="text-sm text-slate-400 mb-2">Профессия</p>
                         <p className="text-sm">
                           <Input
-                            {...register("title")}
-                            placeholder={data.profile.title}
+                            {...register("display_name")}
+                            placeholder={data.profile.data.display_name}
                           />
                         </p>
                       </div>
@@ -238,7 +265,7 @@ export default function Education({ data }: Props) {
                         <TextArea
                           {...register("description")}
                           className=" h-"
-                          placeholder={data.profile.description}
+                          placeholder={data.profile.data.description}
                         />
                       </p>
                     </div>
@@ -259,13 +286,7 @@ export default function Education({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            name="2gis"
-                            onChange={(e) => {
-                              setContacts((prev: any) => ({
-                                ...prev.contacts,
-                                "2gis": e.target.value,
-                              }));
-                            }}
+                            {...register("two_gis_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на 2ГИС"
                             minLength={1}
@@ -284,13 +305,7 @@ export default function Education({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            name="instagram"
-                            onChange={(e) => {
-                              setContacts((prev: any) => ({
-                                ...prev.contacts,
-                                instagram: e.target.value,
-                              }));
-                            }}
+                            {...register("instagram_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на Instagram"
                             minLength={1}
@@ -309,13 +324,7 @@ export default function Education({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            name="whatsapp"
-                            onChange={(e) => {
-                              setContacts((prev: any) => ({
-                                ...prev.contacts,
-                                whatsapp: e.target.value,
-                              }));
-                            }}
+                            {...register("whatsapp_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на WhatsApp"
                             minLength={1}
@@ -334,7 +343,7 @@ export default function Education({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            name="website"
+                            {...register("website_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на сайт"
                             minLength={1}
@@ -357,7 +366,11 @@ export default function Education({ data }: Props) {
                 <div className="h-full bg-white px-6">
                   <div className="flex flex-col items-center justify-center pt-12">
                     <Image
-                      src={data.user.file ? data.user.file.url : DefaultAva}
+                      src={
+                        data.profile.data.avatar
+                          ? `http://localhost:3333${data.profile.data.avatar.url}`
+                          : DefaultAva
+                      }
                       width={0}
                       height={0}
                       unoptimized
@@ -365,25 +378,29 @@ export default function Education({ data }: Props) {
                       className="mb-3 h-[106px] w-auto rounded-md object-cover"
                     />
                     <p className="text-2xl font-semibold">
-                      {data.user.firstName} {data.user.lastName}
+                      {data.data.first_name} {data.data.last_name}
                     </p>
-                    <p className=" text-sm">{data.profile.industry}</p>
+                    <p className=" text-sm">{data.profile.data.industry}</p>
                   </div>
                   <div className="mb-6 mt-3" />
                   <div className="grid grid-cols-2 gap-y-4">
                     <div>
                       <p className="text-sm text-slate-400">Локация</p>
-                      <p className="text-sm ">{data.profile.location}</p>
+                      <p className="text-sm ">{data.profile.data.location}</p>
                     </div>
                     <div>
                       <p className="text-sm text-slate-400">Профессия</p>
-                      <p className="text-sm">{data.profile.title}</p>
+                      <p className="text-sm">
+                        {data.profile.data.display_name}
+                      </p>
                     </div>
                   </div>
                   <div className="mb-6 mt-4" />
                   <div>
                     <p className="text-lg font-semibold">Обо мне</p>
-                    <p className="pt-3 text-sm">{data.profile.description}</p>
+                    <p className="pt-3 text-sm line-clamp-2 w-auto">
+                      {data.profile.data.description}
+                    </p>
                   </div>
                   {data.isAuthor ? (
                     <div className="col-span-2">
@@ -507,11 +524,11 @@ export default function Education({ data }: Props) {
                         <div className="grid sm:grid-cols-10 grid-cols-1 gap-y-5">
                           <div className="col-span-3 flex gap-5">
                             <div className=" text-lg font-semibold">
-                              {item.startedAt}
+                              {item.started_at}
                             </div>
                             <>-</>
                             <div className=" text-lg font-semibold">
-                              {item.finishedAt}
+                              {item.finished_at}
                             </div>
                           </div>
                           <div className="col-span-5">
@@ -521,7 +538,7 @@ export default function Education({ data }: Props) {
                             <p className=" text-sm font-semibold">
                               {item.title}
                             </p>
-                            <p className=" text-sm flex flex-wrap">
+                            <p className=" text-sm flex relative">
                               {item.description}
                             </p>
                           </div>
