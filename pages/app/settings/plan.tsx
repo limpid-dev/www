@@ -128,7 +128,7 @@ export default function Settings({ data }: Props) {
                   ref={inputRef}
                   style={{ display: "none" }}
                   type="file"
-                  placeholder="shitty"
+                  placeholder="some photo"
                   onChange={handleFileChange}
                 />
                 <Button onClick={handleClick}>Поменять фото</Button>
