@@ -257,7 +257,7 @@ export interface paths {
             tin?: string;
             is_visible?: boolean;
             /** Format: binary */
-            avatar?: File;
+            avatar?: string;
             instagram_url?: string | null;
             whatsapp_url?: string | null;
             website_url?: string | null;
@@ -601,6 +601,239 @@ export interface paths {
       };
     };
   };
+  "/profiles/{profile_id}/skills": {
+    get: {
+      parameters: {
+        query: {
+          page: number;
+          per_page?: number;
+        };
+        path: {
+          profile_id: number;
+        };
+      };
+      responses: {
+        /** @description Profile's skills */
+        200: {
+          content: {
+            "application/json": {
+              meta?: components["schemas"]["Pagination"];
+              data?: components["schemas"]["Skill"][];
+            };
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          profile_id: number;
+        };
+      };
+      requestBody: {
+        content: {
+          "multipart/form-data": {
+            name: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Skill data */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["Skill"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/profiles/{profile_id}/skills/{skill_id}": {
+    get: {
+      parameters: {
+        path: {
+          profile_id: number;
+          skill_id: number;
+        };
+      };
+      responses: {
+        /** @description Skill data */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["Skill"];
+            };
+          };
+        };
+      };
+    };
+    delete: {
+      parameters: {
+        path: {
+          profile_id: number;
+          skill_id: number;
+        };
+      };
+      responses: {
+        /** @description Skill is deleted */
+        200: never;
+      };
+    };
+    patch: {
+      parameters: {
+        path: {
+          profile_id: number;
+          skill_id: number;
+        };
+      };
+      requestBody: {
+        content: {
+          "multipart/form-data": {
+            name?: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Updated skill's data */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["Skill"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/projects": {
+    get: {
+      parameters: {
+        query: {
+          page: number;
+          per_page?: number;
+          profile_id?: number;
+          industry?: string[];
+          stage?: string[];
+          required_money_amount?: {
+            min?: number;
+            max?: number;
+          };
+          owned_money_amount?: {
+            min?: number;
+            max?: number;
+          };
+          search?: string;
+        };
+      };
+      responses: {
+        /** @description Projects */
+        200: {
+          content: {
+            "application/json": {
+              meta?: components["schemas"]["Pagination"];
+              data?: components["schemas"]["Project"][];
+            };
+          };
+        };
+      };
+    };
+    post: {
+      requestBody: {
+        content: {
+          "multipart/form-data": {
+            title: string;
+            description: string;
+            location: string;
+            industry: string;
+            stage: string;
+            required_money_amount: number;
+            owned_money_amount: number;
+            required_intellectual_resources: string;
+            owned_intellectual_resources: string;
+            required_material_resources: string;
+            owned_material_resources: string;
+            profitability: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Project data */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["Project"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/projects/{project_id}": {
+    get: {
+      parameters: {
+        path: {
+          project_id: number;
+        };
+      };
+      responses: {
+        /** @description Project data */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["Project"];
+            };
+          };
+        };
+      };
+    };
+    delete: {
+      parameters: {
+        path: {
+          project_id: number;
+        };
+      };
+      responses: {
+        /** @description Project is deleted */
+        200: never;
+      };
+    };
+    patch: {
+      parameters: {
+        path: {
+          project_id: number;
+        };
+      };
+      requestBody: {
+        content: {
+          "multipart/form-data": {
+            title?: string;
+            description?: string;
+            location?: string;
+            industry?: string;
+            stage?: string;
+            required_money_amount?: number;
+            owned_money_amount?: number;
+            required_intellectual_resources?: string;
+            owned_intellectual_resources?: string;
+            required_material_resources?: string;
+            owned_material_resources?: string;
+            profitability?: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Updated project's data */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["Project"];
+            };
+          };
+        };
+      };
+    };
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -608,7 +841,7 @@ export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
     Pagination: {
-      total: number;
+      total?: number;
       per_page?: number;
       current_page?: number;
       last_page?: number;
@@ -687,6 +920,30 @@ export interface components {
       profile_id?: number;
       started_at?: string;
       finished_at?: string | null;
+    };
+    Project: {
+      id?: number;
+      profile_id?: number;
+      chat_id?: number;
+      title?: string;
+      description?: string;
+      location?: string;
+      industry?: string;
+      stage?: string;
+      required_money_amount?: number;
+      owned_money_amount?: number;
+      required_material_resources?: string;
+      owned_material_resources?: string;
+      required_intellectual_resources?: string;
+      owned_intellectual_resources?: string;
+      profitability?: string;
+      created_at?: string;
+      updated_at?: string;
+    };
+    Skill: {
+      id?: number;
+      profile_id?: number;
+      name?: string;
     };
   };
   responses: never;

@@ -180,6 +180,45 @@ class APIClient {
     );
   }
 
+  async getCertificates(
+    params: paths["/profiles/{profile_id}/certificates"]["get"]["parameters"],
+    config?: AxiosRequestConfig
+  ): Promise<
+    AxiosResponse<{
+      meta: components["schemas"]["Pagination"];
+      data: components["schemas"]["Certificate"][];
+    }>
+  > {
+    const {
+      path: { profile_id },
+      query: queryParams,
+    } = params;
+
+    return this.axiosInstance.get(`/profiles/${profile_id}/certificates`, {
+      ...config,
+      params: queryParams,
+    });
+  }
+
+  async getSkills(
+    params: paths["/profiles/{profile_id}/skills"]["get"]["parameters"],
+    config?: AxiosRequestConfig
+  ): Promise<
+    AxiosResponse<{
+      meta: components["schemas"]["Pagination"];
+      data: components["schemas"]["Skill"][];
+    }>
+  > {
+    const {
+      path: { profile_id },
+      query: queryParams,
+    } = params;
+    return this.axiosInstance.get(`/profiles/${profile_id}/skills`, {
+      ...config,
+      params: queryParams,
+    });
+  }
+
   // Profiles Certificates
   async createCertificate(
     profile_id: number,

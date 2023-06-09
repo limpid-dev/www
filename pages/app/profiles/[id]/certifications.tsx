@@ -39,50 +39,58 @@ export const getServerSideProps = async (
     id: string;
   }>
 ) => {
-  const session = await api.session.show({
+  const { data: session } = await api.getUser({
     headers: {
-      Cookie: context.req.headers.cookie!,
+      Cookie: context.req.headers.cookie,
     },
-    credentials: "include",
   });
 
-  const { data: profile } = await api.profiles.show(Number(context.params!.id));
-
-  const { data: certifications } = await api.certifications.index(
-    Number(context.params!.id)
+  const { data: profile } = await api.getProfileById(
+    Number.parseInt(context!.params!.id as string, 10),
+    {
+      headers: {
+        cookie: context.req.headers.cookie,
+      },
+    }
   );
 
-  const { data: skills } = await api.skills.index(Number(context.params!.id));
-  const isAuthor =
-    session.data?.id && profile?.userId && session.data.id === profile.userId;
-
-  if (certifications && profile) {
-    const withFiles = certifications!.map(async (d) => {
-      const certificate = await api.certificateFile.index(
-        Number(context.params!.id),
-        d.id,
-        {
-          page: 1,
-          perPage: 100,
-        }
-      );
-      return { ...d, certificate: certificate.data! };
-    });
-    const wCertifications = await Promise.all(withFiles);
-    const { data: user } = await api.users.show(profile.userId);
-
-    return {
-      props: {
-        data: {
-          isAuthor: isAuthor!,
-          certifications: certifications!,
-          skills: skills!,
-          user: user!,
-          profile: profile!,
-        },
+  const response = await api.getCertificates(
+    {
+      path: { profile_id: Number.parseInt(context!.params!.id as string, 10) },
+      query: { page: 1, per_page: 10 },
+    },
+    {
+      headers: {
+        cookie: context.req.headers.cookie,
       },
-    };
-  }
+    }
+  );
+
+  console.log(response.data.data);
+
+  const data = await api.getSkills(
+    {
+      path: { profile_id: Number.parseInt(context!.params!.id as string, 10) },
+      query: { page: 1, per_page: 10 },
+    },
+    {
+      headers: {
+        cookie: context.req.headers.cookie,
+      },
+    }
+  );
+
+  return {
+    props: {
+      data: {
+        // isAuthor: isAuthor!,
+        // certifications: certifications!,
+        // skills: skills!,
+        // user: user!,
+        profile: profile!,
+      },
+    },
+  };
 };
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
@@ -167,7 +175,7 @@ export default function Certifications({ data }: Props) {
 
       <div className=" min-h-[90vh] bg-slate-50 px-5 pt-8">
         <div className="mx-auto max-w-screen-xl">
-          <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
+          {/* <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
             {data.isAuthor ? (
               <div className="flex gap-5">
                 <AlertDialog>
@@ -529,14 +537,14 @@ export default function Certifications({ data }: Props) {
                               <p className="text-center text-xs  font-normal sm:text-sm">
                                 {certificate.description}
                               </p>
-                              {/* <a
+                              <a
                                 target="_blank"
                                 href={certificate.certificate[0]?.url}
                               >
                                 <p className="text-sm font-medium text-sky-500">
                                   Смотреть сертификат
                                 </p>
-                              </a> */}
+                              </a>
                             </div>
                           </div>
                         </div>
@@ -600,7 +608,7 @@ export default function Certifications({ data }: Props) {
                 )}
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
