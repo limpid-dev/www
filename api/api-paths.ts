@@ -257,7 +257,7 @@ export interface paths {
             tin?: string;
             is_visible?: boolean;
             /** Format: binary */
-            avatar?: string;
+            avatar?: File;
             instagram_url?: string | null;
             whatsapp_url?: string | null;
             website_url?: string | null;

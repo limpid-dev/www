@@ -59,10 +59,10 @@ class APIClient {
   }
 
   // User
-  async getUser(): Promise<
-    AxiosResponse<{ data: components["schemas"]["User"] }>
-  > {
-    return this.axiosInstance.get("/user");
+  async getUser(
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse<{ data: components["schemas"]["User"] }>> {
+    return this.axiosInstance.get("/user", config);
   }
 
   async updateUser(
@@ -90,16 +90,33 @@ class APIClient {
   }
 
   async getProfileById(
-    profileId: number
+    profileId: number,
+    config?: AxiosRequestConfig
   ): Promise<AxiosResponse<{ data: components["schemas"]["Profile"] }>> {
-    return this.axiosInstance.get(`/profiles/${profileId}`);
+    return this.axiosInstance.get(`/profiles/${profileId}`, config);
   }
 
   async updateProfile(
     profileId: number,
     profileData: paths["/profiles/{profile_id}"]["patch"]["requestBody"]["content"]["multipart/form-data"]
   ): Promise<AxiosResponse<{ data: components["schemas"]["Profile"] }>> {
-    return this.axiosInstance.patch(`/profiles/${profileId}`, profileData);
+    const f = new FormData();
+
+    Object.entries(profileData).forEach(([k, v]) => {
+      if (v) {
+        if (v === true) {
+          f.append(k, `${v}`);
+        }
+        if (v instanceof File) {
+          f.append(k, v);
+        }
+        if (typeof v === "string") {
+          f.append(k, v);
+        }
+      }
+    });
+
+    return this.axiosInstance.patch(`/profiles/${profileId}`, f);
   }
 
   async deleteProfile(profileId: number): Promise<AxiosResponse<void>> {

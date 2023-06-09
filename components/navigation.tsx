@@ -128,6 +128,8 @@ export function Navigation() {
   const [profession, setProfession] = useState<string>();
   const [sessionData, setSessionData] =
     useState<components["schemas"]["User"]>();
+  const [avatarUrl, setAvatarUrl] = useState<string>();
+  const [foundObject, setFoundObject] = useState<any>();
 
   useEffect(() => {
     async function fetchProfiles() {
@@ -147,14 +149,24 @@ export function Navigation() {
             const foundObject = profiles.data.find(
               (item) => item.id === sessionData.data.selected_profile_id
             );
+            setFoundObject(foundObject);
+            setAvatarUrl(`http://localhost:3333${foundObject?.avatar?.url}`);
             setProfession(foundObject?.display_name);
           }
 
           if (sessionData.data.selected_profile_id === null) {
-            await api.updateUser({
-              selected_profile_id: profiles.data[0].id,
-            });
-
+            await api
+              .updateUser({
+                selected_profile_id: profiles.data[0].id,
+              })
+              .then(() => {
+                const foundObject = profiles.data.find(
+                  (item) => item.id === sessionData.data.selected_profile_id
+                );
+                setAvatarUrl(
+                  `http://localhost:3333${foundObject?.avatar?.url}`
+                );
+              });
             setProfession(profiles.data[0].display_name);
           }
         }
@@ -272,7 +284,7 @@ export function Navigation() {
                         width={10}
                         unoptimized
                         height={10}
-                        src={sessionData?.file ? sessionData.file.url : testAva}
+                        src={foundObject?.avatar?.url ? avatarUrl : testAva}
                         alt=""
                       />
                     </Menu.Button>
@@ -300,6 +312,7 @@ export function Navigation() {
                                   selected_profile_id: item.id,
                                 });
                                 setProfession(item.display_name);
+                                router.reload();
                               }}
                             >
                               {item.display_name}

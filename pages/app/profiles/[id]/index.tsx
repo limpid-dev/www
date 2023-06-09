@@ -34,6 +34,12 @@ interface FormValuesGeneral {
   location: string;
   description: string;
   display_name: string;
+  avatar?: File;
+  instagram_url: string;
+  whatsapp_url: string;
+  website_url: string;
+  telegram_url: string;
+  two_gis_url: string;
 }
 
 export const getServerSideProps = async (
@@ -164,11 +170,13 @@ export default function OneProfile({ data }: Props) {
     setEditGeneral((current: boolean) => !current);
   };
 
+  const test_url = data.profile.data.instagram_url || "s";
+  console.log(test_url);
   return (
     <div>
       <Navigation />
 
-      <div className="min-h-[90vh] bg-slate-50 px-5 pt-8">
+      <div className="min-h-screen bg-slate-50 px-5 pt-8">
         <div className="mx-auto max-w-screen-xl">
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
             {data.isAuthor ? (
@@ -209,7 +217,7 @@ export default function OneProfile({ data }: Props) {
                       <Image
                         src={
                           data.profile.data.avatar
-                            ? data.profile.data.avatar
+                            ? `http://localhost:3333${data.profile.data.avatar.url}`
                             : DefaultAva
                         }
                         width={0}
@@ -277,13 +285,7 @@ export default function OneProfile({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            name="2gis"
-                            onChange={(e) => {
-                              setContacts((prev: any) => ({
-                                ...prev.contacts,
-                                "2gis": e.target.value,
-                              }));
-                            }}
+                            {...register2("two_gis_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на 2ГИС"
                             minLength={1}
@@ -302,13 +304,7 @@ export default function OneProfile({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            name="instagram"
-                            onChange={(e) => {
-                              setContacts((prev: any) => ({
-                                ...prev.contacts,
-                                instagram: e.target.value,
-                              }));
-                            }}
+                            {...register2("instagram_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на Instagram"
                             minLength={1}
@@ -327,13 +323,7 @@ export default function OneProfile({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            name="whatsapp"
-                            onChange={(e) => {
-                              setContacts((prev: any) => ({
-                                ...prev.contacts,
-                                whatsapp: e.target.value,
-                              }));
-                            }}
+                            {...register2("whatsapp_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на WhatsApp"
                             minLength={1}
@@ -352,7 +342,7 @@ export default function OneProfile({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            name="website"
+                            {...register2("website_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на сайт"
                             minLength={1}
@@ -377,7 +367,7 @@ export default function OneProfile({ data }: Props) {
                     <Image
                       src={
                         data.profile.data.avatar
-                          ? data.profile.data.avatar
+                          ? `http://localhost:3333${data.profile.data.avatar.url}`
                           : DefaultAva
                       }
                       width={0}
@@ -432,38 +422,76 @@ export default function OneProfile({ data }: Props) {
                       Социальные сети
                     </p>
                     <div className="flex gap-6 pb-5">
-                      <Image
-                        width={24}
-                        height={24}
-                        alt=""
-                        unoptimized
-                        quality={100}
-                        src="/2gis.png"
-                      />
-                      <Image
-                        width={24}
-                        height={24}
-                        alt=""
-                        unoptimized
-                        quality={100}
-                        src="/instagram.png"
-                      />
-                      <Image
-                        width={24}
-                        height={24}
-                        alt=""
-                        unoptimized
-                        quality={100}
-                        src="/whatsapp.png"
-                      />
-                      <Image
-                        width={24}
-                        height={24}
-                        alt=""
-                        unoptimized
-                        quality={100}
-                        src="/website.png"
-                      />
+                      {data.profile.data.two_gis_url !== null ? (
+                        <Link href={data.profile.data.two_gis_url}>
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/2gis.png"
+                          />
+                        </Link>
+                      ) : (
+                        ""
+                      )}
+                      {data.profile.data.instagram_url !== null ? (
+                        <Link href={data.profile.data.instagram_url}>
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/instagram.png"
+                          />
+                        </Link>
+                      ) : (
+                        ""
+                      )}
+                      {data.profile.data.website_url !== null ? (
+                        <Link href={data.profile.data.whatsapp_url}>
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/whatsapp.png"
+                          />
+                        </Link>
+                      ) : (
+                        ""
+                      )}
+                      {data.profile.data.telegram_url !== null ? (
+                        <Link href={data.profile.data.telegram_url}>
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/whatsapp.png"
+                          />
+                        </Link>
+                      ) : (
+                        ""
+                      )}
+                      {data.profile.data.website_url !== null ? (
+                        <Link href={data.profile.data.website_url}>
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/website.png"
+                          />
+                        </Link>
+                      ) : (
+                        ""
+                      )}
                     </div>
                   </div>
                 </div>

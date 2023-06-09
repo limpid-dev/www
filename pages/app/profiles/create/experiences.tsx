@@ -52,7 +52,7 @@ export default function Test() {
 
   return (
     <>
-      <div className="h-auto bg-slate-50">
+      <div className="min-h-screen bg-slate-50">
         <Navigation />
         <div className="container mx-auto mb-4 max-w-screen-xl px-5 pt-8">
           <h1 className="text-sm">

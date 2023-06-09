@@ -6,7 +6,7 @@ import clsx from "clsx";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, ChangeEventHandler, useRef, useState } from "react";
 import api from "../../../api";
 // import { buildFormData } from "../../../api/files";
 import { Navigation } from "../../../components/navigation";
@@ -50,22 +50,21 @@ const secondaryNavigation = [
 ];
 
 export const getServerSideProps = async (
-  context: GetServerSidePropsContext
+  context: GetServerSidePropsContext<{
+    id: string;
+  }>
 ) => {
-  const { data: session } = await api.session.show({
+  const { data: session } = await api.getUser({
     headers: {
-      Cookie: context.req.headers.cookie!,
+      Cookie: context.req.headers.cookie,
     },
-    credentials: "include",
   });
 
   if (session) {
-    const { data: user } = await api.users.show(session.id);
-
     return {
       props: {
         data: {
-          userInfo: user!,
+          userInfo: session!,
         },
       },
     };
@@ -76,25 +75,10 @@ type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 export default function Settings({ data }: Props) {
   const router = useRouter();
-  const inputRef = useRef(null);
-  const [privateAccount, setPrivateAccount] = useState(false);
-
-  const handleClick = () => {
-    (inputRef.current as unknown as HTMLInputElement).click();
-  };
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const fileObj = event.target.files?.[0];
-    if (!fileObj) {
-      return;
-    }
-    api.users.avatar(data.userInfo.id, buildFormData(fileObj));
-    router.reload();
-  };
 
   const [inputValue, setInputValue] = useState("");
 
-  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     setInputValue(event.target.value);
   };
 
@@ -148,33 +132,6 @@ export default function Settings({ data }: Props) {
 
         <main className="px-4 py-16 sm:px-6 lg:flex-auto lg:px-0 lg:py-16">
           <div className="mx-auto max-w-2xl space-y-16 lg:mx-0 lg:max-w-none">
-            <div className="col-span-full flex items-center gap-x-8">
-              <Image
-                src={
-                  data.userInfo.file && data.userInfo.file.url
-                    ? data.userInfo.file.url
-                    : DefaultAva
-                }
-                width={0}
-                height={0}
-                unoptimized
-                alt=""
-                className=" h-44 w-44 flex-none rounded-lg bg-gray-100 object-cover"
-              />
-              <div>
-                <input
-                  ref={inputRef}
-                  style={{ display: "none" }}
-                  type="file"
-                  placeholder="shitty"
-                  onChange={handleFileChange}
-                />
-                <Button onClick={handleClick}>Поменять фото</Button>
-                <p className="mt-2 text-xs leading-5 text-gray-400">
-                  JPG или PNG. 1MB макс.
-                </p>
-              </div>
-            </div>
             <div>
               <h2 className="text-base font-semibold leading-7 text-gray-900">
                 Ваша информация
@@ -191,7 +148,8 @@ export default function Settings({ data }: Props) {
                   </dt>
                   <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
                     <div className="text-gray-900">
-                      {data.userInfo.lastName} {data.userInfo.firstName}
+                      {data.userInfo.data.last_name}{" "}
+                      {data.userInfo.data.first_name}
                     </div>
                     <button
                       type="button"
@@ -206,7 +164,9 @@ export default function Settings({ data }: Props) {
                     Электронная почта
                   </dt>
                   <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                    <div className="text-gray-900">{data.userInfo.email}</div>
+                    <div className="text-gray-900">
+                      {data.userInfo.data.email}
+                    </div>
                     <Dialog>
                       <DialogTrigger asChild>
                         <button
@@ -264,48 +224,6 @@ export default function Settings({ data }: Props) {
                   </dd>
                 </div>
               </dl>
-            </div>
-            <div className="divide-y divide-gray-200">
-              <div>
-                <h2 className="text-base font-semibold leading-7 text-gray-900">
-                  Приватность
-                </h2>
-              </div>
-              <ul className="mt-2 divide-y divide-gray-200">
-                <Switch.Group
-                  as="li"
-                  className="flex items-center justify-between py-4"
-                >
-                  <div className="flex flex-col">
-                    <Switch.Label
-                      as="p"
-                      className="text-sm font-medium leading-6 text-gray-900"
-                      passive
-                    >
-                      Режим инкогнито
-                    </Switch.Label>
-                    <Switch.Description className="text-sm text-gray-500">
-                      Никто не увидит ваши данные без вашего подтверждения
-                    </Switch.Description>
-                  </div>
-                  <Switch
-                    checked={privateAccount}
-                    onChange={setPrivateAccount}
-                    className={classNames(
-                      privateAccount ? "bg-lime-500" : "bg-gray-200",
-                      "relative ml-4 inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-offset-2"
-                    )}
-                  >
-                    <span
-                      aria-hidden="true"
-                      className={classNames(
-                        privateAccount ? "translate-x-5" : "translate-x-0",
-                        "inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
-                      )}
-                    />
-                  </Switch>
-                </Switch.Group>
-              </ul>
             </div>
           </div>
         </main>
