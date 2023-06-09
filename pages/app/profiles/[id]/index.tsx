@@ -367,7 +367,7 @@ export default function OneProfile({ data }: Props) {
                     <Image
                       src={
                         data.profile.data.avatar
-                          ? `http://localhost:3333${data.profile.data.avatar.url}`
+                          ? `https://api.limpid.kz${data.profile.data.avatar.url}`
                           : DefaultAva
                       }
                       width={0}
