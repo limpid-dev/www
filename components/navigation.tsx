@@ -150,7 +150,7 @@ export function Navigation() {
               (item) => item.id === sessionData.data.selected_profile_id
             );
             setFoundObject(foundObject);
-            setAvatarUrl(`http://localhost:3333${foundObject?.avatar?.url}`);
+            setAvatarUrl(`https://api.limpid.kz${foundObject?.avatar?.url}`);
             setProfession(foundObject?.display_name);
           }
 
@@ -164,7 +164,7 @@ export function Navigation() {
                   (item) => item.id === sessionData.data.selected_profile_id
                 );
                 setAvatarUrl(
-                  `http://localhost:3333${foundObject?.avatar?.url}`
+                  `https://api.limpid.kz${foundObject?.avatar?.url}`
                 );
               });
             setProfession(profiles.data[0].display_name);
