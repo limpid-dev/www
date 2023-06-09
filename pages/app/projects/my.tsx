@@ -1,12 +1,11 @@
 import { Plus } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { InferGetServerSidePropsType } from "next";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import api from "../../../api";
-import { Entity } from "../../../api/projects";
 import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
 import { Skeleton } from "../../../components/primitives/skeleton";
@@ -18,26 +17,46 @@ const tabs = [
   { name: "Мои проекты", href: "/app/projects/my", current: true },
 ];
 
-// export const getServerSideProps = async () => {
-//   const data = await api.session.show();
-//
-//   // const { data: projects } = await api.projects.index(2);
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext<{
+    id: string;
+  }>
+) => {
+  const { data: session } = await api.getUser({
+    headers: {
+      Cookie: context.req.headers.cookie,
+    },
+  });
 
-//   return {
-//     props: {
-//       data: {
-//         projects: data!,
-//       },
-//     },
-//   };
-// };
+  console.log(session.data.selected_profile_id);
+  if (session) {
+    const { data: projects } = await api.getProjects(
+      {
+        page: 1,
+        per_page: 6,
+        profile_id: session.data.selected_profile_id!,
+      },
+      {
+        headers: {
+          cookie: context.req.headers.cookie,
+        },
+      }
+    );
 
-// type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
+    return {
+      props: {
+        data: {
+          projects: projects!,
+        },
+      },
+    };
+  }
+};
 
-export default function All() {
-  const [projectsData, setProjectsData] = useState<Entity[]>([]);
+type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+export default function All({ data }: Props) {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
 
   const handleRoute = () => {
     router.push("/app/projects/create");
@@ -101,46 +120,35 @@ export default function All() {
             </Button>
           </div>
 
-          {loading ? (
+          {data.projects.data.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-              <Skeleton className="h-[127px] w-[400px] rounded-md" />
+              {data.projects.data.map((project, projectIndex) => (
+                <Link key={projectIndex} href={`/app/projects/${project.id}`}>
+                  <div className="grid items-center justify-center gap-4 rounded-lg border py-6 pl-6 pr-4 hover:border-black sm:grid-cols-10">
+                    <div className="sm:col-span-4 ">
+                      <Image
+                        src={testAva}
+                        className="m-auto w-[126px] rounded-lg"
+                        alt="test"
+                      />
+                    </div>
+                    <div className="sm:col-span-6">
+                      <div className="flex flex-col gap-1">
+                        <h1 className=" text-lg font-semibold">
+                          {project.title}
+                        </h1>
+                        <p className=" text-sm">{project.industry}</p>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
             </div>
           ) : (
-            <>
-              {projectsData.length > 0 ? (
-                <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-                  {projectsData.map((project, projectIndex) => (
-                    <Link
-                      key={projectIndex}
-                      href={`/app/projects/${project.id}`}
-                    >
-                      <div className="grid items-center justify-center gap-4 rounded-lg border py-6 pl-6 pr-4 hover:border-black sm:grid-cols-10">
-                        <div className="sm:col-span-4 ">
-                          <Image
-                            src={testAva}
-                            className="m-auto w-[126px] rounded-lg"
-                            alt="test"
-                          />
-                        </div>
-                        <div className="sm:col-span-6">
-                          <div className="flex flex-col gap-1">
-                            <h1 className=" text-lg font-semibold">
-                              {project.title}
-                            </h1>
-                            <p className=" text-sm">{project.industry}</p>
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center gap-8">
-                  <Image src={NoProjects} alt="Нет проектов" />
-                  <p className=" text-2xl font-semibold">У вас нет проектов</p>
-                </div>
-              )}
-            </>
+            <div className="flex flex-col items-center justify-center gap-8">
+              <Image src={NoProjects} alt="Нет проектов" />
+              <p className=" text-2xl font-semibold">У вас нет проектов</p>
+            </div>
           )}
         </div>
       </div>

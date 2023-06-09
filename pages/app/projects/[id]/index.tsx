@@ -70,17 +70,33 @@ export const getServerSideProps = async (
     id: string;
   }>
 ) => {
-  const session = await api.session.show({
+  const { data: session } = await api.getUser({
     headers: {
-      Cookie: context.req.headers.cookie!,
+      Cookie: context.req.headers.cookie,
     },
-    credentials: "include",
   });
 
-  const { data: project } = await api.projects.show(Number(context.params!.id));
+  const { data: profile } = await api.getProfileById(
+    session.data.selected_profile_id,
+    {
+      headers: {
+        cookie: context.req.headers.cookie,
+      },
+    }
+  );
+
+  const { data: project } = await api.getProject(
+    Number.parseInt(context!.params!.id as string, 10),
+    {
+      headers: {
+        Cookie: context.req.headers.cookie,
+      },
+    }
+  );
 
   if (project) {
-    const isAuthor = session.data?.id && project.profile_id;
+    const isAuthor = profile.data.id === project.data.profile_id;
+
     return {
       props: {
         data: {
@@ -136,7 +152,7 @@ export default function ProjectView({ data }: Props) {
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
           <h1 className="text-sm">
             <span className="text-slate-300">Проект / </span>
-            {data.project.title}
+            {data.project.data.title}
           </h1>
 
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline md:justify-end">
@@ -222,9 +238,9 @@ export default function ProjectView({ data }: Props) {
                     className="h-[106px] w-auto rounded-md object-cover pb-6"
                   />
                   <p className=" text-2xl font-semibold">
-                    {data.project.title}
+                    {data.project.data.title}
                   </p>
-                  <p className=" text-sm">{data.project.title}</p>
+                  <p className=" text-sm">{data.project.data.title}</p>
                 </div>
                 <Separator className="mb-6 mt-3" />
                 <div className="grid gap-3">
@@ -307,7 +323,7 @@ export default function ProjectView({ data }: Props) {
                       <p className=" text-xl font-semibold text-slate-400">
                         О проекте
                       </p>
-                      <p className="text-sm">{data.project.description}</p>
+                      <p className="text-sm">{data.project.data.description}</p>
                     </div>
                   </TabsContent>
 
@@ -320,7 +336,7 @@ export default function ProjectView({ data }: Props) {
                           Материальные ресурсы проекта
                         </p>
                         <p className="text-sm">
-                          {data.project.owned_material_resources}
+                          {data.project.data.owned_material_resources}
                         </p>
                       </div>
                       <Separator />
@@ -329,7 +345,7 @@ export default function ProjectView({ data }: Props) {
                           Требуемые материальные ресурсы проекту
                         </p>
                         <p className="text-sm">
-                          {data.project.required_material_resources}
+                          {data.project.data.required_material_resources}
                         </p>
                       </div>
                       <Separator />
@@ -338,7 +354,7 @@ export default function ProjectView({ data }: Props) {
                           Интеллектуальные ресурсы проекта
                         </p>
                         <p className="text-sm">
-                          {data.project.owned_intellectual_resources}
+                          {data.project.data.owned_intellectual_resources}
                         </p>
                       </div>
                       <Separator />
@@ -347,7 +363,7 @@ export default function ProjectView({ data }: Props) {
                           Требуемые интеллектуальные ресурсы проекту
                         </p>
                         <p className="text-sm">
-                          {data.project.owned_intellectual_resources}
+                          {data.project.data.owned_intellectual_resources}
                         </p>
                       </div>
                     </div>
@@ -365,7 +381,7 @@ export default function ProjectView({ data }: Props) {
                             Ожидаемая рентабельность по проекту
                           </p>
                           <p className="text-sm">
-                            {data.project.profitability}
+                            {data.project.data.profitability}
                           </p>
                         </div>
                       </div>

@@ -45,7 +45,7 @@ export default function Create() {
   } = useForm<FormValues>({});
 
   const onSubmit = async (post: FormValues) => {
-    const { data } = await api.projects.store(post);
+    const { data } = await api.createProject(post);
 
     if (data) {
       toast({
@@ -187,21 +187,11 @@ export default function Create() {
                     <Input
                       type="number"
                       placeholder="Требуемая сумма"
-                      {...register("required_money_amount", {
-                        setValueAs(value) {
-                          return value ? Number(value) : 0;
-                        },
-                      })}
-                      defaultValue={0}
+                      {...register("required_money_amount", {})}
                     />
                     <Input
                       placeholder="Сумма в собственности"
-                      {...register("owned_money_amount", {
-                        setValueAs(value) {
-                          return value ? Number(value) : 0;
-                        },
-                      })}
-                      defaultValue={0}
+                      {...register("owned_money_amount", {})}
                     />
                   </div>
                 </div>

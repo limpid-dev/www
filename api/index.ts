@@ -201,7 +201,6 @@ class APIClient {
   }
 
   //Profile skills
-
   async getSkills(
     params: paths["/profiles/{profile_id}/skills"]["get"]["parameters"],
     config?: AxiosRequestConfig
@@ -288,6 +287,38 @@ class APIClient {
       params,
       ...config,
     });
+  }
+
+  // Projects
+
+  async createProject(
+    data: paths["/projects"]["post"]["requestBody"]["content"]["multipart/form-data"]
+  ): Promise<AxiosResponse<{ data: components["schemas"]["Project"] }>> {
+    return this.axiosInstance.post(`/projects`, data);
+  }
+
+  async getProjects(
+    params?: paths["/projects"]["get"]["parameters"]["query"],
+    config?: AxiosRequestConfig
+  ): Promise<
+    AxiosResponse<{
+      meta: components["schemas"]["Pagination"];
+      data: components["schemas"]["Project"][];
+    }>
+  > {
+    return this.axiosInstance.get(`/projects`, {
+      params,
+      ...config,
+    });
+  }
+
+  // Project
+
+  async getProject(
+    project_id: number,
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse<{ data: components["schemas"]["Project"] }>> {
+    return this.axiosInstance.get(`/projects/${project_id}`, config);
   }
 }
 

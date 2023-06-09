@@ -27,8 +27,8 @@ export default function All() {
     (Number.parseInt(router.query.page as string, 10) as number) || 1;
 
   const [search, setSearch] = useState("");
-  const [totalItems, setTotalItems] = useState(1);
-  const [data, setData] = useState([]);
+  const [totalItems, setTotalItems] = useState<any>(1);
+  const [data, setData] = useState<any>();
   const [loading, setLoading] = useState(true);
 
   const OPTIONS: EmblaOptionsType = { align: "center", loop: true };
@@ -41,7 +41,7 @@ export default function All() {
 
   useEffect(() => {
     async function fetchProjects() {
-      const data = await api.getProfiles({
+      const { data } = await api.getProjects({
         page: currentPage,
         per_page: 6,
       });
@@ -54,6 +54,7 @@ export default function All() {
     }
     fetchProjects();
   }, [currentPage]);
+
   return (
     <>
       <Navigation />
