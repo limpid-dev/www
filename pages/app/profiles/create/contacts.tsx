@@ -43,7 +43,6 @@ export default function Test() {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileObj = event.target.files?.[0];
-    console.log(fileObj);
     if (!fileObj) {
       return;
     }

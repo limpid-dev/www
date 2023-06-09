@@ -170,8 +170,6 @@ export default function OneProfile({ data }: Props) {
     setEditGeneral((current: boolean) => !current);
   };
 
-  const test_url = data.profile.data.instagram_url || "s";
-  console.log(test_url);
   return (
     <div>
       <Navigation />
