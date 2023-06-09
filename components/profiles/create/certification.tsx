@@ -1,16 +1,7 @@
-import "@uppy/core/dist/style.min.css";
-import "@uppy/dashboard/dist/style.min.css";
-import { Paperclip, Plus } from "@phosphor-icons/react";
-import Uppy from "@uppy/core";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import Russian from "@uppy/locales/lib/ru_RU";
-import { Dashboard, DashboardModal } from "@uppy/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import api from "../../../api";
-// import { buildFormData } from "../../../api/files";
 import { Button } from "../../primitives/button";
 import { Input } from "../../primitives/input";
 import { TextArea } from "../../primitives/text-area";
@@ -20,44 +11,16 @@ interface CertificationValues {
     institution: string;
     title: string;
     description: string;
-    issuedAt: string;
-    expiredAt: string;
+    issued_at: string;
+    expired_at: string;
+    attachment: File;
   }[];
 }
-
-const uppy = new Uppy({
-  locale: Russian,
-  restrictions: {
-    maxNumberOfFiles: 1,
-    allowedFileTypes: [
-      ".jpg",
-      ".jpeg",
-      ".png",
-      ".pdf",
-      ".docx",
-      ".doc",
-      ".pptx",
-      ".ppt",
-      ".xlsx",
-      ".xls",
-    ],
-    maxFileSize: 1024 * 1024 * 8,
-  },
-});
 
 export function CertificationCreate({ certificateAdd, profileId }: any) {
   const [error, setError] = useState("");
   const [fileDashboardOpen, setFileDashboardOpen] = useState(false);
-
-  useEffect(() => {
-    uppy.on("dashboard:modal-closed", () => setFileDashboardOpen(false));
-  }, []);
-  const [fileCount, setFileCount] = useState(0);
-
-  useEffect(() => {
-    uppy.on("file-added", () => setFileCount(uppy.getFiles().length));
-    uppy.on("file-removed", () => setFileCount(uppy.getFiles().length));
-  }, []);
+  const router = useRouter();
 
   const {
     register,
@@ -71,8 +34,9 @@ export function CertificationCreate({ certificateAdd, profileId }: any) {
           institution: "",
           title: "",
           description: "",
-          issuedAt: "",
-          expiredAt: "",
+          issued_at: "",
+          expired_at: "",
+          attachment: "",
         },
       ],
     },
@@ -84,20 +48,17 @@ export function CertificationCreate({ certificateAdd, profileId }: any) {
   });
 
   const onSubmit = async (data: CertificationValues) => {
-    // try {
-    //   data.certification.forEach(async (post) => {
-    //     const { data } = await api.certifications.store(post, profileId);
-    //     if (data) {
-    //       const files = uppy.getFiles();
-    //       const formData = buildFormData(files[0].data);
-    //       const fileId = data.id;
-    //       return api.certificateFile.store(formData, profileId, fileId);
-    //     }
-    //   });
-    //   // router.reload();
-    // } catch (error) {
-    //   setError("Что то пошло не так, попробуйте позже");
-    // }
+    try {
+      data.certification.forEach(async (data) => {
+        const { data: certificate } = await api.createCertificate(profileId, {
+          ...data,
+          attachment: data.attachment[0],
+        });
+      });
+      router.reload();
+    } catch (error) {
+      setError("Что то пошло не так, попробуйте позже");
+    }
   };
 
   return (
@@ -118,23 +79,12 @@ export function CertificationCreate({ certificateAdd, profileId }: any) {
                   />
                 </div>
 
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="space-x-2"
-                  onClick={() => setFileDashboardOpen(true)}
-                >
-                  <Paperclip weight="bold" className="h-4 w-4 text-zinc-800" />
-                  <span>Прикрепление файлов</span>
-                  <span className="font-semibold">
-                    {fileCount > 0 && `${fileCount} выбран(о)`}
-                  </span>
-                </Button>
-                <DashboardModal
-                  proudlyDisplayPoweredByUppy={false}
-                  hideUploadButton
-                  open={fileDashboardOpen}
-                  uppy={uppy}
+                <Input
+                  id="fileInput"
+                  type="file"
+                  {...register(`certification.${index}.attachment`, {
+                    required: true,
+                  })}
                 />
                 <div className="flex flex-col justify-around gap-5 md:flex-row">
                   <div className="flex items-center justify-between gap-3">
@@ -145,13 +95,11 @@ export function CertificationCreate({ certificateAdd, profileId }: any) {
                         placeholder="начало"
                         type="date"
                         id="birthday"
-                        {...register(`certification.${index}.issuedAt`, {
+                        {...register(`certification.${index}.issued_at`, {
                           required: "Please enter your first name.",
-                          setValueAs: (value: string | undefined) =>
-                            value ? new Date(value).toISOString() : undefined,
                         })}
                       />
-                      {errors.certification?.[index]?.issuedAt && (
+                      {errors.certification?.[index]?.issued_at && (
                         <p className="ml-2 text-sm text-red-500">
                           Выберите дату
                         </p>
@@ -166,13 +114,11 @@ export function CertificationCreate({ certificateAdd, profileId }: any) {
                         placeholder="начало"
                         type="date"
                         id="birthday"
-                        {...register(`certification.${index}.expiredAt`, {
+                        {...register(`certification.${index}.expired_at`, {
                           required: "Please enter your first name.",
-                          setValueAs: (value: string | undefined) =>
-                            value ? new Date(value).toISOString() : undefined,
                         })}
                       />
-                      {errors.certification?.[index]?.expiredAt && (
+                      {errors.certification?.[index]?.expired_at && (
                         <p className="ml-2 text-sm text-red-500">
                           Выберите дату
                         </p>

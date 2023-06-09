@@ -41,35 +41,52 @@ export const getServerSideProps = async (
     id: string;
   }>
 ) => {
-  const session = await api.session.show({
+  const { data: session } = await api.getUser({
     headers: {
-      Cookie: context.req.headers.cookie!,
+      Cookie: context.req.headers.cookie,
     },
-    credentials: "include",
   });
-  const { data: profile } = await api.profiles.show(Number(context.params!.id));
-  const { data: experiences } = await api.experiences.index(
-    Number(context.params!.id)
+
+  const { data: profile } = await api.getProfileById(
+    Number.parseInt(context!.params!.id as string, 10),
+    {
+      headers: {
+        cookie: context.req.headers.cookie,
+      },
+    }
   );
 
+  const { data: experiences } = await api.getExperiences(
+    Number.parseInt(context!.params!.id as string, 10),
+    {
+      page: 1,
+      per_page: 10,
+    },
+    {
+      headers: {
+        cookie: context.req.headers.cookie,
+      },
+    }
+  );
+  const isAuthor =
+    session.data.id &&
+    profile.data.user_id &&
+    session.data.id === profile.data.user_id;
+
   if (profile && experiences) {
-    const { data: user } = await api.users.show(profile.userId);
-    const updatedItems = experiences.map((item) => {
+    const updatedItems = experiences.data.map((item) => {
       return {
         ...item,
-        startedAt: dateFormatter(item.startedAt),
-        finishedAt: dateFormatter(item.finishedAt),
+        started_at: dateFormatter(item.started_at),
+        finished_at: dateFormatter(item.finished_at),
       };
     });
-    const isAuthor =
-      session.data?.id && profile.userId && session.data.id === profile.userId;
 
     return {
       props: {
         data: {
           ...session,
           profile: profile!,
-          user: user!,
           isAuthor: isAuthor!,
           experiences: updatedItems!,
         },
@@ -194,7 +211,11 @@ export default function Education({ data }: Props) {
                   <div className="h-full bg-white px-6">
                     <div className="flex flex-col items-center justify-center pt-12">
                       <Image
-                        src={data.user.file ? data.user.file.url : DefaultAva}
+                        src={
+                          data.profile.data.avatar
+                            ? `http://localhost:3333${data.profile.data.avatar.url}`
+                            : DefaultAva
+                        }
                         width={0}
                         height={0}
                         unoptimized
@@ -202,12 +223,12 @@ export default function Education({ data }: Props) {
                         className="mb-3 h-[106px] w-auto rounded-md object-cover"
                       />
                       <p className="text-2xl font-semibold mb-2">
-                        {data.user.firstName} {data.user.lastName}
+                        {data.data.first_name} {data.data.last_name}
                       </p>
                       <p className=" text-sm">
                         <Input
                           {...register("industry")}
-                          placeholder={data.profile.industry}
+                          placeholder={data.profile.data.industry}
                         />
                       </p>
                     </div>
@@ -218,7 +239,7 @@ export default function Education({ data }: Props) {
                         <p className="text-sm ">
                           <Input
                             {...register("location")}
-                            placeholder={data.profile.location}
+                            placeholder={data.profile.data.location}
                           />
                         </p>
                       </div>
@@ -226,8 +247,8 @@ export default function Education({ data }: Props) {
                         <p className="text-sm text-slate-400 mb-2">Профессия</p>
                         <p className="text-sm">
                           <Input
-                            {...register("title")}
-                            placeholder={data.profile.title}
+                            {...register("display_name")}
+                            placeholder={data.profile.data.display_name}
                           />
                         </p>
                       </div>
@@ -239,7 +260,7 @@ export default function Education({ data }: Props) {
                         <TextArea
                           {...register("description")}
                           className=" h-"
-                          placeholder={data.profile.description}
+                          placeholder={data.profile.data.description}
                         />
                       </p>
                     </div>
@@ -260,13 +281,7 @@ export default function Education({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            name="2gis"
-                            onChange={(e) => {
-                              setContacts((prev: any) => ({
-                                ...prev.contacts,
-                                "2gis": e.target.value,
-                              }));
-                            }}
+                            {...register("two_gis_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на 2ГИС"
                             minLength={1}
@@ -285,13 +300,7 @@ export default function Education({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            name="instagram"
-                            onChange={(e) => {
-                              setContacts((prev: any) => ({
-                                ...prev.contacts,
-                                instagram: e.target.value,
-                              }));
-                            }}
+                            {...register("instagram_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на Instagram"
                             minLength={1}
@@ -310,13 +319,7 @@ export default function Education({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            name="whatsapp"
-                            onChange={(e) => {
-                              setContacts((prev: any) => ({
-                                ...prev.contacts,
-                                whatsapp: e.target.value,
-                              }));
-                            }}
+                            {...register("whatsapp_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на WhatsApp"
                             minLength={1}
@@ -335,7 +338,7 @@ export default function Education({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            name="website"
+                            {...register("website_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на сайт"
                             minLength={1}
@@ -358,7 +361,11 @@ export default function Education({ data }: Props) {
                 <div className="h-full bg-white px-6">
                   <div className="flex flex-col items-center justify-center pt-12">
                     <Image
-                      src={data.user.file ? data.user.file.url : DefaultAva}
+                      src={
+                        data.profile.data.avatar
+                          ? `http://localhost:3333${data.profile.data.avatar.url}`
+                          : DefaultAva
+                      }
                       width={0}
                       height={0}
                       unoptimized
@@ -366,25 +373,29 @@ export default function Education({ data }: Props) {
                       className="mb-3 h-[106px] w-auto rounded-md object-cover"
                     />
                     <p className="text-2xl font-semibold">
-                      {data.user.firstName} {data.user.lastName}
+                      {data.data.first_name} {data.data.last_name}
                     </p>
-                    <p className=" text-sm">{data.profile.industry}</p>
+                    <p className=" text-sm">{data.profile.data.industry}</p>
                   </div>
                   <div className="mb-6 mt-3" />
                   <div className="grid grid-cols-2 gap-y-4">
                     <div>
                       <p className="text-sm text-slate-400">Локация</p>
-                      <p className="text-sm ">{data.profile.location}</p>
+                      <p className="text-sm ">{data.profile.data.location}</p>
                     </div>
                     <div>
                       <p className="text-sm text-slate-400">Профессия</p>
-                      <p className="text-sm">{data.profile.title}</p>
+                      <p className="text-sm">
+                        {data.profile.data.display_name}
+                      </p>
                     </div>
                   </div>
                   <div className="mb-6 mt-4" />
                   <div>
                     <p className="text-lg font-semibold">Обо мне</p>
-                    <p className="pt-3 text-sm">{data.profile.description}</p>
+                    <p className="pt-3 text-sm line-clamp-2 w-auto">
+                      {data.profile.data.description}
+                    </p>
                   </div>
                   {data.isAuthor ? (
                     <div className="col-span-2">

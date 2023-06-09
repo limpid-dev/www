@@ -31,7 +31,12 @@ interface FormValuesGeneral {
   industry: string;
   location: string;
   description: string;
-  title: string;
+  display_name: string;
+  instagram_url: string;
+  whatsapp_url: string;
+  website_url: string;
+  telegram_url: string;
+  two_gis_url: string;
 }
 
 export const getServerSideProps = async (
@@ -54,7 +59,7 @@ export const getServerSideProps = async (
     }
   );
 
-  const response = await api.getCertificates(
+  const { data: certificates } = await api.getCertificates(
     {
       path: { profile_id: Number.parseInt(context!.params!.id as string, 10) },
       query: { page: 1, per_page: 10 },
@@ -66,9 +71,12 @@ export const getServerSideProps = async (
     }
   );
 
-  console.log(response.data.data);
+  const isAuthor =
+    session.data.id &&
+    profile.data.user_id &&
+    session.data.id === profile.data.user_id;
 
-  const data = await api.getSkills(
+  const { data: skills } = await api.getSkills(
     {
       path: { profile_id: Number.parseInt(context!.params!.id as string, 10) },
       query: { page: 1, per_page: 10 },
@@ -79,14 +87,13 @@ export const getServerSideProps = async (
       },
     }
   );
-
   return {
     props: {
       data: {
-        // isAuthor: isAuthor!,
-        // certifications: certifications!,
-        // skills: skills!,
-        // user: user!,
+        ...session!,
+        isAuthor: isAuthor!,
+        certifications: certificates!,
+        skills: skills!,
         profile: profile!,
       },
     },
@@ -142,13 +149,18 @@ export default function Certifications({ data }: Props) {
     setCertificate((current: boolean) => !current);
   };
 
-  const handleDeleteProfile = () => {
-    api.profiles.destroy(parsedId);
+  const handleDeleteProfile = async () => {
+    await api.deleteProfile(parsedId);
+
+    await router.push({
+      pathname: "/app/profiles/my",
+    });
   };
 
-  const handleDeleteSkill = (skillId: number) => {
-    api.skills.destroy(parsedId, skillId);
-
+  const handleDeleteSkill = async (skillId: number) => {
+    await api.deleteSkill({
+      path: { profile_id: parsedId, skill_id: skillId },
+    });
     router.reload();
   };
 
@@ -175,7 +187,7 @@ export default function Certifications({ data }: Props) {
 
       <div className=" min-h-[90vh] bg-slate-50 px-5 pt-8">
         <div className="mx-auto max-w-screen-xl">
-          {/* <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
+          <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
             {data.isAuthor ? (
               <div className="flex gap-5">
                 <AlertDialog>
@@ -212,7 +224,11 @@ export default function Certifications({ data }: Props) {
                   <div className="h-full bg-white px-6">
                     <div className="flex flex-col items-center justify-center pt-12">
                       <Image
-                        src={data.user.file ? data.user.file.url : DefaultAva}
+                        src={
+                          data.profile.data.avatar
+                            ? `${process.env.NEXT_PUBLIC_FILE_DOWNLOAD}${data.profile.data.avatar.url}`
+                            : DefaultAva
+                        }
                         width={0}
                         height={0}
                         unoptimized
@@ -220,12 +236,12 @@ export default function Certifications({ data }: Props) {
                         className="mb-3 h-[106px] w-auto rounded-md object-cover"
                       />
                       <p className="text-2xl font-semibold mb-2">
-                        {data.user.firstName} {data.user.lastName}
+                        {data.data.first_name} {data.data.last_name}
                       </p>
                       <p className=" text-sm">
                         <Input
                           {...register("industry")}
-                          placeholder={data.profile.industry}
+                          placeholder={data.profile.data.industry}
                         />
                       </p>
                     </div>
@@ -236,7 +252,7 @@ export default function Certifications({ data }: Props) {
                         <p className="text-sm ">
                           <Input
                             {...register("location")}
-                            placeholder={data.profile.location}
+                            placeholder={data.profile.data.location}
                           />
                         </p>
                       </div>
@@ -244,8 +260,8 @@ export default function Certifications({ data }: Props) {
                         <p className="text-sm text-slate-400 mb-2">Профессия</p>
                         <p className="text-sm">
                           <Input
-                            {...register("title")}
-                            placeholder={data.profile.title}
+                            {...register("display_name")}
+                            placeholder={data.profile.data.display_name}
                           />
                         </p>
                       </div>
@@ -257,7 +273,7 @@ export default function Certifications({ data }: Props) {
                         <TextArea
                           {...register("description")}
                           className=" h-"
-                          placeholder={data.profile.description}
+                          placeholder={data.profile.data.description}
                         />
                       </p>
                     </div>
@@ -278,13 +294,7 @@ export default function Certifications({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            name="2gis"
-                            onChange={(e) => {
-                              setContacts((prev: any) => ({
-                                ...prev.contacts,
-                                "2gis": e.target.value,
-                              }));
-                            }}
+                            {...register("two_gis_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на 2ГИС"
                             minLength={1}
@@ -303,13 +313,7 @@ export default function Certifications({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            name="instagram"
-                            onChange={(e) => {
-                              setContacts((prev: any) => ({
-                                ...prev.contacts,
-                                instagram: e.target.value,
-                              }));
-                            }}
+                            {...register("instagram_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на Instagram"
                             minLength={1}
@@ -328,13 +332,7 @@ export default function Certifications({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            name="whatsapp"
-                            onChange={(e) => {
-                              setContacts((prev: any) => ({
-                                ...prev.contacts,
-                                whatsapp: e.target.value,
-                              }));
-                            }}
+                            {...register("whatsapp_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на WhatsApp"
                             minLength={1}
@@ -353,7 +351,7 @@ export default function Certifications({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            name="website"
+                            {...register("website_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на сайт"
                             minLength={1}
@@ -376,7 +374,11 @@ export default function Certifications({ data }: Props) {
                 <div className="h-full bg-white px-6">
                   <div className="flex flex-col items-center justify-center pt-12">
                     <Image
-                      src={data.user.file ? data.user.file.url : DefaultAva}
+                      src={
+                        data.profile.data.avatar
+                          ? `http://localhost:3333${data.profile.data.avatar.url}`
+                          : DefaultAva
+                      }
                       width={0}
                       height={0}
                       unoptimized
@@ -384,25 +386,29 @@ export default function Certifications({ data }: Props) {
                       className="mb-3 h-[106px] w-auto rounded-md object-cover"
                     />
                     <p className="text-2xl font-semibold">
-                      {data.user.firstName} {data.user.lastName}
+                      {data.data.first_name} {data.data.last_name}
                     </p>
-                    <p className=" text-sm">{data.profile.industry}</p>
+                    <p className=" text-sm">{data.profile.data.industry}</p>
                   </div>
                   <div className="mb-6 mt-3" />
                   <div className="grid grid-cols-2 gap-y-4">
                     <div>
                       <p className="text-sm text-slate-400">Локация</p>
-                      <p className="text-sm ">{data.profile.location}</p>
+                      <p className="text-sm ">{data.profile.data.location}</p>
                     </div>
                     <div>
                       <p className="text-sm text-slate-400">Профессия</p>
-                      <p className="text-sm">{data.profile.title}</p>
+                      <p className="text-sm">
+                        {data.profile.data.display_name}
+                      </p>
                     </div>
                   </div>
                   <div className="mb-6 mt-4" />
                   <div>
                     <p className="text-lg font-semibold">Обо мне</p>
-                    <p className="pt-3 text-sm">{data.profile.description}</p>
+                    <p className="pt-3 text-sm line-clamp-2 w-auto">
+                      {data.profile.data.description}
+                    </p>
                   </div>
                   {data.isAuthor ? (
                     <div className="col-span-2">
@@ -521,7 +527,7 @@ export default function Certifications({ data }: Props) {
                 </p>
                 {certificate ? (
                   <>
-                    {data.certifications.map(
+                    {data.certifications.data.map(
                       (certificate, certificateIndex) => (
                         <div key={certificateIndex} className="mb-7">
                           <div className="w-full rounded-xl bg-slate-100 pb-6 pt-4">
@@ -539,7 +545,7 @@ export default function Certifications({ data }: Props) {
                               </p>
                               <a
                                 target="_blank"
-                                href={certificate.certificate[0]?.url}
+                                href={`${process.env.NEXT_PUBLIC_FILE_DOWNLOAD}${certificate.attachment?.url}`}
                               >
                                 <p className="text-sm font-medium text-sky-500">
                                   Смотреть сертификат
@@ -573,7 +579,7 @@ export default function Certifications({ data }: Props) {
                 {skill ? (
                   <>
                     <div className="mt-8 flex flex-wrap gap-7">
-                      {data.skills.map((skill, skillIndex) => (
+                      {data.skills.data.map((skill, skillIndex) => (
                         <div
                           key={skillIndex}
                           className="flex items-center gap-3"
@@ -608,7 +614,7 @@ export default function Certifications({ data }: Props) {
                 )}
               </div>
             </div>
-          </div> */}
+          </div>
         </div>
       </div>
     </div>

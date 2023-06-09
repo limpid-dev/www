@@ -133,6 +133,8 @@ export function Navigation() {
 
   useEffect(() => {
     async function fetchProfiles() {
+      const file_url = process.env.NEXT_PUBLIC_FILE_DOWNLOAD;
+      console.log(file_url);
       const { data: sessionData } = await api.getUser();
       if (sessionData) {
         setSessionData(sessionData.data);
@@ -150,7 +152,9 @@ export function Navigation() {
               (item) => item.id === sessionData.data.selected_profile_id
             );
             setFoundObject(foundObject);
-            setAvatarUrl(`http://localhost:3333${foundObject?.avatar?.url}`);
+            setAvatarUrl(
+              `${process.env.NEXT_PUBLIC_FILE_DOWNLOAD}${foundObject?.avatar?.url}`
+            );
             setProfession(foundObject?.display_name);
           }
 
@@ -164,7 +168,7 @@ export function Navigation() {
                   (item) => item.id === sessionData.data.selected_profile_id
                 );
                 setAvatarUrl(
-                  `http://localhost:3333${foundObject?.avatar?.url}`
+                  `${process.env.NEXT_PUBLIC_FILE_DOWNLOAD}${foundObject?.avatar?.url}`
                 );
               });
             setProfession(profiles.data[0].display_name);

@@ -40,12 +40,7 @@ export default function All() {
   const [loading, setLoading] = useState(true);
 
   const handleRoute = () => {
-    if (localStorage.getItem("profileId")) {
-      router.push("/app/projects/create");
-    } else {
-      router.push("/app/profiles/my");
-      alert("Создайте профиль");
-    }
+    router.push("/app/projects/create");
   };
 
   const handleSelectChange = (event: any) => {

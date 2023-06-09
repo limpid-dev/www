@@ -200,6 +200,8 @@ class APIClient {
     });
   }
 
+  //Profile skills
+
   async getSkills(
     params: paths["/profiles/{profile_id}/skills"]["get"]["parameters"],
     config?: AxiosRequestConfig
@@ -217,6 +219,31 @@ class APIClient {
       ...config,
       params: queryParams,
     });
+  }
+
+  async addSkill(
+    params: paths["/profiles/{profile_id}/skills"]["post"]["parameters"],
+    body: paths["/profiles/{profile_id}/skills"]["post"]["requestBody"]["content"]["multipart/form-data"]
+  ): Promise<
+    AxiosResponse<{
+      data?: components["schemas"]["Skill"];
+    }>
+  > {
+    const {
+      path: { profile_id },
+    } = params;
+    return this.axiosInstance.post(`/profiles/${profile_id}/skills`, body);
+  }
+
+  async deleteSkill(
+    params: paths["/profiles/{profile_id}/skills/{skill_id}"]["delete"]["parameters"]
+  ): Promise<AxiosResponse<void>> {
+    const {
+      path: { profile_id, skill_id },
+    } = params;
+    return this.axiosInstance.delete(
+      `/profiles/${profile_id}/skills/${skill_id}`
+    );
   }
 
   // Profiles Certificates
@@ -244,6 +271,23 @@ class APIClient {
       `/profiles/${profile_id}/experiences`,
       educationData
     );
+  }
+
+  //Profiles experiences
+  async getExperiences(
+    profile_id: number,
+    params?: paths["/profiles/{profile_id}/experiences"]["get"]["parameters"]["query"],
+    config?: AxiosRequestConfig
+  ): Promise<
+    AxiosResponse<{
+      meta: components["schemas"]["Pagination"];
+      data: components["schemas"]["Experience"][];
+    }>
+  > {
+    return this.axiosInstance.get(`/profiles/${profile_id}/experiences`, {
+      params,
+      ...config,
+    });
   }
 }
 

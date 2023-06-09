@@ -3,7 +3,6 @@ import router from "next/router";
 import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import api from "../../../api";
-import { Entity } from "../../../api/profile-skills";
 import { Button } from "../../primitives/button";
 import { Input } from "../../primitives/input";
 
@@ -31,11 +30,16 @@ export default function SkillsCreate({ skillAdd, profileId }: any) {
 
   const onSubmit = async (data: SkillValues) => {
     data.skills.forEach(async (post) => {
-      const { data } = await api.skills.store(post, profileId);
-      if (data) {
+      const { data } = await api.addSkill(
+        {
+          path: {
+            profile_id: profileId,
+          },
+        },
+        post
+      );
+      if (data.data) {
         router.reload();
-      } else {
-        throw new Error("Network response was not ok.");
       }
     });
   };

@@ -72,6 +72,7 @@ export const getServerSideProps = async (
       },
     }
   );
+
   const updatedItems = education.data.map((item) => {
     return {
       ...item,
