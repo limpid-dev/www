@@ -53,8 +53,8 @@ export default function Create() {
         description: "The API call was successful!",
       });
       await router.push({
-        // pathname: "/app/projects/create/files",
-        // query: { projectId: data.id },
+        pathname: "/app/projects/create/files",
+        query: { projectId: data.data.id },
       });
     }
   };

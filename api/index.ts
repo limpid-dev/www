@@ -290,7 +290,6 @@ class APIClient {
   }
 
   // Projects
-
   async createProject(
     data: paths["/projects"]["post"]["requestBody"]["content"]["multipart/form-data"]
   ): Promise<AxiosResponse<{ data: components["schemas"]["Project"] }>> {
@@ -313,12 +312,55 @@ class APIClient {
   }
 
   // Project
-
   async getProject(
     project_id: number,
     config?: AxiosRequestConfig
   ): Promise<AxiosResponse<{ data: components["schemas"]["Project"] }>> {
     return this.axiosInstance.get(`/projects/${project_id}`, config);
+  }
+
+  async updateProject(
+    params: paths["/projects/{project_id}"]["patch"]["parameters"]["path"],
+    requestBody: paths["/projects/{project_id}"]["patch"]["requestBody"]["content"]["multipart/form-data"],
+    config?: AxiosRequestConfig
+  ): Promise<
+    AxiosResponse<{
+      data?: components["schemas"]["Project"];
+    }>
+  > {
+    const { project_id } = params;
+    return this.axiosInstance.patch(
+      `/projects/${project_id}`,
+      requestBody,
+      config
+    );
+  }
+
+  // Chats
+  async getChats(
+    params?: paths["/chats"]["get"]["parameters"]["query"],
+    config?: AxiosRequestConfig
+  ): Promise<
+    AxiosResponse<{
+      meta: components["schemas"]["Pagination"];
+      data: components["schemas"]["Chat"][];
+    }>
+  > {
+    return this.axiosInstance.get("/chats", {
+      params,
+      ...config,
+    });
+  }
+
+  async createChat(
+    requestBody: paths["/chats"]["post"]["requestBody"]["content"]["multipart/form-data"],
+    config?: AxiosRequestConfig
+  ): Promise<
+    AxiosResponse<{
+      data?: components["schemas"]["Chat"];
+    }>
+  > {
+    return this.axiosInstance.post("/chats", requestBody, config);
   }
 }
 

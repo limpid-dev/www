@@ -45,6 +45,17 @@ export default function Profiles() {
 
   const [largeScreen, setLargeScreen] = useState(false);
 
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearch = async () => {
+    const { data } = await api.getProjects({
+      page: 1,
+      per_page: 6,
+      search: searchTerm,
+    });
+    setProfilesData(data.data);
+  };
+
   useEffect(() => {
     const handleResize = () => {
       const newScreenWidth = window.innerWidth;
@@ -126,12 +137,14 @@ export default function Profiles() {
           <div className="flex justify-end flex-wrap gap-3">
             <div className="flex rounded-md border">
               <input
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 type="search"
-                placeholder="Искать по профилям"
+                placeholder="Искать по проектам"
                 className="rounded-lg border-none"
               />
               <Button
-                type="submit"
+                onClick={handleSearch}
                 className=" bg-transparent ring-0 ring-transparent hover:bg-slate-100 active:bg-slate-200"
               >
                 <MagnifyingGlass className="w-6 h-6 text-black" />
@@ -205,7 +218,6 @@ export default function Profiles() {
                         Сбросить
                       </Button>
                     </DialogPrimitive.Close>
-
                     <Button
                       type="submit"
                       className={clsx(
@@ -223,17 +235,13 @@ export default function Profiles() {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-3">
-          {profilesData.map((profile) => (
-            <Link key={profile.id} href={`/app/profiles/${profile.id}`}>
+          {profilesData.map((profile, profileIndex) => (
+            <Link key={profileIndex} href={`/app/profiles/${profile.id}`}>
               <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
                 <div className="grid grid-cols-10 h-[130px]">
                   <div className="col-span-4 mr-3">
                     <Image
-                      src={
-                        profile.user.avatar
-                          ? profile.user.file.url
-                          : DefaultAvatar
-                      }
+                      src={DefaultAvatar}
                       width={0}
                       height={0}
                       unoptimized
@@ -244,7 +252,7 @@ export default function Profiles() {
                   <div className="col-span-6 flex flex-col gap-1">
                     <p>{profile.display_name}</p>
                     <p>
-                      {profile.user.first_name} {profile.user.last_name}
+                      {profile.user?.first_name} {profile.user?.last_name}
                     </p>
                     <p className="line-clamp-2 w-auto text-xs text-slate-600">
                       {profile.industry}

@@ -191,7 +191,7 @@ export default function ProjectView({ data }: Props) {
                   <DialogTrigger className="rounded-md bg-slate-700 p-2 text-sm text-white hover:bg-black">
                     Заинтересоваться проектом
                   </DialogTrigger>
-                  <DialogContent className="p-6">
+                  <DialogContent className="p-6 max-w-lg">
                     {sent ? (
                       <div className="flex flex-col items-center justify-center gap-3">
                         <Image src={SentImage} alt="s" />
@@ -286,7 +286,7 @@ export default function ProjectView({ data }: Props) {
                     </SheetContent>
                   </Sheet>
 
-                  {/* {data.activeMember && (
+                  {data.activeMember && (
                     <Button
                       variant="ghost"
                       className="w-full"
@@ -297,7 +297,7 @@ export default function ProjectView({ data }: Props) {
                       </div>
                       <ArrowRight className="w-6 h-6" />
                     </Button>
-                  )} */}
+                  )}
                 </div>
                 <div />
               </div>
@@ -413,11 +413,11 @@ export default function ProjectView({ data }: Props) {
                             <DialogHeader>
                               <DialogTitle>Участники Обсуждения</DialogTitle>
                             </DialogHeader>
-                            {/* {data.membershipData.map((member) => (
+                            {data.membershipData.map((member) => (
                               <div key={member.id}>
                                 <p>{member.profile.title}</p>
                               </div>
-                            ))} */}
+                            ))}
                           </DialogContent>
                         </Dialog>
                       </DropdownMenuContent>

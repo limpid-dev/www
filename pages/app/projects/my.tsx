@@ -28,7 +28,6 @@ export const getServerSideProps = async (
     },
   });
 
-  console.log(session.data.selected_profile_id);
   if (session) {
     const { data: projects } = await api.getProjects(
       {
@@ -80,7 +79,7 @@ export default function All({ data }: Props) {
                   id="tabs"
                   name="tabs"
                   className="block w-full  border-gray-300 focus:border-lime-500 focus:ring-lime-500"
-                  defaultValue={tabs.find((tab) => tab.current)?.name}
+                  defaultValue="/app/projects/my"
                 >
                   {tabs.map((tab) => (
                     <option key={tab.name} value={tab.href}>

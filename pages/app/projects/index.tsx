@@ -26,7 +26,6 @@ export default function All() {
   const currentPage =
     (Number.parseInt(router.query.page as string, 10) as number) || 1;
 
-  const [search, setSearch] = useState("");
   const [totalItems, setTotalItems] = useState<any>(1);
   const [data, setData] = useState<any>();
   const [loading, setLoading] = useState(true);
@@ -39,13 +38,23 @@ export default function All() {
     router.push(selectedPage);
   };
 
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearch = async () => {
+    const { data } = await api.getProjects({
+      page: 1,
+      per_page: 6,
+      search: searchTerm,
+    });
+    setData(data.data);
+  };
+
   useEffect(() => {
     async function fetchProjects() {
       const { data } = await api.getProjects({
         page: currentPage,
         per_page: 6,
       });
-
       if (data.data && data.meta) {
         setData(data.data);
         setTotalItems(data.meta.total);
@@ -103,14 +112,14 @@ export default function All() {
           <div className="flex flex-wrap items-end justify-end gap-3">
             <div className="flex rounded-lg border">
               <input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 type="search"
                 placeholder="Искать по проектам"
                 className="rounded-lg border-none"
               />
               <Button
-                type="submit"
+                onClick={handleSearch}
                 className=" bg-transparent ring-0 ring-transparent hover:bg-slate-100 active:bg-slate-200"
               >
                 <svg

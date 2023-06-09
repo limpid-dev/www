@@ -134,7 +134,6 @@ export function Navigation() {
   useEffect(() => {
     async function fetchProfiles() {
       const file_url = process.env.NEXT_PUBLIC_FILE_DOWNLOAD;
-      console.log(file_url);
       const { data: sessionData } = await api.getUser();
       if (sessionData) {
         setSessionData(sessionData.data);
