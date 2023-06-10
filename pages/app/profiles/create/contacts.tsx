@@ -95,7 +95,7 @@ export default function Test() {
                   <Image
                     src={
                       data.avatar
-                        ? `${process.env.NEXT_PUBLIC_FILE_DOWNLOAD}${data.avatar.url}`
+                        ? `${process.env.NEXT_PUBLIC_API_URL}${data.avatar.url}`
                         : DefaultAva
                     }
                     width={0}

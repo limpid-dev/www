@@ -289,7 +289,7 @@ export default function All() {
                                   className="rounded-md object-cover"
                                   src={
                                     project.avatar?.url && project.avatar
-                                      ? `${process.env.NEXT_PUBLIC_FILE_DOWNLOAD}${project.avatar.url}`
+                                      ? `${process.env.NEXT_PUBLIC_API_URL}${project.avatar.url}`
                                       : testAva
                                   }
                                   alt="Your alt text"
@@ -323,7 +323,7 @@ export default function All() {
                                 {/* <Image
                                   src={
                                     project.profile_data?.data?.avatar
-                                      ? `${process.env.NEXT_PUBLIC_FILE_DOWNLOAD}${project.profile_data.data.avatar.url}`
+                                      ? `${process.env.NEXT_PUBLIC_API_URL}${project.profile_data.data.avatar.url}`
                                       : testAva
                                   }
                                   alt="test"

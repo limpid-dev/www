@@ -226,7 +226,7 @@ export default function Certifications({ data }: Props) {
                       <Image
                         src={
                           data.profile.data.avatar
-                            ? `${process.env.NEXT_PUBLIC_FILE_DOWNLOAD}${data.profile.data.avatar.url}`
+                            ? `${process.env.NEXT_PUBLIC_API_URL}${data.profile.data.avatar.url}`
                             : DefaultAva
                         }
                         width={0}
@@ -376,7 +376,7 @@ export default function Certifications({ data }: Props) {
                     <Image
                       src={
                         data.profile.data.avatar
-                          ? `${process.env.NEXT_PUBLIC_FILE_DOWNLOAD}${data.profile.data.avatar.url}`
+                          ? `${process.env.NEXT_PUBLIC_API_URL}${data.profile.data.avatar.url}`
                           : DefaultAva
                       }
                       width={0}
@@ -545,7 +545,7 @@ export default function Certifications({ data }: Props) {
                               </p>
                               <a
                                 target="_blank"
-                                href={`${process.env.NEXT_PUBLIC_FILE_DOWNLOAD}${certificate.attachment?.url}`}
+                                href={`${process.env.NEXT_PUBLIC_API_URL}${certificate.attachment?.url}`}
                               >
                                 <p className="text-sm font-medium text-sky-500">
                                   Смотреть сертификат

@@ -151,7 +151,7 @@ export function Navigation() {
             );
             setFoundObject(foundObject);
             setAvatarUrl(
-              `${process.env.NEXT_PUBLIC_FILE_DOWNLOAD}${foundObject?.avatar?.url}`
+              `${process.env.NEXT_PUBLIC_API_URL}${foundObject?.avatar?.url}`
             );
             setProfession(foundObject?.display_name);
           }
@@ -166,7 +166,7 @@ export function Navigation() {
                   (item) => item.id === sessionData.data.selected_profile_id
                 );
                 setAvatarUrl(
-                  `${process.env.NEXT_PUBLIC_FILE_DOWNLOAD}${foundObject?.avatar?.url}`
+                  `${process.env.NEXT_PUBLIC_API_URL}${foundObject?.avatar?.url}`
                 );
               });
             setProfession(profiles.data[0].display_name);
