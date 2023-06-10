@@ -881,7 +881,7 @@ export interface paths {
       };
     };
   };
-  "/chat/{chat_id}": {
+  "/chats/{chat_id}": {
     get: {
       parameters: {
         path: {
@@ -908,6 +908,54 @@ export interface paths {
       responses: {
         /** @description Chat is deleted */
         200: never;
+      };
+    };
+  };
+  "/chats/{chat_id}/messages": {
+    get: {
+      parameters: {
+        query: {
+          page: number;
+          per_page?: number;
+        };
+        path: {
+          chat_id: number;
+        };
+      };
+      responses: {
+        /** @description Messages */
+        200: {
+          content: {
+            "application/json": {
+              meta?: components["schemas"]["Pagination"];
+              data?: components["schemas"]["Message"][];
+            };
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          chat_id: number;
+        };
+      };
+      requestBody: {
+        content: {
+          "multipart/form-data": {
+            message: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Message */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["Message"];
+            };
+          };
+        };
       };
     };
   };

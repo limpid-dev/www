@@ -27,28 +27,28 @@ const calcTime = (date: string) => {
   return hours > 0 ? hours : 0;
 };
 
-export async function getServerSideProps() {
-  const { data, meta } = await api.tenders.index({
-    page: 1,
-    perPage: 100,
-  });
+// export async function getServerSideProps() {
+//   const { data, meta } = await api.tenders.index({
+//     page: 1,
+//     perPage: 100,
+//   });
 
-  return {
-    props: {
-      data: data!,
-      meta: meta!,
-    },
-  };
-}
+//   return {
+//     props: {
+//       data: data!,
+//       meta: meta!,
+//     },
+//   };
+// }
 
-type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
+// type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 const tabs = [
   { name: "Все закупки", href: "/app/tenders", current: true },
   { name: "Мои закупки", href: "/app/tenders/my", current: false },
 ];
 
-export default function Tenders({ data, meta }: Props) {
+export default function Tenders() {
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
@@ -72,8 +72,8 @@ export default function Tenders({ data, meta }: Props) {
                 className="block w-full  border-gray-300 focus:border-lime-500 focus:ring-lime-500"
                 defaultValue="/app/tenders"
               >
-                <option value="/app/tenders">Все продажи</option>
-                <option value="/app/tenders/my">Мои продажи</option>
+                <option value="/app/tenders">Все закупки</option>
+                <option value="/app/tenders/my">Мои закупки</option>
               </select>
             </div>
             <div className="hidden sm:block">
@@ -96,7 +96,7 @@ export default function Tenders({ data, meta }: Props) {
               </nav>
             </div>
           </div>
-          {/* <div className="flex flex-wrap items-end justify-end gap-3">
+          <div className="flex flex-wrap items-end justify-end gap-3">
             <div className="flex rounded-lg border">
               <input
                 type="search"
@@ -131,10 +131,10 @@ export default function Tenders({ data, meta }: Props) {
                 <SquaresFour className="h-6 w-6" />
               </Button>
             </div>
-          </div> */}
+          </div>
         </div>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {data.map((tender) => (
+          {/* {data.map((tender) => (
             <Card
               key={tender.id}
               onClick={() => {
@@ -179,7 +179,7 @@ export default function Tenders({ data, meta }: Props) {
                 </div>
               </CardContent>
             </Card>
-          ))}
+          ))} */}
         </div>
       </div>
     </div>

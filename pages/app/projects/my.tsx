@@ -1,4 +1,6 @@
 import { Plus } from "@phosphor-icons/react";
+import { Label } from "@radix-ui/react-dropdown-menu";
+import { Field, Form } from "@radix-ui/react-form";
 import clsx from "clsx";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
@@ -8,9 +10,19 @@ import { useState } from "react";
 import api from "../../../api";
 import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../../../components/primitives/dialog";
+import { Input } from "../../../components/primitives/input";
 import { Skeleton } from "../../../components/primitives/skeleton";
 import NoProjects from "../../../images/noProjects.svg";
 import testAva from "../../../images/projectDefault.svg";
+import session from "../../api/session";
 
 const tabs = [
   { name: "Все проекты", href: "/app/projects/", current: false },
@@ -32,7 +44,7 @@ export const getServerSideProps = async (
     const { data: projects } = await api.getProjects(
       {
         page: 1,
-        per_page: 6,
+        per_page: 20,
         profile_id: session.data.selected_profile_id!,
       },
       {
@@ -56,9 +68,15 @@ type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 export default function All({ data }: Props) {
   const router = useRouter();
+  const [openDialog, setOpenDialog] = useState(false);
 
-  const handleRoute = () => {
-    router.push("/app/projects/create");
+  const handleRoute = async () => {
+    const { data } = await api.getUser();
+    if (data.data.selected_profile_id) {
+      router.push("/app/projects/create");
+    } else {
+      setOpenDialog(true);
+    }
   };
 
   const handleSelectChange = (event: any) => {
@@ -151,6 +169,29 @@ export default function All({ data }: Props) {
           )}
         </div>
       </div>
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <DialogTrigger />
+        <DialogContent className="sm:max-w-[425px] p-10">
+          <DialogHeader>
+            <DialogTitle className="text-center">У вас нет профиля</DialogTitle>
+            <DialogDescription>
+              Для создания проекта, вам необходим профиль
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Button
+              onClick={() => {
+                router.push("/app/profiles/create");
+              }}
+              variant="black"
+              type="reset"
+              className="w-full"
+            >
+              Создать профиль
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

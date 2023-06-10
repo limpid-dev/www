@@ -67,7 +67,7 @@ export default function Profiles() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearch = async () => {
-    const { data } = await api.getProjects({
+    const { data } = await api.getProfiles({
       page: 1,
       per_page: 6,
       search: searchTerm,

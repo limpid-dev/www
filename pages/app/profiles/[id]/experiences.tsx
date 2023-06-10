@@ -213,7 +213,7 @@ export default function Education({ data }: Props) {
                       <Image
                         src={
                           data.profile.data.avatar
-                            ? `http://localhost:3333${data.profile.data.avatar.url}`
+                            ? `${process.env.NEXT_PUBLIC_FILE_DOWNLOAD}${data.profile.data.avatar.url}`
                             : DefaultAva
                         }
                         width={0}
@@ -363,7 +363,7 @@ export default function Education({ data }: Props) {
                     <Image
                       src={
                         data.profile.data.avatar
-                          ? `http://localhost:3333${data.profile.data.avatar.url}`
+                          ? `${process.env.NEXT_PUBLIC_FILE_DOWNLOAD}${data.profile.data.avatar.url}`
                           : DefaultAva
                       }
                       width={0}

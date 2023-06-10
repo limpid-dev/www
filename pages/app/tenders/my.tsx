@@ -1,7 +1,7 @@
 import "@uppy/core/dist/style.css";
 import "@uppy/dashboard/dist/style.css";
 import "@uppy/drag-drop/dist/style.css";
-import { Paperclip, Question } from "@phosphor-icons/react";
+import { Paperclip, Plus, Question } from "@phosphor-icons/react";
 import {
   Tooltip,
   TooltipContent,
@@ -13,11 +13,11 @@ import Russian from "@uppy/locales/lib/ru_RU";
 import { DashboardModal } from "@uppy/react";
 import clsx from "clsx";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 import api from "../../../api";
 // import { buildFormData } from "../../../api/files";
-import { Entity } from "../../../api/tenders";
 import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
 import {
@@ -180,7 +180,13 @@ export default function TendersMy({ data }: Props) {
                   ))}
                 </nav>
               </div>
-            </div> <Button>Создать закупки</Button>
+            </div>{" "}
+            <Link href="/app/auctions/create">
+              <Button variant="black">
+                <Plus className="h-6 w-6" />
+                Создать закупки
+              </Button>
+            </Link>
             <Dialog
               onOpenChange={(open) => {
                 if (!open) {
@@ -190,9 +196,7 @@ export default function TendersMy({ data }: Props) {
                 }
               }}
             >
-              <DialogTrigger asChild>
-               
-              </DialogTrigger>
+              <DialogTrigger asChild />
               <DialogContent className={clsx("p-6")}>
                 <DialogHeader>
                   <DialogTitle>Создать закупки</DialogTitle>
@@ -265,7 +269,7 @@ export default function TendersMy({ data }: Props) {
               </DialogContent>
             </Dialog>
           </div>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {/* <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {data.map((tender) => (
               <Card
                 key={tender.id}
@@ -314,48 +318,48 @@ export default function TendersMy({ data }: Props) {
                 </CardContent>
               </Card>
             ))}
-          </div>
+          </div> */}
         </div>
       </div>
     </>
   );
 }
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await api.session.show({
-    headers: {
-      Cookie: context.req.headers.cookie!,
-    },
-    credentials: "include",
-  });
+// export async function getServerSideProps(context: GetServerSidePropsContext) {
+//   const session = await api.session.show({
+//     headers: {
+//       Cookie: context.req.headers.cookie!,
+//     },
+//     credentials: "include",
+//   });
 
-  const profiles = await api.profiles.index({
-    page: 1,
-    perPage: 100,
-    filters: {
-      userId: session.data!.id,
-    },
-  });
+//   const profiles = await api.profiles.index({
+//     page: 1,
+//     perPage: 100,
+//     filters: {
+//       userId: session.data!.id,
+//     },
+//   });
 
-  const tndrs = profiles.data!.map((profile) =>
-    api.tenders
-      .index({
-        page: 1,
-        perPage: 100,
-        filters: {
-          profileId: profile.id,
-        },
-      })
-      .then((tenders) => tenders.data)
-  );
+//   const tndrs = profiles.data!.map((profile) =>
+//     api.tenders
+//       .index({
+//         page: 1,
+//         perPage: 100,
+//         filters: {
+//           profileId: profile.id,
+//         },
+//       })
+//       .then((tenders) => tenders.data)
+//   );
 
-  const tenders = await Promise.all(tndrs);
+//   const tenders = await Promise.all(tndrs);
 
-  const flat = tenders.flat().filter(Boolean) as Entity[];
+//   const flat = tenders.flat().filter(Boolean) as Entity[];
 
-  return {
-    props: {
-      data: flat,
-    },
-  };
-}
+//   return {
+//     props: {
+//       data: flat,
+//     },
+//   };
+// }

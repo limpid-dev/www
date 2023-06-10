@@ -25,8 +25,8 @@ import {
 } from "../../../components/primitives/form";
 
 const tabs = [
-  { name: "Все аукционы", href: "/app/profiles/", current: false },
-  { name: "Мои аукционы", href: "/app/profiles/my", current: true },
+  { name: "Все продажи", href: "/app/auctions/", current: false },
+  { name: "Мои продажи", href: "/app/auctions/my", current: true },
 ];
 
 export default function All() {
@@ -37,43 +37,13 @@ export default function All() {
     router.push(selectedPage);
   };
 
-  const handleProfileCreate = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    const values = Object.fromEntries(form.entries()) as {
-      title: string;
-      description: string;
-      location: string;
-      industry: string;
-      ownedIntellectualResources: string;
-      ownedMaterialResources: string;
-    };
-
-    await api.profiles.store({
-      title: values.title,
-      location: values.location,
-      description: values.description,
-      industry: values.industry,
-      ownedIntellectualResources: values.ownedIntellectualResources,
-      ownedMaterialResources: values.ownedMaterialResources,
-    });
-
-    // if (Validation.is(error)) {
-    //   setErrors((prev) => ({
-    //     ...prev,
-    //     email: true,
-    //   }));
-    //   return;
-    // }
-  };
-
   return (
     <div>
       <Navigation />
       <div className="h-screen bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
           <p className=" text-sm">
-            Аукционы / <span className="text-slate-300">Продажи</span>
+            <span className="text-slate-300">Продажи</span>
           </p>
           <div className="my-5 flex flex-col items-center justify-end gap-4 md:mb-12 md:flex-row  md:justify-between">
             <div>
@@ -113,12 +83,9 @@ export default function All() {
               </div>
             </div>
             <Link href="/app/auctions/create">
-              <Button
-                variant="black"
-                className="flex items-center gap-2 rounded-lg bg-zinc-900 p-2 text-sm text-white"
-              >
+              <Button variant="black">
                 <Plus className="h-6 w-6" />
-                Создать аукцион
+                Создать продажи
               </Button>
             </Link>
           </div>
@@ -159,7 +126,7 @@ export default function All() {
                 </div>
                 <div className="my-6" />
                 <div className="flex items-center justify-end">
-                  <Button className="rounded-full bg-slate-300 px-2 py-1.5 hover:bg-black">
+                  <Button variant="black">
                     <CaretRight />
                   </Button>
                 </div>

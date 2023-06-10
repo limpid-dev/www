@@ -31,31 +31,31 @@ const secondaryNavigation = [
   },
 ];
 
-export const getServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const { data: session } = await api.session.show({
-    headers: {
-      Cookie: context.req.headers.cookie!,
-    },
-    credentials: "include",
-  });
+// export const getServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   const { data: session } = await api.session.show({
+//     headers: {
+//       Cookie: context.req.headers.cookie!,
+//     },
+//     credentials: "include",
+//   });
 
-  if (session) {
-    const { data: user } = await api.users.show(session.id);
-    return {
-      props: {
-        data: {
-          userInfo: user!,
-        },
-      },
-    };
-  }
-};
+//   if (session) {
+//     const { data: user } = await api.users.show(session.id);
+//     return {
+//       props: {
+//         data: {
+//           userInfo: user!,
+//         },
+//       },
+//     };
+//   }
+// };
 
-type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
+// type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-export default function Settings({ data }: Props) {
+export default function Settings() {
   const router = useRouter();
   const inputRef = useRef(null);
 
@@ -110,33 +110,6 @@ export default function Settings({ data }: Props) {
 
         <main className="px-4 py-16 sm:px-6 lg:flex-auto lg:px-0 lg:py-16">
           <div className="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
-            <div className="col-span-full flex items-center gap-x-8">
-              <Image
-                src={
-                  data.userInfo.file && data.userInfo.file.url
-                    ? data.userInfo.file.url
-                    : DefaultAva
-                }
-                width={0}
-                height={0}
-                unoptimized
-                alt=""
-                className=" h-44 w-44 flex-none rounded-lg bg-gray-100 object-cover"
-              />
-              <div>
-                <input
-                  ref={inputRef}
-                  style={{ display: "none" }}
-                  type="file"
-                  placeholder="some photo"
-                  onChange={handleFileChange}
-                />
-                <Button onClick={handleClick}>Поменять фото</Button>
-                <p className="mt-2 text-xs leading-5 text-gray-400">
-                  JPG или PNG. 1MB макс.
-                </p>
-              </div>
-            </div>
             <div>
               <h2 className="text-base font-semibold leading-7 text-gray-900 mb-4">
                 Информация по вашему плану

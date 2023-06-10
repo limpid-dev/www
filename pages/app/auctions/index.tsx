@@ -19,7 +19,7 @@ export default function All() {
     const selectedPage = event.target.value;
     router.push(selectedPage);
   };
-  
+
   return (
     <div>
       <Navigation />
@@ -142,7 +142,7 @@ export default function All() {
                 </div>
                 <div className="my-6" />
                 <div className="flex items-center justify-end">
-                  <Link href="/auctions/user/create">
+                  <Link href="/app/auctions/create">
                     <Button className="rounded-full bg-slate-300 px-2 py-1.5 hover:bg-black">
                       <CaretRight />
                     </Button>

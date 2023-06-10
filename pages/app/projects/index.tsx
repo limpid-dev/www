@@ -1,4 +1,5 @@
 import { Faders, SquaresFour } from "@phosphor-icons/react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 import clsx from "clsx";
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel, { EmblaOptionsType } from "embla-carousel-react";
@@ -12,6 +13,21 @@ import { GeneralLayout } from "../../../components/general-layout";
 import { Navigation } from "../../../components/navigation";
 import Pagination from "../../../components/pagination";
 import { Button } from "../../../components/primitives/button";
+import { Options } from "../../../components/primitives/options";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "../../../components/primitives/popover";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../../../components/primitives/sheet";
 import { Skeleton } from "../../../components/primitives/skeleton";
 import testAva from "../../../images/projectDefault.svg";
 
@@ -39,6 +55,7 @@ export default function All() {
   };
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [largeScreen, setLargeScreen] = useState(false);
 
   const handleSearch = async () => {
     const { data } = await api.getProjects({
@@ -49,6 +66,19 @@ export default function All() {
     setData(data.data);
   };
 
+  useEffect(() => {
+    const handleResize = () => {
+      const newScreenWidth = window.innerWidth;
+      setLargeScreen(newScreenWidth > 896);
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   useEffect(() => {
     async function fetchProjects() {
       const { data } = await api.getProjects({
@@ -63,10 +93,11 @@ export default function All() {
           return { ...project, profile_data: sessionData };
         })
       );
-      console.log(profileDataArray);
-      setData(profileDataArray);
-      setTotalItems(data.meta.total);
-      setLoading(false);
+      if (profileDataArray.length > 0) {
+        setData(profileDataArray);
+        setTotalItems(data.meta.total);
+        setLoading(false);
+      }
     }
     fetchProjects();
   }, [currentPage]);
@@ -146,12 +177,85 @@ export default function All() {
               </Button>
             </div>
             <div className="flex gap-4">
-              <Button variant="outline">
-                <Faders className="h-6 w-6" />
-              </Button>
-              <Button variant="outline">
-                <SquaresFour className="h-6 w-6" />
-              </Button>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline">
+                    <Faders className="h-6 w-6" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <div className="flex items-center gap-3 bg-slate-50 rounded-md p-3">
+                    <input
+                      type="checkbox"
+                      name=""
+                      id=""
+                      className="rounded-md"
+                    />
+                    <p className="text-sm">Сначала новые</p>
+                  </div>
+                  <div className="flex items-center gap-3 bg-slate-50 rounded-md p-3 mt-3">
+                    <input
+                      type="checkbox"
+                      name=""
+                      id=""
+                      className="rounded-md"
+                    />
+                    <p className="text-sm">Сначала старые</p>
+                  </div>
+                </PopoverContent>
+              </Popover>
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline">
+                    <SquaresFour className="w-6 h-6" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent
+                  position="right"
+                  size={largeScreen ? "default" : "full"}
+                >
+                  <SheetHeader>
+                    <SheetTitle>Сфера деятельности</SheetTitle>
+                    <SheetDescription>
+                      Выберите сферы деятельности интересующие вас
+                    </SheetDescription>
+                  </SheetHeader>
+                  <div className="grid grid-cols-2 gap-4 py-4 overflow-auto h-[74%] sm:h-[85%]">
+                    {Options.map((option) => (
+                      <div
+                        key={option.id}
+                        className="flex items-center gap-3 bg-slate-50 rounded-md p-3"
+                      >
+                        <input
+                          type="checkbox"
+                          name=""
+                          id=""
+                          className="rounded-md"
+                        />
+                        <p className="text-sm">{option.name}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <SheetFooter
+                    className={clsx("flex justify-center gap-3 pt-3")}
+                  >
+                    <DialogPrimitive.Close aria-label="Close">
+                      <Button type="reset" variant="outline" className="w-full">
+                        Сбросить
+                      </Button>
+                    </DialogPrimitive.Close>
+                    <Button
+                      type="submit"
+                      className={clsx(
+                        " bg-slate-900 text-white hover:bg-slate-800"
+                      )}
+                      variant="subtle"
+                    >
+                      Применить
+                    </Button>
+                  </SheetFooter>
+                </SheetContent>
+              </Sheet>
             </div>
           </div>
         </div>
@@ -213,7 +317,7 @@ export default function All() {
                           </p>
                           <div className="mt-2 flex gap-4 text-xs">
                             <Link
-                              href={`/app/profiles/${project.profile_data.data.id}`}
+                              href={`/app/profiles/${project?.profile_data?.data?.id}`}
                             >
                               <div className="flex w-fit items-center gap-4 rounded-lg bg-slate-100 p-2 hover:bg-lime-200">
                                 {/* <Image
@@ -228,7 +332,7 @@ export default function All() {
                                   className="rounded-lg"
                                 /> */}
                                 <p className="text-xs sm:text-sm">
-                                  {project.profile_data.data.display_name}
+                                  {project?.profile_data?.data?.display_name}
                                 </p>
                               </div>
                             </Link>
