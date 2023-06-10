@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { FormEvent, useState } from "react";
-import api from "../api";
+import api, { AxiosError } from "../api";
 import { AuthLayout } from "../components/auth-layout";
 import {
   Field,
@@ -44,14 +44,30 @@ export default function Login() {
       password: string;
     };
 
-    await api.loginUser(values.email, values.password);
+    try {
+      await api.loginUser(values.email, values.password);
+      await router.push({ pathname: "/app/projects" });
+    } catch (error) {
+      if (error instanceof Error) {
+        const status = (error as AxiosError).response?.status;
+        if (status === 422) {
+          setErrors((prev) => ({
+            ...prev,
+            email: true,
+          }));
+          return;
+        }
 
-    localStorage.clear();
-
-    await router.push({
-      pathname: "/app/projects",
-    });
+        if (status === 400) {
+          setErrors((prev) => ({
+            ...prev,
+            password: true,
+          }));
+        }
+      }
+    }
   };
+
   const { t } = useTranslation("common");
 
   return (
@@ -77,6 +93,7 @@ export default function Login() {
           <Input
             type="email"
             autoComplete="email"
+            onChange={clearErrors}
             defaultValue={router.query.email}
             required
           />
@@ -89,16 +106,13 @@ export default function Login() {
           <Input
             type="password"
             minLength={8}
+            onChange={clearErrors}
             autoComplete="current-password"
             pattern="(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+"
             required
           />
           <Message match="patternMismatch">{t("password_error")}</Message>
-          <Message
-            onChange={clearErrors}
-            match="badInput"
-            forceMatch={errors.password}
-          >
+          <Message match="badInput" forceMatch={errors.password}>
             {t("incorrect_password")}
           </Message>
         </Field>

@@ -850,6 +850,103 @@ export interface paths {
       };
     };
   };
+  "/projects/{project_id}/members": {
+    get: {
+      parameters: {
+        query: {
+          page: number;
+          per_page?: number;
+        };
+        path: {
+          project_id: number;
+        };
+      };
+      responses: {
+        /** @description Project's members */
+        200: {
+          content: {
+            "application/json": {
+              meta?: components["schemas"]["Pagination"];
+              data?: components["schemas"]["ProjectMember"][];
+            };
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          project_id: number;
+        };
+      };
+      requestBody: {
+        content: {
+          "multipart/form-data": {
+            application_message: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Project's member */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["ProjectMember"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/projects/{project_id}/members/{member_id}": {
+    delete: {
+      parameters: {
+        path: {
+          project_id: number;
+          member_id: number;
+        };
+      };
+      responses: {
+        /** @description Project's member is deleted */
+        200: never;
+      };
+    };
+  };
+  "/projects/{project_id}/members/{member_id}/accept": {
+    post: {
+      responses: {
+        /** @description Project's member */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["ProjectMember"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/projects/{project_id}/members/{member_id}/reject": {
+    post: {
+      requestBody: {
+        content: {
+          "multipart/form-data": {
+            rejection_message?: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Project's member */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["ProjectMember"];
+            };
+          };
+        };
+      };
+    };
+  };
   "/chats": {
     get: {
       parameters: {
@@ -992,6 +1089,8 @@ export interface paths {
             duration: string;
             starting_price?: number;
             purchase_price?: number;
+            /** Format: binary */
+            technical_specification?: string;
           };
         };
       };
@@ -1160,6 +1259,351 @@ export interface paths {
       };
     };
   };
+  "/organizations": {
+    get: {
+      parameters: {
+        query: {
+          page: number;
+          per_page?: number;
+          user_id?: number;
+          industry?: string[];
+          search?: string;
+        };
+      };
+      responses: {
+        /** @description Organizations */
+        200: {
+          content: {
+            "application/json": {
+              meta?: components["schemas"]["Pagination"];
+              data?: components["schemas"]["Profile"][];
+            };
+          };
+        };
+      };
+    };
+    post: {
+      requestBody: {
+        content: {
+          "multipart/form-data": {
+            display_name: string;
+            description: string;
+            location: string;
+            industry: string;
+            owned_intellectual_resources?: string;
+            owned_material_resources?: string;
+            tin: string;
+            perfomance: string;
+            legal_structure: string;
+            is_visible: boolean;
+            /** Format: binary */
+            avatar?: string;
+            instagram_url?: string | null;
+            whatsapp_url?: string | null;
+            website_url?: string | null;
+            telegram_url?: string | null;
+            two_gis_url?: string | null;
+          };
+        };
+      };
+      responses: {
+        /** @description Organization data */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["Profile"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/organizations/{organization_id}": {
+    get: {
+      parameters: {
+        path: {
+          organization_id: number;
+        };
+      };
+      responses: {
+        /** @description Organization data */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["Profile"];
+            };
+          };
+        };
+      };
+    };
+    delete: {
+      parameters: {
+        path: {
+          organization_id: number;
+        };
+      };
+      responses: {
+        /** @description Deleted organization's data */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["Profile"];
+            };
+          };
+        };
+      };
+    };
+    patch: {
+      parameters: {
+        path: {
+          organization_id: number;
+        };
+      };
+      requestBody: {
+        content: {
+          "multipart/form-data": {
+            display_name?: string;
+            description?: string;
+            location?: string;
+            industry?: string;
+            owned_intellectual_resources?: string;
+            owned_material_resources?: string;
+            tin?: string;
+            perfomance?: string;
+            legal_structure?: string;
+            is_visible?: boolean;
+            /** Format: binary */
+            avatar?: string;
+            instagram_url?: string | null;
+            whatsapp_url?: string | null;
+            website_url?: string | null;
+            telegram_url?: string | null;
+            two_gis_url?: string | null;
+          };
+        };
+      };
+      responses: {
+        /** @description Updated organization's data */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["Profile"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/organizations/{organization_id}/experiences": {
+    get: {
+      parameters: {
+        query: {
+          page: number;
+          per_page?: number;
+        };
+        path: {
+          organization_id: number;
+        };
+      };
+      responses: {
+        /** @description Organization's experiences */
+        200: {
+          content: {
+            "application/json": {
+              meta?: components["schemas"]["Pagination"];
+              data?: components["schemas"]["Experience"][];
+            };
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          organization_id: number;
+        };
+      };
+      requestBody: {
+        content: {
+          "multipart/form-data": {
+            title: string;
+            description: string;
+            institution: string;
+            started_at: string;
+            finished_at?: string | null;
+          };
+        };
+      };
+      responses: {
+        /** @description Experience data */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["Experience"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/organizations/{organization_id}/experiences/{experience_id}": {
+    get: {
+      parameters: {
+        path: {
+          organization_id: number;
+          experience_id: number;
+        };
+      };
+      responses: {
+        /** @description Experience data */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["Experience"];
+            };
+          };
+        };
+      };
+    };
+    delete: {
+      parameters: {
+        path: {
+          organization_id: number;
+          experience_id: number;
+        };
+      };
+      responses: {
+        /** @description Experience is deleted */
+        200: never;
+      };
+    };
+    patch: {
+      parameters: {
+        path: {
+          organization_id: number;
+          experience_id: number;
+        };
+      };
+      requestBody: {
+        content: {
+          "multipart/form-data": {
+            title?: string;
+            description?: string;
+            institution?: string;
+            started_at?: string;
+            finished_at?: string | null;
+          };
+        };
+      };
+      responses: {
+        /** @description Updated experience's data */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["Experience"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/organizations/{organization_id}/members": {
+    get: {
+      parameters: {
+        query: {
+          page: number;
+          per_page?: number;
+        };
+        path: {
+          organization_id: number;
+        };
+      };
+      responses: {
+        /** @description Organization's members */
+        200: {
+          content: {
+            "application/json": {
+              meta?: components["schemas"]["Pagination"];
+              data?: components["schemas"]["OrganizationMember"][];
+            };
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          organization_id: number;
+        };
+      };
+      requestBody: {
+        content: {
+          "multipart/form-data": {
+            application_message: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Organization's member */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["OrganizationMember"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/organizations/{organization_id}/members/{member_id}": {
+    delete: {
+      parameters: {
+        path: {
+          organization_id: number;
+          member_id: number;
+        };
+      };
+      responses: {
+        /** @description Organization's member is deleted */
+        200: never;
+      };
+    };
+  };
+  "/organizations/{organization_id}/members/{member_id}/accept": {
+    post: {
+      responses: {
+        /** @description Organization's member */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["OrganizationMember"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/organizations/{organization_id}/members/{member_id}/reject": {
+    post: {
+      requestBody: {
+        content: {
+          "multipart/form-data": {
+            rejection_message?: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Organization's member */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["OrganizationMember"];
+            };
+          };
+        };
+      };
+    };
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -1297,7 +1741,7 @@ export interface components {
       duration?: string;
       starting_price?: number | null;
       purchase_price?: number | null;
-      technical_specification?: Record<string, unknown> | null;
+      technical_specification?: components["schemas"]["Attachment"];
       won_auction_bid_id?: number;
       verified_at?: string;
       created_at?: string;
@@ -1310,6 +1754,27 @@ export interface components {
       price?: number;
       created_at?: string;
       updated_at?: string;
+    };
+    ProjectMember: {
+      id?: number;
+      project_id?: number;
+      profile_id?: number;
+      application_message?: string;
+      rejection_message?: string | null;
+      /** Format: date-time */
+      applied_at?: string;
+      accepted_at?: string | null;
+      rejected_at?: string | null;
+    };
+    OrganizationMember: {
+      id?: number;
+      profile_id?: number;
+      application_message?: string;
+      rejection_message?: string | null;
+      /** Format: date-time */
+      applied_at?: string;
+      accepted_at?: string | null;
+      rejected_at?: string | null;
     };
   };
   responses: never;

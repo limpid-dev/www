@@ -1,8 +1,14 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { components, paths } from "./api-paths";
 
-const API_BASE_URL = "https://limpid.kz/api";
-// const API_BASE_URL = "http://localhost:3000/api";
+export interface AxiosError extends Error {
+  response?: {
+    status?: number;
+    data?: any;
+  };
+}
+// const API_BfASE_URL = "https://limpid.kz/api";
+const API_BASE_URL = "http://localhost:3000/api";
 
 class APIClient {
   private axiosInstance = axios.create({
