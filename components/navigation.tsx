@@ -133,7 +133,6 @@ export function Navigation() {
 
   useEffect(() => {
     async function fetchProfiles() {
-      const file_url = process.env.NEXT_PUBLIC_FILE_DOWNLOAD;
       const { data: sessionData } = await api.getUser();
       if (sessionData) {
         setSessionData(sessionData.data);
@@ -206,6 +205,15 @@ export function Navigation() {
                 <NavigationMenu>
                   <NavigationMenuList>
                     <NavigationMenuItem>
+                      <Link href="/app/chats" legacyBehavior passHref>
+                        <NavigationMenuLink
+                          className={navigationMenuTriggerStyle()}
+                        >
+                          Чаты
+                        </NavigationMenuLink>
+                      </Link>
+                    </NavigationMenuItem>
+                    <NavigationMenuItem>
                       <Link href="/app/projects" legacyBehavior passHref>
                         <NavigationMenuLink
                           className={navigationMenuTriggerStyle()}
@@ -218,26 +226,36 @@ export function Navigation() {
                       <NavigationMenuTrigger>Профили</NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[400px] lg:grid-cols-1">
-                          <ListItem href="/app/profiles/my" title="Ваш профиль">
-                            Ваш профиль покажите себя всему миру
-                          </ListItem>
                           <ListItem
-                            href="/app/profiles"
-                            title="Профили и Организации"
+                            href="/app/profiles/my"
+                            title="Ваши профиля"
                           >
-                            Найдите интересующих вас людей или компании
+                            Ваши профиля покажите себя всему миру
+                          </ListItem>
+                          <ListItem href="/app/profiles" title="Профили">
+                            Найдите интересующих вас людей
                           </ListItem>
                         </ul>
                       </NavigationMenuContent>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
-                      <Link href="/app/chats" legacyBehavior passHref>
-                        <NavigationMenuLink
-                          className={navigationMenuTriggerStyle()}
-                        >
-                          Чаты
-                        </NavigationMenuLink>
-                      </Link>
+                      <NavigationMenuTrigger>Организации</NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[400px] lg:grid-cols-1">
+                          <ListItem
+                            href="/app/organizations/my"
+                            title="Ваши организации"
+                          >
+                            Ваши организации - создайте команду мечты
+                          </ListItem>
+                          <ListItem
+                            href="/app/organizations/"
+                            title="Организации"
+                          >
+                            Найдите интересующие вас компании
+                          </ListItem>
+                        </ul>
+                      </NavigationMenuContent>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
                       <NavigationMenuTrigger>Аукционы</NavigationMenuTrigger>
