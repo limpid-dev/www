@@ -9,7 +9,7 @@ import { InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useEffect } from "react";
 import api from "../../../api";
 import { GeneralLayout } from "../../../components/general-layout";
 import { Navigation } from "../../../components/navigation";
@@ -65,6 +65,17 @@ export default function Chats() {
     const selectedPage = event.target.value;
     router.push(selectedPage);
   };
+
+  useEffect(() => {
+    async function fetchChats() {
+      const response = await api.getChats({
+        page: 1,
+        per_page: 100,
+      });
+      console.log(response.data.data);
+    }
+    fetchChats();
+  }, []);
 
   return (
     <div>

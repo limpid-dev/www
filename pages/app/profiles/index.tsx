@@ -36,10 +36,29 @@ export default function Profiles() {
   const router = useRouter();
   const [profilesData, setProfilesData] = useState<any[]>([]);
   const [totalItems, setTotalItems] = useState<number>(1);
+
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>): void => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
   };
+
+  const handleChat = async (receiver_id: number) => {
+    try {
+      const { data: sessionData } = await api.getUser();
+      const { data } = await api.createChat({
+        user_ids: [receiver_id, sessionData.data.id],
+        name: "My New Chat",
+      });
+
+      if (data) {
+        router.push("/app/chats");
+      }
+    } catch (error) {
+      // Handle any errors
+      console.error("Error handling chat:", error);
+    }
+  };
+
   const currentPage =
     (Number.parseInt(router.query.page as string, 10) as number) || 1;
 
@@ -238,7 +257,7 @@ export default function Profiles() {
           {profilesData.map((profile, profileIndex) => (
             <Link key={profileIndex} href={`/app/profiles/${profile.id}`}>
               <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
-                <div className="grid grid-cols-10 h-[180px]">
+                <div className="grid grid-cols-10 h-[130px]">
                   <div className="col-span-4 mr-3">
                     <Image
                       src={
@@ -270,7 +289,11 @@ export default function Profiles() {
                     <p className="line-clamp-2 text-xs">
                       {profile.description}
                     </p>
-                    <Button variant="outline" className="mt-5">
+                    {/* <Button
+                      variant="outline"
+                      className="mt-5"
+                      onClick={() => handleChat(profile?.user?.id)}
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="20"
@@ -286,7 +309,7 @@ export default function Profiles() {
                         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                       </svg>
                       Написать сообщение
-                    </Button>
+                    </Button> */}
                   </div>
                 </div>
               </div>
