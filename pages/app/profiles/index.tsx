@@ -262,7 +262,7 @@ export default function Profiles() {
                     <Image
                       src={
                         profile.avatar
-                          ? `${process.env.NEXT_PUBLIC_API_URL}${profile?.avatar?.url}`
+                          ? `/api/${profile?.avatar?.url}`
                           : DefaultAvatar
                       }
                       width={0}

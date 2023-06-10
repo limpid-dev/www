@@ -93,11 +93,7 @@ export default function Test() {
               <div className="flex justify-center items-center flex-col">
                 <div className="col-span-full flex items-center gap-x-8">
                   <Image
-                    src={
-                      data.avatar
-                        ? `${process.env.NEXT_PUBLIC_API_URL}${data.avatar.url}`
-                        : DefaultAva
-                    }
+                    src={data.avatar ? `/api/${data.avatar.url}` : DefaultAva}
                     width={0}
                     height={0}
                     unoptimized

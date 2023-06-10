@@ -191,7 +191,7 @@ export default function ProfileProjects({ data }: Props) {
                       <Image
                         src={
                           data.profile.data.avatar
-                            ? `${process.env.NEXT_PUBLIC_API_URL}${data.profile.data.avatar.url}`
+                            ? `/api/${data.profile.data.avatar.url}`
                             : DefaultAva
                         }
                         width={0}
@@ -341,7 +341,7 @@ export default function ProfileProjects({ data }: Props) {
                     <Image
                       src={
                         data.profile.data.avatar
-                          ? `${process.env.NEXT_PUBLIC_API_URL}${data.profile.data.avatar.url}`
+                          ? `/api/${data.profile.data.avatar.url}`
                           : DefaultAva
                       }
                       width={0}
