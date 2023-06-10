@@ -38,26 +38,47 @@ export const getServerSideProps = async (
     id: string;
   }>
 ) => {
-  const session = await api.session.show({
+  const { data: session } = await api.getUser({
     headers: {
-      Cookie: context.req.headers.cookie!,
+      Cookie: context.req.headers.cookie,
     },
-    credentials: "include",
   });
-  const { data: profile } = await api.profiles.show(Number(context.params!.id));
 
-  if (profile) {
-    const { data: user } = await api.users.show(profile.userId);
-    const isAuthor =
-      session.data?.id && profile.userId && session.data.id === profile.userId;
+  const { data: profile } = await api.getProfileById(
+    Number.parseInt(context!.params!.id as string, 10),
+    {
+      headers: {
+        cookie: context.req.headers.cookie,
+      },
+    }
+  );
+
+  const isAuthor =
+    session.data.id &&
+    profile.data.user_id &&
+    session.data.id === profile.data.user_id;
+
+  if (profile.data.id) {
+    const { data: userProjects } = await api.getProjects(
+      {
+        page: 1,
+        per_page: 20,
+        profile_id: profile.data.id,
+      },
+      {
+        headers: {
+          cookie: context.req.headers.cookie,
+        },
+      }
+    );
 
     return {
       props: {
         data: {
           ...session,
           profile: profile!,
-          user: user!,
           isAuthor: isAuthor!,
+          projects: userProjects!,
         },
       },
     };
@@ -71,10 +92,6 @@ export default function ProfileProjects({ data }: Props) {
   const { id } = router.query;
   const parsedId = Number.parseInt(id as string, 10) as number;
 
-  const [first, setfirst] = useState(1);
-  const [second, setsecond] = useState(1);
-  const [contacts, setContacts] = useState({});
-
   const [editGeneral, setEditGeneral] = useState(false);
   const [error, setError] = useState("");
 
@@ -83,28 +100,6 @@ export default function ProfileProjects({ data }: Props) {
     formState: { errors: errors2 },
     handleSubmit: handleSubmit2,
   } = useForm<FormValuesGeneral>();
-
-  useEffect(() => {
-    async function fetchProfiles() {
-      const { data } = await api.profiles.show(parsedId);
-      if (data) {
-        setsecond(data.userId);
-      }
-    }
-    fetchProfiles();
-  }, [id]);
-
-  useEffect(() => {
-    async function getSession() {
-      const { data } = await api.session.show();
-      if (data) {
-        setfirst(data.id);
-      }
-    }
-    getSession();
-  }, [id]);
-
-  const isAuthor = first && second && first === second;
 
   const handleDeleteProfile = async () => {
     api.profiles.destroy(parsedId);
@@ -194,7 +189,11 @@ export default function ProfileProjects({ data }: Props) {
                   <div className="h-full bg-white px-6">
                     <div className="flex flex-col items-center justify-center pt-12">
                       <Image
-                        src={data.user.file ? data.user.file.url : DefaultAva}
+                        src={
+                          data.profile.data.avatar
+                            ? `http://localhost:3333${data.profile.data.avatar.url}`
+                            : DefaultAva
+                        }
                         width={0}
                         height={0}
                         unoptimized
@@ -202,12 +201,12 @@ export default function ProfileProjects({ data }: Props) {
                         className="mb-3 h-[106px] w-auto rounded-md object-cover"
                       />
                       <p className="text-2xl font-semibold mb-2">
-                        {data.user.firstName} {data.user.lastName}
+                        {data.data.first_name} {data.data.last_name}
                       </p>
                       <p className=" text-sm">
                         <Input
-                          {...register2("industry")}
-                          placeholder={data.profile.industry}
+                          {...register("industry")}
+                          placeholder={data.profile.data.industry}
                         />
                       </p>
                     </div>
@@ -217,8 +216,8 @@ export default function ProfileProjects({ data }: Props) {
                         <p className="text-sm text-slate-400 mb-2">Локация</p>
                         <p className="text-sm ">
                           <Input
-                            {...register2("location")}
-                            placeholder={data.profile.location}
+                            {...register("location")}
+                            placeholder={data.profile.data.location}
                           />
                         </p>
                       </div>
@@ -226,8 +225,8 @@ export default function ProfileProjects({ data }: Props) {
                         <p className="text-sm text-slate-400 mb-2">Профессия</p>
                         <p className="text-sm">
                           <Input
-                            {...register2("title")}
-                            placeholder={data.profile.title}
+                            {...register("display_name")}
+                            placeholder={data.profile.data.display_name}
                           />
                         </p>
                       </div>
@@ -237,9 +236,9 @@ export default function ProfileProjects({ data }: Props) {
                       <p className="text-lg font-semibold">Обо мне</p>
                       <p className="pt-3 text-sm">
                         <TextArea
-                          {...register2("description")}
-                          className=" h-"
-                          placeholder={data.profile.description}
+                          {...register("description")}
+                          className=" "
+                          placeholder={data.profile.data.description}
                         />
                       </p>
                     </div>
@@ -260,13 +259,7 @@ export default function ProfileProjects({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            name="2gis"
-                            onChange={(e) => {
-                              setContacts((prev: any) => ({
-                                ...prev.contacts,
-                                "2gis": e.target.value,
-                              }));
-                            }}
+                            {...register("two_gis_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на 2ГИС"
                             minLength={1}
@@ -285,13 +278,7 @@ export default function ProfileProjects({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            name="instagram"
-                            onChange={(e) => {
-                              setContacts((prev: any) => ({
-                                ...prev.contacts,
-                                instagram: e.target.value,
-                              }));
-                            }}
+                            {...register("instagram_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на Instagram"
                             minLength={1}
@@ -310,13 +297,7 @@ export default function ProfileProjects({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            name="whatsapp"
-                            onChange={(e) => {
-                              setContacts((prev: any) => ({
-                                ...prev.contacts,
-                                whatsapp: e.target.value,
-                              }));
-                            }}
+                            {...register("whatsapp_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на WhatsApp"
                             minLength={1}
@@ -335,7 +316,7 @@ export default function ProfileProjects({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            name="website"
+                            {...register("website_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на сайт"
                             minLength={1}
@@ -358,7 +339,11 @@ export default function ProfileProjects({ data }: Props) {
                 <div className="h-full bg-white px-6">
                   <div className="flex flex-col items-center justify-center pt-12">
                     <Image
-                      src={data.user.file ? data.user.file.url : DefaultAva}
+                      src={
+                        data.profile.data.avatar
+                          ? `http://localhost:3333${data.profile.data.avatar.url}`
+                          : DefaultAva
+                      }
                       width={0}
                       height={0}
                       unoptimized
@@ -366,25 +351,29 @@ export default function ProfileProjects({ data }: Props) {
                       className="mb-3 h-[106px] w-auto rounded-md object-cover"
                     />
                     <p className="text-2xl font-semibold">
-                      {data.user.firstName} {data.user.lastName}
+                      {data.data.first_name} {data.data.last_name}
                     </p>
-                    <p className=" text-sm">{data.profile.industry}</p>
+                    <p className=" text-sm">{data.profile.data.industry}</p>
                   </div>
                   <div className="mb-6 mt-3" />
                   <div className="grid grid-cols-2 gap-y-4">
                     <div>
                       <p className="text-sm text-slate-400">Локация</p>
-                      <p className="text-sm ">{data.profile.location}</p>
+                      <p className="text-sm ">{data.profile.data.location}</p>
                     </div>
                     <div>
                       <p className="text-sm text-slate-400">Профессия</p>
-                      <p className="text-sm">{data.profile.title}</p>
+                      <p className="text-sm">
+                        {data.profile.data.display_name}
+                      </p>
                     </div>
                   </div>
                   <div className="mb-6 mt-4" />
                   <div>
                     <p className="text-lg font-semibold">Обо мне</p>
-                    <p className="pt-3 text-sm">{data.profile.description}</p>
+                    <p className="pt-3 text-sm line-clamp-2 w-auto">
+                      {data.profile.data.description}
+                    </p>
                   </div>
                   {data.isAuthor ? (
                     <div className="col-span-2">
@@ -496,30 +485,32 @@ export default function ProfileProjects({ data }: Props) {
               </div>
               <div className="p-6">
                 <div className="grid gap-5 md:grid-cols-2">
-                  <Link href="/login">
-                    <div className="grid items-center justify-center gap-4 rounded-lg border py-6 pl-6 pr-4 hover:border-black sm:grid-cols-10">
-                      <div className="sm:col-span-4 ">
-                        <Image
-                          src={Badge}
-                          className="m-auto w-[126px]"
-                          alt="test"
-                        />
-                      </div>
-                      <div className="sm:col-span-6">
-                        <div className="flex flex-col gap-1">
-                          <h1 className=" text-lg font-semibold">
-                            Кофейня-библиотека
-                          </h1>
-                          <p className=" text-sm">
-                            рестораны, кафе, бары и т.д.
-                          </p>
-                          <div className="flex items-center gap-4 text-sm text-slate-400">
-                            <p>26.06.2023</p>
+                  {data.projects.data.map((item, index) => (
+                    <Link key={index} href={`/app/projects/${item.id}`}>
+                      <div className="grid items-center justify-center gap-4 rounded-lg border py-6 pl-6 pr-4 hover:border-black sm:grid-cols-10">
+                        <div className="sm:col-span-4">
+                          <Image
+                            src={item.logo}
+                            width={0}
+                            height={0}
+                            className="m-auto w-[126px]"
+                            alt="test"
+                          />
+                        </div>
+                        <div className="sm:col-span-6">
+                          <div className="flex flex-col gap-1">
+                            <h1 className="text-lg font-semibold">
+                              {item.title}
+                            </h1>
+                            <p className="text-sm">{item.industry}</p>
+                            <div className="flex items-center gap-4 text-sm text-slate-400">
+                              <p>{item.description}</p>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </Link>
+                    </Link>
+                  ))}
                 </div>
               </div>
             </div>

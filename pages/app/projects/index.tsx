@@ -176,22 +176,21 @@ export default function All() {
                         <div className="col-span-2">
                           <div className="overflow-hidden" ref={emblaRef}>
                             <div className="flex">
-                              {/* {project.images.map((data, index) => (
-                            <div
-                              key={index}
-                              className="relative h-28 flex-[0_0_100%]"
-                            >
-                              <Image
-                                width={0}
-                                height={0}
-                                unoptimized
-                                fill
-                                className="rounded-md object-cover"
-                                src={data.url}
-                                alt="Your alt text"
-                              />
-                            </div>
-                          ))} */}
+                              <div className="relative h-28 flex-[0_0_100%]">
+                                <Image
+                                  width={0}
+                                  height={0}
+                                  unoptimized
+                                  fill
+                                  className="rounded-md object-cover"
+                                  src={
+                                    project.avatar?.url && project.avatar
+                                      ? `${process.env.NEXT_PUBLIC_FILE_DOWNLOAD}${project.avatar.url}`
+                                      : testAva
+                                  }
+                                  alt="Your alt text"
+                                />
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -217,7 +216,7 @@ export default function All() {
                               href={`/app/profiles/${project.profile_data.data.id}`}
                             >
                               <div className="flex w-fit items-center gap-4 rounded-lg bg-slate-100 p-2 hover:bg-lime-200">
-                                <Image
+                                {/* <Image
                                   src={
                                     project.profile_data?.data?.avatar
                                       ? `${process.env.NEXT_PUBLIC_FILE_DOWNLOAD}${project.profile_data.data.avatar.url}`
@@ -227,7 +226,7 @@ export default function All() {
                                   width={20}
                                   height={20}
                                   className="rounded-lg"
-                                />
+                                /> */}
                                 <p className="text-xs sm:text-sm">
                                   {project.profile_data.data.display_name}
                                 </p>

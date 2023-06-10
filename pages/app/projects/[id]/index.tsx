@@ -240,7 +240,7 @@ export default function ProjectView({ data }: Props) {
                   <p className=" text-2xl font-semibold">
                     {data.project.data.title}
                   </p>
-                  <p className=" text-sm">{data.project.data.title}</p>
+                  <p className=" text-sm">{data.project.data.industry}</p>
                 </div>
                 <Separator className="mb-6 mt-3" />
                 <div className="grid gap-3">
