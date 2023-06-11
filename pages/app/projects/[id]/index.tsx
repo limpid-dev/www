@@ -1,7 +1,10 @@
 import {
+  ArrowLeft,
   ArrowRight,
   ArrowsVertical,
   Chat,
+  DotsThreeVertical,
+  DownloadSimple,
   Files,
   FileVideo,
   Paperclip,
@@ -12,8 +15,9 @@ import { DialogClose } from "@radix-ui/react-dialog";
 import clsx from "clsx";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import api from "../../../../api";
 import { Navigation } from "../../../../components/navigation";
@@ -94,18 +98,31 @@ export const getServerSideProps = async (
     }
   );
 
-  if (project) {
-    const isAuthor = profile.data.id === project.data.profile_id;
-
-    return {
-      props: {
-        data: {
-          project: project!,
-          isAuthor: isAuthor!,
-        },
+  const { data: projectMemberShip } = await api.getProjectMembers(
+    {
+      project_id: Number.parseInt(context!.params!.id as string, 10),
+      page: 1,
+      per_page: 10,
+    },
+    {
+      headers: {
+        Cookie: context.req.headers.cookie,
       },
-    };
-  }
+    }
+  );
+
+  console.log(projectMemberShip.data);
+
+  const isAuthor = profile.data.id === project.data.profile_id;
+
+  return {
+    props: {
+      data: {
+        project: project!,
+        isAuthor: isAuthor!,
+      },
+    },
+  };
 };
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
@@ -117,7 +134,21 @@ export default function ProjectView({ data }: Props) {
   const { id } = router.query;
   const [sent, setSent] = useState(false);
   const parsedId = Number.parseInt(id as string, 10) as number;
+  const [largeScreen, setLargeScreen] = useState(false);
 
+  useEffect(() => {
+    const handleResize = () => {
+      const newScreenWidth = window.innerWidth;
+      setLargeScreen(newScreenWidth > 896);
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   const {
     register,
     handleSubmit,
@@ -148,7 +179,7 @@ export default function ProjectView({ data }: Props) {
   return (
     <div>
       <Navigation />
-      <div className="min-h-[90vh] bg-slate-50">
+      <div className=" min-h-screen bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
           <h1 className="text-sm">
             <span className="text-slate-300">Проект / </span>
@@ -158,9 +189,7 @@ export default function ProjectView({ data }: Props) {
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline md:justify-end">
             {data.isAuthor ? (
               <div className="flex gap-5">
-                <Button className="bg-slate-700 hover:bg-black">
-                  Редактировать
-                </Button>
+                <Button variant="black">Редактировать</Button>
                 <AlertDialog>
                   <AlertDialogTrigger className="rounded-lg border p-2 hover:bg-slate-100">
                     <Trash />
@@ -233,8 +262,15 @@ export default function ProjectView({ data }: Props) {
               <div className="h-full bg-white px-6">
                 <div className="flex flex-col items-center justify-center pt-12">
                   <Image
-                    src={Test}
+                    src={
+                      data.project.data.logo?.url
+                        ? `${process.env.NEXT_PUBLIC_API_URL}${data.project.data.logo.url}`
+                        : Test
+                    }
                     alt="Photo by Alvaro Pinot"
+                    width={0}
+                    unoptimized
+                    height={0}
                     className="h-[106px] w-auto rounded-md object-cover pb-6"
                   />
                   <p className=" text-2xl font-semibold">
@@ -244,13 +280,39 @@ export default function ProjectView({ data }: Props) {
                 </div>
                 <Separator className="mb-6 mt-3" />
                 <div className="grid gap-3">
-                  <Button variant="ghost" className="w-full">
-                    <div className="flex w-full items-center gap-3 text-sm font-semibold">
-                      <Files className="w-6 h-6" />
-                      Бизнес-план
-                    </div>
-                    <ArrowRight className="w-6 h-6" />
-                  </Button>
+                  <Sheet>
+                    <SheetTrigger asChild>
+                      <Button variant="ghost" className="w-full">
+                        <div className="flex w-full items-center gap-3 text-sm font-semibold">
+                          <Files className="w-6 h-6" />
+                          Бизнес-план
+                        </div>
+                        <ArrowRight className="w-6 h-6" />
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent
+                      position="right"
+                      size={largeScreen ? "default" : "full"}
+                    >
+                      <SheetHeader>
+                        <SheetTitle>Бизнес-план</SheetTitle>
+                        <Link
+                          href={
+                            data.project.data.business_plan?.url
+                              ? `${process.env.NEXT_PUBLIC_API_URL}${data.project.data.business_plan.url}`
+                              : Test
+                          }
+                        >
+                          <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-8 font-semibold hover:border-slate-700 sm:max-w-[400px]">
+                            <DownloadSimple className="h-14 w-14" />
+                            <p className="mt-3 text-center text-base sm:text-xl ">
+                              {data.project.data.title}
+                            </p>
+                          </div>
+                        </Link>
+                      </SheetHeader>
+                    </SheetContent>
+                  </Sheet>
                   <Sheet>
                     <SheetTrigger asChild>
                       <Button variant="ghost" className="w-full">
@@ -260,22 +322,29 @@ export default function ProjectView({ data }: Props) {
                         <ArrowRight className="w-6 h-6" />
                       </Button>
                     </SheetTrigger>
-                    <SheetContent position="right" size="default">
+                    <SheetContent
+                      position="right"
+                      size={largeScreen ? "default" : "full"}
+                    >
                       <SheetHeader>
                         <SheetTitle>Фото</SheetTitle>
                       </SheetHeader>
-                      <div className="m-auto mt-16 grid w-4/5 grid-cols-1 sm:grid-cols-3 gap-6">
-                        {/* {data.images.map((img, index) => (
-                          <Image
-                            key={index}
-                            className="h-auto w-auto object-cover rounded-md"
-                            width={0}
-                            height={0}
-                            unoptimized
-                            src={img.url}
-                            alt="test"
-                          />
-                        ))} */}
+                      <div className="flex w-auto flex-col items-center justify-center rounded-lg bg-white py-8 font-semibold">
+                        <Image
+                          className="h-20 w-20 object-cover rounded-md"
+                          width={0}
+                          height={0}
+                          unoptimized
+                          src={
+                            data.project.data.logo?.url
+                              ? `${process.env.NEXT_PUBLIC_API_URL}${data.project.data.logo.url}`
+                              : Test
+                          }
+                          alt="test"
+                        />
+                        <p className="mt-3 text-center text-base sm:text-xl ">
+                          {data.project.data.title}
+                        </p>
                       </div>
                       <Separator className="my-7" />
                       <p>Видео</p>
@@ -286,18 +355,16 @@ export default function ProjectView({ data }: Props) {
                     </SheetContent>
                   </Sheet>
 
-                  {data.activeMember && (
-                    <Button
-                      variant="ghost"
-                      className="w-full"
-                      onClick={handleClick}
-                    >
-                      <div className="flex w-full items-center gap-3 text-sm font-semibold">
-                        <Chat className="w-6 h-6" /> Обсуждение проекта
-                      </div>
-                      <ArrowRight className="w-6 h-6" />
-                    </Button>
-                  )}
+                  <Button
+                    variant="ghost"
+                    className="w-full"
+                    onClick={handleClick}
+                  >
+                    <div className="flex w-full items-center gap-3 text-sm font-semibold">
+                      <Chat className="w-6 h-6" /> Обсуждение проекта
+                    </div>
+                    <ArrowRight className="w-6 h-6" />
+                  </Button>
                 </div>
                 <div />
               </div>
@@ -392,17 +459,19 @@ export default function ProjectView({ data }: Props) {
                 <div>
                   <div className="flex items-center justify-between bg-slate-100 p-3">
                     <Button
-                      variant="ghost"
+                      variant="subtle"
                       className="px-2"
                       onClick={handleClick}
                     >
-                      <TagChevron />
+                      <ArrowLeft className="w-5 h-5" />
                     </Button>
                     <p className="text-lg font-semibold">Обсуждение проекта</p>
 
                     <DropdownMenu>
-                      <DropdownMenuTrigger className="flex items-center gap-1 rounded-lg p-2 text-sm font-medium hover:bg-slate-100">
-                        <ArrowsVertical />
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="subtle">
+                          <DotsThreeVertical className="w-5 h-5" />
+                        </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
                         <Dialog>
@@ -413,11 +482,11 @@ export default function ProjectView({ data }: Props) {
                             <DialogHeader>
                               <DialogTitle>Участники Обсуждения</DialogTitle>
                             </DialogHeader>
-                            {data.membershipData.map((member) => (
+                            {/* {data.membershipData.map((member) => (
                               <div key={member.id}>
                                 <p>{member.profile.title}</p>
                               </div>
-                            ))}
+                            ))} */}
                           </DialogContent>
                         </Dialog>
                       </DropdownMenuContent>
@@ -471,13 +540,10 @@ export default function ProjectView({ data }: Props) {
                       </div> */}
                     </div>
                   </ScrollArea>
-                  <div className="flex items-center justify-around px-6 pb-3">
-                    <TextArea
-                      placeholder="Сообщение"
-                      className="h-10 w-[90%]"
-                    />
-                    <Button variant="outline" className="bg-slate-100">
-                      <Paperclip />
+                  <div className="flex items-center justify-around px-6 pb-3 gap-2">
+                    <TextArea placeholder="Сообщение" className="max-h-11" />
+                    <Button variant="outline" className="bg-slate-100 ">
+                      <Paperclip className="h-5 w-5" />
                     </Button>
                   </div>
                 </div>

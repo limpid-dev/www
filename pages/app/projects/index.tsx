@@ -13,6 +13,14 @@ import { GeneralLayout } from "../../../components/general-layout";
 import { Navigation } from "../../../components/navigation";
 import Pagination from "../../../components/pagination";
 import { Button } from "../../../components/primitives/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../../../components/primitives/dialog";
 import { Options } from "../../../components/primitives/options";
 import {
   Popover,
@@ -45,6 +53,7 @@ export default function All() {
   const [totalItems, setTotalItems] = useState<any>(1);
   const [data, setData] = useState<any>();
   const [loading, setLoading] = useState(true);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const OPTIONS: EmblaOptionsType = { align: "center", loop: true };
   const [emblaRef] = useEmblaCarousel(OPTIONS, [Autoplay()]);
@@ -63,7 +72,26 @@ export default function All() {
       per_page: 6,
       search: searchTerm,
     });
-    setData(data.data);
+
+    const profileDataArray = await Promise.all(
+      data.data.map(async (project) => {
+        const { data: sessionData } = await api.getProfileById(
+          project.profile_id
+        );
+        return { ...project, profile_data: sessionData };
+      })
+    );
+
+    setData(profileDataArray);
+  };
+
+  const handleRoute = async (project_id) => {
+    const { data } = await api.getUser();
+    if (data.data.selected_profile_id) {
+      router.push(`/app/projects/${project_id}`);
+    } else {
+      setOpenDialog(true);
+    }
   };
 
   useEffect(() => {
@@ -79,6 +107,7 @@ export default function All() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
   useEffect(() => {
     async function fetchProjects() {
       const { data } = await api.getProjects({
@@ -105,6 +134,33 @@ export default function All() {
   return (
     <>
       <Navigation />
+      <div className="hidden">
+        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+          <DialogTrigger />
+          <DialogContent className="sm:max-w-[425px] p-10">
+            <DialogHeader>
+              <DialogTitle className="text-center">
+                У вас нет профиля
+              </DialogTitle>
+              <DialogDescription>
+                Вам необходим профиль для участия в проектах
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <Button
+                onClick={() => {
+                  router.push("/app/profiles/create");
+                }}
+                variant="black"
+                type="reset"
+                className="w-full"
+              >
+                Создать профиль
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
       <GeneralLayout>
         <p className="text-sm text-slate-300">Проекты</p>
         <div className="my-5 flex flex-col items-end justify-end gap-4 md:mb-12 md:flex-row md:items-center md:justify-between">
@@ -273,7 +329,12 @@ export default function All() {
           <>
             <div className="grid gap-6 sm:grid-cols-2">
               {data.map((project, projectIndex) => (
-                <Link key={projectIndex} href={`/app/projects/${project.id}`}>
+                <div
+                  key={projectIndex}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => handleRoute(project.id)}
+                >
                   <div className=" rounded-2xl border border-slate-200 bg-white hover:border-black">
                     <div className="p-4">
                       <div className="grid w-full grid-cols-10 gap-4">
@@ -288,8 +349,8 @@ export default function All() {
                                   fill
                                   className="rounded-md object-cover"
                                   src={
-                                    project.avatar?.url && project.avatar
-                                      ? `${process.env.NEXT_PUBLIC_API_URL}${project.avatar.url}`
+                                    project.logo?.url && project.logo.url
+                                      ? `${process.env.NEXT_PUBLIC_API_URL}${project.logo.url}`
                                       : testAva
                                   }
                                   alt="Your alt text"
@@ -341,9 +402,10 @@ export default function All() {
                       </div>
                     </div>
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
+
             <Pagination
               renderPageLink={(page) => `/app/projects/?page=${page}`}
               itemsPerPage={6}

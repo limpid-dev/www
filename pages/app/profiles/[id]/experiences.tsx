@@ -33,7 +33,13 @@ interface FormValuesGeneral {
   industry: string;
   location: string;
   description: string;
-  title: string;
+  display_name: string;
+  avatar?: File;
+  instagram_url: string;
+  whatsapp_url: string;
+  website_url: string;
+  telegram_url: string;
+  two_gis_url: string;
 }
 
 export const getServerSideProps = async (
@@ -81,7 +87,7 @@ export const getServerSideProps = async (
         finished_at: dateFormatter(item.finished_at),
       };
     });
-
+    console.log(updatedItems);
     return {
       props: {
         data: {
@@ -127,7 +133,6 @@ export default function Education({ data }: Props) {
   ];
 
   const [isAdd, setIsAdd] = useState(true);
-  const [contacts, setContacts] = useState({});
 
   const {
     register,
@@ -136,18 +141,24 @@ export default function Education({ data }: Props) {
   } = useForm<FormValuesGeneral>();
   const [error, setError] = useState("");
 
-  const [editGeneral, setEditGeneral] = useState(false);
-  const editGeneralInfo = () => {
-    setEditGeneral((current: boolean) => !current);
-  };
+  const {
+    register: register2,
+    formState: { errors: errors2 },
+    handleSubmit: handleSubmit2,
+  } = useForm<FormValuesGeneral>();
 
-  const onSubmit = async (data1: FormValuesGeneral) => {
+  const onSubmit2 = async (data1: FormValuesGeneral) => {
     try {
-      const { data } = await api.profiles.update(parsedId, data1);
+      const { data } = await api.updateProfile(parsedId, data1);
       router.reload();
     } catch (error) {
       setError("Что то пошло не так, попробуйте позже");
     }
+  };
+
+  const [editGeneral, setEditGeneral] = useState(false);
+  const editGeneralInfo = () => {
+    setEditGeneral((current: boolean) => !current);
   };
 
   const handleSelectChange = (event: any) => {
@@ -159,20 +170,30 @@ export default function Education({ data }: Props) {
     setIsAdd((current: boolean) => !current);
   };
 
-  const handleDeleteProfile = () => {
-    api.profiles.destroy(parsedId);
+  const handleDeleteProfile = async () => {
+    await api.deleteProfile(parsedId);
+
+    await router.push({
+      pathname: "/app/profiles/my",
+    });
   };
 
-  const handleDelete = (itemId: any) => {
-    api.educations.destroy(parsedId, itemId);
-    router.reload();
+  const handleDelete = async (experienceId: number) => {
+    try {
+      await api.deleteExperience({
+        path: { profile_id: parsedId, experience_id: experienceId },
+      });
+      await router.reload();
+    } catch (error_) {
+      console.error("Failed to delete experience:", error_);
+    }
   };
 
   return (
     <div>
       <Navigation />
 
-      <div className=" min-h-[90vh] bg-slate-50 px-5 pt-8">
+      <div className=" min-h-screen bg-slate-50 px-5 pt-8">
         <div className="mx-auto max-w-screen-xl">
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
             {data.isAuthor ? (
@@ -207,7 +228,7 @@ export default function Education({ data }: Props) {
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-10 ">
             <div className="rounded-lg border sm:col-span-3">
               {editGeneral ? (
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit2(onSubmit2)}>
                   <div className="h-full bg-white px-6">
                     <div className="flex flex-col items-center justify-center pt-12">
                       <Image
@@ -227,7 +248,7 @@ export default function Education({ data }: Props) {
                       </p>
                       <p className=" text-sm">
                         <Input
-                          {...register("industry")}
+                          {...register2("industry")}
                           placeholder={data.profile.data.industry}
                         />
                       </p>
@@ -238,7 +259,7 @@ export default function Education({ data }: Props) {
                         <p className="text-sm text-slate-400 mb-2">Локация</p>
                         <p className="text-sm ">
                           <Input
-                            {...register("location")}
+                            {...register2("location")}
                             placeholder={data.profile.data.location}
                           />
                         </p>
@@ -247,7 +268,7 @@ export default function Education({ data }: Props) {
                         <p className="text-sm text-slate-400 mb-2">Профессия</p>
                         <p className="text-sm">
                           <Input
-                            {...register("display_name")}
+                            {...register2("display_name")}
                             placeholder={data.profile.data.display_name}
                           />
                         </p>
@@ -258,7 +279,7 @@ export default function Education({ data }: Props) {
                       <p className="text-lg font-semibold">Обо мне</p>
                       <p className="pt-3 text-sm">
                         <TextArea
-                          {...register("description")}
+                          {...register2("description")}
                           className=" h-"
                           placeholder={data.profile.data.description}
                         />
@@ -281,7 +302,7 @@ export default function Education({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            {...register("two_gis_url")}
+                            {...register2("two_gis_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на 2ГИС"
                             minLength={1}
@@ -300,7 +321,7 @@ export default function Education({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            {...register("instagram_url")}
+                            {...register2("instagram_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на Instagram"
                             minLength={1}
@@ -319,7 +340,7 @@ export default function Education({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            {...register("whatsapp_url")}
+                            {...register2("whatsapp_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на WhatsApp"
                             minLength={1}
@@ -338,7 +359,7 @@ export default function Education({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            {...register("website_url")}
+                            {...register2("website_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на сайт"
                             minLength={1}
@@ -393,7 +414,7 @@ export default function Education({ data }: Props) {
                   <div className="mb-6 mt-4" />
                   <div>
                     <p className="text-lg font-semibold">Обо мне</p>
-                    <p className="pt-3 text-sm line-clamp-2 w-auto">
+                    <p className="pt-3 text-sm">
                       {data.profile.data.description}
                     </p>
                   </div>
@@ -418,38 +439,76 @@ export default function Education({ data }: Props) {
                       Социальные сети
                     </p>
                     <div className="flex gap-6 pb-5">
-                      <Image
-                        width={24}
-                        height={24}
-                        alt=""
-                        unoptimized
-                        quality={100}
-                        src="/2gis.png"
-                      />
-                      <Image
-                        width={24}
-                        height={24}
-                        alt=""
-                        unoptimized
-                        quality={100}
-                        src="/instagram.png"
-                      />
-                      <Image
-                        width={24}
-                        height={24}
-                        alt=""
-                        unoptimized
-                        quality={100}
-                        src="/whatsapp.png"
-                      />
-                      <Image
-                        width={24}
-                        height={24}
-                        alt=""
-                        unoptimized
-                        quality={100}
-                        src="/website.png"
-                      />
+                      {data.profile.data.two_gis_url !== null ? (
+                        <Link href={data.profile.data.two_gis_url}>
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/2gis.png"
+                          />
+                        </Link>
+                      ) : (
+                        ""
+                      )}
+                      {data.profile.data.instagram_url !== null ? (
+                        <Link href={data.profile.data.instagram_url}>
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/instagram.png"
+                          />
+                        </Link>
+                      ) : (
+                        ""
+                      )}
+                      {data.profile.data.website_url !== null ? (
+                        <Link href={data.profile.data.whatsapp_url}>
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/whatsapp.png"
+                          />
+                        </Link>
+                      ) : (
+                        ""
+                      )}
+                      {data.profile.data.telegram_url !== null ? (
+                        <Link href={data.profile.data.telegram_url}>
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/telegram.png"
+                          />
+                        </Link>
+                      ) : (
+                        ""
+                      )}
+                      {data.profile.data.website_url !== null ? (
+                        <Link href={data.profile.data.website_url}>
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/website.png"
+                          />
+                        </Link>
+                      ) : (
+                        ""
+                      )}
                     </div>
                   </div>
                 </div>
@@ -462,7 +521,6 @@ export default function Education({ data }: Props) {
                   <label htmlFor="tabs" className="sr-only">
                     Select a tab
                   </label>
-                  {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
                   <select
                     onChange={handleSelectChange}
                     id="tabs"
@@ -520,16 +578,16 @@ export default function Education({ data }: Props) {
                         <div className="grid sm:grid-cols-10 grid-cols-1 gap-y-5">
                           <div className="col-span-3 flex gap-5">
                             <div className=" text-lg font-semibold">
-                              {item.startedAt}
+                              {item.started_at}
                             </div>
                             <>-</>
                             <div className=" text-lg font-semibold">
-                              {item.finishedAt}
+                              {item.finished_at}
                             </div>
                           </div>
                           <div className="col-span-5">
                             <p className=" text-lg font-semibold">
-                              {item.company}
+                              {item.institution}
                             </p>
                             <p className=" text-sm font-semibold">
                               {item.title}

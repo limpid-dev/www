@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { FormEvent, useState } from "react";
-import api from "../api";
+import api, { AxiosError } from "../api";
 import { AuthLayout } from "../components/auth-layout";
 import {
   Field,
@@ -40,13 +40,25 @@ export default function Recovery() {
       email: string;
     };
 
-    await api.recoverPassword({
-      email: values.email,
-    });
+    try {
+      await api.recoverPassword({
+        email: values.email,
+      });
 
-    await router.push({
-      pathname: "/recovery-pass",
-    });
+      await router.push({
+        pathname: "/recovery-pass",
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        const status = (error as AxiosError).response?.status;
+        if (status === 422) {
+          setErrors((prev) => ({
+            ...prev,
+            email: true,
+          }));
+        }
+      }
+    }
   };
 
   const { t } = useTranslation("common");

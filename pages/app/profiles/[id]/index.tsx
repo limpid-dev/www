@@ -138,12 +138,6 @@ export default function OneProfile({ data }: Props) {
     formState: { errors },
   } = useForm<FormValues>();
 
-  const {
-    register: register2,
-    formState: { errors: errors2 },
-    handleSubmit: handleSubmit2,
-  } = useForm<FormValuesGeneral>();
-
   const onSubmit = async (data1: FormValues) => {
     try {
       const { data } = await api.updateProfile(Number.parseInt(id, 10), data1);
@@ -152,6 +146,12 @@ export default function OneProfile({ data }: Props) {
       setError("Что то пошло не так, попробуйте позже");
     }
   };
+
+  const {
+    register: register2,
+    formState: { errors: errors2 },
+    handleSubmit: handleSubmit2,
+  } = useForm<FormValuesGeneral>();
 
   const onSubmit2 = async (data1: FormValuesGeneral) => {
     try {

@@ -44,10 +44,13 @@ export function ExperienceCreate({ profileId, isAddHandler }: any) {
     if (Number.isNaN(parsedId)) return;
 
     async function fetchEducation() {
-      const { data } = await api.experiences.show(profileId, parsedId);
-      if (data) {
-        setValue(`experiences.0.title`, data.title);
-        setValue(`experiences.0.company`, data.company);
+      const { data } = await api.getExperience({
+        profile_id: profileId,
+        experience_id: parsedId,
+      });
+      if (data.data) {
+        setValue(`experiences.0.title`, data.data.title);
+        setValue(`experiences.0.company`, data.data.institution);
         setValue(`experiences.0.description`, data.description);
         setValue(
           `experiences.0.startedAt`,

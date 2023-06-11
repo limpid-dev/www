@@ -186,6 +186,7 @@ class APIClient {
     );
   }
 
+  //Certificates
   async getCertificates(
     params: paths["/profiles/{profile_id}/certificates"]["get"]["parameters"],
     config?: AxiosRequestConfig
@@ -204,6 +205,34 @@ class APIClient {
       ...config,
       params: queryParams,
     });
+  }
+
+  // Profiles Certificates
+  async createCertificate(
+    profile_id: number,
+    certificateData: paths["/profiles/{profile_id}/certificates"]["post"]["requestBody"]["content"]["multipart/form-data"]
+  ): Promise<AxiosResponse<{ data: components["schemas"]["Certificate"] }>> {
+    const f = new FormData();
+    f.append("institution", certificateData.institution);
+    f.append("title", certificateData.title);
+    f.append("description", certificateData.description);
+    f.append("issued_at", certificateData.issued_at);
+    if (certificateData.expired_at) {
+      f.append("expired_at", certificateData.expired_at);
+    }
+    f.append("attachment", certificateData.attachment);
+    return this.axiosInstance.post(`/profiles/${profile_id}/certificates`, f);
+  }
+
+  async deleteCertificate(
+    params: paths["/profiles/{profile_id}/certificates/{certificate_id}"]["delete"]["parameters"]["path"],
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse<void>> {
+    const { profile_id, certificate_id } = params;
+    return this.axiosInstance.delete(
+      `/profiles/${profile_id}/certificates/${certificate_id}`,
+      config
+    );
   }
 
   //Profile skills
@@ -251,33 +280,6 @@ class APIClient {
     );
   }
 
-  // Profiles Certificates
-  async createCertificate(
-    profile_id: number,
-    certificateData: paths["/profiles/{profile_id}/certificates"]["post"]["requestBody"]["content"]["multipart/form-data"]
-  ): Promise<AxiosResponse<{ data: components["schemas"]["Certificate"] }>> {
-    const f = new FormData();
-    f.append("institution", certificateData.institution);
-    f.append("title", certificateData.title);
-    f.append("description", certificateData.description);
-    f.append("issued_at", certificateData.issued_at);
-    if (certificateData.expired_at) {
-      f.append("expired_at", certificateData.expired_at);
-    }
-    f.append("attachment", certificateData.attachment);
-    return this.axiosInstance.post(`/profiles/${profile_id}/certificates`, f);
-  }
-
-  async createExperience(
-    profile_id: number,
-    educationData: paths["/profiles/{profile_id}/experiences"]["post"]["requestBody"]["content"]["multipart/form-data"]
-  ): Promise<AxiosResponse<{ data: components["schemas"]["Education"] }>> {
-    return this.axiosInstance.post(
-      `/profiles/${profile_id}/experiences`,
-      educationData
-    );
-  }
-
   //Profiles experiences
   async getExperiences(
     profile_id: number,
@@ -295,13 +297,36 @@ class APIClient {
     });
   }
 
-  // Projects
-  async createProject(
-    data: paths["/projects"]["post"]["requestBody"]["content"]["multipart/form-data"]
-  ): Promise<AxiosResponse<{ data: components["schemas"]["Project"] }>> {
-    return this.axiosInstance.post(`/projects`, data);
+  async createExperience(
+    profile_id: number,
+    educationData: paths["/profiles/{profile_id}/experiences"]["post"]["requestBody"]["content"]["multipart/form-data"]
+  ): Promise<AxiosResponse<{ data: components["schemas"]["Education"] }>> {
+    return this.axiosInstance.post(
+      `/profiles/${profile_id}/experiences`,
+      educationData
+    );
   }
 
+  async getExperience(
+    params: paths["/profiles/{profile_id}/experiences/{experience_id}"]["get"]["parameters"]["path"]
+  ): Promise<AxiosResponse<{ data?: components["schemas"]["Experience"] }>> {
+    const { profile_id, experience_id } = params;
+    const response = await axios.get(
+      `/profiles/${profile_id}/experiences/${experience_id}`
+    );
+    return response;
+  }
+
+  async deleteExperience(
+    params: paths["/profiles/{profile_id}/experiences/{experience_id}"]["delete"]["parameters"]
+  ): Promise<AxiosResponse<void>> {
+    const {
+      path: { profile_id, experience_id },
+    } = params;
+    return axios.delete(`/profiles/${profile_id}/experiences/${experience_id}`);
+  }
+
+  // Projects
   async getProjects(
     params?: paths["/projects"]["get"]["parameters"]["query"],
     config?: AxiosRequestConfig
@@ -318,6 +343,12 @@ class APIClient {
   }
 
   // Project
+  async createProject(
+    data: paths["/projects"]["post"]["requestBody"]["content"]["multipart/form-data"]
+  ): Promise<AxiosResponse<{ data: components["schemas"]["Project"] }>> {
+    return this.axiosInstance.post(`/projects`, data);
+  }
+
   async getProject(
     project_id: number,
     config?: AxiosRequestConfig
@@ -354,7 +385,35 @@ class APIClient {
     );
   }
 
+  async getProjectMembers(
+    params: paths["/projects/{project_id}/members"]["get"]["parameters"]["path"] &
+      paths["/projects/{project_id}/members"]["get"]["parameters"]["query"],
+    config?: AxiosRequestConfig
+  ): Promise<
+    AxiosResponse<{
+      meta: components["schemas"]["Pagination"];
+      data: components["schemas"]["ProjectMember"][];
+    }>
+  > {
+    const { project_id, ...queryParams } = params;
+    return this.axiosInstance.get(`/projects/${project_id}/members`, {
+      params: queryParams,
+      ...config,
+    });
+  }
+
   // Chats
+  async createChat(
+    requestBody: paths["/chats"]["post"]["requestBody"]["content"]["multipart/form-data"],
+    config?: AxiosRequestConfig
+  ): Promise<
+    AxiosResponse<{
+      data?: components["schemas"]["Chat"];
+    }>
+  > {
+    return this.axiosInstance.post("/chats", requestBody, config);
+  }
+
   async getChats(
     params?: paths["/chats"]["get"]["parameters"]["query"],
     config?: AxiosRequestConfig
@@ -368,17 +427,6 @@ class APIClient {
       params,
       ...config,
     });
-  }
-
-  async createChat(
-    requestBody: paths["/chats"]["post"]["requestBody"]["content"]["multipart/form-data"],
-    config?: AxiosRequestConfig
-  ): Promise<
-    AxiosResponse<{
-      data?: components["schemas"]["Chat"];
-    }>
-  > {
-    return this.axiosInstance.post("/chats", requestBody, config);
   }
 }
 

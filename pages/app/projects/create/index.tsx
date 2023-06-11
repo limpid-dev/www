@@ -35,7 +35,6 @@ interface FormValues {
 
 export default function Create() {
   const router = useRouter();
-  const { toast } = useToast();
 
   const {
     register,
@@ -47,11 +46,7 @@ export default function Create() {
   const onSubmit = async (post: FormValues) => {
     const { data } = await api.createProject(post);
 
-    if (data) {
-      toast({
-        title: "API Call Success",
-        description: "The API call was successful!",
-      });
+    if (data.data.id) {
       await router.push({
         pathname: "/app/projects/create/files",
         query: { projectId: data.data.id },
@@ -126,7 +121,7 @@ export default function Create() {
                       />
                       {errors.location && (
                         <span className="text-sm text-red-600 ml-2">
-                          Введите название проекта
+                          Введите локацию вашей деятельности
                         </span>
                       )}
                     </div>

@@ -40,7 +40,7 @@ export const getServerSideProps = async (
     },
   });
 
-  if (session) {
+  if (session.data.selected_profile_id) {
     const { data: projects } = await api.getProjects(
       {
         page: 1,
@@ -62,6 +62,13 @@ export const getServerSideProps = async (
       },
     };
   }
+  return {
+    props: {
+      data: {
+        projects: null,
+      },
+    },
+  };
 };
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
@@ -86,6 +93,33 @@ export default function All({ data }: Props) {
   return (
     <div>
       <Navigation />
+      <div className="hidden">
+        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+          <DialogTrigger />
+          <DialogContent className="sm:max-w-[425px] p-10">
+            <DialogHeader>
+              <DialogTitle className="text-center">
+                У вас нет профиля
+              </DialogTitle>
+              <DialogDescription>
+                Для создания проекта, вам необходим профиль
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <Button
+                onClick={() => {
+                  router.push("/app/profiles/create");
+                }}
+                variant="black"
+                type="reset"
+                className="w-full"
+              >
+                Создать профиль
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
       <div className="h-[90vh] bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
           <p className=" text-sm text-slate-300">Мои проекты</p>
@@ -137,7 +171,7 @@ export default function All({ data }: Props) {
             </Button>
           </div>
 
-          {data.projects.data.length > 0 ? (
+          {data.projects?.data.length > 0 || data.projects !== null ? (
             <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
               {data.projects.data.map((project, projectIndex) => (
                 <Link key={projectIndex} href={`/app/projects/${project.id}`}>
@@ -169,29 +203,6 @@ export default function All({ data }: Props) {
           )}
         </div>
       </div>
-      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-        <DialogTrigger />
-        <DialogContent className="sm:max-w-[425px] p-10">
-          <DialogHeader>
-            <DialogTitle className="text-center">У вас нет профиля</DialogTitle>
-            <DialogDescription>
-              Для создания проекта, вам необходим профиль
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <Button
-              onClick={() => {
-                router.push("/app/profiles/create");
-              }}
-              variant="black"
-              type="reset"
-              className="w-full"
-            >
-              Создать профиль
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

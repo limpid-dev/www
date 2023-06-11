@@ -62,8 +62,6 @@ export default function Profiles() {
   const currentPage =
     (Number.parseInt(router.query.page as string, 10) as number) || 1;
 
-  const [largeScreen, setLargeScreen] = useState(false);
-
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearch = async () => {
@@ -74,6 +72,7 @@ export default function Profiles() {
     });
     setProfilesData(data.data);
   };
+  const [largeScreen, setLargeScreen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {

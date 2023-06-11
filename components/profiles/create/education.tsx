@@ -48,20 +48,22 @@ export function EducationCreate({ profileId, isAddHandler }: any) {
           data.education[0]
         );
         await router.push({
-          pathname: `/app/profiles/${profileId}/education`,
+          pathname: `/app/profiles/${profileId}/educations`,
           query: {},
         });
-        router.reload();
+        isAddHandler(false);
       } else {
-        data.education.forEach(async (post) => {
-          const { data } = await api.createEducation(profileId, post);
-        });
-        if (data) {
-          router.reload();
-        }
+        await Promise.all(
+          data.education.map(async (post) => {
+            const { data } = await api.createEducation(profileId, post);
+            return data;
+          })
+        );
+
+        await router.reload();
       }
     } catch (error) {
-      setError("Что то пошло не так, попробуйте позже");
+      setError("Что-то пошло не так, попробуйте позже");
     }
   };
 

@@ -12,7 +12,9 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
 
-  images: { domains: ["object.pscloud.io"] },
+  // images: { domains: ["object.pscloud.io"] },
+  images: { domains: ["127.0.0.1"] },
+
   async rewrites() {
     return [
       // {

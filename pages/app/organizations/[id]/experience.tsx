@@ -3,7 +3,6 @@ import clsx from "clsx";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import api from "../../../../api";
-import { Entity } from "../../../../api/profile-experiences";
 import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";
 import { ExperienceCreate } from "../../../../components/profiles/create/experience";
@@ -62,11 +61,6 @@ export default function One() {
       href: `/app/profiles/${id}/certification`,
       current: false,
     },
-    // {
-    //   name: "Проекты",
-    //   href: `/app/profiles/${id}/projects`,
-    //   current: false,
-    // },
     {
       name: "Опыт работы",
       href: `/app/profiles/${id}/experience`,

@@ -134,14 +134,13 @@ export default function Education({ data }: Props) {
     formState: { errors },
     handleSubmit,
   } = useForm<FormValuesGeneral>();
-  const [error, setError] = useState("");
 
   const onSubmit = async (data1: FormValuesGeneral) => {
     try {
-      await api.updateProfile(parsedId, data1);
+      const { data } = await api.updateProfile(parsedId, data1);
       router.reload();
     } catch (error) {
-      setError("Что то пошло не так, попробуйте позже");
+      console.error("Что то пошло не так, попробуйте позже");
     }
   };
 
@@ -399,7 +398,7 @@ export default function Education({ data }: Props) {
                   <div className="mb-6 mt-4" />
                   <div>
                     <p className="text-lg font-semibold">Обо мне</p>
-                    <p className="pt-3 text-sm line-clamp-2 w-auto">
+                    <p className="pt-3 text-sm">
                       {data.profile.data.description}
                     </p>
                   </div>
@@ -424,38 +423,76 @@ export default function Education({ data }: Props) {
                       Социальные сети
                     </p>
                     <div className="flex gap-6 pb-5">
-                      <Image
-                        width={24}
-                        height={24}
-                        alt=""
-                        unoptimized
-                        quality={100}
-                        src="/2gis.png"
-                      />
-                      <Image
-                        width={24}
-                        height={24}
-                        alt=""
-                        unoptimized
-                        quality={100}
-                        src="/instagram.png"
-                      />
-                      <Image
-                        width={24}
-                        height={24}
-                        alt=""
-                        unoptimized
-                        quality={100}
-                        src="/whatsapp.png"
-                      />
-                      <Image
-                        width={24}
-                        height={24}
-                        alt=""
-                        unoptimized
-                        quality={100}
-                        src="/website.png"
-                      />
+                      {data.profile.data.two_gis_url !== null ? (
+                        <Link href={data.profile.data.two_gis_url}>
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/2gis.png"
+                          />
+                        </Link>
+                      ) : (
+                        ""
+                      )}
+                      {data.profile.data.instagram_url !== null ? (
+                        <Link href={data.profile.data.instagram_url}>
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/instagram.png"
+                          />
+                        </Link>
+                      ) : (
+                        ""
+                      )}
+                      {data.profile.data.website_url !== null ? (
+                        <Link href={data.profile.data.whatsapp_url}>
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/whatsapp.png"
+                          />
+                        </Link>
+                      ) : (
+                        ""
+                      )}
+                      {data.profile.data.telegram_url !== null ? (
+                        <Link href={data.profile.data.telegram_url}>
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/telegram.png"
+                          />
+                        </Link>
+                      ) : (
+                        ""
+                      )}
+                      {data.profile.data.website_url !== null ? (
+                        <Link href={data.profile.data.website_url}>
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/website.png"
+                          />
+                        </Link>
+                      ) : (
+                        ""
+                      )}
                     </div>
                   </div>
                 </div>

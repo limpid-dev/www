@@ -19,7 +19,6 @@ interface CertificationValues {
 
 export function CertificationCreate({ certificateAdd, profileId }: any) {
   const [error, setError] = useState("");
-  const [fileDashboardOpen, setFileDashboardOpen] = useState(false);
   const router = useRouter();
 
   const {
@@ -55,7 +54,7 @@ export function CertificationCreate({ certificateAdd, profileId }: any) {
           attachment: data.attachment[0],
         });
       });
-      router.reload();
+      await router.reload();
     } catch (error) {
       setError("Что то пошло не так, попробуйте позже");
     }

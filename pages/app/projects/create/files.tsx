@@ -14,8 +14,6 @@ interface FormValues {
   business_plan?: FileList;
 }
 export default function Create() {
-  const [error, setError] = useState("");
-  const [tab, setTab] = useState("general");
   const router = useRouter();
   const { projectId } = router.query;
   const parsedProjectId = Number.parseInt(projectId as string, 10) as number;
@@ -27,11 +25,17 @@ export default function Create() {
   } = useForm<FormValues>({});
 
   const onSubmit = async (data1: FormValues) => {
+    console.log(data1);
     const { data } = await api.updateProject(
       { project_id: parsedProjectId },
-      data1
+      {
+        logo: data1.logo[0],
+        video_introduction: data1.video_introduction[0],
+        presentation: data1.presentation[0],
+        business_plan: data1.business_plan[0],
+      }
     );
-    if (data) {
+    if (data.data?.id) {
       await router.push(`/app/projects/${parsedProjectId}`);
     }
   };

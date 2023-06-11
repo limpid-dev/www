@@ -190,8 +190,8 @@ export default function ProfileProjects({ data }: Props) {
                     <div className="flex flex-col items-center justify-center pt-12">
                       <Image
                         src={
-                          data.profile.data.avatar
-                            ? `/api/${data.profile.data.avatar.url}`
+                          data.profile.data.avatar?.url
+                            ? `${process.env.NEXT_PUBLIC_API_URL}${data.profile.data.avatar.url}`
                             : DefaultAva
                         }
                         width={0}
@@ -205,7 +205,7 @@ export default function ProfileProjects({ data }: Props) {
                       </p>
                       <p className=" text-sm">
                         <Input
-                          {...register("industry")}
+                          {...register2("industry")}
                           placeholder={data.profile.data.industry}
                         />
                       </p>
@@ -216,7 +216,7 @@ export default function ProfileProjects({ data }: Props) {
                         <p className="text-sm text-slate-400 mb-2">Локация</p>
                         <p className="text-sm ">
                           <Input
-                            {...register("location")}
+                            {...register2("location")}
                             placeholder={data.profile.data.location}
                           />
                         </p>
@@ -225,7 +225,7 @@ export default function ProfileProjects({ data }: Props) {
                         <p className="text-sm text-slate-400 mb-2">Профессия</p>
                         <p className="text-sm">
                           <Input
-                            {...register("display_name")}
+                            {...register2("display_name")}
                             placeholder={data.profile.data.display_name}
                           />
                         </p>
@@ -236,8 +236,8 @@ export default function ProfileProjects({ data }: Props) {
                       <p className="text-lg font-semibold">Обо мне</p>
                       <p className="pt-3 text-sm">
                         <TextArea
-                          {...register("description")}
-                          className=" "
+                          {...register2("description")}
+                          className=" h-"
                           placeholder={data.profile.data.description}
                         />
                       </p>
@@ -259,7 +259,7 @@ export default function ProfileProjects({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            {...register("two_gis_url")}
+                            {...register2("two_gis_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на 2ГИС"
                             minLength={1}
@@ -278,7 +278,7 @@ export default function ProfileProjects({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            {...register("instagram_url")}
+                            {...register2("instagram_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на Instagram"
                             minLength={1}
@@ -297,7 +297,7 @@ export default function ProfileProjects({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            {...register("whatsapp_url")}
+                            {...register2("whatsapp_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на WhatsApp"
                             minLength={1}
@@ -316,7 +316,7 @@ export default function ProfileProjects({ data }: Props) {
                           />
                           <Input
                             type="url"
-                            {...register("website_url")}
+                            {...register2("website_url")}
                             className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
                             placeholder="Ссылка на сайт"
                             minLength={1}
@@ -340,8 +340,8 @@ export default function ProfileProjects({ data }: Props) {
                   <div className="flex flex-col items-center justify-center pt-12">
                     <Image
                       src={
-                        data.profile.data.avatar
-                          ? `/api/${data.profile.data.avatar.url}`
+                        data.profile.data.avatar?.url
+                          ? `${process.env.NEXT_PUBLIC_API_URL}${data.profile.data.avatar.url}`
                           : DefaultAva
                       }
                       width={0}
@@ -371,7 +371,7 @@ export default function ProfileProjects({ data }: Props) {
                   <div className="mb-6 mt-4" />
                   <div>
                     <p className="text-lg font-semibold">Обо мне</p>
-                    <p className="pt-3 text-sm line-clamp-2 w-auto">
+                    <p className="pt-3 text-sm">
                       {data.profile.data.description}
                     </p>
                   </div>
@@ -396,38 +396,76 @@ export default function ProfileProjects({ data }: Props) {
                       Социальные сети
                     </p>
                     <div className="flex gap-6 pb-5">
-                      <Image
-                        width={24}
-                        height={24}
-                        alt=""
-                        unoptimized
-                        quality={100}
-                        src="/2gis.png"
-                      />
-                      <Image
-                        width={24}
-                        height={24}
-                        alt=""
-                        unoptimized
-                        quality={100}
-                        src="/instagram.png"
-                      />
-                      <Image
-                        width={24}
-                        height={24}
-                        alt=""
-                        unoptimized
-                        quality={100}
-                        src="/whatsapp.png"
-                      />
-                      <Image
-                        width={24}
-                        height={24}
-                        alt=""
-                        unoptimized
-                        quality={100}
-                        src="/website.png"
-                      />
+                      {data.profile.data.two_gis_url !== null ? (
+                        <Link href={data.profile.data.two_gis_url}>
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/2gis.png"
+                          />
+                        </Link>
+                      ) : (
+                        ""
+                      )}
+                      {data.profile.data.instagram_url !== null ? (
+                        <Link href={data.profile.data.instagram_url}>
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/instagram.png"
+                          />
+                        </Link>
+                      ) : (
+                        ""
+                      )}
+                      {data.profile.data.website_url !== null ? (
+                        <Link href={data.profile.data.whatsapp_url}>
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/whatsapp.png"
+                          />
+                        </Link>
+                      ) : (
+                        ""
+                      )}
+                      {data.profile.data.telegram_url !== null ? (
+                        <Link href={data.profile.data.telegram_url}>
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/telegram.png"
+                          />
+                        </Link>
+                      ) : (
+                        ""
+                      )}
+                      {data.profile.data.website_url !== null ? (
+                        <Link href={data.profile.data.website_url}>
+                          <Image
+                            width={24}
+                            height={24}
+                            alt=""
+                            unoptimized
+                            quality={100}
+                            src="/website.png"
+                          />
+                        </Link>
+                      ) : (
+                        ""
+                      )}
                     </div>
                   </div>
                 </div>
@@ -490,10 +528,15 @@ export default function ProfileProjects({ data }: Props) {
                       <div className="grid items-center justify-center gap-4 rounded-lg border py-6 pl-6 pr-4 hover:border-black sm:grid-cols-10">
                         <div className="sm:col-span-4">
                           <Image
-                            src={item.logo}
+                            src={
+                              item.logo?.url
+                                ? `${process.env.NEXT_PUBLIC_API_URL}${item.logo.url}`
+                                : DefaultAva
+                            }
+                            unoptimized
                             width={0}
                             height={0}
-                            className="m-auto w-[126px]"
+                            className="m-auto w-[126px] rounded-md"
                             alt="test"
                           />
                         </div>
@@ -503,8 +546,10 @@ export default function ProfileProjects({ data }: Props) {
                               {item.title}
                             </h1>
                             <p className="text-sm">{item.industry}</p>
-                            <div className="flex items-center gap-4 text-sm text-slate-400">
-                              <p>{item.description}</p>
+                            <div className="flex items-center gap-4">
+                              <p className=" line-clamp-2 text-sm text-slate-400">
+                                {item.description}
+                              </p>
                             </div>
                           </div>
                         </div>
