@@ -7,7 +7,7 @@ export interface AxiosError extends Error {
     data?: any;
   };
 }
-const API_BfASE_URL = "https://limpid.kz/api";
+const API_BASE_URL = "https://limpid.kz/api";
 // const API_BASE_URL = "http://localhost:3000/api";
 
 class APIClient {
@@ -398,8 +398,7 @@ class APIClient {
   }
 
   async getProjectMembers(
-    params: paths["/projects/{project_id}/members"]["get"]["parameters"]["path"] &
-      paths["/projects/{project_id}/members"]["get"]["parameters"]["query"],
+    params: paths["/projects/{project_id}/members"]["get"]["parameters"],
     config?: AxiosRequestConfig
   ): Promise<
     AxiosResponse<{
@@ -407,9 +406,12 @@ class APIClient {
       data: components["schemas"]["ProjectMember"][];
     }>
   > {
-    const { project_id, ...queryParams } = params;
+    const {
+      path: { project_id },
+      query,
+    } = params;
     return this.axiosInstance.get(`/projects/${project_id}/members`, {
-      params: queryParams,
+      params: query,
       ...config,
     });
   }

@@ -100,9 +100,8 @@ export const getServerSideProps = async (
 
   const { data: projectMemberShip } = await api.getProjectMembers(
     {
-      project_id: Number.parseInt(context!.params!.id as string, 10),
-      page: 1,
-      per_page: 10,
+      path: { project_id: Number.parseInt(context!.params!.id as string, 10) },
+      query: { page: 1, per_page: 10 },
     },
     {
       headers: {
