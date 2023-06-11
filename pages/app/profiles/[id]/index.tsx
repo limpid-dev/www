@@ -61,17 +61,12 @@ export const getServerSideProps = async (
       },
     }
   );
-
-  if (profile.data.id) {
-    const isAuthor =
-      session.data.id &&
-      profile.data.user_id &&
-      session.data.id === profile.data.user_id;
-
+  console.log(profile);
+  if (profile.data.user.first_name) {
+    const isAuthor = session.data.id === profile.data.user_id;
     return {
       props: {
         data: {
-          ...session,
           profile: profile!,
           isAuthor: isAuthor!,
         },
@@ -225,7 +220,8 @@ export default function OneProfile({ data }: Props) {
                         className="mb-3 h-[106px] w-auto rounded-md object-cover"
                       />
                       <p className="text-2xl font-semibold mb-2">
-                        {data.data.first_name} {data.data.last_name}
+                        {data.profile.data.user?.first_name}{" "}
+                        {data.profile.data.user?.last_name}
                       </p>
                       <p className=" text-sm">
                         <Input
@@ -375,7 +371,8 @@ export default function OneProfile({ data }: Props) {
                       className="mb-3 h-[106px] w-auto rounded-md object-cover"
                     />
                     <p className="text-2xl font-semibold">
-                      {data.data.first_name} {data.data.last_name}
+                      {data.profile.data.user?.first_name}{" "}
+                      {data.profile.data.user?.last_name}
                     </p>
                     <p className=" text-sm">{data.profile.data.industry}</p>
                   </div>

@@ -166,6 +166,7 @@ function Profiles() {
                       >
                         <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-8 font-semibold hover:border-slate-700 sm:max-w-[400px]">
                           <Image
+                            unoptimized
                             className="h-14 w-14"
                             src={ProfileDefault}
                             alt="some"

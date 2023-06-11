@@ -8,11 +8,11 @@ import { TextArea } from "../../primitives/text-area";
 
 interface FormValues {
   experiences: {
-    company: string;
     title: string;
+    institution: string;
     description: string;
-    startedAt: string;
-    finishedAt: string;
+    started_at: string;
+    finished_at: string;
   }[];
 }
 
@@ -50,16 +50,10 @@ export function ExperienceCreate({ profileId, isAddHandler }: any) {
       });
       if (data.data) {
         setValue(`experiences.0.title`, data.data.title);
-        setValue(`experiences.0.company`, data.data.institution);
+        setValue(`experiences.0.institution`, data.data.institution);
         setValue(`experiences.0.description`, data.description);
-        setValue(
-          `experiences.0.startedAt`,
-          new Date(data.startedAt).toISOString().slice(0, 10)
-        );
-        setValue(
-          `experiences.0.finishedAt`,
-          new Date(data.finishedAt).toISOString().slice(0, 10)
-        );
+        setValue(`experiences.0.started_at`, new Date(data.started_at));
+        setValue(`experiences.0.finished_at`, new Date(data.finished_at));
       }
     }
     fetchEducation();
@@ -68,15 +62,15 @@ export function ExperienceCreate({ profileId, isAddHandler }: any) {
   const onSubmit = async (data: FormValues) => {
     try {
       if (isEdit === false) {
-        await api.experiences.update(profileId, parsedId, data.experiences[0]);
+        await api.updateExperience(profileId, parsedId, data.experiences[0]);
         await router.push({
-          pathname: `/app/profiles/${profileId}/education`,
+          pathname: `/app/profiles/${profileId}/experiences`,
           query: {},
         });
         router.reload();
       } else {
         data.experiences.forEach(async (post) => {
-          const { data } = await api.experiences.store(post, profileId);
+          const { data } = await api.createExperience(profileId, post);
         });
         if (data) {
           router.reload();
@@ -113,11 +107,11 @@ export function ExperienceCreate({ profileId, isAddHandler }: any) {
                     <input
                       className="w-full rounded-md border p-2"
                       placeholder="Место работы"
-                      {...register(`experiences.${index}.company`, {
+                      {...register(`experiences.${index}.institution`, {
                         required: "Please enter your first name.",
                       })}
                     />
-                    {errors.experiences?.[index]?.company && (
+                    {errors.experiences?.[index]?.institution && (
                       <p className="ml-2 text-sm text-red-500">
                         Обязательное поле
                       </p>
@@ -149,13 +143,11 @@ export function ExperienceCreate({ profileId, isAddHandler }: any) {
                         placeholder="начало"
                         type="date"
                         id="birthday"
-                        {...register(`experiences.${index}.startedAt`, {
+                        {...register(`experiences.${index}.started_at`, {
                           required: "Please enter your first name.",
-                          setValueAs: (value: string | undefined) =>
-                            value ? new Date(value).toISOString() : undefined,
                         })}
                       />
-                      {errors.experiences?.[index]?.startedAt && (
+                      {errors.experiences?.[index]?.started_at && (
                         <p className="ml-2 text-sm text-red-500">
                           Выберите дату
                         </p>
@@ -170,13 +162,11 @@ export function ExperienceCreate({ profileId, isAddHandler }: any) {
                         placeholder="начало"
                         type="date"
                         id="birthday"
-                        {...register(`experiences.${index}.finishedAt`, {
+                        {...register(`experiences.${index}.finished_at`, {
                           required: "Please enter your first name.",
-                          setValueAs: (value: string | undefined) =>
-                            value ? new Date(value).toISOString() : undefined,
                         })}
                       />
-                      {errors.experiences?.[index]?.finishedAt && (
+                      {errors.experiences?.[index]?.finished_at && (
                         <p className="ml-2 text-sm text-red-500">
                           Выберите дату
                         </p>
@@ -202,11 +192,11 @@ export function ExperienceCreate({ profileId, isAddHandler }: any) {
                 type="button"
                 onClick={() => {
                   append({
-                    company: "",
+                    institution: "",
                     title: "",
                     description: "",
-                    startedAt: "",
-                    finishedAt: "",
+                    started_at: "",
+                    finished_at: "",
                   });
                 }}
                 variant="outline"

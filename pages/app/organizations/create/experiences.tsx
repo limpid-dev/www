@@ -223,7 +223,7 @@ export default function Test() {
                         }}
                         variant="outline"
                       >
-                        <Plus /> Добавить образование
+                        <Plus /> Добавить опыт работы
                       </Button>
                     </div>
                   </div>

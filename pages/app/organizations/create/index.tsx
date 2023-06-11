@@ -17,14 +17,14 @@ import {
 import { TextArea } from "../../../../components/primitives/text-area";
 
 interface FormValues {
-  name: string;
-  bin: string;
+  display_name: string;
+  tin: string;
   description: string;
   industry: string;
-  type: string;
-  ownedIntellectualResources: string;
-  ownedMaterialResources: string;
-  perfomance: string;
+  legal_structure: string;
+  owned_intellectual_resources: string;
+  owned_material_resources: string;
+  performance: string;
 }
 
 export default function Test() {
@@ -37,11 +37,11 @@ export default function Test() {
   } = useForm<FormValues>({});
 
   const onSubmit = async (data: FormValues) => {
-    const { data: organization } = await api.organizations.store(data);
+    const { data: organization } = await api.createOrganization(data);
     if (organization) {
       router.push({
-        pathname: "/app/organizations/create/experiences",
-        query: { organizationId: organization.id },
+        pathname: "/app/organizations/create/certificates",
+        query: { organizationId: organization.data.id },
       });
     }
   };
@@ -86,13 +86,13 @@ export default function Test() {
                     </div>
                     <Input
                       type="text"
-                      {...register("name", { required: true })}
+                      {...register("display_name", { required: true })}
                       className="py-4 px-5 text-black rounded-md border border-slate-300 mt-6 w-1/2"
                       placeholder="Название"
                       minLength={1}
                       maxLength={255}
                     />
-                    {errors.name && (
+                    {errors.display_name && (
                       <span className="ml-1 text-sm text-red-600">
                         Обязательное поле
                       </span>
@@ -106,7 +106,7 @@ export default function Test() {
                     <div className="w-full">
                       <Input
                         type="text"
-                        {...register("bin", { required: true })}
+                        {...register("tin", { required: true })}
                         className="py-4 px-5 text-black rounded-md border border-slate-300 flex-1"
                         minLength={12}
                         maxLength={12}
@@ -159,7 +159,7 @@ export default function Test() {
                     <div className="w-full">
                       <Controller
                         control={control}
-                        name="type"
+                        name="legal_structure"
                         rules={{ required: true }}
                         render={({ field }) => (
                           <Select
@@ -180,7 +180,7 @@ export default function Test() {
                           </Select>
                         )}
                       />
-                      {errors.type && (
+                      {errors.legal_structure && (
                         <span className="ml-1 text-sm text-red-600">
                           Обязательное поле
                         </span>
@@ -189,13 +189,13 @@ export default function Test() {
                     <div className="w-full">
                       <Input
                         type="text"
-                        {...register("perfomance", { required: true })}
+                        {...register("performance", { required: true })}
                         className="py-4 px-5 text-black rounded-md border border-slate-300 flex-1"
                         minLength={1}
                         maxLength={255}
-                        placeholder="Производственная мощность предприятия (при наличии)"
+                        placeholder="Производственная мощность"
                       />
-                      {errors.perfomance && (
+                      {errors.performance && (
                         <span className="ml-1 text-sm text-red-600">
                           Обязательное поле
                         </span>
@@ -227,7 +227,7 @@ export default function Test() {
                     </div>
                     <TextArea
                       className="mt-6"
-                      {...register("ownedMaterialResources", {
+                      {...register("owned_material_resources", {
                         required: true,
                       })}
                       rows={4}
@@ -235,7 +235,7 @@ export default function Test() {
                       maxLength={1024}
                       placeholder="Что  будет полезно другим людям о материальных ресурсах компании?"
                     />
-                    {errors.ownedMaterialResources && (
+                    {errors.owned_material_resources && (
                       <span className="ml-1 text-sm text-red-600">
                         Обязательное поле
                       </span>
@@ -248,14 +248,14 @@ export default function Test() {
                     <TextArea
                       className=" mt-6 "
                       rows={4}
-                      {...register("ownedIntellectualResources", {
+                      {...register("owned_intellectual_resources", {
                         required: true,
                       })}
                       minLength={1}
                       maxLength={1024}
                       placeholder="Что  будет полезно другим людям о интеллектуальных ресурсах компании?"
                     />
-                    {errors.ownedIntellectualResources && (
+                    {errors.owned_intellectual_resources && (
                       <span className="ml-1 text-sm text-red-600">
                         Обязательное поле
                       </span>

@@ -181,15 +181,31 @@ export default function Test() {
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <Switch
-                        id="is_visible"
-                        {...register("is_visible", {
-                          required: true,
-                        })}
-                      />
-                      <Label htmlFor="is_visible">Видимость профиля</Label>
-                    </div>
+                    <Controller
+                      control={control}
+                      name="is_visible"
+                      rules={{ required: true }}
+                      render={({ field }) => (
+                        <div className="flex flex-col w-full">
+                          <Select onValueChange={field.onChange}>
+                            <SelectTrigger className="px-5 text-ellipsis whitespace-nowrap overflow-hidden">
+                              <SelectValue placeholder="Выберите видимость" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="1">Не видимый</SelectItem>
+                              <SelectItem value="1">Видимый</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <p>
+                            {errors.industry && (
+                              <span className="text-sm text-red-600">
+                                Введите обязательное поле
+                              </span>
+                            )}
+                          </p>
+                        </div>
+                      )}
+                    />
                   </div>
                   <div>
                     <TextArea

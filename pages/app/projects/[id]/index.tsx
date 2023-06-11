@@ -111,8 +111,6 @@ export const getServerSideProps = async (
     }
   );
 
-  console.log(projectMemberShip.data);
-
   const isAuthor = profile.data.id === project.data.profile_id;
 
   return {
@@ -149,6 +147,28 @@ export default function ProjectView({ data }: Props) {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     api
+  //       .getMessages({
+  //         path: { chat_id: parsedId },
+  //         query: {
+  //           page: 1,
+  //           per_page: 10,
+  //         },
+  //       })
+  //       .then((response) => {
+  //         console.log(response.data.data);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error getting messages:", error);
+  //       });
+  //   }, 2000);
+
+  //   return () => clearInterval(intervalId);
+  // }, []);
+
   const {
     register,
     handleSubmit,
@@ -280,80 +300,102 @@ export default function ProjectView({ data }: Props) {
                 </div>
                 <Separator className="mb-6 mt-3" />
                 <div className="grid gap-3">
-                  <Sheet>
-                    <SheetTrigger asChild>
-                      <Button variant="ghost" className="w-full">
-                        <div className="flex w-full items-center gap-3 text-sm font-semibold">
-                          <Files className="w-6 h-6" />
-                          Бизнес-план
-                        </div>
-                        <ArrowRight className="w-6 h-6" />
-                      </Button>
-                    </SheetTrigger>
-                    <SheetContent
-                      position="right"
-                      size={largeScreen ? "default" : "full"}
-                    >
-                      <SheetHeader>
-                        <SheetTitle>Бизнес-план</SheetTitle>
-                        <Link
-                          href={
-                            data.project.data.business_plan?.url
-                              ? `${process.env.NEXT_PUBLIC_API_URL}${data.project.data.business_plan.url}`
-                              : Test
-                          }
-                        >
-                          <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-8 font-semibold hover:border-slate-700 sm:max-w-[400px]">
-                            <DownloadSimple className="h-14 w-14" />
-                            <p className="mt-3 text-center text-base sm:text-xl ">
-                              {data.project.data.title}
-                            </p>
+                  {data.project.data.business_plan?.url && (
+                    <Sheet>
+                      <SheetTrigger asChild>
+                        <Button variant="ghost" className="w-full">
+                          <div className="flex w-full items-center gap-3 text-sm font-semibold">
+                            <Files className="w-6 h-6" />
+                            Бизнес-план
                           </div>
-                        </Link>
-                      </SheetHeader>
-                    </SheetContent>
-                  </Sheet>
-                  <Sheet>
-                    <SheetTrigger asChild>
-                      <Button variant="ghost" className="w-full">
-                        <div className="flex w-full items-center gap-3 text-sm font-semibold">
-                          <FileVideo className="w-6 h-6" /> Фото и видео
+                          <ArrowRight className="w-6 h-6" />
+                        </Button>
+                      </SheetTrigger>
+                      <SheetContent
+                        position="right"
+                        size={largeScreen ? "default" : "full"}
+                      >
+                        <SheetHeader>
+                          <SheetTitle>Бизнес-план</SheetTitle>
+                          <Link
+                            href={
+                              data.project.data.business_plan.url
+                                ? `${process.env.NEXT_PUBLIC_API_URL}${data.project.data.business_plan.url}`
+                                : Test
+                            }
+                          >
+                            <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-8 font-semibold hover:border-slate-700">
+                              <DownloadSimple className="h-14 w-14" />
+                              <p className="mt-3 text-center text-base sm:text-xl ">
+                                {data.project.data.title}
+                              </p>
+                            </div>
+                          </Link>
+                        </SheetHeader>
+                      </SheetContent>
+                    </Sheet>
+                  )}
+
+                  {data.project.data.logo?.url && (
+                    <Sheet>
+                      <SheetTrigger asChild>
+                        <Button variant="ghost" className="w-full">
+                          <div className="flex w-full items-center gap-3 text-sm font-semibold">
+                            <FileVideo className="w-6 h-6" /> Фото и видео
+                          </div>
+                          <ArrowRight className="w-6 h-6" />
+                        </Button>
+                      </SheetTrigger>
+                      <SheetContent
+                        position="right"
+                        size={largeScreen ? "default" : "full"}
+                      >
+                        <SheetHeader>
+                          <SheetTitle>Фото</SheetTitle>
+                        </SheetHeader>
+                        <div className="flex w-auto flex-col items-center justify-center rounded-lg bg-white py-8 font-semibold">
+                          <Image
+                            className="h-20 w-20 object-cover rounded-md"
+                            width={0}
+                            height={0}
+                            unoptimized
+                            src={
+                              data.project.data.logo.url
+                                ? `${process.env.NEXT_PUBLIC_API_URL}${data.project.data.logo.url}`
+                                : Test
+                            }
+                            alt="test"
+                          />
+                          <p className="mt-3 text-center text-base sm:text-xl ">
+                            {data.project.data.title}
+                          </p>
                         </div>
-                        <ArrowRight className="w-6 h-6" />
-                      </Button>
-                    </SheetTrigger>
-                    <SheetContent
-                      position="right"
-                      size={largeScreen ? "default" : "full"}
-                    >
-                      <SheetHeader>
-                        <SheetTitle>Фото</SheetTitle>
-                      </SheetHeader>
-                      <div className="flex w-auto flex-col items-center justify-center rounded-lg bg-white py-8 font-semibold">
-                        <Image
-                          className="h-20 w-20 object-cover rounded-md"
-                          width={0}
-                          height={0}
-                          unoptimized
-                          src={
-                            data.project.data.logo?.url
-                              ? `${process.env.NEXT_PUBLIC_API_URL}${data.project.data.logo.url}`
-                              : Test
-                          }
-                          alt="test"
-                        />
-                        <p className="mt-3 text-center text-base sm:text-xl ">
-                          {data.project.data.title}
-                        </p>
-                      </div>
-                      <Separator className="my-7" />
-                      <p>Видео</p>
-                      <div className="m-auto mt-16 grid w-4/5 gap-y-6">
-                        <Image src={Test} alt="test" />
-                      </div>
-                      <div />
-                    </SheetContent>
-                  </Sheet>
+                        <Separator className="my-7" />
+                        {data.project.data.video_introduction?.url && (
+                          <div>
+                            <p>Видео</p>
+                            <div className="m-auto mt-16 grid">
+                              <Link
+                                href={
+                                  data.project.data.video_introduction.url
+                                    ? `${process.env.NEXT_PUBLIC_API_URL}${data.project.data.video_introduction.url}`
+                                    : Test
+                                }
+                              >
+                                <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-8 font-semibold hover:border-slate-700">
+                                  <DownloadSimple className="h-14 w-14" />
+                                  <p className="mt-3 text-center text-base sm:text-xl ">
+                                    {data.project.data.title} Видео
+                                  </p>
+                                </div>
+                              </Link>
+                            </div>
+                            <div />
+                          </div>
+                        )}
+                      </SheetContent>
+                    </Sheet>
+                  )}
 
                   <Button
                     variant="ghost"
@@ -498,7 +540,7 @@ export default function ProjectView({ data }: Props) {
                         isTrue ? "items-end self-end" : "items-start"
                       }`}
                     >
-                      {/* <div
+                      <div
                         className={`mt-2 w-96 rounded-lg px-2 py-1 ${
                           isTrue ? "bg-lime-400 " : "flex items-end gap-3"
                         }`}
@@ -506,7 +548,7 @@ export default function ProjectView({ data }: Props) {
                         <Image
                           src={Test}
                           width={34}
-                          className={` ${isTrue ? "hidden" : ""}`}
+                          className={` ${isTrue ? "hidden" : ""} rounded-full`}
                           alt="test"
                         />
                         <div
@@ -521,28 +563,201 @@ export default function ProjectView({ data }: Props) {
                               isTrue ? "hidden" : ""
                             }`}
                           >
-                            {data.acceptMembers[0].id}
+                            Ахметов Темирлан
                           </p>
                           <>
                             <p className="text-sm">
-                              {data.acceptMembers[0]?.message}
+                              Салам, у меня есть учпушмак с горячем чаем
                             </p>
                           </>
-                          {data.acceptMembers[0] && (
-                            <div className="flex justify-end gap-3">
-                              <Button variant="ghost">Отклонить</Button>
-                              <Button onClick={handleAccept} variant="ghost">
-                                Принять
-                              </Button>
-                            </div>
-                          )}
                         </div>
-                      </div> */}
+                      </div>
+                    </div>
+                    <div
+                      className={`my-1 flex flex-col ${
+                        isTrue ? "items-end self-end" : "items-start"
+                      }`}
+                    >
+                      <div
+                        className={`mt-2 w-96 rounded-lg px-2 py-1 ${
+                          isTrue ? "bg-lime-400 " : "flex items-end gap-3"
+                        }`}
+                      >
+                        <Image
+                          src={Test}
+                          width={34}
+                          className={` ${isTrue ? "hidden" : ""} rounded-full`}
+                          alt="test"
+                        />
+                        <div
+                          className={`mt-2 rounded-lg px-2 py-1 ${
+                            isTrue
+                              ? "bg-lime-400"
+                              : "grid max-w-96 items-end justify-end gap-3 border bg-slate-50"
+                          }`}
+                        >
+                          <p
+                            className={`font-semibold ${
+                              isTrue ? "hidden" : ""
+                            }`}
+                          >
+                            Ахметов Темирлан
+                          </p>
+                          <>
+                            <p className="text-sm">
+                              Салам, у меня есть учпушмак с горячем чаем
+                            </p>
+                          </>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className={`my-1 flex flex-col ${
+                        isTrue ? "" : "items-end self-end"
+                      }`}
+                    >
+                      <div
+                        className={`mt-2 w-96 rounded-lg px-2 py-1 ${
+                          isTrue ? "bg-lime-400 " : "flex items-end gap-3"
+                        }`}
+                      >
+                        <div
+                          className={`mt-2 rounded-lg px-2 py-1 ${
+                            isTrue
+                              ? "bg-lime-400"
+                              : "grid max-w-96 items-end justify-end gap-3 border bg-slate-50"
+                          }`}
+                        >
+                          <p
+                            className={`font-semibold ${
+                              isTrue ? "hidden" : ""
+                            }`}
+                          >
+                            Ахметов Темирлан
+                          </p>
+                          <>
+                            <p className="text-sm">
+                              Салам, у меня есть учпушмак с горячем чаем
+                            </p>
+                          </>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className={`my-1 flex flex-col ${
+                        isTrue ? "items-end self-end" : "items-start"
+                      }`}
+                    >
+                      <div
+                        className={`mt-2 w-96 rounded-lg px-2 py-1 ${
+                          isTrue ? "bg-lime-400 " : "flex items-end gap-3"
+                        }`}
+                      >
+                        <Image
+                          src={Test}
+                          width={34}
+                          className={` ${isTrue ? "hidden" : ""} rounded-full`}
+                          alt="test"
+                        />
+                        <div
+                          className={`mt-2 rounded-lg px-2 py-1 ${
+                            isTrue
+                              ? "bg-lime-400"
+                              : "grid max-w-96 items-end justify-end gap-3 border bg-slate-50"
+                          }`}
+                        >
+                          <p
+                            className={`font-semibold ${
+                              isTrue ? "hidden" : ""
+                            }`}
+                          >
+                            Ахметов Темирлан
+                          </p>
+                          <>
+                            <p className="text-sm">
+                              Салам, у меня есть учпушмак с горячем чаем
+                            </p>
+                          </>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className={`my-1 flex flex-col ${
+                        isTrue ? "items-end self-end" : "items-start"
+                      }`}
+                    >
+                      <div
+                        className={`mt-2 w-96 rounded-lg px-2 py-1 ${
+                          isTrue ? "bg-lime-400 " : "flex items-end gap-3"
+                        }`}
+                      >
+                        <Image
+                          src={Test}
+                          width={34}
+                          className={` ${isTrue ? "hidden" : ""} rounded-full`}
+                          alt="test"
+                        />
+                        <div
+                          className={`mt-2 rounded-lg px-2 py-1 ${
+                            isTrue
+                              ? "bg-lime-400"
+                              : "grid max-w-96 items-end justify-end gap-3 border bg-slate-50"
+                          }`}
+                        >
+                          <p
+                            className={`font-semibold ${
+                              isTrue ? "hidden" : ""
+                            }`}
+                          >
+                            Ахметов Темирлан
+                          </p>
+                          <>
+                            <p className="text-sm">
+                              Салам, у меня есть учпушмак с горячем чаем
+                            </p>
+                          </>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className={`my-1 flex flex-col ${
+                        isTrue ? "" : "items-end self-end"
+                      }`}
+                    >
+                      <div
+                        className={`mt-2 w-96 rounded-lg px-2 py-1 ${
+                          isTrue ? "bg-lime-400 " : "flex items-end gap-3"
+                        }`}
+                      >
+                        <div
+                          className={`mt-2 rounded-lg px-2 py-1 ${
+                            isTrue
+                              ? "bg-lime-400"
+                              : "grid max-w-96 items-end justify-end gap-3 border bg-slate-50"
+                          }`}
+                        >
+                          <p
+                            className={`font-semibold ${
+                              isTrue ? "hidden" : ""
+                            }`}
+                          >
+                            Ахметов Темирлан
+                          </p>
+                          <>
+                            <p className="text-sm">
+                              Салам, у меня есть учпушмак с горячем чаем
+                            </p>
+                          </>
+                        </div>
+                      </div>
                     </div>
                   </ScrollArea>
                   <div className="flex items-center justify-around px-6 pb-3 gap-2">
                     <TextArea placeholder="Сообщение" className="max-h-11" />
-                    <Button variant="outline" className="bg-slate-100 ">
+                    <Button
+                      variant="outline"
+                      className="bg-slate-100 rounded-full"
+                    >
                       <Paperclip className="h-5 w-5" />
                     </Button>
                   </div>

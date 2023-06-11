@@ -67,7 +67,7 @@ export default function Profiles() {
   const handleSearch = async () => {
     const { data } = await api.getProfiles({
       page: 1,
-      per_page: 6,
+      per_page: 9,
       search: searchTerm,
     });
     setProfilesData(data.data);

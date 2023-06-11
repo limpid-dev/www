@@ -4,8 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import api from "../../../api";
-import { Entity } from "../../../api/organizations";
-import * as Users from "../../../api/users";
+import { components } from "../../../api/api-paths";
 import { Navigation } from "../../../components/navigation";
 import { Skeleton } from "../../../components/primitives/skeleton";
 import DefaultAvatar from "../../../images/avatars/defaultProfile.svg";
@@ -19,7 +18,8 @@ export default function All() {
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
-  const [profilesData, setProfilesData] = useState<Entity[]>([]);
+  const [profilesData, setProfilesData] =
+    useState<components["schemas"]["Profile"][]>();
 
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
@@ -28,14 +28,17 @@ export default function All() {
 
   useEffect(() => {
     async function fetchProfiles() {
-      const { data } = await api.organizations.index({
-        page: 1,
-        perPage: 100,
-      });
-
-      if (data) {
-        setProfilesData(data);
-        setLoading(false);
+      try {
+        const { data } = await api.getOrganizations({
+          page: 1,
+          per_page: 9,
+        });
+        if (data.data.length > 0) {
+          setProfilesData(data.data);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Error getting organizations:", error);
       }
     }
     fetchProfiles();
@@ -135,25 +138,23 @@ export default function All() {
               </div>
             ) : (
               <>
-                {profilesData.map((profile) => (
+                {profilesData?.map((profile) => (
                   <Link key={profile.id} href={`/app/profiles/${profile.id}`}>
                     <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
                       <div className="grid grid-cols-10">
                         <div className="col-span-6 flex flex-col gap-1 pl-3">
                           <p className="text-lg font-semibold text-black">
-                            {profile.name}
+                            {profile.display_name}
                           </p>
                           <p className="text-sm whitespace-nowrap text-black">
                             {profile.industry}
                           </p>
                           <div className="flex gap-2">
                             <p className="text-xs text-slate-400 font-medium">
-                              {new Date(profile.createdAt).toLocaleDateString(
-                                "ru-RU"
-                              )}
+                              {profile.created_at}
                             </p>
                             <p className="text-xs text-slate-400 font-medium">
-                              {profile.type}
+                              {profile.legal_structure}
                             </p>
                           </div>
                           <p className="line-clamp-3 w-auto text-sm mt-2">

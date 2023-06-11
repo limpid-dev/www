@@ -7,8 +7,8 @@ export interface AxiosError extends Error {
     data?: any;
   };
 }
-// const API_BfASE_URL = "https://limpid.kz/api";
-const API_BASE_URL = "http://localhost:3000/api";
+const API_BfASE_URL = "https://limpid.kz/api";
+// const API_BASE_URL = "http://localhost:3000/api";
 
 class APIClient {
   private axiosInstance = axios.create({
@@ -326,6 +326,18 @@ class APIClient {
     return axios.delete(`/profiles/${profile_id}/experiences/${experience_id}`);
   }
 
+  async updateExperience(
+    params: paths["/profiles/{profile_id}/experiences/{experience_id}"]["patch"]["parameters"]["path"],
+    requestData: paths["/profiles/{profile_id}/experiences/{experience_id}"]["patch"]["requestBody"]["content"]["multipart/form-data"]
+  ): Promise<AxiosResponse<{ data?: components["schemas"]["Experience"] }>> {
+    const { profile_id, experience_id } = params;
+    const response = await axios.patch(
+      `/profiles/${profile_id}/experiences/${experience_id}`,
+      requestData
+    );
+    return response;
+  }
+
   // Projects
   async getProjects(
     params?: paths["/projects"]["get"]["parameters"]["query"],
@@ -427,6 +439,61 @@ class APIClient {
       params,
       ...config,
     });
+  }
+
+  // Messages
+  async getMessages(
+    params: paths["/chats/{chat_id}/messages"]["get"]["parameters"],
+    config?: AxiosRequestConfig
+  ): Promise<
+    AxiosResponse<{
+      meta: components["schemas"]["Pagination"];
+      data: components["schemas"]["Message"][];
+    }>
+  > {
+    const {
+      path: { chat_id },
+      query,
+    } = params;
+    return this.axiosInstance.get(`/chats/${chat_id}/messages`, {
+      params: query,
+      ...config,
+    });
+  }
+
+  async postMessage(
+    params: paths["/chats/{chat_id}/messages"]["post"]["parameters"]["path"],
+    requestBody: paths["/chats/{chat_id}/messages"]["post"]["requestBody"]["content"]["multipart/form-data"],
+    config?: AxiosRequestConfig
+  ): Promise<
+    AxiosResponse<{
+      data?: components["schemas"]["Message"];
+    }>
+  > {
+    const { chat_id } = params;
+    return this.axiosInstance.post(
+      `/chats/${chat_id}/messages`,
+      requestBody,
+      config
+    );
+  }
+
+  // Organizations
+  async getOrganizations(
+    params: paths["/organizations"]["get"]["parameters"]["query"]
+  ): Promise<
+    AxiosResponse<{
+      meta: components["schemas"]["Pagination"];
+      data: components["schemas"]["Profile"][];
+    }>
+  > {
+    return this.axiosInstance.get("/organizations", { params });
+  }
+
+  async createOrganization(
+    organizationData: paths["/organizations"]["post"]["requestBody"]["content"]["multipart/form-data"]
+  ): Promise<AxiosResponse<{ data: components["schemas"]["Profile"] }>> {
+    return this.axiosInstance.post("/organizations", organizationData);
   }
 }
 

@@ -105,7 +105,7 @@ export default function Certifications({ data }: Props) {
   const router = useRouter();
   const { id } = router.query;
   const parsedId = Number.parseInt(id as string, 10) as number;
-
+  const [error, setError] = useState<string>();
   const tabs = [
     { name: "Ресурсы", href: `/app/profiles/${id}/`, current: false },
     {
@@ -133,8 +133,20 @@ export default function Certifications({ data }: Props) {
   const [certificate, setCertificate] = useState(true);
   const [skill, setSkill] = useState(true);
   const [editGeneral, setEditGeneral] = useState(false);
-  const [contacts, setContacts] = useState({});
+  const {
+    register: register2,
+    formState: { errors: errors2 },
+    handleSubmit: handleSubmit2,
+  } = useForm<FormValuesGeneral>();
 
+  const onSubmit2 = async (data1: FormValuesGeneral) => {
+    try {
+      const { data } = await api.updateProfile(Number.parseInt(id, 10), data1);
+      router.reload();
+    } catch (error) {
+      setError("Что то пошло не так, попробуйте позже");
+    }
+  };
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
@@ -246,7 +258,8 @@ export default function Certifications({ data }: Props) {
                         className="mb-3 h-[106px] w-auto rounded-md object-cover"
                       />
                       <p className="text-2xl font-semibold mb-2">
-                        {data.data.first_name} {data.data.last_name}
+                        {data.profile.data.user?.first_name}{" "}
+                        {data.profile.data.user?.last_name}{" "}
                       </p>
                       <p className=" text-sm">
                         <Input
@@ -396,7 +409,8 @@ export default function Certifications({ data }: Props) {
                       className="mb-3 h-[106px] w-auto rounded-md object-cover"
                     />
                     <p className="text-2xl font-semibold">
-                      {data.data.first_name} {data.data.last_name}
+                      {data.profile.data.user?.first_name}{" "}
+                      {data.profile.data.user?.last_name}{" "}
                     </p>
                     <p className=" text-sm">{data.profile.data.industry}</p>
                   </div>

@@ -112,7 +112,7 @@ const navigation = [
   { name: "Профили", href: "/app/profiles" },
   { name: "Закупки", href: "/app/auctions" },
   { name: "Продажи", href: "/app/tenders" },
-  { name: "Чаты", href: "/app/chats" },
+  // { name: "Чаты", href: "/app/chats" },
 ];
 
 const userNavigation = [{ name: "Настройки", href: "/app/settings" }];
@@ -371,16 +371,16 @@ export function Navigation() {
             </div>
             <div className="border-t border-zinc-200 pb-3 pt-4">
               <div className="flex items-center px-4">
-                {/* <div className="flex-shrink-0">
+                <div className="flex-shrink-0">
                   <Image
-                    className="h-10 w-10 rounded-full object-cover"
+                    className="h-8 w-8 rounded-full object-cover"
                     width={10}
                     unoptimized
                     height={10}
-                    src={sessionData?.file ? sessionData.file.url : testAva}
+                    src={foundObject?.avatar?.url ? avatarUrl : testAva}
                     alt=""
                   />
-                </div> */}
+                </div>
                 <div className="ml-3">
                   <div className="text-base font-medium text-zinc-800">
                     {sessionData?.first_name} {sessionData?.last_name}

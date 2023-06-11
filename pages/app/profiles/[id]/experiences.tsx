@@ -244,7 +244,8 @@ export default function Education({ data }: Props) {
                         className="mb-3 h-[106px] w-auto rounded-md object-cover"
                       />
                       <p className="text-2xl font-semibold mb-2">
-                        {data.data.first_name} {data.data.last_name}
+                        {data.profile.data.user?.first_name}{" "}
+                        {data.profile.data.user?.last_name}{" "}
                       </p>
                       <p className=" text-sm">
                         <Input
@@ -394,7 +395,8 @@ export default function Education({ data }: Props) {
                       className="mb-3 h-[106px] w-auto rounded-md object-cover"
                     />
                     <p className="text-2xl font-semibold">
-                      {data.data.first_name} {data.data.last_name}
+                      {data.profile.data.user?.first_name}{" "}
+                      {data.profile.data.user?.last_name}{" "}
                     </p>
                     <p className=" text-sm">{data.profile.data.industry}</p>
                   </div>

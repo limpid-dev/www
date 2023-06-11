@@ -321,9 +321,6 @@ export default function All() {
             <Skeleton className=" h-[150px] rounded-full" />
             <Skeleton className=" h-[150px] rounded-full" />
             <Skeleton className=" h-[150px] rounded-full" />
-            <Skeleton className=" h-[150px] rounded-full" />
-            <Skeleton className=" h-[150px] rounded-full" />
-            <Skeleton className=" h-[150px] rounded-full" />
           </div>
         ) : (
           <>
@@ -381,7 +378,7 @@ export default function All() {
                               href={`/app/profiles/${project?.profile_data?.data?.id}`}
                             >
                               <div className="flex w-fit items-center gap-4 rounded-lg bg-slate-100 p-2 hover:bg-lime-200">
-                                {/* <Image
+                                <Image
                                   src={
                                     project.profile_data?.data?.avatar
                                       ? `${process.env.NEXT_PUBLIC_API_URL}${project.profile_data.data.avatar.url}`
@@ -391,7 +388,7 @@ export default function All() {
                                   width={20}
                                   height={20}
                                   className="rounded-lg"
-                                /> */}
+                                />
                                 <p className="text-xs sm:text-sm">
                                   {project?.profile_data?.data?.display_name}
                                 </p>
