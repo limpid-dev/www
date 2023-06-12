@@ -165,8 +165,8 @@ export function Navigation() {
                   (item) => item.id === sessionData.data.selected_profile_id
                 );
                 setAvatarUrl(`/api/${foundObject?.avatar?.url}`);
+                setProfession(foundObject?.display_name);
               });
-            setProfession(profiles.data[0].display_name);
           }
         }
       }
