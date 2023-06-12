@@ -276,7 +276,7 @@ export default function Profiles() {
                   <div className="col-span-4 mr-3">
                     <Image
                       src={
-                        profile.avatar
+                        profile?.avatar?.url
                           ? `/api/${profile?.avatar?.url}`
                           : DefaultAvatar
                       }
