@@ -87,7 +87,7 @@ export default function Settings({ data }: Props) {
       email: inputValue,
     });
     if (userUpdate) {
-      await api.session.destroy();
+      await api.logoutUser();
       await router.push({
         pathname: "/",
       });

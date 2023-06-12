@@ -154,7 +154,7 @@ export default function Certifications({ data }: Props) {
     await api.deleteProfile(parsedId);
 
     await router.push({
-      pathname: "/app/profiles/my",
+      pathname: "/app/organizations/my",
     });
   };
 

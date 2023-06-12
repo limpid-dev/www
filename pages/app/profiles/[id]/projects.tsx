@@ -102,7 +102,7 @@ export default function ProfileProjects({ data }: Props) {
   } = useForm<FormValuesGeneral>();
 
   const handleDeleteProfile = async () => {
-    api.profiles.destroy(parsedId);
+    await api.deleteProfile(parsedId);
 
     await router.push({
       pathname: "/app/profiles/my",
