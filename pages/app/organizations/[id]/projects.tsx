@@ -101,15 +101,12 @@ export default function ProfileProjects({ data }: Props) {
     handleSubmit: handleSubmit2,
   } = useForm<FormValuesGeneral>();
 
-
   const handleDeleteProfile = async () => {
     await api.deleteProfile(parsedId);
 
     await router.push({
       pathname: "/app/organizations/my",
     });
-  };
-
   };
 
   const onSubmit2 = async (data1: FormValuesGeneral) => {

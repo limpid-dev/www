@@ -615,16 +615,20 @@ export default function Certifications({ data }: Props) {
                               </Link>
                             </div>
                           </div>
-                          <div className=" flex items-end justify-end text-sm font-medium text-red-500 mt-2">
-                            <Button
-                              onClick={() => {
-                                handleDeleteCertificate(certificate.id);
-                              }}
-                              variant="ghost"
-                            >
-                              Удалить сертификат
-                            </Button>
-                          </div>
+                          {data.isAuthor ? (
+                            <div className=" flex items-end justify-end text-sm font-medium text-red-500 mt-2">
+                              <Button
+                                onClick={() => {
+                                  handleDeleteCertificate(certificate.id);
+                                }}
+                                variant="ghost"
+                              >
+                                Удалить сертификат
+                              </Button>
+                            </div>
+                          ) : (
+                            ""
+                          )}
                         </div>
                       )
                     )}
