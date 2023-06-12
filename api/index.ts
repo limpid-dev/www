@@ -7,8 +7,8 @@ export interface AxiosError extends Error {
     data?: any;
   };
 }
-const API_BASE_URL = "https://limpid.kz/api";
-// const API_BASE_URL = "http://localhost:3000/api";
+// const API_BASE_URL = "https://limpid.kz/api";
+const API_BASE_URL = "http://localhost:3000/api";
 
 class APIClient {
   private axiosInstance = axios.create({
@@ -405,22 +405,20 @@ class APIClient {
   }
 
   async getProjectMembers(
-    params: paths["/projects/{project_id}/members"]["get"]["parameters"],
+    project_id: number,
+    query?: { page?: number; per_page?: number },
     config?: AxiosRequestConfig
   ): Promise<
     AxiosResponse<{
-      meta: components["schemas"]["Pagination"];
-      data: components["schemas"]["ProjectMember"][];
+      meta?: components["schemas"]["Pagination"];
+      data?: components["schemas"]["ProjectMember"][];
     }>
   > {
-    const {
-      path: { project_id },
-      query,
-    } = params;
-    return this.axiosInstance.get(`/projects/${project_id}/members`, {
+    const response = await axios.get(`/projects/${project_id}/members`, {
       params: query,
       ...config,
     });
+    return response;
   }
 
   // Chats

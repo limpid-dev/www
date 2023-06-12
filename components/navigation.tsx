@@ -168,7 +168,8 @@ export function Navigation() {
               });
             setProfession(profiles.data[0].display_name);
           }
-        } else {
+        }
+        if (profiles.data.length > 0) {
           setProfilesData(profiles.data);
 
           if (sessionData.data.selected_profile_id !== null) {

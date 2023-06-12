@@ -98,6 +98,7 @@ export const getServerSideProps = async (
         },
       }
     );
+
     const isAuthor = profile.data.id === project.data.profile_id;
 
     return {
@@ -109,19 +110,6 @@ export const getServerSideProps = async (
       },
     };
   }
-
-  // const { data: projectMemberShip } = await api.getProjectMembers(
-  //   {
-  //     path: { project_id: Number.parseInt(context!.params!.id as string, 10) },
-  //     query: { page: 1, per_page: 10 },
-  //   },
-  //   {
-  //     headers: {
-  //       Cookie: context.req.headers.cookie,
-  //     },
-  //   }
-  // );
-  // console.log(projectMemberShip);
 };
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
@@ -169,6 +157,17 @@ export default function ProjectView({ data }: Props) {
 
   //   return () => clearInterval(intervalId);
   // }, []);
+
+  useEffect(() => {
+    const fetchProjectMembers = async () => {
+      const { data: projectMemberShip } = await api.getProjectMembers(
+        parsedId,
+        { page: 1, per_page: 10 }
+      );
+    };
+
+    fetchProjectMembers();
+  }, []);
 
   const {
     register,
