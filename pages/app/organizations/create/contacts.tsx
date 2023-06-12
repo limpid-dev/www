@@ -61,7 +61,7 @@ export default function Test() {
       data
     );
 
-    await router.push(`/app/profiles/${router.query.organizationId}`);
+    await router.push(`/app/organizations/${router.query.organizationId}`);
   };
 
   return (
