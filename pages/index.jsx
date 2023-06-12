@@ -1247,7 +1247,7 @@ export default function Home() {
       {
         content: t("testimonials_content_3"),
         author: {
-          name: "Куаныш Асембай",
+          name: "Куаныш Амангали",
           role: "Director Design Sensei",
           image: avatarImage3,
         },
