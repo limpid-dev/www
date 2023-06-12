@@ -390,6 +390,7 @@ export default function All() {
                                       : testAva
                                   }
                                   alt="test"
+                                  unoptimized
                                   width={20}
                                   height={20}
                                   className="rounded-lg"
