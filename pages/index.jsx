@@ -573,7 +573,7 @@ export function Footer() {
             <div className="-my-1 flex justify-center gap-x-6">
               <NavLink href="#features">{t("opportunities")}</NavLink>
               <NavLink href="#testimonials">{t("reviews")}</NavLink>
-              <NavLink href="#pricing">{t("prices")}</NavLink>
+              {/* <NavLink href="#pricing">{t("prices")}</NavLink> */}
             </div>
           </nav>
         </div>
@@ -1347,7 +1347,7 @@ export default function Home() {
         </Container>
       </section>
 
-      <Pricing />
+      {/* <Pricing /> */}
       <Footer />
     </>
   );

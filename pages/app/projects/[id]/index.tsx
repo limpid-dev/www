@@ -80,46 +80,48 @@ export const getServerSideProps = async (
     },
   });
 
-  const { data: profile } = await api.getProfileById(
-    session.data.selected_profile_id,
-    {
-      headers: {
-        cookie: context.req.headers.cookie,
-      },
-    }
-  );
+  if (session.data.selected_profile_id) {
+    const { data: profile } = await api.getProfileById(
+      session.data.selected_profile_id,
+      {
+        headers: {
+          cookie: context.req.headers.cookie,
+        },
+      }
+    );
 
-  const { data: project } = await api.getProject(
-    Number.parseInt(context!.params!.id as string, 10),
-    {
-      headers: {
-        Cookie: context.req.headers.cookie,
-      },
-    }
-  );
+    const { data: project } = await api.getProject(
+      Number.parseInt(context!.params!.id as string, 10),
+      {
+        headers: {
+          Cookie: context.req.headers.cookie,
+        },
+      }
+    );
+    const isAuthor = profile.data.id === project.data.profile_id;
 
-  const { data: projectMemberShip } = await api.getProjectMembers(
-    {
-      path: { project_id: Number.parseInt(context!.params!.id as string, 10) },
-      query: { page: 1, per_page: 10 },
-    },
-    {
-      headers: {
-        Cookie: context.req.headers.cookie,
+    return {
+      props: {
+        data: {
+          project: project!,
+          isAuthor: isAuthor!,
+        },
       },
-    }
-  );
+    };
+  }
 
-  const isAuthor = profile.data.id === project.data.profile_id;
-
-  return {
-    props: {
-      data: {
-        project: project!,
-        isAuthor: isAuthor!,
-      },
-    },
-  };
+  // const { data: projectMemberShip } = await api.getProjectMembers(
+  //   {
+  //     path: { project_id: Number.parseInt(context!.params!.id as string, 10) },
+  //     query: { page: 1, per_page: 10 },
+  //   },
+  //   {
+  //     headers: {
+  //       Cookie: context.req.headers.cookie,
+  //     },
+  //   }
+  // );
+  // console.log(projectMemberShip);
 };
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
@@ -190,6 +192,21 @@ export default function ProjectView({ data }: Props) {
     setIsShown((current: boolean) => !current);
   };
 
+  const handleDeleteProject = (projectId: number) => {
+    const params = {
+      project_id: projectId,
+    };
+
+    api
+      .deleteProject(params)
+      .then((response) => {
+        router.reload();
+      })
+      .catch((error) => {
+        console.error("Error deleting project:", error);
+      });
+  };
+
   // const handleAccept = async () => {
   //   const { data } = await api.projects
   //     .memberships(parsedId)
@@ -225,6 +242,9 @@ export default function ProjectView({ data }: Props) {
                     <AlertDialogFooter>
                       <AlertDialogCancel>Отмена</AlertDialogCancel>
                       <AlertDialogAction
+                        onClick={() =>
+                          handleDeleteProject(data.project.data.id)
+                        }
                         className={clsx("bg-rose-500 hover:bg-rose-700")}
                       >
                         Удалить

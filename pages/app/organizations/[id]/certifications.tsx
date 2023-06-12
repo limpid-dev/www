@@ -1,4 +1,4 @@
-import { Pen, Trash } from "@phosphor-icons/react";
+import { Pen, Plus, Power, Trash } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
@@ -22,19 +22,16 @@ import {
 import { Button } from "../../../../components/primitives/button";
 import { Input } from "../../../../components/primitives/input";
 import { TextArea } from "../../../../components/primitives/text-area";
+import { CertificationCreate } from "../../../../components/profiles/create/certification";
+import SkillsCreate from "../../../../components/profiles/create/skills";
 import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
-
-interface FormValues {
-  owned_material_resources: string;
-  owned_intellectual_resources: string;
-}
+import Badge from "../../../../images/badge.svg";
 
 interface FormValuesGeneral {
   industry: string;
   location: string;
   description: string;
   display_name: string;
-  avatar?: File;
   instagram_url: string;
   whatsapp_url: string;
   website_url: string;
@@ -61,34 +58,60 @@ export const getServerSideProps = async (
       },
     }
   );
-  console.log(profile);
-  if (profile.data.user.first_name) {
-    const isAuthor = session.data.id === profile.data.user_id;
-    return {
-      props: {
-        data: {
-          profile: profile!,
-          isAuthor: isAuthor!,
-        },
+
+  const { data: certificates } = await api.getCertificates(
+    {
+      path: { profile_id: Number.parseInt(context!.params!.id as string, 10) },
+      query: { page: 1, per_page: 10 },
+    },
+    {
+      headers: {
+        cookie: context.req.headers.cookie,
       },
-    };
-  }
+    }
+  );
+  const isAuthor =
+    session.data.id &&
+    profile.data.user_id &&
+    session.data.id === profile.data.user_id;
+
+  const { data: skills } = await api.getSkills(
+    {
+      path: { profile_id: Number.parseInt(context!.params!.id as string, 10) },
+      query: { page: 1, per_page: 10 },
+    },
+    {
+      headers: {
+        cookie: context.req.headers.cookie,
+      },
+    }
+  );
+  return {
+    props: {
+      data: {
+        ...session!,
+        isAuthor: isAuthor!,
+        certifications: certificates!,
+        skills: skills!,
+        profile: profile!,
+      },
+    },
+  };
 };
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-export default function OneProfile({ data }: Props) {
+export default function Certifications({ data }: Props) {
   const router = useRouter();
-  const { id } = router.query as {
-    id: string;
-  };
-
+  const { id } = router.query;
+  const parsedId = Number.parseInt(id as string, 10) as number;
+  const [error, setError] = useState<string>();
   const tabs = [
-    { name: "Ресурсы", href: `/app/organizations/${id}/`, current: true },
+    { name: "Ресурсы", href: `/app/organizations/${id}/`, current: false },
     {
       name: "Сертификаты",
       href: `/app/organizations/${id}/certifications`,
-      current: false,
+      current: true,
     },
     {
       name: "Проекты",
@@ -97,41 +120,9 @@ export default function OneProfile({ data }: Props) {
     },
   ];
 
-  const parsedId = Number.parseInt(id as string, 10) as number;
-
-  const [edit, setEdit] = useState(false);
-  const [contacts, setContacts] = useState({});
-  const [error, setError] = useState("");
+  const [certificate, setCertificate] = useState(true);
+  const [skill, setSkill] = useState(true);
   const [editGeneral, setEditGeneral] = useState(false);
-
-  const handleSelectChange = (event: any) => {
-    const selectedPage = event.target.value;
-    router.push(selectedPage);
-  };
-
-  const handleDeleteProfile = async () => {
-    await api.deleteProfile(parsedId);
-
-    await router.push({
-      pathname: "/app/profiles/my",
-    });
-  };
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>();
-
-  const onSubmit = async (data1: FormValues) => {
-    try {
-      const { data } = await api.updateProfile(Number.parseInt(id, 10), data1);
-      router.reload();
-    } catch (error) {
-      setError("Что то пошло не так, попробуйте позже");
-    }
-  };
-
   const {
     register: register2,
     formState: { errors: errors2 },
@@ -146,20 +137,67 @@ export default function OneProfile({ data }: Props) {
       setError("Что то пошло не так, попробуйте позже");
     }
   };
+  const handleSelectChange = (event: any) => {
+    const selectedPage = event.target.value;
+    router.push(selectedPage);
+  };
 
-  const editResources = () => {
-    setEdit((current: boolean) => !current);
+  const skillAdd = () => {
+    setSkill((current: boolean) => !current);
+  };
+
+  const certificateAdd = () => {
+    setCertificate((current: boolean) => !current);
+  };
+
+  const handleDeleteProfile = async () => {
+    await api.deleteProfile(parsedId);
+
+    await router.push({
+      pathname: "/app/profiles/my",
+    });
+  };
+
+  const handleDeleteCertificate = async (certificateId: number) => {
+    try {
+      await api.deleteCertificate({
+        profile_id: parsedId,
+        certificate_id: certificateId,
+      });
+      await router.reload();
+    } catch (error) {
+      console.error("Failed to delete certificate:", error);
+    }
+  };
+  const handleDeleteSkill = async (skillId: number) => {
+    await api.deleteSkill({
+      path: { profile_id: parsedId, skill_id: skillId },
+    });
+    router.reload();
   };
 
   const editGeneralInfo = () => {
     setEditGeneral((current: boolean) => !current);
   };
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValuesGeneral>();
+
+  const onSubmit = async (data: FormValuesGeneral) => {
+    try {
+      await api.profiles.update(Number.parseInt(id as string, 10), data);
+      router.reload();
+    } catch (error) {}
+  };
+
   return (
     <div>
       <Navigation />
 
-      <div className="min-h-screen bg-slate-50 px-5 pt-8">
+      <div className=" min-h-[90vh] bg-slate-50 px-5 pt-8">
         <div className="mx-auto max-w-screen-xl">
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
             {data.isAuthor ? (
@@ -211,7 +249,7 @@ export default function OneProfile({ data }: Props) {
                       />
                       <p className="text-2xl font-semibold mb-2">
                         {data.profile.data.user?.first_name}{" "}
-                        {data.profile.data.user?.last_name}
+                        {data.profile.data.user?.last_name}{" "}
                       </p>
                       <p className=" text-sm">
                         <Input
@@ -232,7 +270,7 @@ export default function OneProfile({ data }: Props) {
                         </p>
                       </div>
                       <div>
-                        <p className="text-sm text-slate-400 mb-2">Название</p>
+                        <p className="text-sm text-slate-400 mb-2">Профессия</p>
                         <p className="text-sm">
                           <Input
                             {...register2("display_name")}
@@ -362,7 +400,7 @@ export default function OneProfile({ data }: Props) {
                     />
                     <p className="text-2xl font-semibold">
                       {data.profile.data.user?.first_name}{" "}
-                      {data.profile.data.user?.last_name}
+                      {data.profile.data.user?.last_name}{" "}
                     </p>
                     <p className=" text-sm">{data.profile.data.industry}</p>
                   </div>
@@ -490,11 +528,11 @@ export default function OneProfile({ data }: Props) {
                     Select a tab
                   </label>
                   <select
-                    id="tabs"
                     onChange={handleSelectChange}
+                    id="tabs"
                     name="tabs"
                     className="block w-full  border-gray-300 focus:border-lime-500 focus:ring-lime-500"
-                    defaultValue={`/app/profiles/${id}/`}
+                    defaultValue={`/app/profiles/${id}/certification`}
                   >
                     {tabs.map((tab) => (
                       <option key={tab.name} value={tab.href}>
@@ -536,78 +574,104 @@ export default function OneProfile({ data }: Props) {
                 </div>
               </div>
               <div className="p-6">
-                {edit ? (
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="flex flex-col gap-6">
-                      <div className="flex flex-col gap-3">
-                        <p className=" text-xl font-semibold text-slate-400">
-                          Материальный ресурс
-                        </p>
-                        <TextArea
-                          placeholder={
-                            data.profile.data.owned_material_resources!
-                          }
-                          {...register("owned_material_resources")}
-                        />
-                      </div>
-
-                      <div />
-                      <div className="flex flex-col gap-3">
-                        <p className=" text-xl font-semibold text-slate-400">
-                          Интеллектуальный ресурс
-                        </p>
-                        <TextArea
-                          {...register("owned_intellectual_resources")}
-                          placeholder={
-                            data.profile.data.owned_intellectual_resources!
-                          }
-                        />
-                      </div>
-                    </div>
-                    <div className="mt-5 flex justify-end gap-3 pt-4">
-                      <Button variant="outline" onClick={editResources}>
-                        Отмена
-                      </Button>
-                      <Button variant="black" type="submit">
-                        Сохранить
-                      </Button>
-                    </div>
-                  </form>
-                ) : (
+                <p className="mb-6 text-xl font-semibold text-slate-400">
+                  Сертификаты
+                </p>
+                {certificate ? (
                   <>
-                    <div className="flex flex-col gap-6 ">
-                      <div className="flex flex-col gap-3">
-                        <p className=" text-xl font-semibold text-slate-400">
-                          Материальный ресурс
-                        </p>
-                        <p className="text-sm">
-                          {data.profile.data.owned_material_resources}
-                        </p>
-                      </div>
-
-                      <div />
-                      <div className="flex flex-col gap-3">
-                        <p className=" text-xl font-semibold text-slate-400">
-                          Интеллектуальный ресурс
-                        </p>
-                        <p className="text-sm">
-                          {data.profile.data.owned_intellectual_resources}
-                        </p>
-                      </div>
-                    </div>
-                    {data.isAuthor && (
-                      <div className="col-span-2">
-                        <div className="flex justify-end gap-6 mt-4">
-                          <Button
-                            variant="outline"
-                            color="zinc"
-                            onClick={editResources}
-                          >
-                            <Pen className="h-6 w-6" />
-                          </Button>
+                    {data.certifications.data.map(
+                      (certificate, certificateIndex) => (
+                        <div key={certificateIndex} className="mb-7">
+                          <div className="w-full rounded-xl bg-slate-100 pb-6 pt-4">
+                            <div className="flex flex-col items-center justify-center p-3 sm:p-0">
+                              <Image
+                                src={Badge}
+                                alt="Sertificate"
+                                className="m-auto"
+                              />
+                              <p className="text-center text-base font-semibold sm:text-xl">
+                                {certificate.title}
+                              </p>
+                              <p className="text-center text-xs  font-normal sm:text-sm">
+                                {certificate.description}
+                              </p>
+                              <Link
+                                target="_blank"
+                                href={`${process.env.NEXT_PUBLIC_API_URL}${certificate.attachment?.url}`}
+                              >
+                                <p className="text-sm font-medium text-sky-500">
+                                  Смотреть сертификат
+                                </p>
+                              </Link>
+                            </div>
+                          </div>
+                          <div className=" flex items-end justify-end text-sm font-medium text-red-500 mt-2">
+                            <Button
+                              onClick={() => {
+                                handleDeleteCertificate(certificate.id);
+                              }}
+                              variant="ghost"
+                            >
+                              Удалить сертификат
+                            </Button>
+                          </div>
                         </div>
+                      )
+                    )}
+                    {data.isAuthor && (
+                      <div className="mt-7 flex items-center justify-end text-sm text-sky-500 underline">
+                        <Plus />
+                        <button onClick={certificateAdd}>
+                          Добавить сертификат
+                        </button>
                       </div>
                     )}
+                  </>
+                ) : (
+                  <>
+                    <CertificationCreate
+                      profileId={id}
+                      certificateAdd={certificateAdd}
+                    />
+                  </>
+                )}
+                <p className="my-7 text-xl font-semibold text-slate-400">
+                  Навыки
+                </p>
+                {skill ? (
+                  <>
+                    <div className="mt-8 flex flex-wrap gap-7">
+                      {data.skills.data.map((skill, skillIndex) => (
+                        <div
+                          key={skillIndex}
+                          className="flex items-center gap-3"
+                        >
+                          <div className="flex items-center gap-3 rounded-md bg-slate-100 px-4 py-3 text-sm">
+                            <Power />
+                            <p>{skill.name}</p>
+                          </div>
+                          {data.isAuthor && (
+                            <Button
+                              variant="outline"
+                              color="zinc"
+                              onClick={() => handleDeleteSkill(skill.id)}
+                            >
+                              <Trash className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    {data.isAuthor && (
+                      <div className="mt-7 flex items-center justify-end text-sm text-sky-500 underline">
+                        <Plus />
+                        <button onClick={skillAdd}>Добавить навык</button>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <SkillsCreate profileId={id} skillAdd={skillAdd} />
                   </>
                 )}
               </div>

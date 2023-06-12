@@ -25,6 +25,8 @@ interface FormValues {
   owned_intellectual_resources: string;
   owned_material_resources: string;
   performance: string;
+  is_visible: boolean;
+  location: string;
 }
 
 export default function Test() {
@@ -63,13 +65,7 @@ export default function Test() {
                   Общие данные
                 </div>
                 <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-lg sm:text-xl">
-                  Опыт работы
-                </div>
-                <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-lg sm:text-xl">
                   Сертификаты
-                </div>
-                <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-lg sm:text-xl">
-                  Доп.материалы
                 </div>
                 <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-lg sm:text-xl">
                   Соцсети
@@ -113,7 +109,7 @@ export default function Test() {
                         placeholder="БИН/ИИН"
                         pattern="[0-9]{12}"
                       />
-                      {errors.bin && (
+                      {errors.tin && (
                         <span className="ml-1 text-sm text-red-600">
                           Обязательное поле
                         </span>
@@ -202,7 +198,51 @@ export default function Test() {
                       )}
                     </div>
                   </div>
-
+                  <div className="flex flex-col sm:flex-row gap-5">
+                    <div className="grid w-full">
+                      <Input
+                        type="text"
+                        className="text-black rounded-md border border-slate-300"
+                        {...register("location", {
+                          required: true,
+                        })}
+                        placeholder="Населенный пункт"
+                      />
+                      {errors.location && (
+                        <span className="text-sm text-red-600">
+                          Введите обязательное поле
+                        </span>
+                      )}
+                    </div>
+                    <Controller
+                      control={control}
+                      name="is_visible"
+                      rules={{ required: true }}
+                      render={({ field }) => (
+                        <div className="flex flex-col w-full">
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger className="px-5 text-ellipsis whitespace-nowrap overflow-hidden">
+                              <SelectValue placeholder="Выберите видимость" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="false">Не видимый</SelectItem>
+                              <SelectItem value="true">Видимый</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <p>
+                            {errors.industry && (
+                              <span className="text-sm text-red-600">
+                                Введите обязательное поле
+                              </span>
+                            )}
+                          </p>
+                        </div>
+                      )}
+                    />
+                  </div>
                   <div>
                     <div className="font-semibold text-black text-lg sm:text-2xl">
                       О компании

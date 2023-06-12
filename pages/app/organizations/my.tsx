@@ -1,5 +1,3 @@
-import "@uppy/core/dist/style.min.css";
-import "@uppy/drag-drop/dist/style.min.css";
 import { Briefcase, Plus } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Image from "next/image";
@@ -7,8 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import api from "../../../api";
-import { Entity } from "../../../api/organizations";
 import { Navigation } from "../../../components/navigation";
+import Pagination from "../../../components/pagination";
 import { Button } from "../../../components/primitives/button";
 import { Skeleton } from "../../../components/primitives/skeleton";
 import NoProfiles from "../../../images/noProfiles.svg";
@@ -20,51 +18,34 @@ const tabs = [
 
 export default function All() {
   const router = useRouter();
-  const [profilesData, setProfilesData] = useState<Entity[]>([]);
+  const [organizationsData, setOrganizationsData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [totalItems, setTotalItems] = useState(1);
+  const currentPage =
+    (Number.parseInt(router.query.page as string, 10) as number) || 1;
 
   useEffect(() => {
-    async function fetchProfiles() {
-      const { data: session } = await api.session.show();
-      if (session) {
-        const { data } = await api.organizations.index({
-          page: 1,
+    async function fetchOrganizations() {
+      const { data: session } = await api.getUser();
+      try {
+        const response = await api.getOrganizations({
+          page: currentPage,
+          per_page: 9,
+          user_id: session.data.id,
         });
-
-        if (data) {
-          const a = (
-            await Promise.all(
-              data.map((org) =>
-                api.organizations
-                  .memberships(org.id)
-                  .index({ page: 1 })
-                  .then((d) => d.data)
-              )
-            )
-          )
-            .flat()
-            .filter(Boolean);
-
-          const u = a.filter(
-            (m) => m!.type === "owner" && m!.userId === session.id
-          );
-
-          const b = (
-            await Promise.all(
-              u.map((m) =>
-                api.organizations.show(m!.organizationId).then((d) => d.data)
-              )
-            )
-          ).filter(Boolean);
-
-          setProfilesData(b as Entity[]);
-
-          setLoading(false);
+        const data = response.data.data;
+        console.log(data);
+        if (data && data.length > 0) {
+          setOrganizationsData(data);
+          setTotalItems(response.data.meta.total);
         }
+      } catch (error) {
+        console.error("Error fetching profiles:", error);
       }
+      setLoading(false);
     }
-    fetchProfiles();
-  }, []);
+    fetchOrganizations();
+  }, [currentPage]);
 
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
@@ -129,21 +110,31 @@ export default function All() {
             </div>
           ) : (
             <>
-              {profilesData.length > 0 ? (
-                <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-                  {profilesData.map((profile) => (
-                    <Link
-                      key={profile.id}
-                      href={`/app/organizations/${profile.id}`}
-                    >
-                      <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-9 font-semibold hover:border-slate-700 sm:max-w-[400px]">
-                        <Briefcase className="h-6 w-6" />
-                        <p className="w-[203px] text-center text-base sm:text-xl ">
-                          {profile.name}
-                        </p>
-                      </div>
-                    </Link>
-                  ))}
+              {organizationsData.length > 0 ? (
+                <div>
+                  <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+                    {organizationsData.map((profile) => (
+                      <Link
+                        key={profile.id}
+                        href={`/app/organizations/${profile.id}`}
+                      >
+                        <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-9 font-semibold hover:border-slate-700 sm:max-w-[400px]">
+                          <Briefcase className="h-6 w-6" />
+                          <p className="w-[203px] text-center text-base sm:text-xl ">
+                            {profile.legal_structure} {profile.display_name}
+                          </p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                  <Pagination
+                    renderPageLink={(page) =>
+                      `/app/organizations/my/?page=${page}`
+                    }
+                    itemsPerPage={9}
+                    totalItems={totalItems}
+                    currentPage={currentPage}
+                  />
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center gap-8">

@@ -16,7 +16,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../../../components/primitives/select";
-import { Switch } from "../../../../components/primitives/switch";
 import { TextArea } from "../../../../components/primitives/text-area";
 
 interface FormValues {
@@ -167,6 +166,9 @@ export default function Test() {
                     <div className="grid w-full">
                       <Input
                         type="text"
+                        pattern="[0-9]{12}"
+                        minLength={12}
+                        maxLength={12}
                         className="text-black rounded-md border border-slate-300"
                         {...register("tin", {
                           required: true,
@@ -187,13 +189,16 @@ export default function Test() {
                       rules={{ required: true }}
                       render={({ field }) => (
                         <div className="flex flex-col w-full">
-                          <Select onValueChange={field.onChange}>
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
                             <SelectTrigger className="px-5 text-ellipsis whitespace-nowrap overflow-hidden">
                               <SelectValue placeholder="Выберите видимость" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="1">Не видимый</SelectItem>
-                              <SelectItem value="1">Видимый</SelectItem>
+                              <SelectItem value="false">Не видимый</SelectItem>
+                              <SelectItem value="true">Видимый</SelectItem>
                             </SelectContent>
                           </Select>
                           <p>

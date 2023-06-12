@@ -49,7 +49,20 @@ export default function All() {
 
   const currentPage =
     (Number.parseInt(router.query.page as string, 10) as number) || 1;
+  const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
 
+  const handleCheckboxChange = (event) => {
+    const value = Number(event.target.value);
+    if (selectedCheckboxes.includes(value)) {
+      setSelectedCheckboxes(selectedCheckboxes.filter((id) => id !== value));
+    } else {
+      setSelectedCheckboxes([...selectedCheckboxes, value]);
+    }
+  };
+  const handleReset = () => {
+    setSelectedCheckboxes([]);
+    setSearchTerm("");
+  };
   const [totalItems, setTotalItems] = useState<any>(1);
   const [data, setData] = useState<any>();
   const [loading, setLoading] = useState(true);
@@ -65,11 +78,22 @@ export default function All() {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [largeScreen, setLargeScreen] = useState(false);
+  useEffect(() => {
+    handleSearch();
+  }, [selectedCheckboxes, searchTerm]);
 
   const handleSearch = async () => {
+    const industries = selectedCheckboxes
+      .map((id) => {
+        const option = Options.find((option) => option.id === id);
+        return option ? option.name : null;
+      })
+      .filter(Boolean);
+
     const { data } = await api.getProjects({
       page: 1,
       per_page: 6,
+      industry: industries,
       search: searchTerm,
     });
 
@@ -233,33 +257,6 @@ export default function All() {
               </Button>
             </div>
             <div className="flex gap-4">
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline">
-                    <Faders className="h-6 w-6" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <div className="flex items-center gap-3 bg-slate-50 rounded-md p-3">
-                    <input
-                      type="checkbox"
-                      name=""
-                      id=""
-                      className="rounded-md"
-                    />
-                    <p className="text-sm">Сначала новые</p>
-                  </div>
-                  <div className="flex items-center gap-3 bg-slate-50 rounded-md p-3 mt-3">
-                    <input
-                      type="checkbox"
-                      name=""
-                      id=""
-                      className="rounded-md"
-                    />
-                    <p className="text-sm">Сначала старые</p>
-                  </div>
-                </PopoverContent>
-              </Popover>
               <Sheet>
                 <SheetTrigger asChild>
                   <Button variant="outline">
@@ -284,8 +281,9 @@ export default function All() {
                       >
                         <input
                           type="checkbox"
-                          name=""
-                          id=""
+                          value={option.id}
+                          checked={selectedCheckboxes.includes(option.id)}
+                          onChange={handleCheckboxChange}
                           className="rounded-md"
                         />
                         <p className="text-sm">{option.name}</p>
@@ -293,22 +291,29 @@ export default function All() {
                     ))}
                   </div>
                   <SheetFooter
-                    className={clsx("flex justify-center gap-3 pt-3")}
+                    className={clsx("flex justify-between gap-3 pt-3")}
                   >
-                    <DialogPrimitive.Close aria-label="Close">
-                      <Button type="reset" variant="outline" className="w-full">
+                    <DialogPrimitive.Close aria-label="Close" asChild>
+                      <Button
+                        type="reset"
+                        variant="outline"
+                        onClick={handleReset}
+                        className="w-full"
+                      >
                         Сбросить
                       </Button>
                     </DialogPrimitive.Close>
-                    <Button
-                      type="submit"
-                      className={clsx(
-                        " bg-slate-900 text-white hover:bg-slate-800"
-                      )}
-                      variant="subtle"
-                    >
-                      Применить
-                    </Button>
+                    <DialogPrimitive.Close aria-label="Close" asChild>
+                      <Button
+                        type="submit"
+                        className={clsx(
+                          " bg-slate-900 text-white hover:bg-slate-800 w-full"
+                        )}
+                        variant="subtle"
+                      >
+                        Применить
+                      </Button>
+                    </DialogPrimitive.Close>
                   </SheetFooter>
                 </SheetContent>
               </Sheet>
@@ -334,7 +339,7 @@ export default function All() {
                 >
                   <div className=" rounded-2xl border border-slate-200 bg-white hover:border-black">
                     <div className="p-4">
-                      <div className="grid w-full grid-cols-10 gap-4">
+                      <div className="grid w-full grid-cols-10 gap-4 h-[160px]">
                         <div className="col-span-2">
                           <div className="overflow-hidden" ref={emblaRef}>
                             <div className="flex">
@@ -390,6 +395,10 @@ export default function All() {
                                   className="rounded-lg"
                                 />
                                 <p className="text-xs sm:text-sm">
+                                  {project?.profile_data?.data?.legal_structure
+                                    ? project?.profile_data?.data
+                                        ?.legal_structure
+                                    : ""}{" "}
                                   {project?.profile_data?.data?.display_name}
                                 </p>
                               </div>

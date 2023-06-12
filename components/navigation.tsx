@@ -18,7 +18,6 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "./primitives/navigation-menu";
-import { Skeleton } from "./primitives/skeleton";
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
@@ -114,27 +113,24 @@ const navigation = [
   { name: "Продажи", href: "/app/tenders" },
   // { name: "Чаты", href: "/app/chats" },
 ];
-
 const userNavigation = [{ name: "Настройки", href: "/app/settings" }];
-interface MyObject {
-  id: number;
-  title?: string;
-}
+
 export function Navigation() {
   const router = useRouter();
   const [profilesData, setProfilesData] = useState<
     components["schemas"]["Profile"][]
   >([]);
-  const [profession, setProfession] = useState<string>();
   const [sessionData, setSessionData] =
     useState<components["schemas"]["User"]>();
+  const [foundObject, setFoundObject] =
+    useState<components["schemas"]["Profile"]>();
+  const [profession, setProfession] = useState<string>();
   const [avatarUrl, setAvatarUrl] = useState<string>();
-  const [foundObject, setFoundObject] = useState<any>();
 
   useEffect(() => {
     async function fetchProfiles() {
       const { data: sessionData } = await api.getUser();
-      if (sessionData) {
+      if (sessionData.data.id) {
         setSessionData(sessionData.data);
 
         const { data: profiles } = await api.getProfiles({
@@ -142,7 +138,37 @@ export function Navigation() {
           page: 1,
         });
 
-        if (profiles.data.length > 0) {
+        const { data: organizations } = await api.getOrganizations({
+          user_id: sessionData.data.id,
+          page: 1,
+        });
+
+        if (profiles.data.length > 0 && organizations.data.length > 0) {
+          const mergedArray = profiles.data.concat(organizations.data);
+          setProfilesData(mergedArray);
+          if (sessionData.data.selected_profile_id !== null) {
+            const foundObject = mergedArray.find(
+              (item) => item.id === sessionData.data.selected_profile_id
+            );
+            setFoundObject(foundObject);
+            setAvatarUrl(`/api/${foundObject?.avatar?.url}`);
+            setProfession(foundObject?.display_name);
+          }
+
+          if (sessionData.data.selected_profile_id === null) {
+            await api
+              .updateUser({
+                selected_profile_id: profiles.data[0].id,
+              })
+              .then(() => {
+                const foundObject = mergedArray.find(
+                  (item) => item.id === sessionData.data.selected_profile_id
+                );
+                setAvatarUrl(`/api/${foundObject?.avatar?.url}`);
+              });
+            setProfession(profiles.data[0].display_name);
+          }
+        } else {
           setProfilesData(profiles.data);
 
           if (sessionData.data.selected_profile_id !== null) {
@@ -332,6 +358,7 @@ export function Navigation() {
                                 router.reload();
                               }}
                             >
+                              {item.legal_structure ? item.legal_structure : ""}{" "}
                               {item.display_name}
                             </button>
                           )}

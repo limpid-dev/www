@@ -1644,7 +1644,7 @@ export interface components {
       owned_material_resources?: string | null;
       tin?: string;
       legal_structure?: string | null;
-      perfomance?: string | null;
+      performance?: string | null;
       is_visible?: boolean;
       is_personal?: boolean;
       avatar?: components["schemas"]["Attachment"];

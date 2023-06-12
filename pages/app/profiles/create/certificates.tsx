@@ -47,7 +47,7 @@ export default function Test() {
           )
         )
       );
-      router.push({
+      await router.push({
         pathname: "/app/profiles/create/contacts",
         query: { profileId: router.query.profileId },
       });

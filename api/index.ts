@@ -7,8 +7,8 @@ export interface AxiosError extends Error {
     data?: any;
   };
 }
-const API_BASE_URL = "https://limpid.kz/api";
-// const API_BASE_URL = "http://localhost:3000/api";
+// const API_BASE_URL = "https://limpid.kz/api";
+const API_BASE_URL = "http://localhost:3000/api";
 
 class APIClient {
   private axiosInstance = axios.create({
@@ -309,12 +309,11 @@ class APIClient {
 
   async getExperience(
     params: paths["/profiles/{profile_id}/experiences/{experience_id}"]["get"]["parameters"]["path"]
-  ): Promise<AxiosResponse<{ data?: components["schemas"]["Experience"] }>> {
+  ): Promise<AxiosResponse<{ data: components["schemas"]["Experience"] }>> {
     const { profile_id, experience_id } = params;
-    const response = await axios.get(
+    return this.axiosInstance.get(
       `/profiles/${profile_id}/experiences/${experience_id}`
     );
-    return response;
   }
 
   async deleteExperience(
@@ -395,6 +394,14 @@ class APIClient {
       formData,
       config
     );
+  }
+
+  async deleteProject(
+    params: paths["/projects/{project_id}"]["delete"]["parameters"]["path"]
+  ): Promise<AxiosResponse<void>> {
+    const { project_id } = params;
+    const response = await axios.delete(`/projects/${project_id}`);
+    return response;
   }
 
   async getProjectMembers(
@@ -496,6 +503,64 @@ class APIClient {
     organizationData: paths["/organizations"]["post"]["requestBody"]["content"]["multipart/form-data"]
   ): Promise<AxiosResponse<{ data: components["schemas"]["Profile"] }>> {
     return this.axiosInstance.post("/organizations", organizationData);
+  }
+
+  async updateOrganization(
+    organizationId: number,
+    organizationData: paths["/organizations/{organization_id}"]["patch"]["requestBody"]["content"]["multipart/form-data"]
+  ): Promise<AxiosResponse<{ data: components["schemas"]["Profile"] }>> {
+    const f = new FormData();
+
+    Object.entries(organizationData).forEach(([k, v]) => {
+      if (v) {
+        if (v === true) {
+          f.append(k, `${v}`);
+        }
+        if (v instanceof File) {
+          f.append(k, v);
+        }
+        if (typeof v === "string") {
+          f.append(k, v);
+        }
+      }
+    });
+
+    return this.axiosInstance.patch(`/organizations/${organizationId}`, f);
+  }
+
+  // Organization certificates
+  async getOrganizationCertificates(
+    params: paths["/organizations/{profile_id}/certificates"]["get"]["parameters"]
+  ): Promise<
+    AxiosResponse<{
+      meta: components["schemas"]["Pagination"];
+      data: components["schemas"]["Certificate"][];
+    }>
+  > {
+    const { path, query } = params;
+    return this.axiosInstance.get(
+      `/organizations/${path.profile_id}/certificates`,
+      { params: query }
+    );
+  }
+
+  async createOrganizationCertificate(
+    profile_id: number,
+    certificateData: paths["/organizations/{profile_id}/certificates"]["post"]["requestBody"]["content"]["multipart/form-data"]
+  ): Promise<AxiosResponse<{ data: components["schemas"]["Certificate"] }>> {
+    const f = new FormData();
+    f.append("institution", certificateData.institution);
+    f.append("title", certificateData.title);
+    f.append("description", certificateData.description);
+    f.append("issued_at", certificateData.issued_at);
+    if (certificateData.expired_at) {
+      f.append("expired_at", certificateData.expired_at);
+    }
+    f.append("attachment", certificateData.attachment);
+    return this.axiosInstance.post(
+      `/organizations/${profile_id}/certificates`,
+      f
+    );
   }
 }
 

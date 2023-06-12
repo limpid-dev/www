@@ -36,44 +36,16 @@ export default function Profiles() {
   const router = useRouter();
   const [profilesData, setProfilesData] = useState<any[]>([]);
   const [totalItems, setTotalItems] = useState<number>(1);
-
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>): void => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
   };
-
-  const handleChat = async (receiver_id: number) => {
-    try {
-      const { data: sessionData } = await api.getUser();
-      const { data } = await api.createChat({
-        user_ids: [receiver_id, sessionData.data.id],
-        name: "My New Chat",
-      });
-
-      if (data) {
-        router.push("/app/chats");
-      }
-    } catch (error) {
-      // Handle any errors
-      console.error("Error handling chat:", error);
-    }
-  };
-
   const currentPage =
     (Number.parseInt(router.query.page as string, 10) as number) || 1;
 
+  const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-
-  const handleSearch = async () => {
-    const { data } = await api.getProfiles({
-      page: 1,
-      per_page: 9,
-      search: searchTerm,
-    });
-    setProfilesData(data.data);
-  };
   const [largeScreen, setLargeScreen] = useState(false);
-
   useEffect(() => {
     const handleResize = () => {
       const newScreenWidth = window.innerWidth;
@@ -87,6 +59,42 @@ export default function Profiles() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  const handleReset = () => {
+    setSelectedCheckboxes([]);
+    setSearchTerm("");
+  };
+
+  const handleCheckboxChange = (event) => {
+    const value = Number(event.target.value);
+    if (selectedCheckboxes.includes(value)) {
+      setSelectedCheckboxes(selectedCheckboxes.filter((id) => id !== value));
+    } else {
+      setSelectedCheckboxes([...selectedCheckboxes, value]);
+    }
+  };
+
+  const handleSearch = async () => {
+    const industries = selectedCheckboxes
+      .map((id) => {
+        const option = Options.find((option) => option.id === id);
+        return option ? option.name : null;
+      })
+      .filter(Boolean);
+
+    const { data } = await api.getProfiles({
+      page: currentPage,
+      per_page: 9,
+      industry: industries,
+      search: searchTerm,
+    });
+
+    setProfilesData(data.data);
+  };
+
+  useEffect(() => {
+    handleSearch();
+  }, [selectedCheckboxes, searchTerm]);
 
   useEffect(() => {
     async function getProfiles() {
@@ -220,8 +228,9 @@ export default function Profiles() {
                       >
                         <input
                           type="checkbox"
-                          name=""
-                          id=""
+                          value={option.id}
+                          checked={selectedCheckboxes.includes(option.id)}
+                          onChange={handleCheckboxChange}
                           className="rounded-md"
                         />
                         <p className="text-sm">{option.name}</p>
@@ -229,22 +238,29 @@ export default function Profiles() {
                     ))}
                   </div>
                   <SheetFooter
-                    className={clsx("flex justify-center gap-3 pt-3")}
+                    className={clsx("flex justify-between gap-3 pt-3")}
                   >
-                    <DialogPrimitive.Close aria-label="Close">
-                      <Button type="reset" variant="outline" className="w-full">
+                    <DialogPrimitive.Close aria-label="Close" asChild>
+                      <Button
+                        type="reset"
+                        variant="outline"
+                        onClick={handleReset}
+                        className="w-full"
+                      >
                         Сбросить
                       </Button>
                     </DialogPrimitive.Close>
-                    <Button
-                      type="submit"
-                      className={clsx(
-                        " bg-slate-900 text-white hover:bg-slate-800"
-                      )}
-                      variant="subtle"
-                    >
-                      Применить
-                    </Button>
+                    <DialogPrimitive.Close aria-label="Close" asChild>
+                      <Button
+                        type="submit"
+                        className={clsx(
+                          " bg-slate-900 text-white hover:bg-slate-800 w-full"
+                        )}
+                        variant="subtle"
+                      >
+                        Применить
+                      </Button>
+                    </DialogPrimitive.Close>
                   </SheetFooter>
                 </SheetContent>
               </Sheet>

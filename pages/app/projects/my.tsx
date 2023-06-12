@@ -173,12 +173,19 @@ export default function All({ data }: Props) {
 
           {data.projects?.data.length > 0 || data.projects !== null ? (
             <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-              {data.projects.data.map((project, projectIndex) => (
+              {data.projects?.data.map((project, projectIndex) => (
                 <Link key={projectIndex} href={`/app/projects/${project.id}`}>
                   <div className="grid items-center justify-center gap-4 rounded-lg border py-6 pl-6 pr-4 hover:border-black sm:grid-cols-10">
                     <div className="sm:col-span-4 ">
                       <Image
-                        src={testAva}
+                        src={
+                          project.logo?.url
+                            ? `${process.env.NEXT_PUBLIC_API_URL}${project.logo.url}`
+                            : testAva
+                        }
+                        width={0}
+                        height={0}
+                        unoptimized
                         className="m-auto w-[126px] rounded-lg"
                         alt="test"
                       />

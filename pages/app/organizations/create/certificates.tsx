@@ -13,8 +13,9 @@ interface CertificationValues {
     institution: string;
     title: string;
     description: string;
-    issuedAt: string;
-    expiredAt: string;
+    issued_at: string;
+    expired_at: string;
+    attachment: FileList;
   }[];
 }
 
@@ -26,53 +27,29 @@ export default function Test() {
     handleSubmit,
     formState: { errors },
     control,
-  } = useForm<CertificationValues>({
-    defaultValues: {
-      certification: [
-        {
-          institution: "",
-          title: "",
-          description: "",
-          issuedAt: "",
-          expiredAt: "",
-        },
-      ],
-    },
-  });
+  } = useForm<CertificationValues>({});
 
   const { fields, append, remove } = useFieldArray({
     name: "certification",
     control,
   });
 
-  const onSubmitFile = async (fileId: number) => {
-    const inputFile = document.querySelector("#fileInput") as HTMLInputElement;
-    const formData = new FormData();
-
-    const files = inputFile.files ? Array.from(inputFile.files) : [];
-    for (const f of files) {
-      formData.set("file", f);
-    }
-
-    const { data } = await api.certificateFile.store(
-      formData,
-      Number.parseInt(router.query.organizationId as string, 10),
-      fileId
-    );
-  };
-
   const onSubmit = async (data: CertificationValues) => {
     try {
-      data.certification.forEach(async (post) => {
-        const { data } = await api.certifications.store(
-          post,
-          Number.parseInt(router.query.organizationId as string, 10)
-        );
-        if (data) {
-          onSubmitFile(data.profileId);
-        } else {
-          throw new Error("Network response was not ok.");
-        }
+      await Promise.all(
+        data.certification.map((post) =>
+          api.createOrganizationCertificate(
+            Number.parseInt(router.query.organizationId as string, 10),
+            {
+              ...post,
+              attachment: post.attachment[0],
+            }
+          )
+        )
+      );
+      await router.push({
+        pathname: "/app/organizations/create/contacts",
+        query: { organizationId: router.query.organizationId },
       });
     } catch (error) {
       setError("Что то пошло не так, попробуйте позже");
@@ -81,7 +58,7 @@ export default function Test() {
 
   return (
     <>
-      <div className="h-auto bg-slate-50">
+      <div className=" min-h-screen bg-slate-50">
         <Navigation />
         <div className="container mx-auto mb-4 max-w-screen-xl px-5 pt-8">
           <h1 className="text-sm">
@@ -95,14 +72,8 @@ export default function Test() {
                 <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-lime-500 text-xl">
                   Общие данные
                 </div>
-                <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-lime-500 text-xl">
-                  Опыт работы
-                </div>
                 <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-lime-600 text-xl">
                   Сертификаты
-                </div>
-                <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-xl">
-                  Доп.материалы
                 </div>
                 <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-xl">
                   Соцсети
@@ -146,7 +117,13 @@ export default function Test() {
                             </div>
                           </div>
 
-                          <Input id="fileInput" type="file" required />
+                          <Input
+                            id="fileInput"
+                            type="file"
+                            {...register(`certification.${index}.attachment`, {
+                              required: true,
+                            })}
+                          />
 
                           <div className="flex flex-col justify-around gap-5 md:flex-row">
                             <div className="flex items-center justify-between gap-3">
@@ -158,17 +135,13 @@ export default function Test() {
                                   type="date"
                                   id="birthday"
                                   {...register(
-                                    `certification.${index}.issuedAt`,
+                                    `certification.${index}.issued_at`,
                                     {
                                       required: true,
-                                      setValueAs: (value: string | undefined) =>
-                                        value
-                                          ? new Date(value).toISOString()
-                                          : undefined,
                                     }
                                   )}
                                 />
-                                {errors.certification?.[index]?.issuedAt && (
+                                {errors.certification?.[index]?.issued_at && (
                                   <p className="ml-2 text-sm text-red-500">
                                     Выберите дату
                                   </p>
@@ -184,17 +157,13 @@ export default function Test() {
                                   type="date"
                                   id="birthday"
                                   {...register(
-                                    `certification.${index}.expiredAt`,
+                                    `certification.${index}.expired_at`,
                                     {
                                       required: true,
-                                      setValueAs: (value: string | undefined) =>
-                                        value
-                                          ? new Date(value).toISOString()
-                                          : undefined,
                                     }
                                   )}
                                 />
-                                {errors.certification?.[index]?.expiredAt && (
+                                {errors.certification?.[index]?.expired_at && (
                                   <p className="ml-2 text-sm text-red-500">
                                     Выберите дату
                                   </p>
@@ -238,8 +207,9 @@ export default function Test() {
                             institution: "",
                             title: "",
                             description: "",
-                            issuedAt: "",
-                            expiredAt: "",
+                            issued_at: "",
+                            expired_at: "",
+                            attachment: "",
                           });
                         }}
                         variant="outline"
