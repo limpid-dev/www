@@ -289,7 +289,7 @@ export default function Profiles() {
                   </div>
                   <div className="col-span-6 flex flex-col gap-1">
                     <p>{profile.display_name}</p>
-                    <p>
+                    <p className="line-clamp-1">
                       {profile.user?.first_name} {profile.user?.last_name}
                     </p>
                     <p className="line-clamp-2 w-auto text-xs text-slate-600">
