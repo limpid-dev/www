@@ -584,9 +584,7 @@ export default function ProjectView({ data }: Props) {
                             Ахметов Темирлан
                           </p>
                           <>
-                            <p className="text-sm">
-                              Салам, у меня есть учпушмак с горячем чаем
-                            </p>
+                            <p className="text-sm">test message</p>
                           </>
                         </div>
                       </div>
@@ -622,9 +620,7 @@ export default function ProjectView({ data }: Props) {
                             Ахметов Темирлан
                           </p>
                           <>
-                            <p className="text-sm">
-                              Салам, у меня есть учпушмак с горячем чаем
-                            </p>
+                            <p className="text-sm">test message</p>
                           </>
                         </div>
                       </div>
@@ -654,9 +650,7 @@ export default function ProjectView({ data }: Props) {
                             Ахметов Темирлан
                           </p>
                           <>
-                            <p className="text-sm">
-                              Салам, у меня есть учпушмак с горячем чаем
-                            </p>
+                            <p className="text-sm">test message</p>
                           </>
                         </div>
                       </div>
@@ -692,9 +686,7 @@ export default function ProjectView({ data }: Props) {
                             Ахметов Темирлан
                           </p>
                           <>
-                            <p className="text-sm">
-                              Салам, у меня есть учпушмак с горячем чаем
-                            </p>
+                            <p className="text-sm">test message</p>
                           </>
                         </div>
                       </div>
@@ -730,9 +722,7 @@ export default function ProjectView({ data }: Props) {
                             Ахметов Темирлан
                           </p>
                           <>
-                            <p className="text-sm">
-                              Салам, у меня есть учпушмак с горячем чаем
-                            </p>
+                            <p className="text-sm">test message</p>
                           </>
                         </div>
                       </div>
@@ -762,9 +752,7 @@ export default function ProjectView({ data }: Props) {
                             Ахметов Темирлан
                           </p>
                           <>
-                            <p className="text-sm">
-                              Салам, у меня есть учпушмак с горячем чаем
-                            </p>
+                            <p className="text-sm">test message</p>
                           </>
                         </div>
                       </div>
