@@ -180,7 +180,7 @@ export default function All({ data }: Props) {
                       <Image
                         src={
                           project.logo?.url
-                            ? `${process.env.NEXT_PUBLIC_API_URL}${project.logo.url}`
+                            ? `/api/${project.logo.url}`
                             : testAva
                         }
                         width={0}

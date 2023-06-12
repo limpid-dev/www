@@ -302,7 +302,7 @@ export default function ProjectView({ data }: Props) {
                   <Image
                     src={
                       data.project.data.logo?.url
-                        ? `${process.env.NEXT_PUBLIC_API_URL}${data.project.data.logo.url}`
+                        ? `/api/${data.project.data.logo.url}`
                         : Test
                     }
                     alt="Photo by Alvaro Pinot"
@@ -338,7 +338,7 @@ export default function ProjectView({ data }: Props) {
                           <Link
                             href={
                               data.project.data.business_plan.url
-                                ? `${process.env.NEXT_PUBLIC_API_URL}${data.project.data.business_plan.url}`
+                                ? `/api/${data.project.data.business_plan.url}`
                                 : Test
                             }
                           >
@@ -379,7 +379,7 @@ export default function ProjectView({ data }: Props) {
                             unoptimized
                             src={
                               data.project.data.logo.url
-                                ? `${process.env.NEXT_PUBLIC_API_URL}${data.project.data.logo.url}`
+                                ? `/api/${data.project.data.logo.url}`
                                 : Test
                             }
                             alt="test"
@@ -396,7 +396,7 @@ export default function ProjectView({ data }: Props) {
                               <Link
                                 href={
                                   data.project.data.video_introduction.url
-                                    ? `${process.env.NEXT_PUBLIC_API_URL}${data.project.data.video_introduction.url}`
+                                    ? `/api/${data.project.data.video_introduction.url}`
                                     : Test
                                 }
                               >

@@ -181,7 +181,7 @@ export default function ProfileProjects({ data }: Props) {
                       <Image
                         src={
                           data.profile.data.avatar?.url
-                            ? `${process.env.NEXT_PUBLIC_API_URL}${data.profile.data.avatar.url}`
+                            ? `/api/${data.profile.data.avatar.url}`
                             : DefaultAva
                         }
                         width={0}
@@ -332,7 +332,7 @@ export default function ProfileProjects({ data }: Props) {
                     <Image
                       src={
                         data.profile.data.avatar?.url
-                          ? `${process.env.NEXT_PUBLIC_API_URL}${data.profile.data.avatar.url}`
+                          ? `/api/${data.profile.data.avatar.url}`
                           : DefaultAva
                       }
                       width={0}
@@ -522,7 +522,7 @@ export default function ProfileProjects({ data }: Props) {
                           <Image
                             src={
                               item.logo?.url
-                                ? `${process.env.NEXT_PUBLIC_API_URL}${item.logo.url}`
+                                ? `/api/${item.logo.url}`
                                 : DefaultAva
                             }
                             unoptimized

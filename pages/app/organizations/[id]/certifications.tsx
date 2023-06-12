@@ -597,7 +597,7 @@ export default function Certifications({ data }: Props) {
                               </p>
                               <Link
                                 target="_blank"
-                                href={`${process.env.NEXT_PUBLIC_API_URL}${certificate.attachment?.url}`}
+                                href={`/api/${certificate.attachment?.url}`}
                               >
                                 <p className="text-sm font-medium text-sky-500">
                                   Смотреть сертификат
