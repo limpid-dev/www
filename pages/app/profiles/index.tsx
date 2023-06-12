@@ -272,7 +272,7 @@ export default function Profiles() {
           {profilesData.map((profile, profileIndex) => (
             <Link key={profileIndex} href={`/app/profiles/${profile.id}`}>
               <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
-                <div className="grid grid-cols-10 h-[130px]">
+                <div className="grid grid-cols-10 h-[140px]">
                   <div className="col-span-4 mr-3">
                     <Image
                       src={
