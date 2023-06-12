@@ -383,9 +383,9 @@ export default function All() {
                               href={`/app/profiles/${project?.profile_data?.data?.id}`}
                             >
                               <div className="flex w-fit items-center gap-4 rounded-lg bg-slate-100 p-2 hover:bg-lime-200">
-                                {/* <Image
+                                <Image
                                   src={
-                                    project.profile_data?.data?.avatar.url
+                                    project.profile_data?.data?.avatar?.url
                                       ? `/api/${project.profile_data.data.avatar.url}`
                                       : testAva
                                   }
@@ -394,7 +394,7 @@ export default function All() {
                                   width={20}
                                   height={20}
                                   className="rounded-lg"
-                                /> */}
+                                />
                                 <p className="text-xs sm:text-sm">
                                   {project?.profile_data?.data?.legal_structure
                                     ? project?.profile_data?.data
