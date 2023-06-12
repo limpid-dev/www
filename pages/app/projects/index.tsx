@@ -385,7 +385,7 @@ export default function All() {
                               <div className="flex w-fit items-center gap-4 rounded-lg bg-slate-100 p-2 hover:bg-lime-200">
                                 <Image
                                   src={
-                                    project.profile_data?.data?.avatar
+                                    project.profile_data?.data?.avatar.url
                                       ? `/api/${project.profile_data.data.avatar.url}`
                                       : testAva
                                   }

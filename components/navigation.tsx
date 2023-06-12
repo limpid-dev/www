@@ -143,7 +143,7 @@ export function Navigation() {
           page: 1,
         });
 
-        if (profiles.data.length > 0 && organizations.data.length > 0) {
+        if (profiles.data.length > 0 || organizations.data.length > 0) {
           const mergedArray = profiles.data.concat(organizations.data);
           setProfilesData(mergedArray);
           if (sessionData.data.selected_profile_id !== null) {
@@ -158,35 +158,10 @@ export function Navigation() {
           if (sessionData.data.selected_profile_id === null) {
             await api
               .updateUser({
-                selected_profile_id: profiles.data[0].id,
+                selected_profile_id: mergedArray[0].id,
               })
               .then(() => {
                 const foundObject = mergedArray.find(
-                  (item) => item.id === sessionData.data.selected_profile_id
-                );
-                setAvatarUrl(`/api/${foundObject?.avatar?.url}`);
-              });
-            setProfession(profiles.data[0].display_name);
-          }
-        } else if (profiles.data.length > 0) {
-          setProfilesData(profiles.data);
-
-          if (sessionData.data.selected_profile_id !== null) {
-            const foundObject = profiles.data.find(
-              (item) => item.id === sessionData.data.selected_profile_id
-            );
-            setFoundObject(foundObject);
-            setAvatarUrl(`/api/${foundObject?.avatar?.url}`);
-            setProfession(foundObject?.display_name);
-          }
-
-          if (sessionData.data.selected_profile_id === null) {
-            await api
-              .updateUser({
-                selected_profile_id: profiles.data[0].id,
-              })
-              .then(() => {
-                const foundObject = profiles.data.find(
                   (item) => item.id === sessionData.data.selected_profile_id
                 );
                 setAvatarUrl(`/api/${foundObject?.avatar?.url}`);
