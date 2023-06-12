@@ -1347,7 +1347,7 @@ export default function Home() {
         </Container>
       </section>
 
-      <Pricing />
+      {/* <Pricing /> */}
       <Footer />
     </>
   );
