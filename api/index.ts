@@ -317,12 +317,12 @@ class APIClient {
   }
 
   async deleteExperience(
-    params: paths["/profiles/{profile_id}/experiences/{experience_id}"]["delete"]["parameters"]
+    pathParams: paths["/profiles/{profile_id}/experiences/{experience_id}"]["delete"]["parameters"]["path"]
   ): Promise<AxiosResponse<void>> {
-    const {
-      path: { profile_id, experience_id },
-    } = params;
-    return axios.delete(`/profiles/${profile_id}/experiences/${experience_id}`);
+    const { profile_id, experience_id } = pathParams;
+    return this.axiosInstance.delete(
+      `/profiles/${profile_id}/experiences/${experience_id}`
+    );
   }
 
   async updateExperience(
