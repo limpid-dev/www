@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import api from "../../../../api";
 import { components } from "../../../../api/api-paths";
-// import { buildFormData } from "../../../../api/files";
 import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";
 import { Input } from "../../../../components/primitives/input";
@@ -22,9 +21,13 @@ interface FormValues {
 export default function Test() {
   const router = useRouter();
   const [data, setData] = useState<components["schemas"]["Profile"]>({});
-  const { register, handleSubmit, control } = useForm<FormValues>({});
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>({});
   const inputRef = useRef(null);
-
+  const [error, setError] = useState("");
   useEffect(() => {
     async function fetchProfiles() {
       if (router.isReady) {
@@ -41,15 +44,29 @@ export default function Test() {
     (inputRef.current as unknown as HTMLInputElement).click();
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const fileObj = event.target.files?.[0];
     if (!fileObj) {
       return;
     }
-    api.updateProfile(Number.parseInt(router.query.profileId as string, 10), {
-      avatar: fileObj,
-    });
-    router.reload();
+
+    try {
+      await api.updateProfile(
+        Number.parseInt(router.query.profileId as string, 10),
+        {
+          avatar: fileObj,
+        }
+      );
+      router.reload();
+    } catch (error) {
+      if (error.response && error.response.status === 422) {
+        setError("Размер файла не более 1 МБ");
+      } else {
+        console.log("Error:", error);
+      }
+    }
   };
 
   const onSubmit = async (data: FormValues) => {
@@ -111,6 +128,9 @@ export default function Test() {
                     <Button onClick={handleClick}>Поменять фото</Button>
                     <p className="mt-2 text-xs leading-5 text-gray-400">
                       JPG или PNG. 1MB макс.
+                    </p>
+                    <p className="mt-2 text-xs leading-5 text-red-500">
+                      {error}
                     </p>
                   </div>
                 </div>
