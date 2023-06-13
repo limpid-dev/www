@@ -326,15 +326,14 @@ class APIClient {
   }
 
   async updateExperience(
-    params: paths["/profiles/{profile_id}/experiences/{experience_id}"]["patch"]["parameters"]["path"],
-    requestData: paths["/profiles/{profile_id}/experiences/{experience_id}"]["patch"]["requestBody"]["content"]["multipart/form-data"]
-  ): Promise<AxiosResponse<{ data?: components["schemas"]["Experience"] }>> {
-    const { profile_id, experience_id } = params;
-    const response = await axios.patch(
+    pathParams: paths["/profiles/{profile_id}/experiences/{experience_id}"]["patch"]["parameters"]["path"],
+    experienceData: paths["/profiles/{profile_id}/experiences/{experience_id}"]["patch"]["requestBody"]["content"]["multipart/form-data"]
+  ): Promise<AxiosResponse<{ data: components["schemas"]["Experience"] }>> {
+    const { profile_id, experience_id } = pathParams;
+    return this.axiosInstance.patch(
       `/profiles/${profile_id}/experiences/${experience_id}`,
-      requestData
+      experienceData
     );
-    return response;
   }
 
   // Projects
