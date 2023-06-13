@@ -48,7 +48,6 @@ export function ExperienceCreate({ profileId, isAddHandler }: any) {
         profile_id: profileId,
         experience_id: parsedId,
       });
-      console.log(data);
       if (data.data) {
         setValue(`experiences.0.title`, data.data.title);
         setValue(`experiences.0.institution`, data.data.institution);
