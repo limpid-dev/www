@@ -25,11 +25,7 @@ export default function Test() {
     handleSubmit,
     formState: { errors },
     control,
-  } = useForm<FormValues>({
-    defaultValues: {
-      educations: [{}],
-    },
-  });
+  } = useForm<FormValues>({});
 
   const onSubmit = async (data: FormValues) => {
     data.educations.forEach(async (post) => {
@@ -37,12 +33,10 @@ export default function Test() {
         Number.parseInt(router.query.profileId as string, 10),
         post
       );
-      if (education.data.id) {
-        router.push({
-          pathname: "/app/profiles/create/certificates",
-          query: { profileId: router.query.profileId },
-        });
-      }
+    });
+    router.push({
+      pathname: "/app/profiles/create/certificates",
+      query: { profileId: router.query.profileId },
     });
   };
 

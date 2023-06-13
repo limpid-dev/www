@@ -25,11 +25,7 @@ export default function Test() {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<FormValues>({
-    defaultValues: {
-      experiences: [{}],
-    },
-  });
+  } = useForm<FormValues>({});
 
   const onSubmit = async (data: FormValues) => {
     data.experiences.forEach(async (post) => {
