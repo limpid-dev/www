@@ -254,7 +254,7 @@ export function Navigation() {
                         </ul>
                       </NavigationMenuContent>
                     </NavigationMenuItem>
-                    {/* <NavigationMenuItem>
+                    <NavigationMenuItem>
                       <NavigationMenuTrigger>Аукционы</NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <ul className="grid w-[400px] gap-3 p-4 md:w-[400px] md:grid-cols-1">
@@ -269,7 +269,7 @@ export function Navigation() {
                           ))}
                         </ul>
                       </NavigationMenuContent>
-                    </NavigationMenuItem> */}
+                    </NavigationMenuItem>
                   </NavigationMenuList>
                 </NavigationMenu>
               </nav>
