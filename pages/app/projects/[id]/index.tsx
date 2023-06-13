@@ -66,7 +66,7 @@ import Test from "../../../../images/avatars/defaultProfile.svg";
 import SentImage from "../../../../images/email 1.png";
 
 interface FormValues {
-  message: string;
+  application_message: string;
 }
 
 export const getServerSideProps = async (
@@ -158,16 +158,16 @@ export default function ProjectView({ data }: Props) {
   //   return () => clearInterval(intervalId);
   // }, []);
 
-  useEffect(() => {
-    const fetchProjectMembers = async () => {
-      const { data: projectMemberShip } = await api.getProjectMembers(
-        parsedId,
-        { page: 1, per_page: 10 }
-      );
-    };
+  // useEffect(() => {
+  //   const fetchProjectMembers = async () => {
+  //     const { data: projectMemberShip } = await api.getProjectMembers(
+  //       parsedId,
+  //       { page: 1, per_page: 10 }
+  //     );
+  //   };
 
-    fetchProjectMembers();
-  }, []);
+  //   fetchProjectMembers();
+  // }, []);
 
   const {
     register,
@@ -177,14 +177,7 @@ export default function ProjectView({ data }: Props) {
   } = useForm<FormValues>();
 
   const onSubmit = async (data1: FormValues) => {
-    // try {
-    //   const profileId = localStorage.getItem("profileId");
-    //   const w = { profileId, ...data1 };
-    //   const { data } = await api.projects.memberships(parsedId).store(w);
-    //   if (data) {
-    //     setSent(true);
-    //   }
-    // } catch (error) {}
+    await api.addProjectMember({ project_id: parsedId }, data1);
   };
 
   const handleClick = (event: any) => {

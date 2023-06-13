@@ -403,6 +403,7 @@ class APIClient {
     return response;
   }
 
+  // Project members
   async getProjectMembers(
     project_id: number,
     query?: { page?: number; per_page?: number },
@@ -418,6 +419,17 @@ class APIClient {
       ...config,
     });
     return response;
+  }
+
+  async addProjectMember(
+    pathParams: paths["/projects/{project_id}/members"]["post"]["parameters"]["path"],
+    applicationMessage: paths["/projects/{project_id}/members"]["post"]["requestBody"]["content"]["multipart/form-data"]
+  ): Promise<AxiosResponse<{ data?: components["schemas"]["ProjectMember"] }>> {
+    const { project_id } = pathParams;
+    return this.axiosInstance.post(
+      `/projects/${project_id}/members`,
+      applicationMessage
+    );
   }
 
   // Chats

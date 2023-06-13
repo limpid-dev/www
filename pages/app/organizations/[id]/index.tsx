@@ -243,7 +243,7 @@ export default function OneProfile({ data }: Props) {
                     </div>
                     <div className="mb-6 mt-4" />
                     <div>
-                      <p className="text-lg font-semibold">Обо мне</p>
+                      <p className="text-lg font-semibold">О комании</p>
                       <p className="pt-3 text-sm">
                         <TextArea
                           {...register2("description")}
@@ -373,7 +373,7 @@ export default function OneProfile({ data }: Props) {
                       <p className="text-sm ">{data.profile.data.location}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-slate-400">Профессия</p>
+                      <p className="text-sm text-slate-400">Название</p>
                       <p className="text-sm">
                         {data.profile.data.display_name}
                       </p>
@@ -381,7 +381,7 @@ export default function OneProfile({ data }: Props) {
                   </div>
                   <div className="mb-6 mt-4" />
                   <div>
-                    <p className="text-lg font-semibold">Обо мне</p>
+                    <p className="text-lg font-semibold">О компании</p>
                     <p className="pt-3 text-sm">
                       {data.profile.data.description}
                     </p>

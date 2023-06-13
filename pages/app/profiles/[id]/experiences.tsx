@@ -179,7 +179,8 @@ export default function Experiences({ data }: Props) {
   const handleDelete = async (experienceId: number) => {
     try {
       await api.deleteExperience({
-        path: { profile_id: parsedId, experience_id: experienceId },
+        profile_id: parsedId,
+        experience_id: experienceId,
       });
       await router.reload();
     } catch (error_) {
