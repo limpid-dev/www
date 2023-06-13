@@ -14,13 +14,16 @@ interface FormValues {
   business_plan?: FileList;
 }
 export default function Create() {
+  const fileMaxSize = 2.5 * 1024 * 1024;
   const router = useRouter();
   const { projectId } = router.query;
   const parsedProjectId = Number.parseInt(projectId as string, 10) as number;
 
   const {
     register,
+    setError,
     handleSubmit,
+    clearErrors,
     formState: { errors },
   } = useForm<FormValues>({});
 
@@ -40,6 +43,20 @@ export default function Create() {
     }
   };
 
+  const handleFileChange = (event) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.size > fileMaxSize) {
+        setError("logo", {
+          type: "validate",
+          message: "File size should not exceed 2.5 MB",
+        });
+      } else {
+        clearErrors("logo");
+      }
+    }
+  };
+
   return (
     <>
       <div className="min-h-screen  bg-slate-50">
@@ -51,7 +68,7 @@ export default function Create() {
                 Общие данные
               </div>
               <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-lime-600 text-lg sm:text-xl">
-                Документация
+                Документа∏ия
               </div>
             </div>
             <div className="grid min-h-[500px] items-center justify-center border-none p-10 max-w-screen-md mx-auto">
@@ -61,7 +78,19 @@ export default function Create() {
                     <div className="grid gap-y-3">
                       <p className="text-2xl font-semibold">Логотип</p>
                       <p className="text-sm">Загрузите логотип проекта</p>
-                      <Input type="file" {...register("logo")} />
+                      <Input
+                        type="file"
+                        {...register("logo", {
+                          validate: (file) => {
+                            return (
+                              (file && file[0].size <= fileMaxSize) ||
+                              "File size should not exceed 2.5 MB"
+                            );
+                          },
+                        })}
+                        onChange={handleFileChange}
+                      />
+                      {errors.logo && <span>{errors.logo.message}</span>}
                     </div>
                     <div className="grid gap-y-3">
                       <p className="text-2xl font-semibold">Видео</p>

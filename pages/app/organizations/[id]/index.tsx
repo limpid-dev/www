@@ -435,7 +435,7 @@ export default function OneProfile({ data }: Props) {
                       ) : (
                         ""
                       )}
-                      {data.profile.data.website_url !== null ? (
+                      {data.profile.data.whatsapp_url !== null ? (
                         <Link href={data.profile.data.whatsapp_url}>
                           <Image
                             width={24}
