@@ -86,7 +86,6 @@ export const getServerSideProps = async (
         finished_at: dateFormatter(item.finished_at),
       };
     });
-    console.log(updatedItems);
     return {
       props: {
         data: {

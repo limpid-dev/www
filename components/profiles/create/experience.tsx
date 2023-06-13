@@ -17,6 +17,7 @@ interface FormValues {
 }
 
 export function ExperienceCreate({ profileId, isAddHandler }: any) {
+  console.log(profileId, isAddHandler);
   const [error, setError] = useState("");
   const router = useRouter();
   const { itemId } = router.query;
@@ -51,9 +52,9 @@ export function ExperienceCreate({ profileId, isAddHandler }: any) {
       if (data.data) {
         setValue(`experiences.0.title`, data.data.title);
         setValue(`experiences.0.institution`, data.data.institution);
-        setValue(`experiences.0.description`, data.description);
-        setValue(`experiences.0.started_at`, new Date(data.started_at));
-        setValue(`experiences.0.finished_at`, new Date(data.finished_at));
+        setValue(`experiences.0.description`, data.data.description);
+        setValue(`experiences.0.started_at`, new Date(data.data.started_at));
+        setValue(`experiences.0.finished_at`, new Date(data.data.finished_at));
       }
     }
     fetchEducation();
@@ -62,15 +63,19 @@ export function ExperienceCreate({ profileId, isAddHandler }: any) {
   const onSubmit = async (data: FormValues) => {
     try {
       if (isEdit === false) {
-        await api.updateExperience(profileId, parsedId, data.experiences[0]);
+        await api.updateExperience(
+          { profile_id: profileId, experience_id: parsedId },
+          data.experiences[0]
+        );
         await router.push({
           pathname: `/app/profiles/${profileId}/experiences`,
           query: {},
         });
         router.reload();
       } else {
-        data.experiences.forEach(async (post) => {
+        data.experiences.map(async (post) => {
           const { data } = await api.createExperience(profileId, post);
+          return data;
         });
         if (data) {
           router.reload();
