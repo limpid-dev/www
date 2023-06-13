@@ -20,8 +20,8 @@ export function ExperienceCreate({ profileId, isAddHandler }: any) {
   const [error, setError] = useState("");
   const router = useRouter();
   const { itemId } = router.query;
-  const isEdit = !itemId;
   const parsedId = Number.parseInt(itemId as string, 10) as number;
+  const isEdit = !itemId;
 
   const {
     setValue,
