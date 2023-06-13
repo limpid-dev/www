@@ -48,12 +48,14 @@ export function CertificationCreate({ certificateAdd, profileId }: any) {
 
   const onSubmit = async (data: CertificationValues) => {
     try {
-      data.certification.forEach(async (data) => {
-        const { data: certificate } = await api.createCertificate(profileId, {
+      const certificatePromises = data.certification.map((data) =>
+        api.createCertificate(profileId, {
           ...data,
           attachment: data.attachment[0],
-        });
-      });
+        })
+      );
+
+      await Promise.all(certificatePromises);
       await router.reload();
     } catch (error) {
       setError("Что то пошло не так, попробуйте позже");

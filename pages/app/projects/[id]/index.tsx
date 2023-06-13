@@ -552,7 +552,7 @@ export default function ProjectView({ data }: Props) {
                       }`}
                     >
                       <div
-                        className={`mt-2 w-96 rounded-lg px-2 py-1 ${
+                        className={`mt-2 max-w-96 rounded-lg px-2 py-1 ${
                           isTrue ? "bg-lime-400 " : "flex items-end gap-3"
                         }`}
                       >
@@ -566,7 +566,7 @@ export default function ProjectView({ data }: Props) {
                           className={`mt-2 rounded-lg px-2 py-1 ${
                             isTrue
                               ? "bg-lime-400"
-                              : "grid max-w-96 items-end justify-end gap-3 border bg-slate-50"
+                              : "grid max-max-w-96 items-end justify-end gap-3 border bg-slate-50"
                           }`}
                         >
                           <p
@@ -588,7 +588,7 @@ export default function ProjectView({ data }: Props) {
                       }`}
                     >
                       <div
-                        className={`mt-2 w-96 rounded-lg px-2 py-1 ${
+                        className={`mt-2 max-w-96 rounded-lg px-2 py-1 ${
                           isTrue ? "bg-lime-400 " : "flex items-end gap-3"
                         }`}
                       >
@@ -602,7 +602,7 @@ export default function ProjectView({ data }: Props) {
                           className={`mt-2 rounded-lg px-2 py-1 ${
                             isTrue
                               ? "bg-lime-400"
-                              : "grid max-w-96 items-end justify-end gap-3 border bg-slate-50"
+                              : "grid max-max-w-96 items-end justify-end gap-3 border bg-slate-50"
                           }`}
                         >
                           <p
@@ -624,7 +624,7 @@ export default function ProjectView({ data }: Props) {
                       }`}
                     >
                       <div
-                        className={`mt-2 w-96 rounded-lg px-2 py-1 ${
+                        className={`mt-2 max-w-96 rounded-lg px-2 py-1 ${
                           isTrue ? "bg-lime-400 " : "flex items-end gap-3"
                         }`}
                       >
@@ -632,7 +632,7 @@ export default function ProjectView({ data }: Props) {
                           className={`mt-2 rounded-lg px-2 py-1 ${
                             isTrue
                               ? "bg-lime-400"
-                              : "grid max-w-96 items-end justify-end gap-3 border bg-slate-50"
+                              : "grid max-max-w-96 items-end justify-end gap-3 border bg-slate-50"
                           }`}
                         >
                           <p
@@ -654,7 +654,7 @@ export default function ProjectView({ data }: Props) {
                       }`}
                     >
                       <div
-                        className={`mt-2 w-96 rounded-lg px-2 py-1 ${
+                        className={`mt-2 max-w-96 rounded-lg px-2 py-1 ${
                           isTrue ? "bg-lime-400 " : "flex items-end gap-3"
                         }`}
                       >
@@ -668,7 +668,7 @@ export default function ProjectView({ data }: Props) {
                           className={`mt-2 rounded-lg px-2 py-1 ${
                             isTrue
                               ? "bg-lime-400"
-                              : "grid max-w-96 items-end justify-end gap-3 border bg-slate-50"
+                              : "grid max-max-w-96 items-end justify-end gap-3 border bg-slate-50"
                           }`}
                         >
                           <p
@@ -690,7 +690,7 @@ export default function ProjectView({ data }: Props) {
                       }`}
                     >
                       <div
-                        className={`mt-2 w-96 rounded-lg px-2 py-1 ${
+                        className={`mt-2 max-w-96 rounded-lg px-2 py-1 ${
                           isTrue ? "bg-lime-400 " : "flex items-end gap-3"
                         }`}
                       >
@@ -704,7 +704,7 @@ export default function ProjectView({ data }: Props) {
                           className={`mt-2 rounded-lg px-2 py-1 ${
                             isTrue
                               ? "bg-lime-400"
-                              : "grid max-w-96 items-end justify-end gap-3 border bg-slate-50"
+                              : "grid max-max-w-96 items-end justify-end gap-3 border bg-slate-50"
                           }`}
                         >
                           <p
@@ -726,7 +726,7 @@ export default function ProjectView({ data }: Props) {
                       }`}
                     >
                       <div
-                        className={`mt-2 w-96 rounded-lg px-2 py-1 ${
+                        className={`mt-2 max-w-96 rounded-lg px-2 py-1 ${
                           isTrue ? "bg-lime-400 " : "flex items-end gap-3"
                         }`}
                       >
@@ -734,7 +734,7 @@ export default function ProjectView({ data }: Props) {
                           className={`mt-2 rounded-lg px-2 py-1 ${
                             isTrue
                               ? "bg-lime-400"
-                              : "grid max-w-96 items-end justify-end gap-3 border bg-slate-50"
+                              : "grid max-max-w-96 items-end justify-end gap-3 border bg-slate-50"
                           }`}
                         >
                           <p

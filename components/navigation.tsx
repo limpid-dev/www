@@ -225,7 +225,7 @@ export function Navigation() {
                         <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[400px] lg:grid-cols-1">
                           <ListItem
                             href="/app/profiles/my"
-                            title="Ваши профиля"
+                            title="Ваши профили"
                           >
                             Ваши профиля покажите себя всему миру
                           </ListItem>

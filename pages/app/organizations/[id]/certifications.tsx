@@ -186,13 +186,6 @@ export default function Certifications({ data }: Props) {
     formState: { errors },
   } = useForm<FormValuesGeneral>();
 
-  const onSubmit = async (data: FormValuesGeneral) => {
-    try {
-      await api.profiles.update(Number.parseInt(id as string, 10), data);
-      router.reload();
-    } catch (error) {}
-  };
-
   return (
     <div>
       <Navigation />
@@ -630,7 +623,7 @@ export default function Certifications({ data }: Props) {
                 ) : (
                   <>
                     <CertificationCreate
-                      profileId={id}
+                      profileId={parsedId}
                       certificateAdd={certificateAdd}
                     />
                   </>
@@ -671,7 +664,7 @@ export default function Certifications({ data }: Props) {
                   </>
                 ) : (
                   <>
-                    <SkillsCreate profileId={id} skillAdd={skillAdd} />
+                    <SkillsCreate profileId={parsedId} skillAdd={skillAdd} />
                   </>
                 )}
               </div>
