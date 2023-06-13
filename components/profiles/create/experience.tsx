@@ -53,8 +53,14 @@ export function ExperienceCreate({ profileId, isAddHandler }: any) {
         setValue(`experiences.0.title`, data.data.title);
         setValue(`experiences.0.institution`, data.data.institution);
         setValue(`experiences.0.description`, data.data.description);
-        setValue(`experiences.0.started_at`, new Date(data.data.started_at));
-        setValue(`experiences.0.finished_at`, new Date(data.data.finished_at));
+        setValue(
+          `experiences.0.started_at`,
+          new Date(data.data.started_at).toISOString().slice(0, 10)
+        );
+        setValue(
+          `experiences.0.finished_at`,
+          new Date(data.data.finished_at).toISOString().slice(0, 10)
+        );
       }
     }
     fetchEducation();
