@@ -102,7 +102,7 @@ export const getServerSideProps = async (
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-export default function Education({ data }: Props) {
+export default function Experiences({ data }: Props) {
   const router = useRouter();
   const { id } = router.query;
   const parsedId = Number.parseInt(id as string, 10) as number;

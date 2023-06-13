@@ -141,7 +141,10 @@ export default function Certifications({ data }: Props) {
 
   const onSubmit2 = async (data1: FormValuesGeneral) => {
     try {
-      const { data } = await api.updateProfile(Number.parseInt(id, 10), data1);
+      const { data } = await api.updateProfile(
+        Number.parseInt(id as string, 10),
+        data1
+      );
       router.reload();
     } catch (error) {
       setError("Что то пошло не так, попробуйте позже");
@@ -188,19 +191,6 @@ export default function Certifications({ data }: Props) {
 
   const editGeneralInfo = () => {
     setEditGeneral((current: boolean) => !current);
-  };
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValuesGeneral>();
-
-  const onSubmit = async (data: FormValuesGeneral) => {
-    try {
-      await api.profiles.update(Number.parseInt(id as string, 10), data);
-      router.reload();
-    } catch (error) {}
   };
 
   return (
