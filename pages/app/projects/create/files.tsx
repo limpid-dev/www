@@ -28,7 +28,6 @@ export default function Create() {
 
   const onSubmit = async (data1: FormValues) => {
     try {
-      console.log(data1);
       const { data } = await api.updateProject(
         { project_id: parsedProjectId },
         {
