@@ -2,27 +2,10 @@ import { CaretRight, Plus } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FormEvent } from "react";
+import { useEffect } from "react";
 import api from "../../../api";
 import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../../../components/primitives/dialog";
-import {
-  Field,
-  Form,
-  Input,
-  Label,
-  Message,
-  Textarea,
-} from "../../../components/primitives/form";
 
 const tabs = [
   { name: "Все продажи", href: "/app/auctions/", current: false },
@@ -36,6 +19,26 @@ export default function All() {
     const selectedPage = event.target.value;
     router.push(selectedPage);
   };
+
+  useEffect(() => {
+    async function fetchAuctions() {
+      const { data: session } = await api.getUser();
+      try {
+        const response = await api.getAuctions({
+          page: 1,
+          per_page: 9,
+          profile_id: session.data.id,
+        });
+        const data = response.data.data;
+        if (data && data.length > 0) {
+          console.log(data);
+        }
+      } catch (error) {
+        console.error("Error fetching auctions:", error);
+      }
+    }
+    fetchAuctions();
+  }, []);
 
   return (
     <div>

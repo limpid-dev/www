@@ -21,6 +21,9 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => ({
 });
 
 export default function Recovery() {
+  const { t } = useTranslation("common");
+  const router = useRouter();
+
   const [errors, setErrors] = useState({
     email: false,
   });
@@ -30,8 +33,6 @@ export default function Recovery() {
       email: false,
     });
   };
-
-  const router = useRouter();
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -51,6 +52,7 @@ export default function Recovery() {
     } catch (error) {
       if (error instanceof Error) {
         const status = (error as AxiosError).response?.status;
+
         if (status === 422) {
           setErrors((prev) => ({
             ...prev,
@@ -60,8 +62,6 @@ export default function Recovery() {
       }
     }
   };
-
-  const { t } = useTranslation("common");
 
   return (
     <AuthLayout>

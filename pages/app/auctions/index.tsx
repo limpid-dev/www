@@ -107,49 +107,45 @@ export default function All() {
           </div>
 
           <div className="grid justify-center gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <div className="min-w-[300px] rounded-2xl border border-slate-200 bg-white md:w-auto">
-              <div className="p-4">
-                <div className="flex flex-col gap-4">
-                  <div className="mb-2.5 flex flex-row justify-between">
-                    <div className="flex gap-2">
-                      <p className="text-sm">#121</p>
-                      <p className="text-base text-slate-400">Поехали с нами</p>
+            <Link href="">
+              <div className="min-w-[300px] rounded-2xl border border-slate-200 bg-white md:w-auto hover:border hover:border-black">
+                <div className="p-4">
+                  <div className="flex flex-col gap-4">
+                    <div className="mb-2.5 flex flex-row justify-between">
+                      <div className="flex gap-2">
+                        <p className="text-sm">#121</p>
+                        <p className="text-base text-slate-400">
+                          Поехали с нами
+                        </p>
+                      </div>
+                      <p className=" text-sm text-slate-400">02.01.2023</p>
                     </div>
-                    <p className=" text-sm text-slate-400">02.01.2023</p>
+                    <div className="mb-2.5 flex flex-row justify-between">
+                      <p className="text-base font-semibold">
+                        Менеджер по туризму
+                      </p>
+                      <p className="rounded-2xl bg-lime-500 px-2 py-1 text-xs font-bold text-slate-100">
+                        в ТОПе
+                      </p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-y-2.5">
+                      <p className="text-sm text-slate-400">Заявки</p>
+                      <p className="w-fit items-center justify-center rounded-2xl bg-sky-50 px-2 pt-0.5 text-center text-xs text-sky-500">
+                        5
+                      </p>
+                      <p className="text-sm text-slate-400">Статус</p>
+                      <p className="w-fit items-center justify-center rounded-2xl bg-sky-50 px-2 pt-0.5 text-center text-xs text-sky-500">
+                        опубликован
+                      </p>
+                      <p className="text-sm text-slate-400">Прием заявок</p>
+                      <p className="w-fit items-center justify-center rounded-2xl bg-sky-50 px-2 pt-0.5 text-center text-xs text-sky-500">
+                        до 24.01.2023, 14:00
+                      </p>
+                    </div>
                   </div>
-                  <div className="mb-2.5 flex flex-row justify-between">
-                    <p className="text-base font-semibold">
-                      Менеджер по туризму
-                    </p>
-                    <p className="rounded-2xl bg-lime-500 px-2 py-1 text-xs font-bold text-slate-100">
-                      в ТОПе
-                    </p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-y-2.5">
-                    <p className="text-sm text-slate-400">Заявки</p>
-                    <p className="w-fit items-center justify-center rounded-2xl bg-sky-50 px-2 pt-0.5 text-center text-xs text-sky-500">
-                      5
-                    </p>
-                    <p className="text-sm text-slate-400">Статус</p>
-                    <p className="w-fit items-center justify-center rounded-2xl bg-sky-50 px-2 pt-0.5 text-center text-xs text-sky-500">
-                      опубликован
-                    </p>
-                    <p className="text-sm text-slate-400">Прием заявок</p>
-                    <p className="w-fit items-center justify-center rounded-2xl bg-sky-50 px-2 pt-0.5 text-center text-xs text-sky-500">
-                      до 24.01.2023, 14:00
-                    </p>
-                  </div>
-                </div>
-                <div className="my-6" />
-                <div className="flex items-center justify-end">
-                  <Link href="/app/auctions/create">
-                    <Button className="rounded-full bg-slate-300 px-2 py-1.5 hover:bg-black">
-                      <CaretRight />
-                    </Button>
-                  </Link>
                 </div>
               </div>
-            </div>
+            </Link>
           </div>
         </div>
       </div>

@@ -7,8 +7,8 @@ export interface AxiosError extends Error {
     data?: any;
   };
 }
-const API_BASE_URL = "https://limpid.kz/api";
-// const API_BASE_URL = "http://localhost:3000/api";
+// const API_BASE_URL = "https://limpid.kz/api";
+const API_BASE_URL = "http://localhost:3000/api";
 
 class APIClient {
   private axiosInstance = axios.create({
@@ -559,6 +559,19 @@ class APIClient {
       `/organizations/${profile_id}/certificates`,
       f
     );
+  }
+
+  // Auctions
+  async getAuctions(
+    params: paths["/auctions"]["get"]["parameters"]["query"],
+    config?: AxiosRequestConfig
+  ): Promise<
+    AxiosResponse<{
+      meta: components["schemas"]["Pagination"];
+      data: components["schemas"]["Auction"][];
+    }>
+  > {
+    return this.axiosInstance.get("/auctions", { params, ...config });
   }
 }
 

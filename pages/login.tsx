@@ -22,6 +22,8 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => ({
 });
 
 export default function Login() {
+  const router = useRouter();
+
   const [errors, setErrors] = useState({
     email: false,
     password: false,
@@ -34,8 +36,6 @@ export default function Login() {
     });
   };
 
-  const router = useRouter();
-
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
@@ -46,6 +46,7 @@ export default function Login() {
 
     try {
       await api.loginUser(values.email, values.password);
+
       await router.push({ pathname: "/app/projects" });
     } catch (error) {
       if (error instanceof Error) {

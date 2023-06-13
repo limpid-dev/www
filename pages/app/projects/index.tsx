@@ -1,9 +1,8 @@
-import { Faders, SquaresFour } from "@phosphor-icons/react";
+import { SquaresFour } from "@phosphor-icons/react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import clsx from "clsx";
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel, { EmblaOptionsType } from "embla-carousel-react";
-import { InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -22,11 +21,6 @@ import {
   DialogTrigger,
 } from "../../../components/primitives/dialog";
 import { Options } from "../../../components/primitives/options";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "../../../components/primitives/popover";
 import {
   Sheet,
   SheetContent,
@@ -366,9 +360,20 @@ export default function All() {
                             <p className="text-xs font-semibold sm:text-base">
                               {project.title}
                             </p>
+                            <p className="text-xs text-slate-400">
+                              {project.created_at &&
+                                new Date(project.created_at).toLocaleDateString(
+                                  "ru-RU",
+                                  {
+                                    day: "numeric",
+                                    month: "numeric",
+                                    year: "numeric",
+                                  }
+                                )}
+                            </p>
                           </div>
                           <div className="flex justify-between">
-                            <p className="max-w-[300px] text-xs sm:text-sm">
+                            <p className="max-w-[300px] text-xs">
                               {project.industry}
                             </p>
                             <p className="flex items-center rounded-2xl bg-lime-500 px-2 py-1 text-[9px] font-bold text-slate-100 sm:text-xs">

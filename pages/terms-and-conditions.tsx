@@ -14,29 +14,26 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => ({
 });
 
 export default function TermsAndConditions() {
-  const [numPages, setNumPages] = useState(null);
+  const { t } = useTranslation("common");
+
+  const [numPages, setNumPages] = useState(1);
   const [pageNumber, setPageNumber] = useState(1);
   const [largeScreen, setLargeScreen] = useState(false);
-
-  const { t } = useTranslation("common");
 
   useEffect(() => {
     const handleResize = () => {
       const newScreenWidth = window.innerWidth;
-
       setLargeScreen(newScreenWidth > 896);
     };
-
     handleResize();
 
     window.addEventListener("resize", handleResize);
-
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
 
-  const onDocumentLoadSuccess = ({ numPages }: any) => {
+  const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
   };
 
@@ -47,30 +44,28 @@ export default function TermsAndConditions() {
     setPageNumber(pageNumber + 1 >= numPages! ? numPages! : pageNumber + 1);
 
   return (
-    <>
-      <div className="flex flex-col justify-center items-center">
-        <Document
-          file="/terms-and-conditions.pdf"
-          onLoadSuccess={onDocumentLoadSuccess}
-        >
-          <Page
-            width={largeScreen ? 596 : 330}
-            renderTextLayer={false}
-            renderAnnotationLayer={false}
-            pageNumber={pageNumber}
-          />
-        </Document>
+    <div className="flex flex-col justify-center items-center">
+      <Document
+        file="/terms-and-conditions.pdf"
+        onLoadSuccess={onDocumentLoadSuccess}
+      >
+        <Page
+          width={largeScreen ? 596 : 330}
+          renderTextLayer={false}
+          renderAnnotationLayer={false}
+          pageNumber={pageNumber}
+        />
+      </Document>
 
-        <div className="py-2 flex justify-center items-center gap-2 flex-col fixed bottom-0">
-          <p className="mt-3">
-            {pageNumber} {t("page_counter")} {numPages}
-          </p>
-          <div className="gap-4 flex">
-            <Button onClick={goToPrevPage}>{t("back")}</Button>
-            <Button onClick={goToNextPage}>{t("forward")}</Button>
-          </div>
+      <div className="py-2 flex justify-center items-center gap-2 flex-col fixed bottom-0">
+        <p className="mt-3">
+          {pageNumber} {t("page_counter")} {numPages}
+        </p>
+        <div className="gap-4 flex">
+          <Button onClick={goToPrevPage}>{t("back")}</Button>
+          <Button onClick={goToNextPage}>{t("forward")}</Button>
         </div>
       </div>
-    </>
+    </div>
   );
 }
