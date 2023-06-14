@@ -186,10 +186,11 @@ export default function ProjectView({ data }: Props) {
 
   const handleDeleteProject = async (projectId: number) => {
     try {
-      const { data } = await api.deleteProject({ project_id: projectId });
-      if(data){
-        
-      }
+      await api.deleteProject({ project_id: projectId });
+      await router.push({
+        pathname: `/app/projects/my`,
+        query: {},
+      });
     } catch (error) {
       console.error("Error deleting project:", error);
     }
