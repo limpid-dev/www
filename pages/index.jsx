@@ -149,8 +149,8 @@ export function PrimaryFeatures() {
                       className={clsx(
                         "group relative rounded-full px-4 py-1 lg:rounded-l-xl lg:rounded-r-none lg:p-6",
                         selectedIndex === featureIndex
-                          ? "text-gray-600 bg-lime-500  focus:ring-4 focus:outline-none focus:ring-lime-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
-                          : "text-white bg-lime-500 focus:ring-4 focus:outline-none focus:ring-lime-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                          ? "bg-white lg:bg-white/10 lg:ring-1 lg:ring-inset lg:ring-white/10"
+                          : "hover:bg-white/10 lg:hover:bg-white/5 border sm:border-none border-lime-700"
                       )}
                     >
                       <h3>
@@ -158,8 +158,8 @@ export function PrimaryFeatures() {
                           className={clsx(
                             " text-lg [&:not(:focus-visible)]:focus:outline-none",
                             selectedIndex === featureIndex
-                              ? "text-white lg:text-white"
-                              : "text-lime-700 hover:text-white lg:text-white"
+                              ? "text-lime-600 lg:text-white"
+                              : "text-lime-100 hover:text-white lg:text-white"
                           )}
                         >
                           <span className="absolute inset-0 rounded-full lg:rounded-l-xl lg:rounded-r-none" />
