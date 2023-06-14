@@ -22,7 +22,6 @@ import {
 import { Button } from "../../../../components/primitives/button";
 import { Input } from "../../../../components/primitives/input";
 import { TextArea } from "../../../../components/primitives/text-area";
-import { General } from "../../../../components/profiles/general";
 import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
 import Badge from "../../../../images/badge.svg";
 
@@ -150,7 +149,7 @@ export default function ProfileProjects({ data }: Props) {
     <div>
       <Navigation />
 
-      <div className=" min-h-[90vh] bg-slate-50 px-5 pt-8">
+      <div className="min-h-screen bg-slate-50 px-5 pt-8">
         <div className="mx-auto max-w-screen-xl">
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
             {data.isAuthor ? (

@@ -97,7 +97,7 @@ export default function Test() {
                         maxLength: 30,
                       })}
                       className="text-black rounded-md border border-slate-300 mt-6 w-1/2"
-                      placeholder="Вэб разработчик ..."
+                      placeholder="Бизнесмен ..."
                     />
                     {errors.display_name && (
                       <span className="text-sm text-red-600">

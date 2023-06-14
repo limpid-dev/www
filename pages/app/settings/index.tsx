@@ -41,12 +41,12 @@ function classNames(...classes: string[]): string {
 
 const secondaryNavigation = [
   { name: "Аккаунт", href: "#", icon: UserCircle, current: true },
-  {
-    name: "План подписки",
-    href: "/app/settings/plan",
-    icon: Cube,
-    current: false,
-  },
+  // {
+  //   name: "План подписки",
+  //   href: "/app/settings/plan",
+  //   icon: Cube,
+  //   current: false,
+  // },
 ];
 
 export const getServerSideProps = async (
@@ -83,16 +83,24 @@ export default function Settings({ data }: Props) {
   };
 
   const sendRequest = async () => {
-    const { data: userUpdate } = await api.users.update(data.userInfo.id, {
-      email: inputValue,
-    });
-    if (userUpdate) {
-      await api.logoutUser();
-      await router.push({
-        pathname: "/",
-      });
+    try {
+      const { data: userUpdate } = await api.updateUser({ email: inputValue });
+
+      if (userUpdate.data.id) {
+        await api.logoutUser();
+        await router.push({ pathname: "/" });
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 422) {
+        const validationErrors = error.response.data.errors;
+        setEmailError("Введите другую почту");
+      } else {
+        setEmailError("Что-то пошло не так");
+      }
     }
   };
+
+  const [emailError, setEmailError] = useState("");
 
   return (
     <>
@@ -151,12 +159,58 @@ export default function Settings({ data }: Props) {
                       {data.userInfo.data.last_name}{" "}
                       {data.userInfo.data.first_name}
                     </div>
-                    <button
-                      type="button"
-                      className="font-semibold text-lime-600 hover:text-lime-500"
-                    >
-                      Изменить
-                    </button>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <button
+                          type="button"
+                          className="font-semibold text-lime-600 hover:text-lime-500"
+                        >
+                          Изменить
+                        </button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px] p-6">
+                        <DialogHeader>
+                          <DialogTitle>Изменить ФИО</DialogTitle>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="name" className="text-right">
+                              Имя
+                            </Label>
+                            <Input
+                              id="name"
+                              placeholder={data.userInfo.data.first_name}
+                              className="col-span-3"
+                            />
+                          </div>
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="username" className="text-right">
+                              Фамилия
+                            </Label>
+                            <Input
+                              id="username"
+                              placeholder={data.userInfo.data.last_name}
+                              className="col-span-3"
+                            />
+                          </div>
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="username" className="text-right">
+                              Отчество
+                            </Label>
+                            <Input
+                              id="username"
+                              placeholder={data.userInfo.data.patronymic}
+                              className="col-span-3"
+                            />
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button variant="black" type="submit">
+                            Изменить
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </dd>
                 </div>
                 <div className="pt-6 sm:flex">
@@ -176,22 +230,32 @@ export default function Settings({ data }: Props) {
                           Изменить
                         </button>
                       </DialogTrigger>
-                      <DialogContent className="sm:max-w-[425px] p-10">
+                      <DialogContent className="sm:max-w-[425px] p-6">
                         <DialogHeader>
                           <DialogTitle>Изменить почту</DialogTitle>
                         </DialogHeader>
-                        <form className="grid gap-4 py-4">
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="name" className="text-right">
+                        <form className="grid gap-4">
+                          <div className="grid grid-cols-4 items-baseline gap-4">
+                            <Label
+                              htmlFor="name"
+                              className="text-right col-span-1"
+                            >
                               Почта
                             </Label>
-                            <Input
-                              id="name"
-                              value={inputValue}
-                              onChange={handleChange}
-                              placeholder="Новая почта"
-                              className="col-span-3"
-                            />
+                            <div className="col-span-3">
+                              <Input
+                                id="name"
+                                type="email"
+                                value={inputValue}
+                                onChange={handleChange}
+                                placeholder={data.userInfo.data.email}
+                                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+                                required
+                              />
+                              <span className="text-sm text-red-600 ml-2">
+                                {emailError}
+                              </span>
+                            </div>
                           </div>
                         </form>
                         <DialogFooter>

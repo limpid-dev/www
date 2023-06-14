@@ -61,7 +61,7 @@ export const getServerSideProps = async (
       },
     }
   );
-  console.log(profile);
+
   if (profile.data.user.first_name) {
     const isAuthor = session.data.id === profile.data.user_id;
     return {
@@ -110,7 +110,6 @@ export default function OneProfile({ data }: Props) {
   const parsedId = Number.parseInt(id as string, 10) as number;
 
   const [edit, setEdit] = useState(false);
-  const [contacts, setContacts] = useState({});
   const [error, setError] = useState("");
   const [editGeneral, setEditGeneral] = useState(false);
 
