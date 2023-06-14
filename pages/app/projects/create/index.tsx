@@ -88,7 +88,7 @@ export default function Create() {
                     {...register("title", {
                       required: true,
                       minLength: 2,
-                      maxLength: 30,
+                      maxLength: 100,
                     })}
                   />
                   {errors.title && (
