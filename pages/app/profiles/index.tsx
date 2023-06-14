@@ -292,7 +292,7 @@ export default function Profiles() {
                     <p className="line-clamp-1">
                       {profile.user?.first_name} {profile.user?.last_name}
                     </p>
-                    <p className="line-clamp-2 w-auto text-xs text-slate-600">
+                    <p className="line-clamp-1 w-auto text-xs text-slate-600">
                       {profile.industry}
                     </p>
                     <p className="line-clamp-2 w-auto text-xs text-slate-500">
