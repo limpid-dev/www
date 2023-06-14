@@ -10,7 +10,7 @@ function App({ Component, pageProps }: AppProps) {
         <title>LIM - все для людей</title>
       </Head>
       <Component {...pageProps} />
-      {/* <Script defer data-domain="limpid.kz" src="/js/script.js" /> */}
+      <Script defer data-domain="limpid.kz" src="/js/script.js" />
     </div>
   );
 }
