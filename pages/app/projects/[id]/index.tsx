@@ -405,7 +405,7 @@ export default function ProjectView({ data }: Props) {
                     </Sheet>
                   )}
 
-                  <Button
+                  {/* <Button
                     variant="ghost"
                     className="w-full"
                     onClick={handleClick}
@@ -414,7 +414,7 @@ export default function ProjectView({ data }: Props) {
                       <Chat className="w-6 h-6" /> Обсуждение проекта
                     </div>
                     <ArrowRight className="w-6 h-6" />
-                  </Button>
+                  </Button> */}
                 </div>
                 <div />
               </div>
