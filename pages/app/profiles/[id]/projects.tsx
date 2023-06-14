@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import api from "../../../../api";
 import { Navigation } from "../../../../components/navigation";
 import {
@@ -21,6 +21,16 @@ import {
 } from "../../../../components/primitives/alert-dialog";
 import { Button } from "../../../../components/primitives/button";
 import { Input } from "../../../../components/primitives/input";
+import { Options } from "../../../../components/primitives/options";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "../../../../components/primitives/select";
 import { TextArea } from "../../../../components/primitives/text-area";
 import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
 import Badge from "../../../../images/badge.svg";
@@ -98,6 +108,7 @@ export default function ProfileProjects({ data }: Props) {
     register: register2,
     formState: { errors: errors2 },
     handleSubmit: handleSubmit2,
+    control,
   } = useForm<FormValuesGeneral>();
 
   const handleDeleteProfile = async () => {
@@ -203,12 +214,33 @@ export default function ProfileProjects({ data }: Props) {
                         {data.profile.data.user?.first_name}{" "}
                         {data.profile.data.user?.last_name}{" "}
                       </p>
-                      <p className=" text-sm">
-                        <Input
-                          {...register2("industry")}
-                          placeholder={data.profile.data.industry}
-                        />
-                      </p>
+                      <Controller
+                        control={control}
+                        name="industry"
+                        render={({ field }) => (
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger className="px-5 text-black rounded-md flex-1 max-w-full text-ellipsis whitespace-nowrap overflow-hidden w-full">
+                              <SelectValue placeholder="Сфера деятельности" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup className="overflow-auto h-[300px]">
+                                <SelectLabel>Сфера деятельности</SelectLabel>
+                                {Options.map((option) => (
+                                  <SelectItem
+                                    key={option.id}
+                                    value={option.name}
+                                  >
+                                    {option.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
                     </div>
                     <div className="mb-6 mt-3" />
                     <div className="grid grid-cols-2 gap-4">
