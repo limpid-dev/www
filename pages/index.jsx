@@ -147,10 +147,10 @@ export function PrimaryFeatures() {
                     <div
                       key={feature.title}
                       className={clsx(
-                        "group relative rounded-full px-4 py-1 lg:rounded-l-xl lg:rounded-r-none lg:p-6",
+                        "group relative rounded-md px-4 py-1 lg:rounded-l-xl lg:rounded-r-none lg:p-6",
                         selectedIndex === featureIndex
-                          ? "bg-white lg:bg-white/10 lg:ring-1 lg:ring-inset lg:ring-white/10"
-                          : "hover:bg-white/10 lg:hover:bg-white/5 border sm:border-none border-lime-700"
+                          ? "bg-white  lg:bg-white/10 lg:ring-1 lg:ring-inset lg:ring-white/10"
+                          : "hover:bg-white/10 lg:hover:bg-white/5 border sm:border-none border-lime-700 bg-lime-600 sm:bg-transparent"
                       )}
                     >
                       <h3>
