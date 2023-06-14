@@ -4,7 +4,7 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import api from "../../../../api";
 import { Navigation } from "../../../../components/navigation";
@@ -114,6 +114,7 @@ type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 export default function Certifications({ data }: Props) {
   const router = useRouter();
   const { id } = router.query;
+  const inputRef = useRef(null);
   const parsedId = Number.parseInt(id as string, 10) as number;
   const [error, setError] = useState<string>();
   const tabs = [
@@ -156,11 +157,14 @@ export default function Certifications({ data }: Props) {
         Number.parseInt(id as string, 10),
         data1
       );
-      router.reload();
+      if (data.data.id) {
+        router.reload();
+      }
     } catch (error) {
       setError("Что то пошло не так, попробуйте позже");
     }
   };
+
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
@@ -182,6 +186,30 @@ export default function Certifications({ data }: Props) {
     });
   };
 
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const fileObj = event.target.files?.[0];
+    console.log(fileObj);
+    if (!fileObj) {
+      return;
+    }
+    try {
+      const { data } = await api.updateProfile(parsedId, {
+        avatar: fileObj,
+      });
+      if (data.data.avatar?.url) {
+        router.reload();
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 422) {
+        setError("Размер файла не более 1 МБ");
+      } else {
+        console.log("Error:", error);
+      }
+    }
+  };
+
   const handleDeleteCertificate = async (certificateId: number) => {
     try {
       await api.deleteCertificate({
@@ -193,6 +221,7 @@ export default function Certifications({ data }: Props) {
       console.error("Failed to delete certificate:", error);
     }
   };
+
   const handleDeleteSkill = async (skillId: number) => {
     await api.deleteSkill({
       path: { profile_id: parsedId, skill_id: skillId },
@@ -202,6 +231,10 @@ export default function Certifications({ data }: Props) {
 
   const editGeneralInfo = () => {
     setEditGeneral((current: boolean) => !current);
+  };
+
+  const handleClick = () => {
+    (inputRef.current as unknown as HTMLInputElement).click();
   };
 
   return (
@@ -243,178 +276,191 @@ export default function Certifications({ data }: Props) {
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-10 ">
             <div className="rounded-lg border sm:col-span-3">
               {editGeneral ? (
-                <form onSubmit={handleSubmit2(onSubmit2)}>
-                  <div className="h-full bg-white px-6">
-                    <div className="flex flex-col items-center justify-center pt-12">
-                      <Image
-                        src={
-                          data.profile.data.avatar
-                            ? `/api/${data.profile.data.avatar.url}`
-                            : DefaultAva
-                        }
-                        width={0}
-                        height={0}
-                        unoptimized
-                        alt="Profile image"
-                        className="mb-3 h-[106px] w-auto rounded-md object-cover"
-                      />
-                      <p className="text-2xl font-semibold mb-2">
-                        {data.profile.data.user?.first_name}{" "}
-                        {data.profile.data.user?.last_name}{" "}
-                      </p>
-                      <Controller
-                        control={control}
-                        name="industry"
-                        render={({ field }) => (
-                          <Select
-                            value={field.value}
-                            onValueChange={field.onChange}
-                          >
-                            <SelectTrigger className="px-5 text-black rounded-md flex-1 max-w-full text-ellipsis whitespace-nowrap overflow-hidden w-full">
-                              <SelectValue placeholder="Сфера деятельности" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectGroup className="overflow-auto h-[300px]">
-                                <SelectLabel>Сфера деятельности</SelectLabel>
-                                {Options.map((option) => (
-                                  <SelectItem
-                                    key={option.id}
-                                    value={option.name}
-                                  >
-                                    {option.name}
-                                  </SelectItem>
-                                ))}
-                              </SelectGroup>
-                            </SelectContent>
-                          </Select>
-                        )}
-                      />
-                    </div>
-                    <div className="mb-6 mt-3" />
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <p className="text-sm text-slate-400 mb-2">Локация</p>
-                        <p className="text-sm ">
-                          <Input
-                            {...register2("location")}
-                            placeholder={data.profile.data.location}
-                          />
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-slate-400 mb-2">Профессия</p>
-                        <p className="text-sm">
-                          <Input
-                            {...register2("display_name")}
-                            placeholder={data.profile.data.display_name}
-                          />
-                        </p>
-                      </div>
-                    </div>
-                    <div className="mb-6 mt-4" />
+                <>
+                  <div className="col-span-full flex items-center gap-x-8">
+                    <Image
+                      src={
+                        data.profile.data.avatar?.url
+                          ? `/api/${data.profile.data.avatar.url}`
+                          : DefaultAva
+                      }
+                      width={0}
+                      height={0}
+                      unoptimized
+                      alt=""
+                      className=" h-44 w-44 flex-none rounded-lg bg-gray-100 object-cover"
+                    />
                     <div>
-                      <p className="text-lg font-semibold">Обо мне</p>
-                      <p className="pt-3 text-sm">
-                        <TextArea
-                          {...register2("description")}
-                          className=" h-"
-                          placeholder={data.profile.data.description}
-                        />
+                      <input
+                        ref={inputRef}
+                        style={{ display: "none" }}
+                        type="file"
+                        placeholder="some photo"
+                        onChange={handleFileChange}
+                      />
+                      <Button onClick={handleClick}>Поменять фото</Button>
+                      <p className="mt-2 text-xs leading-5 text-gray-400">
+                        JPG или PNG. 1MB макс.
                       </p>
-                    </div>
-
-                    <div className="mb-5 mt-3" />
-                    <div>
-                      <p className="text-lg font-semibold">Социальные сети</p>
-                      <div className="flex flex-col gap-2 pb-5">
-                        <div className="relative mt-4 flex items-center">
-                          <Image
-                            width={24}
-                            height={24}
-                            alt=""
-                            unoptimized
-                            quality={100}
-                            src="/2gis.png"
-                            className="absolute left-5"
-                          />
-                          <Input
-                            type="url"
-                            {...register2("two_gis_url")}
-                            className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
-                            placeholder="Ссылка на 2ГИС"
-                            minLength={1}
-                            maxLength={255}
-                          />
-                        </div>
-                        <div className="relative mt-4 flex items-center">
-                          <Image
-                            width={24}
-                            height={24}
-                            alt=""
-                            unoptimized
-                            quality={100}
-                            src="/instagram.png"
-                            className="absolute left-5"
-                          />
-                          <Input
-                            type="url"
-                            {...register2("instagram_url")}
-                            className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
-                            placeholder="Ссылка на Instagram"
-                            minLength={1}
-                            maxLength={255}
-                          />
-                        </div>
-                        <div className="relative mt-4 flex items-center">
-                          <Image
-                            width={24}
-                            height={24}
-                            alt=""
-                            unoptimized
-                            quality={100}
-                            src="/whatsapp.png"
-                            className="absolute left-5"
-                          />
-                          <Input
-                            type="url"
-                            {...register2("whatsapp_url")}
-                            className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
-                            placeholder="Ссылка на WhatsApp"
-                            minLength={1}
-                            maxLength={255}
-                          />
-                        </div>
-                        <div className="relative mt-4 flex  items-center">
-                          <Image
-                            width={24}
-                            height={24}
-                            alt=""
-                            unoptimized
-                            quality={100}
-                            src="/website.png"
-                            className="absolute left-5"
-                          />
-                          <Input
-                            type="url"
-                            {...register2("website_url")}
-                            className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
-                            placeholder="Ссылка на сайт"
-                            minLength={1}
-                            maxLength={255}
-                          />
-                        </div>
-                      </div>
-                      <div className="flex justify-end gap-3 pb-3">
-                        <Button variant="outline" onClick={editGeneralInfo}>
-                          Отмена
-                        </Button>
-                        <Button variant="black" type="submit">
-                          Сохранить
-                        </Button>
-                      </div>
+                      <p className="mt-2 text-xs leading-5 text-red-500">
+                        {error}
+                      </p>
                     </div>
                   </div>
-                </form>
+                  <form onSubmit={handleSubmit2(onSubmit2)}>
+                    <div className="h-full bg-white px-6">
+                      <div className="flex flex-col items-center justify-center pt-12">
+                        <p className="text-2xl font-semibold mb-2">
+                          {data.profile.data.user?.first_name}{" "}
+                          {data.profile.data.user?.last_name}{" "}
+                        </p>
+                        <Controller
+                          control={control}
+                          name="industry"
+                          render={({ field }) => (
+                            <Select
+                              value={field.value}
+                              onValueChange={field.onChange}
+                            >
+                              <SelectTrigger className="px-5 text-black rounded-md flex-1 max-w-full text-ellipsis whitespace-nowrap overflow-hidden w-full">
+                                <SelectValue placeholder="Сфера деятельности" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectGroup className="overflow-auto h-[300px]">
+                                  <SelectLabel>Сфера деятельности</SelectLabel>
+                                  {Options.map((option) => (
+                                    <SelectItem
+                                      key={option.id}
+                                      value={option.name}
+                                    >
+                                      {option.name}
+                                    </SelectItem>
+                                  ))}
+                                </SelectGroup>
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                      </div>
+                      <div className="mb-6 mt-3" />
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-sm text-slate-400 mb-2">Локация</p>
+                          <p className="text-sm ">
+                            <Input
+                              {...register2("location")}
+                              placeholder={data.profile.data.location}
+                            />
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-slate-400 mb-2">
+                            Профессия
+                          </p>
+                          <p className="text-sm">
+                            <Input
+                              {...register2("display_name")}
+                              placeholder={data.profile.data.display_name}
+                            />
+                          </p>
+                        </div>
+                      </div>
+                      <div className="mb-6 mt-4" />
+                      <div>
+                        <p className="text-lg font-semibold">Обо мне</p>
+                        <p className="pt-3 text-sm">
+                          <TextArea
+                            {...register2("description")}
+                            className=" h-"
+                            placeholder={data.profile.data.description}
+                          />
+                        </p>
+                      </div>
+
+                      <div className="mb-5 mt-3" />
+                      <div>
+                        <p className="text-lg font-semibold">Социальные сети</p>
+                        <div className="flex flex-col gap-2 pb-5">
+                          <div className="relative mt-4 flex items-center">
+                            <Input
+                              type="url"
+                              {...register2("two_gis_url")}
+                              className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
+                              placeholder="Ссылка на 2ГИС"
+                              minLength={1}
+                              maxLength={255}
+                            />
+                          </div>
+                          <div className="relative mt-4 flex items-center">
+                            <Image
+                              width={24}
+                              height={24}
+                              alt=""
+                              unoptimized
+                              quality={100}
+                              src="/instagram.png"
+                              className="absolute left-5"
+                            />
+                            <Input
+                              type="url"
+                              {...register2("instagram_url")}
+                              className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
+                              placeholder="Ссылка на Instagram"
+                              minLength={1}
+                              maxLength={255}
+                            />
+                          </div>
+                          <div className="relative mt-4 flex items-center">
+                            <Image
+                              width={24}
+                              height={24}
+                              alt=""
+                              unoptimized
+                              quality={100}
+                              src="/whatsapp.png"
+                              className="absolute left-5"
+                            />
+                            <Input
+                              type="url"
+                              {...register2("whatsapp_url")}
+                              className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
+                              placeholder="Ссылка на WhatsApp"
+                              minLength={1}
+                              maxLength={255}
+                            />
+                          </div>
+                          <div className="relative mt-4 flex  items-center">
+                            <Image
+                              width={24}
+                              height={24}
+                              alt=""
+                              unoptimized
+                              quality={100}
+                              src="/website.png"
+                              className="absolute left-5"
+                            />
+                            <Input
+                              type="url"
+                              {...register2("website_url")}
+                              className="py-4 px-5 pl-14 text-black rounded-md border border-slate-300 placeholder:text-black text-sm max-w-sm w-full"
+                              placeholder="Ссылка на сайт"
+                              minLength={1}
+                              maxLength={255}
+                            />
+                          </div>
+                        </div>
+                        <div className="flex justify-end gap-3 pb-3">
+                          <Button variant="outline" onClick={editGeneralInfo}>
+                            Отмена
+                          </Button>
+                          <Button variant="black" type="submit">
+                            Сохранить
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </>
               ) : (
                 <div className="h-full bg-white px-6">
                   <div className="flex flex-col items-center justify-center pt-12">

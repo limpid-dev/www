@@ -184,19 +184,15 @@ export default function ProjectView({ data }: Props) {
     setIsShown((current: boolean) => !current);
   };
 
-  const handleDeleteProject = (projectId: number) => {
-    const params = {
-      project_id: projectId,
-    };
-
-    api
-      .deleteProject(params)
-      .then((response) => {
-        router.reload();
-      })
-      .catch((error) => {
-        console.error("Error deleting project:", error);
-      });
+  const handleDeleteProject = async (projectId: number) => {
+    try {
+      const { data } = await api.deleteProject({ project_id: projectId });
+      if(data){
+        
+      }
+    } catch (error) {
+      console.error("Error deleting project:", error);
+    }
   };
 
   // const handleAccept = async () => {

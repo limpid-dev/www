@@ -399,8 +399,7 @@ class APIClient {
     params: paths["/projects/{project_id}"]["delete"]["parameters"]["path"]
   ): Promise<AxiosResponse<void>> {
     const { project_id } = params;
-    const response = await axios.delete(`/projects/${project_id}`);
-    return response;
+    return this.axiosInstance.delete(`/projects/${project_id}`);
   }
 
   // Project members

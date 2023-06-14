@@ -52,7 +52,7 @@ export default function Test() {
         query: { profileId: router.query.profileId },
       });
     } catch (error) {
-      setError("Что то пошло не так, попробуйте позже");
+      setError("Ошибка загрузки файла: Проверьте файлы");
     }
   };
 
@@ -123,13 +123,23 @@ export default function Test() {
                             </div>
                           </div>
 
-                          <Input
-                            id="fileInput"
-                            type="file"
-                            {...register(`certification.${index}.attachment`, {
-                              required: true,
-                            })}
-                          />
+                          <div>
+                            <Input
+                              id="fileInput"
+                              type="file"
+                              {...register(
+                                `certification.${index}.attachment`,
+                                {
+                                  required: true,
+                                }
+                              )}
+                            />
+                            <p className="text-slate-400 text-xs text-center">
+                              Размер файла должен быть не более 2 МБ, а
+                              расширение файла должно быть в формате JPG, PNG,
+                              JPEG или PDF.
+                            </p>
+                          </div>
                           <div className="flex flex-col  gap-5 md:flex-row justify-around">
                             <div className="flex items-center justify-between gap-3">
                               <p>Начало</p>
@@ -224,7 +234,8 @@ export default function Test() {
                     </div>
                   </div>
                 </div>
-                <div className="mt-32 flex gap-8 max-w-screen-sm w-full mx-auto">
+                {error && <p className="text-center mt-7">{error}</p>}
+                <div className="mt-24 flex gap-8 max-w-screen-sm w-full mx-auto">
                   <button
                     onClick={() => remove()}
                     className="rounded-md text-black py-2 px-4 border border-black text-sm font-medium flex-1"
@@ -237,7 +248,6 @@ export default function Test() {
                   >
                     Далее
                   </button>
-                  {error}
                 </div>
               </form>
             </div>
