@@ -204,7 +204,7 @@ export default function ProjectView({ data }: Props) {
   return (
     <div>
       <Navigation />
-      <div className=" min-h-screen bg-slate-50">
+      <div className="min-h-screen bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
           <h1 className="text-sm">
             <span className="text-slate-300">Проект / </span>

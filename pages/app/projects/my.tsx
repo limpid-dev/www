@@ -120,7 +120,7 @@ export default function All({ data }: Props) {
           </DialogContent>
         </Dialog>
       </div>
-      <div className="h-[90vh] bg-slate-50">
+      <div className="min-h-screen bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
           <p className=" text-sm text-slate-300">Мои проекты</p>
           <div className="my-5 flex flex-col items-end justify-end gap-4 md:mb-12 md:flex-row md:items-center  md:justify-between">
