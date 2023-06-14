@@ -17,14 +17,14 @@ const nextConfig = {
 
   async rewrites() {
     return [
-      // {
-      //   source: "/js/script.js",
-      //   destination: "https://analytics.limpid.kz/js/script.js",
-      // },
-      // {
-      //   source: "/api/event",
-      //   destination: "https://analytics.limpid.kz/api/event",
-      // },
+      {
+        source: "/js/script.js",
+        destination: "https://analytics.limpid.kz/js/script.js",
+      },
+      {
+        source: "/api/event",
+        destination: "https://analytics.limpid.kz/api/event",
+      },
     ];
   },
   transpilePackages: ["react-pdf"],
