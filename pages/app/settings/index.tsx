@@ -7,6 +7,7 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { ChangeEvent, ChangeEventHandler, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import api from "../../../api";
 // import { buildFormData } from "../../../api/files";
 import { Navigation } from "../../../components/navigation";
@@ -48,6 +49,11 @@ const secondaryNavigation = [
   //   current: false,
   // },
 ];
+interface FormValues {
+  first_name: string;
+  last_name: string;
+  patronymic: string;
+}
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext<{
@@ -77,6 +83,7 @@ export default function Settings({ data }: Props) {
   const router = useRouter();
 
   const [inputValue, setInputValue] = useState("");
+  const [emailError, setEmailError] = useState("");
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     setInputValue(event.target.value);
@@ -100,8 +107,15 @@ export default function Settings({ data }: Props) {
     }
   };
 
-  const [emailError, setEmailError] = useState("");
+  const { register, handleSubmit } = useForm<FormValues>({});
 
+  const onSubmit = async (userData: FormValues) => {
+    const { data } = await api.updateUser(userData);
+
+    if (data.data.id) {
+      router.reload();
+    }
+  };
   return (
     <>
       <Navigation />
@@ -157,7 +171,10 @@ export default function Settings({ data }: Props) {
                   <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
                     <div className="text-gray-900">
                       {data.userInfo.data.last_name}{" "}
-                      {data.userInfo.data.first_name}
+                      {data.userInfo.data.first_name}{" "}
+                      {data.userInfo.data.patronymic && (
+                        <span>{data.userInfo.data.patronymic}</span>
+                      )}
                     </div>
                     <Dialog>
                       <DialogTrigger asChild>
@@ -172,43 +189,49 @@ export default function Settings({ data }: Props) {
                         <DialogHeader>
                           <DialogTitle>Изменить ФИО</DialogTitle>
                         </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="name" className="text-right">
-                              Имя
-                            </Label>
-                            <Input
-                              id="name"
-                              placeholder={data.userInfo.data.first_name}
-                              className="col-span-3"
-                            />
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                          <div className="grid gap-4 py-4">
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label htmlFor="name" className="text-right">
+                                Имя
+                              </Label>
+                              <Input
+                                {...register("first_name")}
+                                placeholder={data.userInfo.data.first_name}
+                                className="col-span-3"
+                              />
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label htmlFor="username" className="text-right">
+                                Фамилия
+                              </Label>
+                              <Input
+                                {...register("last_name")}
+                                placeholder={data.userInfo.data.last_name}
+                                className="col-span-3"
+                              />
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label htmlFor="username" className="text-right">
+                                Отчество
+                              </Label>
+                              <Input
+                                {...register("patronymic")}
+                                placeholder={data.userInfo.data.patronymic}
+                                className="col-span-3"
+                              />
+                            </div>
                           </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="username" className="text-right">
-                              Фамилия
-                            </Label>
-                            <Input
-                              id="username"
-                              placeholder={data.userInfo.data.last_name}
-                              className="col-span-3"
-                            />
-                          </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="username" className="text-right">
-                              Отчество
-                            </Label>
-                            <Input
-                              id="username"
-                              placeholder={data.userInfo.data.patronymic}
-                              className="col-span-3"
-                            />
-                          </div>
-                        </div>
-                        <DialogFooter>
-                          <Button variant="black" type="submit">
-                            Изменить
-                          </Button>
-                        </DialogFooter>
+                          <DialogFooter>
+                            <Button
+                              variant="black"
+                              type="submit"
+                              className="mt-4"
+                            >
+                              Изменить
+                            </Button>
+                          </DialogFooter>
+                        </form>
                       </DialogContent>
                     </Dialog>
                   </dd>
