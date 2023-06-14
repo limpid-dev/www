@@ -1,6 +1,7 @@
 import "../tailwind.css";
 import { AppProps } from "next/app";
 import Head from "next/head";
+import Script from "next/script";
 import { appWithTranslation } from "next-i18next";
 
 function App({ Component, pageProps }: AppProps) {
