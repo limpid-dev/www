@@ -72,7 +72,7 @@ export const getServerSideProps = async (
     }
   );
 
-  if (profile.data.user.first_name) {
+  if (profile.data) {
     const isAuthor = session.data.id === profile.data.user_id;
     return {
       props: {

@@ -357,7 +357,7 @@ export default function All() {
                         </div>
                         <div className="col-span-8 flex flex-col gap-1">
                           <div className="flex justify-between">
-                            <p className="text-xs font-semibold sm:text-base">
+                            <p className="text-xs font-semibold sm:text-base line-clamp-1">
                               {project.title}
                             </p>
                             <p className="text-xs text-slate-400">
