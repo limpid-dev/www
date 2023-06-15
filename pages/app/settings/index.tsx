@@ -272,7 +272,7 @@ export default function Settings({ data }: Props) {
                                 value={inputValue}
                                 onChange={handleChange}
                                 placeholder={data.userInfo.data.email}
-                                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+                                pattern="(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&_-])[A-Za-z\d@$!%*#?&_-]+"
                                 required
                               />
                               <span className="text-sm text-red-600 ml-2">
