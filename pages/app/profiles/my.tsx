@@ -173,7 +173,7 @@ function Profiles({ data }: Props) {
               <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
                 {data.profiles.data.map((profile) => (
                   <Link key={profile.id} href={`/app/profiles/${profile.id}`}>
-                    <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-8 font-semibold hover:border-slate-700 sm:max-w-[400px]">
+                    <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-8 font-semibold hover:border-slate-700 sm:max-w-[400px] sm:max-h-44">
                       <Image
                         unoptimized
                         className="h-14 w-14"
