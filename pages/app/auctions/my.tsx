@@ -108,9 +108,9 @@ export default function All() {
                     <p className="text-base font-semibold">
                       Менеджер по туризму
                     </p>
-                    <p className="rounded-2xl bg-lime-500 px-2 py-1 text-xs font-bold text-slate-100">
+                    {/* <p className="rounded-2xl bg-lime-500 px-2 py-1 text-xs font-bold text-slate-100">
                       в ТОПе
-                    </p>
+                    </p> */}
                   </div>
                   <div className="grid grid-cols-2 gap-y-2.5">
                     <p className="text-sm text-slate-400">Заявки</p>

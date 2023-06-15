@@ -376,9 +376,9 @@ export default function All() {
                             <p className="max-w-[300px] text-xs">
                               {project.industry}
                             </p>
-                            <p className="flex items-center rounded-2xl bg-lime-500 px-2 py-1 text-[9px] font-bold text-slate-100 sm:text-xs">
+                            {/* <p className="flex items-center rounded-2xl bg-lime-500 px-2 py-1 text-[9px] font-bold text-slate-100 sm:text-xs">
                               в ТОПе
-                            </p>
+                            </p> */}
                           </div>
                           <p className="line-clamp-3 w-auto text-xs">
                             {project.description}
