@@ -297,7 +297,7 @@ export default function Experiences({ data }: Props) {
                       </p>
                     </div>
                   </div>
-                  <form onSubmit={handleSubmit(onSubmit)}>
+                  <form onSubmit={handleSubmit2(onSubmit2)}>
                     <div className="h-full bg-white px-6">
                       <div className="flex flex-col items-center justify-center">
                         <p className="text-2xl font-semibold mb-2">
