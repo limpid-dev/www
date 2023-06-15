@@ -272,7 +272,7 @@ export default function ProjectView({ data }: Props) {
                           onSubmit={handleSubmit(onSubmit)}
                           className="flex flex-col items-end"
                         >
-                          <TextArea {...register("message")} />
+                          <TextArea {...register("application_message")} />
                           <Button className="mt-4" variant="outline">
                             Отправить
                           </Button>
