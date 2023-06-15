@@ -39,8 +39,6 @@ export default function Register() {
         last_name: values.lastName,
         email: values.email,
         password: values.password,
-        born_at: "",
-        patronymic: "",
       })
       .then((response) => {
         if (response.status === 200) {
@@ -96,7 +94,7 @@ export default function Register() {
           <Label>{t("password")}</Label>
           <Input
             type="password"
-            pattern="(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&_])[A-Za-z\d@$!%*#?&_]+"
+            pattern="(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&_-]+"
             autoComplete="new-password"
             minLength={8}
             required

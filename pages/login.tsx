@@ -109,7 +109,7 @@ export default function Login() {
             minLength={8}
             onChange={clearErrors}
             autoComplete="current-password"
-            pattern="(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&_])[A-Za-z\d@$!%*#?&_]+"
+            pattern="(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&_-]+"
             required
           />
           <Message match="patternMismatch">{t("password_error")}</Message>

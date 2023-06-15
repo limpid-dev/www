@@ -599,7 +599,7 @@ export default function ProfileProjects({ data }: Props) {
                 <div className="grid gap-5 md:grid-cols-2">
                   {data.projects.data.map((item, index) => (
                     <Link key={index} href={`/app/projects/${item.id}`}>
-                      <div className="grid items-center justify-center gap-4 rounded-lg border py-6 pl-6 pr-4 hover:border-black sm:grid-cols-10">
+                      <div className="grid items-center justify-center gap-4 rounded-lg border py-6 pl-6 pr-4 sm:h-48 hover:border-black sm:grid-cols-10">
                         <div className="sm:col-span-4">
                           <Image
                             src={
