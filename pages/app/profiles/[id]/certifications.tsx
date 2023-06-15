@@ -277,7 +277,7 @@ export default function Certifications({ data }: Props) {
             <div className="rounded-lg border sm:col-span-3">
               {editGeneral ? (
                 <>
-                  <div className="col-span-full flex items-center gap-x-8">
+                  <div className="flex flex-col items-center gap-x-8 bg-white pt-5">
                     <Image
                       src={
                         data.profile.data.avatar?.url
@@ -288,7 +288,7 @@ export default function Certifications({ data }: Props) {
                       height={0}
                       unoptimized
                       alt=""
-                      className=" h-44 w-44 flex-none rounded-lg bg-gray-100 object-cover"
+                      className="mb-3 h-[106px] w-auto rounded-md object-cover"
                     />
                     <div>
                       <input
@@ -309,7 +309,7 @@ export default function Certifications({ data }: Props) {
                   </div>
                   <form onSubmit={handleSubmit2(onSubmit2)}>
                     <div className="h-full bg-white px-6">
-                      <div className="flex flex-col items-center justify-center pt-12">
+                      <div className="flex flex-col items-center justify-center">
                         <p className="text-2xl font-semibold mb-2">
                           {data.profile.data.user?.first_name}{" "}
                           {data.profile.data.user?.last_name}{" "}

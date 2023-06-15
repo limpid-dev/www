@@ -18,11 +18,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../../../components/primitives/dialog";
-import { Input } from "../../../components/primitives/input";
-import { Skeleton } from "../../../components/primitives/skeleton";
 import NoProjects from "../../../images/noProjects.svg";
 import testAva from "../../../images/projectDefault.svg";
-import session from "../../api/session";
 
 const tabs = [
   { name: "Все проекты", href: "/app/projects/", current: false },
@@ -171,7 +168,7 @@ export default function All({ data }: Props) {
             </Button>
           </div>
 
-          {data.projects?.data.length > 0 || data.projects !== null ? (
+          {data.projects?.data.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
               {data.projects?.data.map((project, projectIndex) => (
                 <Link key={projectIndex} href={`/app/projects/${project.id}`}>

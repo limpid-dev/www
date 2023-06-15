@@ -1,5 +1,6 @@
 import { Plus } from "@phosphor-icons/react";
 import clsx from "clsx";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -23,7 +24,51 @@ import NoProfiles from "../../../images/noProfiles.svg";
 import onLaptop from "../../../images/onLaptop.svg";
 import ProfileDefault from "../../../images/profileDefault.svg";
 
-function Profiles() {
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext<{
+    id: string;
+  }>
+) => {
+  const { data: session } = await api.getUser({
+    headers: {
+      Cookie: context.req.headers.cookie,
+    },
+  });
+
+  if (session.data.id) {
+    const { data: profiles } = await api.getProfiles(
+      {
+        page: 1,
+        per_page: 20,
+        user_id: session.data.id!,
+      },
+      {
+        headers: {
+          cookie: context.req.headers.cookie,
+        },
+      }
+    );
+
+    return {
+      props: {
+        data: {
+          profiles: profiles!,
+        },
+      },
+    };
+  }
+  return {
+    props: {
+      data: {
+        profiles: null,
+      },
+    },
+  };
+};
+
+type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+function Profiles({ data }: Props) {
   const tabs = [
     { name: "Все профили", href: "/app/profiles/", current: false },
     { name: "Мои профили", href: "/app/profiles/my", current: true },
@@ -31,40 +76,10 @@ function Profiles() {
 
   const router = useRouter();
 
-  const currentPage =
-    (Number.parseInt(router.query.page as string, 10) as number) || 1;
-
-  const [data, setData] = useState<components["schemas"]["Profile"][]>([]);
-  const [loading, setLoading] = useState(true);
-
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>): void => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
   };
-
-  const [totalItems, setTotalItems] = useState(1);
-
-  useEffect(() => {
-    async function fetchProfiles() {
-      const { data: session } = await api.getUser();
-      try {
-        const response = await api.getProfiles({
-          page: currentPage,
-          per_page: 9,
-          user_id: session.data.id,
-        });
-        const data = response.data.data;
-        if (data && data.length > 0) {
-          setData(data);
-          setTotalItems(response.data.meta.total);
-        }
-      } catch (error) {
-        console.error("Error fetching profiles:", error);
-      }
-      setLoading(false);
-    }
-    fetchProfiles();
-  }, [currentPage]);
 
   return (
     <div>
@@ -152,46 +167,32 @@ function Profiles() {
               </DialogContent>
             </Dialog>
           </div>
-          {loading ? (
-            <Skeleton className="w-[400px] h-[160px] rounded-full" />
-          ) : (
+
+          {data.profiles.data.length > 0 ? (
             <>
-              {data.length > 0 ? (
-                <>
-                  <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-                    {data.map((profile) => (
-                      <Link
-                        key={profile.id}
-                        href={`/app/profiles/${profile.id}`}
-                      >
-                        <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-8 font-semibold hover:border-slate-700 sm:max-w-[400px]">
-                          <Image
-                            unoptimized
-                            className="h-14 w-14"
-                            src={ProfileDefault}
-                            alt="some"
-                          />
-                          <p className="mt-3 text-center text-base sm:text-xl ">
-                            {profile.display_name}
-                          </p>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                  <Pagination
-                    renderPageLink={(page) => `/app/profiles/my/?page=${page}`}
-                    itemsPerPage={9}
-                    totalItems={totalItems}
-                    currentPage={currentPage}
-                  />
-                </>
-              ) : (
-                <div className="flex flex-col items-center justify-center gap-8">
-                  <Image src={NoProfiles} alt="Нет профилей" />
-                  <p className=" text-2xl font-semibold">У вас нет профиля</p>
-                </div>
-              )}
+              <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+                {data.profiles.data.map((profile) => (
+                  <Link key={profile.id} href={`/app/profiles/${profile.id}`}>
+                    <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-8 font-semibold hover:border-slate-700 sm:max-w-[400px]">
+                      <Image
+                        unoptimized
+                        className="h-14 w-14"
+                        src={ProfileDefault}
+                        alt="some"
+                      />
+                      <p className="mt-3 text-center text-base sm:text-xl ">
+                        {profile.display_name}
+                      </p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
             </>
+          ) : (
+            <div className="flex flex-col items-center justify-center gap-8">
+              <Image src={NoProfiles} alt="Нет профилей" />
+              <p className=" text-2xl font-semibold">У вас нет профиля</p>
+            </div>
           )}
         </GeneralLayout>
       </div>

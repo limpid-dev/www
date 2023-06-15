@@ -8,7 +8,7 @@ export interface AxiosError extends Error {
   };
 }
 const API_BASE_URL = "https://limpid.kz/api";
-// const API_BASE_URL = "http://localhost:3000/api";
+// const API_BASE_URL = "http://localhost:3000/api"
 
 class APIClient {
   private axiosInstance = axios.create({
@@ -79,14 +79,15 @@ class APIClient {
 
   // Profiles
   async getProfiles(
-    params: paths["/profiles"]["get"]["parameters"]["query"]
+    params: paths["/profiles"]["get"]["parameters"]["query"],
+    config?: AxiosRequestConfig
   ): Promise<
     AxiosResponse<{
       meta: components["schemas"]["Pagination"];
       data: components["schemas"]["Profile"][];
     }>
   > {
-    return this.axiosInstance.get("/profiles", { params });
+    return this.axiosInstance.get("/profiles", { params, ...config });
   }
 
   async createProfile(
