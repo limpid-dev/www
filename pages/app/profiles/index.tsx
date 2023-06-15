@@ -4,7 +4,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import api from "../../../api";
 import { GeneralLayout } from "../../../components/general-layout";
 import { Navigation } from "../../../components/navigation";
@@ -269,75 +269,101 @@ export default function Profiles() {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-3">
-          {profilesData.map((profile, profileIndex) => (
-            <Link key={profileIndex} href={`/app/profiles/${profile.id}`}>
-              <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
-                <div className="grid grid-cols-10 h-[140px]">
-                  <div className="col-span-4 mr-3">
-                    <Image
-                      src={
-                        profile?.avatar?.url
-                          ? `/api/${profile?.avatar?.url}`
-                          : DefaultAvatar
-                      }
-                      width={0}
-                      height={0}
-                      unoptimized
-                      alt="test"
-                      className="h-32 w-32 rounded-lg object-cover"
-                    />
+          <React.Fragment>
+            {profilesData.map((profile, profileIndex) => {
+              if (!profile.is_visible) {
+                return (
+                  <div
+                    key={profileIndex}
+                    className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black"
+                  >
+                    <div className="grid grid-cols-10 h-[140px]">
+                      <div className="col-span-4 mr-3">
+                        <Image
+                          src={
+                            profile?.avatar?.url
+                              ? `/api/${profile?.avatar?.url}`
+                              : DefaultAvatar
+                          }
+                          width={0}
+                          height={0}
+                          unoptimized
+                          alt="test"
+                          className="h-32 w-32 rounded-lg object-cover"
+                        />
+                      </div>
+                      <div className="col-span-6 flex flex-col gap-1">
+                        <p>{profile.display_name}</p>
+                        <p className="line-clamp-1">
+                          {profile.user?.first_name} {profile.user?.last_name}
+                        </p>
+                        <p className="line-clamp-1 w-auto text-xs text-slate-600">
+                          {profile.industry}
+                        </p>
+                        <p className="line-clamp-2 w-auto text-xs text-slate-500">
+                          {profile.title}
+                        </p>
+                        <p className="line-clamp-2 w-auto text-sm text-slate-400">
+                          {profile.location}
+                        </p>
+                        <p className="line-clamp-2 text-xs">
+                          {profile.description}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="col-span-6 flex flex-col gap-1">
-                    <p>{profile.display_name}</p>
-                    <p className="line-clamp-1">
-                      {profile.user?.first_name} {profile.user?.last_name}
-                    </p>
-                    <p className="line-clamp-1 w-auto text-xs text-slate-600">
-                      {profile.industry}
-                    </p>
-                    <p className="line-clamp-2 w-auto text-xs text-slate-500">
-                      {profile.title}
-                    </p>
-                    <p className="line-clamp-2 w-auto text-sm text-slate-400">
-                      {profile.location}
-                    </p>
-                    <p className="line-clamp-2 text-xs">
-                      {profile.description}
-                    </p>
-                    {/* <Button
-                      variant="outline"
-                      className="mt-5"
-                      onClick={() => handleChat(profile?.user?.id)}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="lucide lucide-message-square"
-                      >
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                      </svg>
-                      Написать сообщение
-                    </Button> */}
+                );
+              }
+              return (
+                <Link key={profileIndex} href={`/app/profiles/${profile.id}`}>
+                  <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
+                    <div className="grid grid-cols-10 h-[140px]">
+                      <div className="col-span-4 mr-3">
+                        <Image
+                          src={
+                            profile?.avatar?.url
+                              ? `/api/${profile?.avatar?.url}`
+                              : DefaultAvatar
+                          }
+                          width={0}
+                          height={0}
+                          unoptimized
+                          alt="test"
+                          className="h-32 w-32 rounded-lg object-cover"
+                        />
+                      </div>
+                      <div className="col-span-6 flex flex-col gap-1">
+                        <p>{profile.display_name}</p>
+                        <p className="line-clamp-1">
+                          {profile.user?.first_name} {profile.user?.last_name}
+                        </p>
+                        <p className="line-clamp-1 w-auto text-xs text-slate-600">
+                          {profile.industry}
+                        </p>
+                        <p className="line-clamp-2 w-auto text-xs text-slate-500">
+                          {profile.title}
+                        </p>
+                        <p className="line-clamp-2 w-auto text-sm text-slate-400">
+                          {profile.location}
+                        </p>
+                        <p className="line-clamp-2 text-xs">
+                          {profile.description}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </Link>
-          ))}
+                </Link>
+              );
+            })}
+          </React.Fragment>
         </div>
-        <Pagination
-          renderPageLink={(page) => `/app/profiles/?page=${page}`}
-          itemsPerPage={9}
-          totalItems={totalItems}
-          currentPage={currentPage}
-        />
       </GeneralLayout>
+      <Pagination
+        renderPageLink={(page) => `/app/profiles/?page=${page}`}
+        itemsPerPage={9}
+        totalItems={totalItems}
+        currentPage={currentPage}
+      />
     </div>
   );
 }

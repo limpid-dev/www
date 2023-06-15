@@ -20,7 +20,7 @@ const Pagination = ({
   const pages = usePagination(totalItems, currentPage, itemsPerPage);
 
   return (
-    <div className="flex items-center justify-center my-8 ">
+    <div className="flex items-center justify-center py-5 bg-slate-50">
       {pages.map((pageNumber, i) =>
         pageNumber === dotts ? (
           <span

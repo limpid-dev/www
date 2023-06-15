@@ -417,16 +417,15 @@ export default function All() {
                 </div>
               ))}
             </div>
-
-            <Pagination
-              renderPageLink={(page) => `/app/projects/?page=${page}`}
-              itemsPerPage={6}
-              totalItems={totalItems}
-              currentPage={currentPage}
-            />
           </>
         )}
       </GeneralLayout>
+      <Pagination
+        renderPageLink={(page) => `/app/projects/?page=${page}`}
+        itemsPerPage={6}
+        totalItems={totalItems}
+        currentPage={currentPage}
+      />
     </>
   );
 }
