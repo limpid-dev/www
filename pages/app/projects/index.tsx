@@ -383,33 +383,38 @@ export default function All() {
                           <p className="line-clamp-3 w-auto text-xs">
                             {project.description}
                           </p>
-                          <div className="mt-2 flex gap-4 text-xs">
-                            <Link
-                              href={`/app/profiles/${project?.profile_data?.data?.id}`}
-                            >
-                              <div className="flex w-fit items-center gap-4 rounded-lg bg-slate-100 p-2 hover:bg-lime-200">
-                                <Image
-                                  src={
-                                    project.profile_data?.data?.avatar?.url
-                                      ? `/api/${project.profile_data.data.avatar.url}`
-                                      : testAva
-                                  }
-                                  alt="test"
-                                  unoptimized
-                                  width={20}
-                                  height={20}
-                                  className="rounded-lg"
-                                />
-                                <p className="text-xs sm:text-sm">
-                                  {project?.profile_data?.data?.legal_structure
-                                    ? project?.profile_data?.data
-                                        ?.legal_structure
-                                    : ""}{" "}
-                                  {project?.profile_data?.data?.display_name}
-                                </p>
-                              </div>
-                            </Link>
-                          </div>
+                          {project.profile_data?.data?.is_visible === false ? (
+                            ""
+                          ) : (
+                            <div className="mt-2 flex gap-4 text-xs">
+                              <Link
+                                href={`/app/profiles/${project?.profile_data?.data?.id}`}
+                              >
+                                <div className="flex w-fit items-center gap-4 rounded-lg bg-slate-100 p-2 hover:bg-lime-200">
+                                  <Image
+                                    src={
+                                      project.profile_data?.data?.avatar?.url
+                                        ? `/api/${project.profile_data.data.avatar.url}`
+                                        : testAva
+                                    }
+                                    alt="test"
+                                    unoptimized
+                                    width={20}
+                                    height={20}
+                                    className="rounded-lg"
+                                  />
+                                  <p className="text-xs sm:text-sm">
+                                    {project?.profile_data?.data
+                                      ?.legal_structure
+                                      ? project?.profile_data?.data
+                                          ?.legal_structure
+                                      : ""}{" "}
+                                    {project?.profile_data?.data?.display_name}
+                                  </p>
+                                </div>
+                              </Link>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
