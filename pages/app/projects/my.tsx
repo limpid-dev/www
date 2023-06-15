@@ -172,7 +172,7 @@ export default function All({ data }: Props) {
             <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
               {data.projects?.data.map((project, projectIndex) => (
                 <Link key={projectIndex} href={`/app/projects/${project.id}`}>
-                  <div className="grid items-center justify-center gap-4 rounded-lg border py-6 pl-6 pr-4 hover:border-black sm:grid-cols-10">
+                  <div className="grid items-center justify-center gap-4 rounded-lg border py-6 pl-6 pr-4 hover:border-black sm:grid-cols-10 sm:min-h-44">
                     <div className="sm:col-span-4 ">
                       <Image
                         src={
