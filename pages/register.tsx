@@ -96,7 +96,7 @@ export default function Register() {
           <Label>{t("password")}</Label>
           <Input
             type="password"
-            pattern="(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+"
+            pattern="(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&_])[A-Za-z\d@$!%*#?&_]+"
             autoComplete="new-password"
             minLength={8}
             required
