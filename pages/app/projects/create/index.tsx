@@ -16,7 +16,6 @@ import {
   SelectValue,
 } from "../../../../components/primitives/select";
 import { TextArea } from "../../../../components/primitives/text-area";
-import { useToast } from "../../../../hooks/useToast";
 
 interface FormValues {
   title: string;
@@ -56,9 +55,9 @@ export default function Create() {
 
   return (
     <>
-      <div className="h-auto bg-slate-50">
-        <Navigation />
-        <div className="container mx-auto mb-4 max-w-screen-xl px-5 pt-8">
+      <Navigation />
+      <div className="h-auto bg-slate-50 px-5 pt-8">
+        <div className="container mx-auto mb-4 max-w-screen-xl">
           <h1 className="text-sm">
             <span className="text-slate-300">Профиль /</span>
             Создание проекта

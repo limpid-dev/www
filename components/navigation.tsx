@@ -109,6 +109,7 @@ export function Logo(props: SVGProps<SVGSVGElement>) {
 const navigation = [
   { name: "Проекты", href: "/app/projects" },
   { name: "Профили", href: "/app/profiles" },
+  { name: "Организации", href: "/app/organizations" },
   // { name: "Закупки", href: "/app/auctions" },
   // { name: "Продажи", href: "/app/tenders" },
   // { name: "Чаты", href: "/app/chats" },

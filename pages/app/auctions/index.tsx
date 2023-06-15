@@ -23,8 +23,8 @@ export default function All() {
   return (
     <div>
       <Navigation />
-      <div className="h-screen bg-slate-50">
-        <div className="mx-auto max-w-screen-xl px-5 pt-8">
+      <div className="h-screen bg-slate-50 px-5 pt-8">
+        <div className="mx-auto max-w-screen-xl">
           <p className=" text-sm text-slate-300">Продажи</p>
           <div className="my-5 flex flex-col items-center justify-end gap-4 md:mb-12 md:flex-row  md:justify-between">
             <div>

@@ -43,8 +43,8 @@ export default function All() {
   return (
     <div>
       <Navigation />
-      <div className="h-screen bg-slate-50">
-        <div className="mx-auto max-w-screen-xl px-5 pt-8">
+      <div className="h-screen bg-slate-50 px-5 pt-8">
+        <div className="mx-auto max-w-screen-xl">
           <p className=" text-sm">
             <span className="text-slate-300">Продажи</span>
           </p>
