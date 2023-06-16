@@ -16,8 +16,8 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useRef, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import api from "../../../../api";
 import { components } from "../../../../api/api-paths";
 import { Navigation } from "../../../../components/navigation";
@@ -46,7 +46,18 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "../../../../components/primitives/dropdown-menu";
+import { Input } from "../../../../components/primitives/input";
+import { Options } from "../../../../components/primitives/options";
 import { ScrollArea } from "../../../../components/primitives/scroll-area";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "../../../../components/primitives/select";
 import { Separator } from "../../../../components/primitives/separator";
 import {
   Sheet,
@@ -83,6 +94,11 @@ interface ResourcesValues {
 
 interface ROIValues {
   profitability: string;
+}
+
+interface GeneralValues {
+  title: string;
+  industry: string;
 }
 
 export const getServerSideProps = async (
@@ -241,6 +257,21 @@ export default function ProjectView({ data }: Props) {
     setEditProjectROI((current: boolean) => !current);
   };
 
+  const [editBusinessPlan, setEditBusinessPlan] = useState(false);
+  const editHandleBusinessPlan = () => {
+    setEditBusinessPlan((current: boolean) => !current);
+  };
+
+  const [editVideo, setEditVideo] = useState(false);
+  const editHandleVideo = () => {
+    setEditVideo((current: boolean) => !current);
+  };
+
+  const [editGeneral, setEditGeneral] = useState(false);
+  const editHandleGeneral = () => {
+    setEditGeneral((current: boolean) => !current);
+  };
+
   const {
     register: registerAbout,
     handleSubmit: handleAbout,
@@ -259,6 +290,13 @@ export default function ProjectView({ data }: Props) {
     formState: { errors: errorsROI },
   } = useForm<ROIValues>();
 
+  const {
+    register: registerGeneral,
+    handleSubmit: handleGeneral,
+    formState: { errors: errorsGeneral },
+    control: controlGeneral,
+  } = useForm<GeneralValues>();
+
   const onSubmitAbout = async (aboutFormData: any) => {
     try {
       const { data } = await api.updateProject(
@@ -270,6 +308,70 @@ export default function ProjectView({ data }: Props) {
       }
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const handleBusinessPlanChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const fileObj = event.target.files?.[0];
+    if (!fileObj) {
+      return;
+    }
+    api.updateProject(
+      { project_id: parsedId },
+      {
+        business_plan: fileObj,
+      }
+    );
+    router.reload();
+  };
+
+  const handleVideoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const fileObj = event.target.files?.[0];
+    if (!fileObj) {
+      return;
+    }
+    api.updateProject(
+      { project_id: parsedId },
+      {
+        video_introduction: fileObj,
+      }
+    );
+    router.reload();
+  };
+
+  const inputRef = useRef(null);
+
+  const [error, setError] = useState("");
+
+  const handleClickAvatar = () => {
+    (inputRef.current as unknown as HTMLInputElement).click();
+  };
+
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const fileObj = event.target.files?.[0];
+    if (!fileObj) {
+      return;
+    }
+    try {
+      const { data } = await api.updateProject(
+        { project_id: parsedId },
+        {
+          logo: fileObj,
+        }
+      );
+      if (data.data?.logo?.url) {
+        router.reload();
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 422) {
+        setError("Размер не более 1 МБ");
+      } else {
+        console.log("Error:", error);
+      }
     }
   };
 
@@ -359,23 +461,118 @@ export default function ProjectView({ data }: Props) {
           <div className="grid min-h-[650px] grid-cols-1 gap-6 sm:grid-cols-10 ">
             <div className="rounded-lg border sm:col-span-3">
               <div className="h-full bg-white p-6">
-                <div className="flex flex-col items-center justify-center pt-12">
-                  <Image
-                    src={
-                      getImageSrc(data.project.data.logo?.url)
-                        ?? Test
-                    }
-                    alt="Photo by Alvaro Pinot"
-                    width={0}
-                    unoptimized
-                    height={0}
-                    className="h-[106px] w-auto rounded-md object-cover pb-6"
-                  />
-                  <p className=" text-2xl font-semibold">
-                    {data.project.data.title}
-                  </p>
-                  <p className=" text-sm">{data.project.data.industry}</p>
-                </div>
+                {editGeneral ? (
+                  <div className="flex flex-col items-center gap-x-8 bg-white pt-5">
+                    <Image
+                      src={
+                        data.project.data.logo?.url
+                          ? `/api/${data.project.data.logo.url}`
+                          : Test
+                      }
+                      alt="Photo by Alvaro Pinot"
+                      width={0}
+                      unoptimized
+                      height={0}
+                      className="h-[106px] w-auto rounded-md object-cover pb-6"
+                    />
+                    <div>
+                      <input
+                        ref={inputRef}
+                        style={{ display: "none" }}
+                        type="file"
+                        placeholder="some photo"
+                        onChange={handleFileChange}
+                      />
+                      <Button onClick={handleClickAvatar}>Поменять фото</Button>
+                      <p className="mt-2 text-xs leading-5 text-gray-400">
+                        JPG или PNG. 1MB макс.
+                      </p>
+                      <p className="mt-2 text-xs leading-5 text-red-500 text-center">
+                        {error}
+                      </p>
+                    </div>
+                    <form
+                      onSubmit={handleGeneral(onSubmitAbout)}
+                      className="flex flex-col gap-2"
+                    >
+                      <Input
+                        {...registerGeneral("title")}
+                        placeholder="Название"
+                      />
+                      <p className=" text-2xl font-semibold" />
+                      <Controller
+                        control={controlGeneral}
+                        name="industry"
+                        render={({ field }) => (
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger className="px-5 text-black rounded-md flex-1 max-w-full text-ellipsis whitespace-nowrap overflow-hidden w-full">
+                              <SelectValue placeholder="Сфера деятельности" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup className="overflow-auto h-[300px]">
+                                <SelectLabel>Сфера деятельности</SelectLabel>
+                                {Options.map((option) => (
+                                  <SelectItem
+                                    key={option.id}
+                                    value={option.name}
+                                  >
+                                    {option.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
+                      <div className="mt-5 flex justify-end gap-3 pt-4">
+                        <Button variant="outline" onClick={editHandleGeneral}>
+                          Отмена
+                        </Button>
+                        <Button variant="black" type="submit">
+                          Сохранить
+                        </Button>
+                      </div>
+                    </form>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex flex-col items-center justify-center pt-12">
+                      <Image
+                        src={
+                          data.project.data.logo?.url
+                            ? `/api/${data.project.data.logo.url}`
+                            : Test
+                        }
+                        alt="Photo by Alvaro Pinot"
+                        width={0}
+                        unoptimized
+                        height={0}
+                        className="h-[106px] w-auto rounded-md object-cover pb-6"
+                      />
+                      <p className=" text-2xl font-semibold">
+                        {data.project.data.title}
+                      </p>
+                      <p className=" text-sm">{data.project.data.industry}</p>
+                    </div>
+                    {data.isAuthor && (
+                      <div className="col-span-2">
+                        <div className="flex justify-end gap-6 mt-4">
+                          <Button
+                            variant="outline"
+                            color="zinc"
+                            onClick={editHandleGeneral}
+                          >
+                            <Pen className="h-6 w-6" />
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+
                 <Separator className="mb-6 mt-3" />
                 <div className="grid gap-3">
                   {data.project.data.business_plan?.url && (
@@ -395,20 +592,53 @@ export default function ProjectView({ data }: Props) {
                       >
                         <SheetHeader>
                           <SheetTitle>Бизнес-план</SheetTitle>
-                          <Link
-                            href={
-                              data.project.data.business_plan.url
-                                ? `/api/${data.project.data.business_plan.url}`
-                                : Test
-                            }
-                          >
-                            <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-8 font-semibold hover:border-slate-700">
-                              <DownloadSimple className="h-14 w-14" />
-                              <p className="mt-3 text-center text-base sm:text-xl ">
-                                {data.project.data.title}
-                              </p>
-                            </div>
-                          </Link>
+
+                          {editBusinessPlan ? (
+                            <form>
+                              <Input
+                                type="file"
+                                onChange={handleBusinessPlanChange}
+                              />
+                              <div className="mt-5 flex justify-end gap-3 pt-4">
+                                <Button
+                                  variant="outline"
+                                  onClick={editHandleBusinessPlan}
+                                >
+                                  Отмена
+                                </Button>
+                              </div>
+                            </form>
+                          ) : (
+                            <>
+                              <Link
+                                href={
+                                  data.project.data.business_plan.url
+                                    ? `/api/${data.project.data.business_plan.url}`
+                                    : Test
+                                }
+                              >
+                                <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-8 font-semibold hover:border-slate-700">
+                                  <DownloadSimple className="h-14 w-14" />
+                                  <p className="mt-3 text-center text-base sm:text-xl ">
+                                    {data.project.data.title}
+                                  </p>
+                                </div>
+                              </Link>
+                              {data.isAuthor && (
+                                <div className="col-span-2">
+                                  <div className="flex justify-end gap-6 mt-4">
+                                    <Button
+                                      variant="outline"
+                                      color="zinc"
+                                      onClick={editHandleBusinessPlan}
+                                    >
+                                      <Pen className="h-6 w-6" />
+                                    </Button>
+                                  </div>
+                                </div>
+                              )}
+                            </>
+                          )}
                         </SheetHeader>
                       </SheetContent>
                     </Sheet>
@@ -452,22 +682,55 @@ export default function ProjectView({ data }: Props) {
                         {data.project.data.video_introduction?.url && (
                           <div>
                             <p className=" text-lg font-semibold">Видео</p>
-                            <div className="m-auto mt-16 grid">
-                              <Link
-                                href={
-                                  data.project.data.video_introduction.url
-                                    ? `/api/${data.project.data.video_introduction.url}`
-                                    : Test
-                                }
-                              >
-                                <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-8 font-semibold hover:border-slate-700">
-                                  <DownloadSimple className="h-14 w-14" />
-                                  <p className="mt-3 text-center text-base sm:text-xl ">
-                                    {data.project.data.title} Видео
-                                  </p>
+
+                            {editVideo ? (
+                              <form className="mt-5">
+                                <Input
+                                  type="file"
+                                  onChange={handleVideoChange}
+                                />
+                                <div className="mt-5 flex justify-end gap-3 pt-4">
+                                  <Button
+                                    variant="outline"
+                                    onClick={editHandleVideo}
+                                  >
+                                    Отмена
+                                  </Button>
                                 </div>
-                              </Link>
-                            </div>
+                              </form>
+                            ) : (
+                              <>
+                                <div className="m-auto mt-16 grid">
+                                  <Link
+                                    href={
+                                      data.project.data.video_introduction.url
+                                        ? `/api/${data.project.data.video_introduction.url}`
+                                        : Test
+                                    }
+                                  >
+                                    <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-8 font-semibold hover:border-slate-700">
+                                      <DownloadSimple className="h-14 w-14" />
+                                      <p className="mt-3 text-center text-base sm:text-xl ">
+                                        {data.project.data.title} Видео
+                                      </p>
+                                    </div>
+                                  </Link>
+                                </div>
+                                {data.isAuthor && (
+                                  <div className="col-span-2">
+                                    <div className="flex justify-end gap-6 mt-4">
+                                      <Button
+                                        variant="outline"
+                                        color="zinc"
+                                        onClick={editHandleVideo}
+                                      >
+                                        <Pen className="h-6 w-6" />
+                                      </Button>
+                                    </div>
+                                  </div>
+                                )}
+                              </>
+                            )}
                             <div />
                           </div>
                         )}
