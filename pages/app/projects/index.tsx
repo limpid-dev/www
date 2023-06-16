@@ -330,7 +330,7 @@ export default function All() {
                   <div className=" rounded-2xl border border-slate-200 bg-white hover:border-black">
                     <div className="p-4">
                       <div className="grid w-full grid-cols-10 gap-4 h-[160px]">
-                        <div className="col-span-2">
+                        <div className="col-span-4 sm:col-span-2">
                           <div className="overflow-hidden" ref={emblaRef}>
                             <div className="flex">
                               <div className="relative h-28 flex-[0_0_100%]">
@@ -351,7 +351,7 @@ export default function All() {
                             </div>
                           </div>
                         </div>
-                        <div className="col-span-8 flex flex-col gap-1">
+                        <div className="col-span-6 sm:col-span-8git flex flex-col gap-1">
                           <div className="flex justify-between">
                             <p className="text-xs font-semibold sm:text-base line-clamp-1">
                               {project.title}
