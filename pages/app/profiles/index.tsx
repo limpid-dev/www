@@ -289,7 +289,7 @@ export default function Profiles() {
                           height={0}
                           unoptimized
                           alt="test"
-                          className="h-32 w-32 rounded-lg object-cover"
+                          className="h-32 w-32 rounded-lg object-cover bg-slate-100"
                         />
                       </div>
                       <div className="col-span-6 flex flex-col gap-1">
