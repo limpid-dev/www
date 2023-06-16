@@ -158,16 +158,18 @@ export default function ProjectView({ data }: Props) {
   //   return () => clearInterval(intervalId);
   // }, []);
 
-  // useEffect(() => {
-  //   const fetchProjectMembers = async () => {
-  //     const { data: projectMemberShip } = await api.getProjectMembers(
-  //       parsedId,
-  //       { page: 1, per_page: 10 }
-  //     );
-  //   };
+  useEffect(() => {
+    const fetchProjectMembers = async () => {
+      const { data: projectMemberShip } = await api.getProjectMembers(
+        parsedId,
+        { page: 1, per_page: 10 }
+      );
+    };
 
-  //   fetchProjectMembers();
-  // }, []);
+    fetchProjectMembers();
+  }, [parsedId]);
+
+  useEffect(() => {}, []);
 
   const {
     register,
@@ -196,11 +198,6 @@ export default function ProjectView({ data }: Props) {
     }
   };
 
-  // const handleAccept = async () => {
-  //   const { data } = await api.projects
-  //     .memberships(parsedId)
-  //     .update(accept[0].id);
-  // };
   return (
     <div>
       <Navigation />

@@ -1,5 +1,6 @@
-import { SquaresFour } from "@phosphor-icons/react";
+import { Anchor, CaretRight, SquaresFour } from "@phosphor-icons/react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { PopoverAnchor } from "@radix-ui/react-popover";
 import clsx from "clsx";
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel, { EmblaOptionsType } from "embla-carousel-react";
@@ -325,12 +326,7 @@ export default function All() {
           <>
             <div className="grid gap-6 sm:grid-cols-2">
               {data.map((project, projectIndex) => (
-                <div
-                  key={projectIndex}
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => handleRoute(project.id)}
-                >
+                <div key={projectIndex}>
                   <div className=" rounded-2xl border border-slate-200 bg-white hover:border-black">
                     <div className="p-4">
                       <div className="grid w-full grid-cols-10 gap-4 h-[160px]">
@@ -415,6 +411,14 @@ export default function All() {
                               </Link>
                             </div>
                           )}
+                          <div className="flex justify-end rounded-full">
+                            <button
+                              onClick={() => handleRoute(project.id)}
+                              className="rounded-full bg-slate-900 hover:bg-slate-700 p-2"
+                            >
+                              <CaretRight className="w-6 h-6 text-white" />
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
