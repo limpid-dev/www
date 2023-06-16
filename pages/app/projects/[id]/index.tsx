@@ -516,8 +516,9 @@ export default function ProjectView({ data }: Props) {
                             <TextArea
                               {...registerAbout("description")}
                               className="text-sm"
-                              placeholder={data.project.data.description}
-                            />
+                            >
+                              {data.project.data.description}
+                            </TextArea>
                           </div>
                           <div className="mt-5 flex justify-end gap-3 pt-4">
                             <Button variant="outline" onClick={editHandleAbout}>
@@ -571,10 +572,9 @@ export default function ProjectView({ data }: Props) {
                                 {...registerResources(
                                   "owned_material_resources"
                                 )}
-                                placeholder={
-                                  data.project.data.owned_intellectual_resources
-                                }
-                              />
+                              >
+                                {data.project.data.owned_intellectual_resources}
+                              </TextArea>
                             </div>
                             <Separator />
                             <div className="flex flex-col gap-3">
@@ -585,10 +585,9 @@ export default function ProjectView({ data }: Props) {
                                 {...registerResources(
                                   "required_material_resources"
                                 )}
-                                placeholder={
-                                  data.project.data.required_material_resources
-                                }
-                              />
+                              >
+                                {data.project.data.required_material_resources}
+                              </TextArea>
                             </div>
                             <Separator />
                             <div className="flex flex-col gap-3">
@@ -599,10 +598,9 @@ export default function ProjectView({ data }: Props) {
                                 {...registerResources(
                                   "owned_intellectual_resources"
                                 )}
-                                placeholder={
-                                  data.project.data.owned_intellectual_resources
-                                }
-                              />
+                              >
+                                {data.project.data.owned_intellectual_resources}
+                              </TextArea>
                             </div>
                             <Separator />
                             <div className="flex flex-col gap-3">
@@ -613,11 +611,12 @@ export default function ProjectView({ data }: Props) {
                                 {...registerResources(
                                   "required_intellectual_resources"
                                 )}
-                                placeholder={
+                              >
+                                {
                                   data.project.data
                                     .required_intellectual_resources
                                 }
-                              />
+                              </TextArea>
                             </div>
                           </div>
                           <div className="mt-5 flex justify-end gap-3 pt-4">
@@ -698,10 +697,9 @@ export default function ProjectView({ data }: Props) {
                             <p className=" text-xl font-semibold text-slate-400">
                               Ожидаемая рентабельность по проекту
                             </p>
-                            <TextArea
-                              {...registerROI("profitability")}
-                              placeholder={data.project.data.profitability}
-                            />
+                            <TextArea {...registerROI("profitability")}>
+                              {data.project.data.profitability}
+                            </TextArea>
                           </div>
                           <div className="mt-5 flex justify-end gap-3 pt-4">
                             <Button variant="outline" onClick={editHandleROI}>
