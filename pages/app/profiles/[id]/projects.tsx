@@ -616,7 +616,7 @@ export default function ProfileProjects({ data }: Props) {
                         </div>
                         <div className="sm:col-span-6">
                           <div className="flex flex-col gap-1">
-                            <h1 className="text-lg font-semibold">
+                            <h1 className="text-sm font-semibold">
                               {item.title}
                             </h1>
                             <p className="text-sm">{item.industry}</p>
