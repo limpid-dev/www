@@ -343,8 +343,7 @@ export default function All() {
                                     fill
                                     className="rounded-md object-cover bg-slate-100"
                                     src={
-                                      getImageSrc(project.logo?.url)
-                                        ?? testAva
+                                      getImageSrc(project.logo?.url) ?? testAva
                                     }
                                     alt="Your alt text"
                                   />
@@ -391,7 +390,10 @@ export default function All() {
                                     <div className="flex w-fit items-center gap-4 rounded-lg bg-slate-100 p-2 hover:bg-lime-200">
                                       <Image
                                         src={
-                                          getImageSrc(project.profile_data.data.avatar.url)?? testAva
+                                          getImageSrc(
+                                            project.profile_data.data.avatar
+                                              ?.url
+                                          ) ?? testAva
                                         }
                                         alt="test"
                                         unoptimized
