@@ -414,11 +414,10 @@ class APIClient {
       data?: components["schemas"]["ProjectMember"][];
     }>
   > {
-    const response = await axios.get(`/projects/${project_id}/members`, {
+    return this.axiosInstance.get(`/projects/${project_id}/members`, {
       params: query,
       ...config,
     });
-    return response;
   }
 
   async addProjectMember(

@@ -340,7 +340,7 @@ export default function All() {
                                     height={0}
                                     unoptimized
                                     fill
-                                    className="rounded-md object-cover"
+                                    className="rounded-md object-cover bg-slate-100"
                                     src={
                                       project.logo?.url && project.logo.url
                                         ? `/api/${project.logo.url}`
