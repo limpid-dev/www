@@ -1,14 +1,13 @@
 import {
   ArrowLeft,
   ArrowRight,
-  ArrowsVertical,
   Chat,
   DotsThreeVertical,
   DownloadSimple,
   Files,
   FileVideo,
   Paperclip,
-  TagChevron,
+  Pen,
   Trash,
 } from "@phosphor-icons/react";
 import { DialogClose } from "@radix-ui/react-dialog";
@@ -17,9 +16,10 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import api from "../../../../api";
+import { components } from "../../../../api/api-paths";
 import { Navigation } from "../../../../components/navigation";
 import {
   AlertDialog,
@@ -69,6 +69,21 @@ interface FormValues {
   application_message: string;
 }
 
+interface AboutValues {
+  description: string;
+}
+
+interface ResourcesValues {
+  owned_intellectual_resources: string;
+  required_intellectual_resources: string;
+  owned_material_resources: string;
+  required_material_resources: string;
+}
+
+interface ROIValues {
+  profitability: string;
+}
+
 export const getServerSideProps = async (
   context: GetServerSidePropsContext<{
     id: string;
@@ -115,13 +130,15 @@ export const getServerSideProps = async (
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 export default function ProjectView({ data }: Props) {
-  const isTrue = false;
+  const isTrue = true;
   const [isShown, setIsShown] = useState(true);
   const router = useRouter();
   const { id } = router.query;
   const [sent, setSent] = useState(false);
   const parsedId = Number.parseInt(id as string, 10) as number;
   const [largeScreen, setLargeScreen] = useState(false);
+  const [pendingMembers, setPendingMembers] =
+    useState<components["schemas"]["ProjectMember"][]>();
 
   useEffect(() => {
     const handleResize = () => {
@@ -160,12 +177,21 @@ export default function ProjectView({ data }: Props) {
 
   useEffect(() => {
     const fetchProjectMembers = async () => {
-      const { data: projectMemberShip } = await api.getProjectMembers(
-        parsedId,
-        { page: 1, per_page: 10 }
-      );
-    };
+      try {
+        const { data } = await api.getProjectMembers(parsedId, {
+          page: 1,
+          per_page: 10,
+        });
 
+        if (data.data) {
+          setPendingMembers(data.data);
+          console.log(pendingMembers);
+        }
+      } catch (error) {
+        // Handle error if necessary
+        console.error(error);
+      }
+    };
     fetchProjectMembers();
   }, [parsedId]);
 
@@ -178,8 +204,9 @@ export default function ProjectView({ data }: Props) {
     control,
   } = useForm<FormValues>();
 
-  const onSubmit = async (data1: FormValues) => {
-    await api.addProjectMember({ project_id: parsedId }, data1);
+  const onSubmit = async (data: FormValues) => {
+    await api.addProjectMember({ project_id: parsedId }, data);
+    setSent(true);
   };
 
   const handleClick = (event: any) => {
@@ -198,6 +225,53 @@ export default function ProjectView({ data }: Props) {
     }
   };
 
+  const [editProjectAbout, setEditProjectAbout] = useState(false);
+  const editHandleAbout = () => {
+    setEditProjectAbout((current: boolean) => !current);
+  };
+
+  const [editProjectResources, setEditProjectResources] = useState(false);
+  const editHandleResources = () => {
+    setEditProjectResources((current: boolean) => !current);
+  };
+
+  const [editProjectROI, setEditProjectROI] = useState(false);
+  const editHandleROI = () => {
+    setEditProjectROI((current: boolean) => !current);
+  };
+
+  const {
+    register: registerAbout,
+    handleSubmit: handleAbout,
+    formState: { errors: erorsAbout },
+  } = useForm<AboutValues>();
+
+  const {
+    register: registerResources,
+    handleSubmit: handleResources,
+    formState: { errors: errorsResources },
+  } = useForm<ResourcesValues>();
+
+  const {
+    register: registerROI,
+    handleSubmit: handleROI,
+    formState: { errors: errorsROI },
+  } = useForm<ROIValues>();
+
+  const onSubmitAbout = async (aboutFormData: any) => {
+    try {
+      const { data } = await api.updateProject(
+        { project_id: parsedId },
+        aboutFormData
+      );
+      if (data.data?.id) {
+        router.reload();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div>
       <Navigation />
@@ -211,10 +285,9 @@ export default function ProjectView({ data }: Props) {
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline md:justify-end">
             {data.isAuthor ? (
               <div className="flex gap-5">
-                <Button variant="black">Редактировать</Button>
                 <AlertDialog>
                   <AlertDialogTrigger className="rounded-lg border p-2 hover:bg-slate-100">
-                    <Trash />
+                    <Trash className="w-6 h-6" />
                   </AlertDialogTrigger>
                   <AlertDialogContent className="flex flex-col items-center justify-center p-6">
                     <AlertDialogHeader className="mb-3">
@@ -284,7 +357,7 @@ export default function ProjectView({ data }: Props) {
 
           <div className="grid min-h-[650px] grid-cols-1 gap-6 sm:grid-cols-10 ">
             <div className="rounded-lg border sm:col-span-3">
-              <div className="h-full bg-white px-6">
+              <div className="h-full bg-white p-6">
                 <div className="flex flex-col items-center justify-center pt-12">
                   <Image
                     src={
@@ -378,7 +451,7 @@ export default function ProjectView({ data }: Props) {
                         <Separator className="my-7" />
                         {data.project.data.video_introduction?.url && (
                           <div>
-                            <p>Видео</p>
+                            <p className=" text-lg font-semibold">Видео</p>
                             <div className="m-auto mt-16 grid">
                               <Link
                                 href={
@@ -417,7 +490,7 @@ export default function ProjectView({ data }: Props) {
               </div>
             </div>
 
-            <div className="rounded-lg border bg-white sm:col-span-7">
+            <div className="rounded-lg border bg-white sm:col-span-7 mb-4">
               {isShown ? (
                 <Tabs defaultValue="about">
                   <TabsList className="flex justify-around border border-slate-100 bg-white p-9 text-lg font-semibold text-slate-300 w-full">
@@ -433,54 +506,184 @@ export default function ProjectView({ data }: Props) {
                   {/* about */}
 
                   <TabsContent className="border-none" value="about">
-                    <div className="flex flex-col gap-3">
-                      <p className=" text-xl font-semibold text-slate-400">
-                        О проекте
-                      </p>
-                      <p className="text-sm">{data.project.data.description}</p>
-                    </div>
+                    <>
+                      {editProjectAbout ? (
+                        <form onSubmit={handleAbout(onSubmitAbout)}>
+                          <div className="flex flex-col gap-3">
+                            <p className=" text-xl font-semibold text-slate-400">
+                              О проекте
+                            </p>
+                            <TextArea
+                              {...registerAbout("description")}
+                              className="text-sm"
+                              placeholder={data.project.data.description}
+                            />
+                          </div>
+                          <div className="mt-5 flex justify-end gap-3 pt-4">
+                            <Button variant="outline" onClick={editHandleAbout}>
+                              Отмена
+                            </Button>
+                            <Button variant="black" type="submit">
+                              Сохранить
+                            </Button>
+                          </div>
+                        </form>
+                      ) : (
+                        <>
+                          <div className="flex flex-col gap-3">
+                            <p className=" text-xl font-semibold text-slate-400">
+                              О проекте
+                            </p>
+                            <p className="text-sm">
+                              {data.project.data.description}
+                            </p>
+                          </div>
+                          {data.isAuthor && (
+                            <div className="col-span-2">
+                              <div className="flex justify-end gap-6 mt-4">
+                                <Button
+                                  variant="outline"
+                                  color="zinc"
+                                  onClick={editHandleAbout}
+                                >
+                                  <Pen className="h-6 w-6" />
+                                </Button>
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </>
                   </TabsContent>
 
                   {/* resource */}
 
                   <TabsContent className="border-none" value="resource">
-                    <div className="flex flex-col gap-6">
-                      <div className="flex flex-col gap-3">
-                        <p className=" text-xl font-semibold text-slate-400">
-                          Материальные ресурсы проекта
-                        </p>
-                        <p className="text-sm">
-                          {data.project.data.owned_material_resources}
-                        </p>
-                      </div>
-                      <Separator />
-                      <div className="flex flex-col gap-3">
-                        <p className=" text-xl font-semibold text-slate-400">
-                          Требуемые материальные ресурсы проекту
-                        </p>
-                        <p className="text-sm">
-                          {data.project.data.required_material_resources}
-                        </p>
-                      </div>
-                      <Separator />
-                      <div className="flex flex-col gap-3">
-                        <p className=" text-xl font-semibold text-slate-400">
-                          Интеллектуальные ресурсы проекта
-                        </p>
-                        <p className="text-sm">
-                          {data.project.data.owned_intellectual_resources}
-                        </p>
-                      </div>
-                      <Separator />
-                      <div className="flex flex-col gap-3">
-                        <p className=" text-xl font-semibold text-slate-400">
-                          Требуемые интеллектуальные ресурсы проекту
-                        </p>
-                        <p className="text-sm">
-                          {data.project.data.owned_intellectual_resources}
-                        </p>
-                      </div>
-                    </div>
+                    <>
+                      {editProjectResources ? (
+                        <form onSubmit={handleResources(onSubmitAbout)}>
+                          <div className="flex flex-col gap-6">
+                            <div className="flex flex-col gap-3">
+                              <p className=" text-xl font-semibold text-slate-400">
+                                Материальные ресурсы проекта
+                              </p>
+                              <TextArea
+                                {...registerResources(
+                                  "owned_material_resources"
+                                )}
+                                placeholder={
+                                  data.project.data.owned_intellectual_resources
+                                }
+                              />
+                            </div>
+                            <Separator />
+                            <div className="flex flex-col gap-3">
+                              <p className=" text-xl font-semibold text-slate-400">
+                                Требуемые материальные ресурсы проекту
+                              </p>
+                              <TextArea
+                                {...registerResources(
+                                  "required_material_resources"
+                                )}
+                                placeholder={
+                                  data.project.data.required_material_resources
+                                }
+                              />
+                            </div>
+                            <Separator />
+                            <div className="flex flex-col gap-3">
+                              <p className=" text-xl font-semibold text-slate-400">
+                                Интеллектуальные ресурсы проекта
+                              </p>
+                              <TextArea
+                                {...registerResources(
+                                  "owned_intellectual_resources"
+                                )}
+                                placeholder={
+                                  data.project.data.owned_intellectual_resources
+                                }
+                              />
+                            </div>
+                            <Separator />
+                            <div className="flex flex-col gap-3">
+                              <p className=" text-xl font-semibold text-slate-400">
+                                Требуемые интеллектуальные ресурсы проекту
+                              </p>
+                              <TextArea
+                                {...registerResources(
+                                  "required_intellectual_resources"
+                                )}
+                                placeholder={
+                                  data.project.data
+                                    .required_intellectual_resources
+                                }
+                              />
+                            </div>
+                          </div>
+                          <div className="mt-5 flex justify-end gap-3 pt-4">
+                            <Button variant="outline" onClick={editHandleAbout}>
+                              Отмена
+                            </Button>
+                            <Button variant="black" type="submit">
+                              Сохранить
+                            </Button>
+                          </div>
+                        </form>
+                      ) : (
+                        <>
+                          <div className="flex flex-col gap-6">
+                            <div className="flex flex-col gap-3">
+                              <p className=" text-xl font-semibold text-slate-400">
+                                Материальные ресурсы проекта
+                              </p>
+                              <p className="text-sm">
+                                {data.project.data.owned_material_resources}
+                              </p>
+                            </div>
+                            <Separator />
+                            <div className="flex flex-col gap-3">
+                              <p className=" text-xl font-semibold text-slate-400">
+                                Требуемые материальные ресурсы проекту
+                              </p>
+                              <p className="text-sm">
+                                {data.project.data.required_material_resources}
+                              </p>
+                            </div>
+                            <Separator />
+                            <div className="flex flex-col gap-3">
+                              <p className=" text-xl font-semibold text-slate-400">
+                                Интеллектуальные ресурсы проекта
+                              </p>
+                              <p className="text-sm">
+                                {data.project.data.owned_intellectual_resources}
+                              </p>
+                            </div>
+                            <Separator />
+                            <div className="flex flex-col gap-3">
+                              <p className=" text-xl font-semibold text-slate-400">
+                                Требуемые интеллектуальные ресурсы проекту
+                              </p>
+                              <p className="text-sm">
+                                {data.project.data.owned_intellectual_resources}
+                              </p>
+                            </div>
+                          </div>
+                          {data.isAuthor && (
+                            <div className="col-span-2">
+                              <div className="flex justify-end gap-6 mt-4">
+                                <Button
+                                  variant="outline"
+                                  color="zinc"
+                                  onClick={editHandleResources}
+                                >
+                                  <Pen className="h-6 w-6" />
+                                </Button>
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </>
                   </TabsContent>
 
                   {/* profitability */}
@@ -489,16 +692,51 @@ export default function ProjectView({ data }: Props) {
                       className=" h-[500px] w-[900px] border-none"
                       value="profitability"
                     >
-                      <div>
-                        <div className="flex flex-col gap-3">
-                          <p className=" text-xl font-semibold text-slate-400">
-                            Ожидаемая рентабельность по проекту
-                          </p>
-                          <p className="text-sm">
-                            {data.project.data.profitability}
-                          </p>
-                        </div>
-                      </div>
+                      {editProjectROI ? (
+                        <form onSubmit={handleROI(onSubmitAbout)}>
+                          <div className="flex flex-col gap-3">
+                            <p className=" text-xl font-semibold text-slate-400">
+                              Ожидаемая рентабельность по проекту
+                            </p>
+                            <TextArea
+                              {...registerROI("profitability")}
+                              placeholder={data.project.data.profitability}
+                            />
+                          </div>
+                          <div className="mt-5 flex justify-end gap-3 pt-4">
+                            <Button variant="outline" onClick={editHandleROI}>
+                              Отмена
+                            </Button>
+                            <Button variant="black" type="submit">
+                              Сохранить
+                            </Button>
+                          </div>
+                        </form>
+                      ) : (
+                        <>
+                          <div className="flex flex-col gap-3">
+                            <p className=" text-xl font-semibold text-slate-400">
+                              Ожидаемая рентабельность по проекту
+                            </p>
+                            <p className="text-sm">
+                              {data.project.data.profitability}
+                            </p>
+                          </div>
+                          {data.isAuthor && (
+                            <div className="col-span-2">
+                              <div className="flex justify-end gap-6 mt-4">
+                                <Button
+                                  variant="outline"
+                                  color="zinc"
+                                  onClick={editHandleROI}
+                                >
+                                  <Pen className="h-6 w-6" />
+                                </Button>
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      )}
                     </TabsContent>
                   </div>
                 </Tabs>
@@ -529,11 +767,11 @@ export default function ProjectView({ data }: Props) {
                             <DialogHeader>
                               <DialogTitle>Участники Обсуждения</DialogTitle>
                             </DialogHeader>
-                            {/* {data.membershipData.map((member) => (
+                            {pendingMembers?.map((member) => (
                               <div key={member.id}>
-                                <p>{member.profile.title}</p>
+                                <p>{member.application_message}</p>
                               </div>
-                            ))} */}
+                            ))}
                           </DialogContent>
                         </Dialog>
                       </DropdownMenuContent>

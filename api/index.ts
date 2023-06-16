@@ -369,8 +369,7 @@ class APIClient {
 
   async updateProject(
     params: paths["/projects/{project_id}"]["patch"]["parameters"]["path"],
-    projectData: paths["/projects/{project_id}"]["patch"]["requestBody"]["content"]["multipart/form-data"],
-    config?: AxiosRequestConfig
+    projectData: paths["/projects/{project_id}"]["patch"]["requestBody"]["content"]["multipart/form-data"]
   ): Promise<
     AxiosResponse<{
       data?: components["schemas"]["Project"];
@@ -378,22 +377,18 @@ class APIClient {
   > {
     const { project_id } = params;
     const formData = new FormData();
-
     Object.entries(projectData).forEach(([key, value]) => {
       if (value) {
         if (value instanceof File) {
           formData.append(key, value);
-        } else if (typeof value === "string") {
+        }
+        if (typeof value === "string") {
           formData.append(key, value);
         }
       }
     });
 
-    return this.axiosInstance.patch(
-      `/projects/${project_id}`,
-      formData,
-      config
-    );
+    return this.axiosInstance.patch(`/projects/${project_id}`, formData);
   }
 
   async deleteProject(
