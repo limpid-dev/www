@@ -8,6 +8,7 @@ import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";
 import { Input } from "../../../../components/primitives/input";
 import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
+import getImageSrc from "../../../../get-image-url";
 
 interface FormValues {
   avatar?: File;
@@ -110,7 +111,7 @@ export default function Test() {
               <div className="flex justify-center items-center flex-col">
                 <div className="col-span-full flex items-center gap-x-8">
                   <Image
-                    src={data.avatar ? `/api/${data.avatar.url}` : DefaultAva}
+                    src={getImageSrc(data?.avatar?.url) ?? DefaultAva}
                     width={0}
                     height={0}
                     unoptimized

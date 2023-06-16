@@ -64,6 +64,7 @@ import {
 import { TextArea } from "../../../../components/primitives/text-area";
 import Test from "../../../../images/avatars/defaultProfile.svg";
 import SentImage from "../../../../images/email 1.png";
+import getImageSrc from "../../../../get-image-url";
 
 interface FormValues {
   application_message: string;
@@ -361,9 +362,8 @@ export default function ProjectView({ data }: Props) {
                 <div className="flex flex-col items-center justify-center pt-12">
                   <Image
                     src={
-                      data.project.data.logo?.url
-                        ? `/api/${data.project.data.logo.url}`
-                        : Test
+                      getImageSrc(data.project.data.logo?.url)
+                        ?? Test
                     }
                     alt="Photo by Alvaro Pinot"
                     width={0}
@@ -438,9 +438,9 @@ export default function ProjectView({ data }: Props) {
                             height={0}
                             unoptimized
                             src={
-                              data.project.data.logo.url
-                                ? `/api/${data.project.data.logo.url}`
-                                : Test
+                      getImageSrc(data.project.data.logo.url)
+
+                                ?? Test
                             }
                             alt="test"
                           />

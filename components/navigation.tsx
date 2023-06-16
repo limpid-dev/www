@@ -18,6 +18,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "./primitives/navigation-menu";
+import getImageSrc from "../get-image-url";
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
@@ -152,7 +153,7 @@ export function Navigation() {
               (item) => item.id === sessionData.data.selected_profile_id
             );
             setFoundObject(foundObject);
-            setAvatarUrl(`/api/${foundObject?.avatar?.url}`);
+            setAvatarUrl(getImageSrc(foundObject?.avatar?.url));
             setProfession(foundObject?.display_name);
           }
 
@@ -165,7 +166,7 @@ export function Navigation() {
                 const foundObject = mergedArray.find(
                   (item) => item.id === sessionData.data.selected_profile_id
                 );
-                setAvatarUrl(`/api/${foundObject?.avatar?.url}`);
+                setAvatarUrl(getImageSrc(foundObject?.avatar?.url));
                 setProfession(foundObject?.display_name);
               });
           }

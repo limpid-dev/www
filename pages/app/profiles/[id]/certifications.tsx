@@ -36,6 +36,7 @@ import { CertificationCreate } from "../../../../components/profiles/create/cert
 import SkillsCreate from "../../../../components/profiles/create/skills";
 import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
 import Badge from "../../../../images/badge.svg";
+import getImageSrc from "../../../../get-image-url";
 
 interface FormValuesGeneral {
   industry: string;
@@ -280,9 +281,8 @@ export default function Certifications({ data }: Props) {
                   <div className="flex flex-col items-center gap-x-8 bg-white pt-5">
                     <Image
                       src={
-                        data.profile.data.avatar?.url
-                          ? `/api/${data.profile.data.avatar.url}`
-                          : DefaultAva
+                        getImageSrc(data.profile.data.avatar?.url)
+                        ?? DefaultAva
                       }
                       width={0}
                       height={0}
@@ -466,9 +466,8 @@ export default function Certifications({ data }: Props) {
                   <div className="flex flex-col items-center justify-center pt-12">
                     <Image
                       src={
-                        data.profile.data.avatar
-                          ? `/api/${data.profile.data.avatar.url}`
-                          : DefaultAva
+                        getImageSrc(data.profile.data.avatar?.url)
+                        ?? DefaultAva
                       }
                       width={0}
                       height={0}

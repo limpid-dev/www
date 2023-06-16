@@ -33,6 +33,7 @@ import {
 } from "../../../components/primitives/sheet";
 import { Skeleton } from "../../../components/primitives/skeleton";
 import testAva from "../../../images/projectDefault.svg";
+import getImageSrc from "../../../get-image-url";
 
 const tabs = [
   { name: "Все проекты", href: "/app/projects/", current: true },
@@ -342,9 +343,8 @@ export default function All() {
                                     fill
                                     className="rounded-md object-cover bg-slate-100"
                                     src={
-                                      project.logo?.url && project.logo.url
-                                        ? `/api/${project.logo.url}`
-                                        : testAva
+                                      getImageSrc(project.logo?.url)
+                                        ?? testAva
                                     }
                                     alt="Your alt text"
                                   />
@@ -391,10 +391,7 @@ export default function All() {
                                     <div className="flex w-fit items-center gap-4 rounded-lg bg-slate-100 p-2 hover:bg-lime-200">
                                       <Image
                                         src={
-                                          project.profile_data?.data?.avatar
-                                            ?.url
-                                            ? `/api/${project.profile_data.data.avatar.url}`
-                                            : testAva
+                                          getImageSrc(project.profile_data.data.avatar.url)?? testAva
                                         }
                                         alt="test"
                                         unoptimized

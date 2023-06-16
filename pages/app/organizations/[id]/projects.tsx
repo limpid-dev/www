@@ -34,6 +34,7 @@ import {
 import { TextArea } from "../../../../components/primitives/text-area";
 import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
 import Badge from "../../../../images/badge.svg";
+import getImageSrc from "../../../../get-image-url";
 
 interface FormValuesGeneral {
   industry: string;
@@ -190,9 +191,8 @@ export default function ProfileProjects({ data }: Props) {
                     <div className="flex flex-col items-center justify-center pt-12">
                       <Image
                         src={
-                          data.profile.data.avatar
-                            ? `/api/${data.profile.data.avatar.url}`
-                            : DefaultAva
+                          getImageSrc(data.profile.data.avatar?.url)
+                            ?? DefaultAva
                         }
                         width={0}
                         height={0}
@@ -362,9 +362,8 @@ export default function ProfileProjects({ data }: Props) {
                   <div className="flex flex-col items-center justify-center pt-12">
                     <Image
                       src={
-                        data.profile.data.avatar
-                          ? `/api/${data.profile.data.avatar.url}`
-                          : DefaultAva
+                       getImageSrc(data.profile.data.avatar?.url)
+                          ?? DefaultAva
                       }
                       width={0}
                       height={0}
@@ -552,9 +551,8 @@ export default function ProfileProjects({ data }: Props) {
                         <div className="sm:col-span-4">
                           <Image
                             src={
-                              item.logo?.url
-                                ? `/api/${item.logo.url}`
-                                : DefaultAva
+                              getImageSrc(item?.logo?.url)
+                                ?? DefaultAva
                             }
                             unoptimized
                             width={0}

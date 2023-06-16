@@ -20,6 +20,7 @@ import {
 } from "../../../components/primitives/dialog";
 import NoProjects from "../../../images/noProjects.svg";
 import testAva from "../../../images/projectDefault.svg";
+import getImageSrc from "../../../get-image-url";
 
 const tabs = [
   { name: "Все проекты", href: "/app/projects/", current: false },
@@ -176,9 +177,8 @@ export default function All({ data }: Props) {
                     <div className="sm:col-span-4 ">
                       <Image
                         src={
-                          project.logo?.url
-                            ? `/api/${project.logo.url}`
-                            : testAva
+                          getImageSrc(project.logo?.url)
+                            ?? testAva
                         }
                         width={0}
                         height={0}
