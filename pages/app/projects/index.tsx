@@ -352,69 +352,72 @@ export default function All() {
                               </div>
                             </div>
                           </div>
-                          <div className="col-span-6 sm:col-span-8 flex flex-col gap-1">
-                            <div className="flex justify-between">
-                              <p className="text-xs font-semibold sm:text-base line-clamp-1">
-                                {project.title}
-                              </p>
-                              <p className="text-xs text-slate-400">
-                                {project.created_at &&
-                                  new Date(
-                                    project.created_at
-                                  ).toLocaleDateString("ru-RU", {
-                                    day: "numeric",
-                                    month: "numeric",
-                                    year: "numeric",
-                                  })}
-                              </p>
-                            </div>
-                            <div className="flex justify-between">
-                              <p className=" line-clamp-1 max-w-[300px] text-xs">
-                                {project.industry}
-                              </p>
-                              {/* <p className="flex items-center rounded-2xl bg-lime-500 px-2 py-1 text-[9px] font-bold text-slate-100 sm:text-xs">
+                          <div className="col-span-6 sm:col-span-8 flex flex-col justify-between">
+                            <div className="flex flex-col gap-1">
+                              <div className="flex justify-between">
+                                <p className="text-xs font-semibold sm:text-base line-clamp-1">
+                                  {project.title}
+                                </p>
+                                <p className="text-xs text-slate-400">
+                                  {project.created_at &&
+                                    new Date(
+                                      project.created_at
+                                    ).toLocaleDateString("ru-RU", {
+                                      day: "numeric",
+                                      month: "numeric",
+                                      year: "numeric",
+                                    })}
+                                </p>
+                              </div>
+                              <div className="flex justify-between">
+                                <p className=" line-clamp-1 max-w-[300px] text-xs">
+                                  {project.industry}
+                                </p>
+                                {/* <p className="flex items-center rounded-2xl bg-lime-500 px-2 py-1 text-[9px] font-bold text-slate-100 sm:text-xs">
                               в ТОПе
                             </p> */}
-                            </div>
-                            <p className="line-clamp-3 w-auto text-xs">
-                              {project.description}
-                            </p>
-                            {project.profile_data?.data?.is_visible ===
-                            false ? (
-                              ""
-                            ) : (
-                              <div className="mt-2 flex gap-4 text-xs">
-                                <Link
-                                  href={`/app/profiles/${project?.profile_data?.data?.id}`}
-                                >
-                                  <div className="flex w-fit items-center gap-4 rounded-lg bg-slate-100 p-2 hover:bg-lime-200">
-                                    <Image
-                                      src={
-                                        project.profile_data?.data?.avatar?.url
-                                          ? `/api/${project.profile_data.data.avatar.url}`
-                                          : testAva
-                                      }
-                                      alt="test"
-                                      unoptimized
-                                      width={20}
-                                      height={20}
-                                      className="rounded-lg"
-                                    />
-                                    <p className="text-xs sm:text-sm">
-                                      {project?.profile_data?.data
-                                        ?.legal_structure
-                                        ? project?.profile_data?.data
-                                            ?.legal_structure
-                                        : ""}{" "}
-                                      {
-                                        project?.profile_data?.data
-                                          ?.display_name
-                                      }
-                                    </p>
-                                  </div>
-                                </Link>
                               </div>
-                            )}
+                              <p className="line-clamp-3 w-auto text-xs">
+                                {project.description}
+                              </p>
+                              {project.profile_data?.data?.is_visible ===
+                              false ? (
+                                ""
+                              ) : (
+                                <div className="mt-2 flex gap-4 text-xs">
+                                  <Link
+                                    href={`/app/profiles/${project?.profile_data?.data?.id}`}
+                                  >
+                                    <div className="flex w-fit items-center gap-4 rounded-lg bg-slate-100 p-2 hover:bg-lime-200">
+                                      <Image
+                                        src={
+                                          project.profile_data?.data?.avatar
+                                            ?.url
+                                            ? `/api/${project.profile_data.data.avatar.url}`
+                                            : testAva
+                                        }
+                                        alt="test"
+                                        unoptimized
+                                        width={20}
+                                        height={20}
+                                        className="rounded-lg"
+                                      />
+                                      <p className="text-xs sm:text-sm">
+                                        {project?.profile_data?.data
+                                          ?.legal_structure
+                                          ? project?.profile_data?.data
+                                              ?.legal_structure
+                                          : ""}{" "}
+                                        {
+                                          project?.profile_data?.data
+                                            ?.display_name
+                                        }
+                                      </p>
+                                    </div>
+                                  </Link>
+                                </div>
+                              )}
+                            </div>
                             <div className="flex justify-end rounded-full">
                               <button
                                 onClick={() => handleRoute(project.id)}
