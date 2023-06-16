@@ -21,7 +21,6 @@ export default function All() {
   const router = useRouter();
   const [organizationsData, setOrganizationsData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [totalItems, setTotalItems] = useState(1);
   const currentPage =
     (Number.parseInt(router.query.page as string, 10) as number) || 1;
 
@@ -31,14 +30,13 @@ export default function All() {
       try {
         const response = await api.getOrganizations({
           page: currentPage,
-          per_page: 9,
+          per_page: 100,
           user_id: session.data.id,
         });
         const data = response.data.data;
         console.log(data);
         if (data && data.length > 0) {
           setOrganizationsData(data);
-          setTotalItems(response.data.meta.total);
         }
       } catch (error) {
         console.error("Error fetching profiles:", error);
@@ -127,14 +125,6 @@ export default function All() {
                     </Link>
                   ))}
                 </div>
-                <Pagination
-                  renderPageLink={(page) =>
-                    `/app/organizations/my/?page=${page}`
-                  }
-                  itemsPerPage={9}
-                  totalItems={totalItems}
-                  currentPage={currentPage}
-                />
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center gap-8">
