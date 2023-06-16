@@ -330,7 +330,7 @@ export default function All() {
                   <div key={projectIndex}>
                     <div className=" rounded-2xl border border-slate-200 bg-white hover:border-black">
                       <div className="p-4">
-                        <div className="grid w-full grid-cols-10 gap-4 h-[180px]">
+                        <div className="grid w-full grid-cols-10 gap-4 h-48">
                           <div className="col-span-4 sm:col-span-2">
                             <div className="overflow-hidden" ref={emblaRef}>
                               <div className="flex">
@@ -369,7 +369,7 @@ export default function All() {
                               </p>
                             </div>
                             <div className="flex justify-between">
-                              <p className="max-w-[300px] text-xs">
+                              <p className=" line-clamp-1 max-w-[300px] text-xs">
                                 {project.industry}
                               </p>
                               {/* <p className="flex items-center rounded-2xl bg-lime-500 px-2 py-1 text-[9px] font-bold text-slate-100 sm:text-xs">
