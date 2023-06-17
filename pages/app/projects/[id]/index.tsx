@@ -73,9 +73,9 @@ import {
   TabsTrigger,
 } from "../../../../components/primitives/tabs";
 import { TextArea } from "../../../../components/primitives/text-area";
+import getImageSrc from "../../../../get-image-url";
 import Test from "../../../../images/avatars/defaultProfile.svg";
 import SentImage from "../../../../images/email 1.png";
-import getImageSrc from "../../../../get-image-url";
 
 interface FormValues {
   application_message: string;
@@ -466,7 +466,7 @@ export default function ProjectView({ data }: Props) {
                     <Image
                       src={
                         data.project.data.logo?.url
-                          ? `/api/${data.project.data.logo.url}`
+                          ? getImageSrc(data.project.data.logo.url)
                           : Test
                       }
                       alt="Photo by Alvaro Pinot"
@@ -668,9 +668,7 @@ export default function ProjectView({ data }: Props) {
                             height={0}
                             unoptimized
                             src={
-                      getImageSrc(data.project.data.logo.url)
-
-                                ?? Test
+                              getImageSrc(data.project.data.logo.url) ?? Test
                             }
                             alt="test"
                           />
