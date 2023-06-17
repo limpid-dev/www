@@ -613,7 +613,7 @@ export default function ProjectView({ data }: Props) {
                               <Link
                                 href={
                                   data.project.data.business_plan.url
-                                    ? `/api/${data.project.data.business_plan.url}`
+                                    ? getImageSrc(data.project.data.logo.url)
                                     : Test
                                 }
                               >
