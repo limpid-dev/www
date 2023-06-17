@@ -872,6 +872,7 @@ export default function ProjectView({ data }: Props) {
                                 Требуемые интеллектуальные ресурсы проекту
                               </p>
                               <TextArea
+                                className=" w-fit h-fit"
                                 {...registerResources(
                                   "required_intellectual_resources"
                                 )}
