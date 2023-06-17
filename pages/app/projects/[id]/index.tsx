@@ -927,7 +927,10 @@ export default function ProjectView({ data }: Props) {
                                 Требуемые интеллектуальные ресурсы проекту
                               </p>
                               <p className="text-sm">
-                                {data.project.data.owned_intellectual_resources}
+                                {
+                                  data.project.data
+                                    .required_intellectual_resources
+                                }
                               </p>
                             </div>
                           </div>
