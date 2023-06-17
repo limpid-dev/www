@@ -527,7 +527,7 @@ export default function ProjectView({ data }: Props) {
                           </Select>
                         )}
                       />
-                      <div className="mt-5 flex justify-end gap-3 pt-4">
+                      <div className="mt-3 flex justify-end gap-3">
                         <Button variant="outline" onClick={editHandleGeneral}>
                           Отмена
                         </Button>
