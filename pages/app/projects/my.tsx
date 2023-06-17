@@ -20,7 +20,7 @@ import {
 } from "../../../components/primitives/dialog";
 import NoProjects from "../../../images/noProjects.svg";
 import testAva from "../../../images/projectDefault.svg";
-import getImageSrc from "../../../get-image-url";
+import getImageSrc from "../../../hooks/get-image-url";
 
 const tabs = [
   { name: "Все проекты", href: "/app/projects/", current: false },
@@ -176,10 +176,7 @@ export default function All({ data }: Props) {
                   <div className="grid items-center justify-center gap-4 rounded-lg border py-6 pl-6 pr-4 hover:border-black sm:grid-cols-10 sm:h-48">
                     <div className="sm:col-span-4 ">
                       <Image
-                        src={
-                          getImageSrc(project.logo?.url)
-                            ?? testAva
-                        }
+                        src={getImageSrc(project.logo?.url) ?? testAva}
                         width={0}
                         height={0}
                         unoptimized

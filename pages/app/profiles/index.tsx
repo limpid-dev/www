@@ -26,7 +26,7 @@ import {
   SheetTrigger,
 } from "../../../components/primitives/sheet";
 import DefaultAvatar from "../../../images/avatars/defaultProfile.svg";
-import getImageSrc from "../../../get-image-url";
+import getImageSrc from "../../../hooks/get-image-url";
 
 const tabs = [
   { name: "Все профили", href: "/app/profiles/", current: true },
@@ -282,8 +282,7 @@ export default function Profiles() {
                       <div className="col-span-4 mr-3">
                         <Image
                           src={
-                            getImageSrc(profile?.avatar?.url)
-                              ?? DefaultAvatar
+                            getImageSrc(profile?.avatar?.url) ?? DefaultAvatar
                           }
                           width={0}
                           height={0}
@@ -321,8 +320,7 @@ export default function Profiles() {
                       <div className="col-span-4 mr-3">
                         <Image
                           src={
-                            getImageSrc(profile?.avatar?.url)
-                            ?? DefaultAvatar
+                            getImageSrc(profile?.avatar?.url) ?? DefaultAvatar
                           }
                           width={0}
                           height={0}

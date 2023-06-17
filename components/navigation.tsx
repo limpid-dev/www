@@ -18,7 +18,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "./primitives/navigation-menu";
-import getImageSrc from "../get-image-url";
+import getImageSrc from "../hooks/get-image-url";
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,

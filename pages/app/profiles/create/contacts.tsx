@@ -8,7 +8,7 @@ import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";
 import { Input } from "../../../../components/primitives/input";
 import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
-import getImageSrc from "../../../../get-image-url";
+import getImageSrc from "../../../../hooks/get-image-url";
 
 interface FormValues {
   avatar?: File;

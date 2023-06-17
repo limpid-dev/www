@@ -34,7 +34,7 @@ import {
 import { TextArea } from "../../../../components/primitives/text-area";
 import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
 import Badge from "../../../../images/badge.svg";
-import getImageSrc from "../../../../get-image-url";
+import getImageSrc from "../../../../hooks/get-image-url";
 
 interface FormValuesGeneral {
   industry: string;
@@ -228,8 +228,7 @@ export default function ProfileProjects({ data }: Props) {
                   <div className="flex flex-col items-center gap-x-8 bg-white pt-5">
                     <Image
                       src={
-                          getImageSrc(data.profile.data.avatar?.url) 
-                          ??DefaultAva
+                        getImageSrc(data.profile.data.avatar?.url) ?? DefaultAva
                       }
                       width={0}
                       height={0}
@@ -413,8 +412,7 @@ export default function ProfileProjects({ data }: Props) {
                   <div className="flex flex-col items-center justify-center pt-12">
                     <Image
                       src={
-                        getImageSrc(data.profile.data.avatar?.url) 
-                        ??DefaultAva
+                        getImageSrc(data.profile.data.avatar?.url) ?? DefaultAva
                       }
                       width={0}
                       height={0}
@@ -601,10 +599,7 @@ export default function ProfileProjects({ data }: Props) {
                       <div className="grid items-center justify-center gap-4 rounded-lg border py-6 pl-6 pr-4 sm:h-48 hover:border-black sm:grid-cols-10">
                         <div className="sm:col-span-4">
                           <Image
-                            src={
-                              getImageSrc(item.logo?.url) 
-                              ??DefaultAva
-                            }
+                            src={getImageSrc(item.logo?.url) ?? DefaultAva}
                             unoptimized
                             width={0}
                             height={0}

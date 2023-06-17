@@ -27,7 +27,7 @@ import {
 } from "../../../components/primitives/sheet";
 import { Skeleton } from "../../../components/primitives/skeleton";
 import DefaultAvatar from "../../../images/avatars/defaultProfile.svg";
-import getImageSrc from "../../../get-image-url";
+import getImageSrc from "../../../hooks/get-image-url";
 
 const tabs = [
   { name: "Все организации", href: "/app/organizations/", current: true },
@@ -244,9 +244,7 @@ export default function All() {
                       <div className="col-span-4 mr-3">
                         <Image
                           src={
-                        getImageSrc(profile.avatar?.url)
-
-                        ?? DefaultAvatar
+                            getImageSrc(profile.avatar?.url) ?? DefaultAvatar
                           }
                           width={0}
                           height={0}

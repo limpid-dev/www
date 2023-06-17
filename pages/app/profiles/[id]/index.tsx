@@ -33,7 +33,7 @@ import {
 } from "../../../../components/primitives/select";
 import { TextArea } from "../../../../components/primitives/text-area";
 import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
-import getImageSrc from "../../../../get-image-url";
+import getImageSrc from "../../../../hooks/get-image-url";
 
 interface FormValues {
   owned_material_resources: string;
@@ -247,8 +247,7 @@ export default function OneProfile({ data }: Props) {
                   <div className="flex flex-col items-center gap-x-8 bg-white pt-5">
                     <Image
                       src={
-                        getImageSrc(data.profile.data.avatar?.url)
-                          ?? DefaultAva
+                        getImageSrc(data.profile.data.avatar?.url) ?? DefaultAva
                       }
                       width={0}
                       height={0}
@@ -432,8 +431,7 @@ export default function OneProfile({ data }: Props) {
                   <div className="flex flex-col items-center justify-center pt-12">
                     <Image
                       src={
-                        getImageSrc(data.profile.data.avatar?.url)
-                        ?? DefaultAva
+                        getImageSrc(data.profile.data.avatar?.url) ?? DefaultAva
                       }
                       width={0}
                       height={0}

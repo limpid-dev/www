@@ -73,7 +73,7 @@ import {
   TabsTrigger,
 } from "../../../../components/primitives/tabs";
 import { TextArea } from "../../../../components/primitives/text-area";
-import getImageSrc from "../../../../get-image-url";
+import getImageSrc from "../../../../hooks/get-image-url";
 import Test from "../../../../images/avatars/defaultProfile.svg";
 import SentImage from "../../../../images/email 1.png";
 
@@ -543,7 +543,7 @@ export default function ProjectView({ data }: Props) {
                       <Image
                         src={
                           data.project.data.logo?.url
-                            ? `/api/${data.project.data.logo.url}`
+                            ? getImageSrc(data.project.data.logo.url)
                             : Test
                         }
                         alt="Photo by Alvaro Pinot"
@@ -702,7 +702,10 @@ export default function ProjectView({ data }: Props) {
                                   <Link
                                     href={
                                       data.project.data.video_introduction.url
-                                        ? `/api/${data.project.data.video_introduction.url}`
+                                        ? getImageSrc(
+                                            data.project.data.video_introduction
+                                              .url
+                                          )
                                         : Test
                                     }
                                   >

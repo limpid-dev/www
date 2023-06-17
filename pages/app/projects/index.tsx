@@ -33,7 +33,7 @@ import {
 } from "../../../components/primitives/sheet";
 import { Skeleton } from "../../../components/primitives/skeleton";
 import testAva from "../../../images/projectDefault.svg";
-import getImageSrc from "../../../get-image-url";
+import getImageSrc from "../../../hooks/get-image-url";
 
 const tabs = [
   { name: "Все проекты", href: "/app/projects/", current: true },

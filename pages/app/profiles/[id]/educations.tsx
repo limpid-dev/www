@@ -34,7 +34,7 @@ import {
 import { TextArea } from "../../../../components/primitives/text-area";
 import { EducationCreate } from "../../../../components/profiles/create/education";
 import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
-import getImageSrc from "../../../../get-image-url";
+import getImageSrc from "../../../../hooks/get-image-url";
 
 const dateFormatter = (arg: string) => {
   return new Date(arg).getFullYear().toString();
@@ -256,8 +256,7 @@ export default function Education({ data }: Props) {
                   <div className="flex flex-col items-center gap-x-8 bg-white pt-5">
                     <Image
                       src={
-                        getImageSrc(data.profile.data.avatar?.url)
-                        ?? DefaultAva
+                        getImageSrc(data.profile.data.avatar?.url) ?? DefaultAva
                       }
                       width={0}
                       height={0}
@@ -441,8 +440,7 @@ export default function Education({ data }: Props) {
                   <div className="flex flex-col items-center justify-center pt-12">
                     <Image
                       src={
-                        getImageSrc(data.profile.data.avatar?.url)
-                        ?? DefaultAva
+                        getImageSrc(data.profile.data.avatar?.url) ?? DefaultAva
                       }
                       width={0}
                       height={0}
