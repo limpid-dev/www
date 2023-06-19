@@ -10,6 +10,7 @@ import {
   Paperclip,
   Pen,
   Trash,
+  User,
 } from "@phosphor-icons/react";
 import { DialogClose } from "@radix-ui/react-dialog";
 import clsx from "clsx";
@@ -487,48 +488,52 @@ export default function ProjectView({ data }: Props) {
               </div>
             ) : (
               <div className="flex flex-col gap-5 sm:flex-row">
-                <Dialog>
-                  <DialogTrigger className="rounded-md bg-black p-2 text-sm text-white hover:bg-slate-700">
-                    Заинтересоваться проектом
-                  </DialogTrigger>
-                  <DialogContent className="p-6 max-w-lg">
-                    {sent ? (
-                      <div className="flex flex-col items-center justify-center gap-3">
-                        <Image src={SentImage} alt="s" />
-                        <p className=" font-semibold text-2xl">
-                          Заявка успешно отправлена
-                        </p>
-                        <p>Ожидайте ответ от автора проекта</p>
-                        <DialogClose>
-                          <Button variant="outline">Понятно</Button>
-                        </DialogClose>
-                      </div>
-                    ) : (
-                      <>
-                        <DialogHeader>
-                          <DialogTitle>Отправить заявку</DialogTitle>
-                          <DialogDescription>
-                            Напишите чем вы будете полезны проекту ?
-                          </DialogDescription>
-                        </DialogHeader>
-                        <form
-                          onSubmit={handleSubmit(onSubmit)}
-                          className="flex flex-col items-end"
-                        >
-                          <TextArea {...register("application_message")} />
-                          <Button className="mt-4" variant="outline">
-                            Отправить
-                          </Button>
-                        </form>
-                        {errors.application_message && (
-                          <p className="text-center text-red-500">
-                            {errors.application_message.message}
+                {data.isMember ? (
+                  ""
+                ) : (
+                  <Dialog>
+                    <DialogTrigger className="rounded-md bg-black p-2 text-sm text-white hover:bg-slate-700">
+                      Заинтересоваться проектом
+                    </DialogTrigger>
+                    <DialogContent className="p-6 max-w-lg">
+                      {sent ? (
+                        <div className="flex flex-col items-center justify-center gap-3">
+                          <Image src={SentImage} alt="s" />
+                          <p className=" font-semibold text-2xl">
+                            Заявка успешно отправлена
                           </p>
-                        )}
-                      </>
-                    )}
-                  </DialogContent>
-                </Dialog>
+                          <p>Ожидайте ответ от автора проекта</p>
+                          <DialogClose>
+                            <Button variant="outline">Понятно</Button>
+                          </DialogClose>
+                        </div>
+                      ) : (
+                        <>
+                          <DialogHeader>
+                            <DialogTitle>Отправить заявку</DialogTitle>
+                            <DialogDescription>
+                              Напишите чем вы будете полезны проекту ?
+                            </DialogDescription>
+                          </DialogHeader>
+                          <form
+                            onSubmit={handleSubmit(onSubmit)}
+                            className="flex flex-col items-end"
+                          >
+                            <TextArea {...register("application_message")} />
+                            <Button className="mt-4" variant="outline">
+                              Отправить
+                            </Button>
+                          </form>
+                          {errors.application_message && (
+                            <p className="text-center text-red-500">
+                              {errors.application_message.message}
+                            </p>
+                          )}
+                        </>
+                      )}
+                    </DialogContent>
+                  </Dialog>
+                )}
               </div>
             )}
           </div>
@@ -1190,30 +1195,32 @@ export default function ProjectView({ data }: Props) {
                           <DialogTrigger className="text-base w-full p-2">
                             Участники проекта
                           </DialogTrigger>
-                          <DialogContent className="px-20 py-12 sm:max-w-[850px]">
+                          <DialogContent className="px-20 py-12 max-w-[825px]">
                             <DialogHeader className="items-center">
                               <DialogTitle>Участники Обсуждения</DialogTitle>
                             </DialogHeader>
-                            {data?.members?.length > 0 ? (
-                              data.members?.map((member) => (
-                                <div
-                                  className="grid grid-cols-2"
-                                  key={member.id}
-                                >
-                                  <div className="grid items-center justify-center gap-4 rounded-lg border py-6 pl-6 pr-4 sm:grid-cols-10">
-                                    <div className="col-span-4">
+                            <div className="grid sm:grid-cols-2 gap-6 max-h-[650px] overflow-y-scroll">
+                              {data?.members?.length > 0 ? (
+                                data.members?.map((member) => (
+                                  <div
+                                    key={member.id}
+                                    className="grid gap-4 rounded-lg border py-6 pl-6 pr-4 sm:grid-cols-10"
+                                  >
+                                    <div className="sm:col-span-4">
                                       <Image
-                                        src={getImageSrc(
-                                          member.profile?.avatar?.url
-                                        )}
+                                        src={
+                                          getImageSrc(
+                                            member?.profile?.avatar?.url
+                                          ) ?? Test
+                                        }
                                         width={0}
                                         height={0}
                                         unoptimized
-                                        className="rounded-md object-cover bg-slate-100 w-auto h-auto"
+                                        className="rounded-md m-auto object-cover bg-slate-100 h-[106px] w-auto"
                                         alt="test"
                                       />
                                     </div>
-                                    <div className="col-span-6">
+                                    <div className="sm:col-span-6">
                                       <div className="flex flex-col gap-2">
                                         <h1 className="font-bold">
                                           {member.profile?.display_name}
@@ -1221,7 +1228,20 @@ export default function ProjectView({ data }: Props) {
                                         <p className="text-xs">
                                           {member.profile?.industry}
                                         </p>
-                                        <div className="flex justify-end gap-1 sm:justify-start">
+                                        <Link
+                                          href={`/app/profiles/${member.profile_id}/`}
+                                        >
+                                          <Button
+                                            variant="subtle"
+                                            className="w-full"
+                                          >
+                                            <User className="h-4 w-4" />
+                                            <span className="ml-2 text-xs">
+                                              Профиль
+                                            </span>
+                                          </Button>
+                                        </Link>
+                                        {data.isAuthor ? (
                                           <Button
                                             variant="subtle"
                                             onClick={() =>
@@ -1236,24 +1256,26 @@ export default function ProjectView({ data }: Props) {
                                               Удалить участника
                                             </span>
                                           </Button>
-                                        </div>
+                                        ) : (
+                                          ""
+                                        )}
                                       </div>
                                     </div>
                                   </div>
+                                ))
+                              ) : (
+                                <div>
+                                  <Image
+                                    src={noProfiles}
+                                    className="m-auto"
+                                    alt="text"
+                                  />
+                                  <p className="text-center mt-3 font-medium">
+                                    У вас нет участников
+                                  </p>
                                 </div>
-                              ))
-                            ) : (
-                              <div>
-                                <Image
-                                  src={noProfiles}
-                                  className="m-auto"
-                                  alt="text"
-                                />
-                                <p className="text-center mt-3 font-medium">
-                                  У вас нет участников
-                                </p>
-                              </div>
-                            )}
+                              )}
+                            </div>
                           </DialogContent>
                         </Dialog>
                       </DropdownMenuContent>
