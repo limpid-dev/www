@@ -77,6 +77,7 @@ import { TextArea } from "../../../../components/primitives/text-area";
 import getImageSrc from "../../../../hooks/get-image-url";
 import Test from "../../../../images/avatars/defaultProfile.svg";
 import SentImage from "../../../../images/email 1.png";
+import noProfiles from "../../../../images/noProfiles.svg";
 
 interface FormValues {
   application_message: string;
@@ -153,7 +154,13 @@ export const getServerSideProps = async (
       const acceptedMembers = members.data?.filter(
         (member) => member.status === "accepted"
       );
-      console.log(acceptedMembers);
+
+      const isMember = members.data?.some(
+        (member) =>
+          member.status === "accepted" && member.profile_id === profile.data.id
+      );
+
+      console.log(isMember);
 
       return {
         props: {
@@ -163,6 +170,7 @@ export const getServerSideProps = async (
             userId: userId!,
             members: acceptedMembers!,
             pendingMembers: pendingMembers!,
+            isMember: isMember!,
           },
         },
       };
@@ -193,7 +201,9 @@ export default function ProjectView({ data }: Props) {
   const parsedId = Number.parseInt(id as string, 10) as number;
   const [largeScreen, setLargeScreen] = useState(false);
   const inputRef = useRef(null);
-  const [error, setError] = useState("");
+  const [error, setErrors] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const handleResize = () => {
@@ -208,8 +218,6 @@ export default function ProjectView({ data }: Props) {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
-  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -236,13 +244,24 @@ export default function ProjectView({ data }: Props) {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
-    control,
   } = useForm<FormValues>();
 
   const onSubmit = async (data: FormValues) => {
-    await api.addProjectMember({ project_id: parsedId }, data);
-    setSent(true);
+    try {
+      await api.addProjectMember({ project_id: parsedId }, data);
+      setSent(true);
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        setError("application_message", {
+          type: "custom",
+          message: "Дождитесь ответа от создателя проекта",
+        });
+      } else {
+        console.error("Error adding project member:", error);
+      }
+    }
   };
 
   const handleClick = (event: any) => {
@@ -378,6 +397,15 @@ export default function ProjectView({ data }: Props) {
     }
   };
 
+  const handleDeleteMember = async (project_id: number, member_id: number) => {
+    try {
+      await api.deleteProjectMember(project_id, member_id);
+      await router.reload();
+    } catch (error) {
+      console.error("Error deleting project member:", error);
+    }
+  };
+
   const handleClickAvatar = () => {
     (inputRef.current as unknown as HTMLInputElement).click();
   };
@@ -401,14 +429,12 @@ export default function ProjectView({ data }: Props) {
       }
     } catch (error) {
       if (error.response && error.response.status === 422) {
-        setError("Размер не более 1 МБ");
+        setErrors("Размер не более 1 МБ");
       } else {
         console.log("Error:", error);
       }
     }
   };
-
-  const [message, setMessage] = useState("");
 
   const handleSendMessage = async () => {
     try {
@@ -429,7 +455,7 @@ export default function ProjectView({ data }: Props) {
             {data.project.data.title}
           </h1>
 
-          <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline md:justify-end">
+          <div className="my-4 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-5 md:flex-row md:items-baseline md:justify-end">
             {data.isAuthor ? (
               <div className="flex gap-5">
                 <AlertDialog>
@@ -494,6 +520,11 @@ export default function ProjectView({ data }: Props) {
                             Отправить
                           </Button>
                         </form>
+                        {errors.application_message && (
+                          <p className="text-center text-red-500">
+                            {errors.application_message.message}
+                          </p>
+                        )}
                       </>
                     )}
                   </DialogContent>
@@ -866,7 +897,7 @@ export default function ProjectView({ data }: Props) {
                   ) : (
                     ""
                   )}
-                  {data.members ? (
+                  {data.isMember || data.isAuthor ? (
                     <Button
                       variant="ghost"
                       className="w-full"
@@ -1163,9 +1194,12 @@ export default function ProjectView({ data }: Props) {
                             <DialogHeader className="items-center">
                               <DialogTitle>Участники Обсуждения</DialogTitle>
                             </DialogHeader>
-                            {data.members?.map((member) => {
-                              return (
-                                <div className="grid grid-cols-2">
+                            {data?.members?.length > 0 ? (
+                              data.members?.map((member) => (
+                                <div
+                                  className="grid grid-cols-2"
+                                  key={member.id}
+                                >
                                   <div className="grid items-center justify-center gap-4 rounded-lg border py-6 pl-6 pr-4 sm:grid-cols-10">
                                     <div className="col-span-4">
                                       <Image
@@ -1188,7 +1222,15 @@ export default function ProjectView({ data }: Props) {
                                           {member.profile?.industry}
                                         </p>
                                         <div className="flex justify-end gap-1 sm:justify-start">
-                                          <Button variant="subtle">
+                                          <Button
+                                            variant="subtle"
+                                            onClick={() =>
+                                              handleDeleteMember(
+                                                member.project_id,
+                                                member.id
+                                              )
+                                            }
+                                          >
                                             <Trash />
                                             <span className="ml-2 text-xs">
                                               Удалить участника
@@ -1199,8 +1241,19 @@ export default function ProjectView({ data }: Props) {
                                     </div>
                                   </div>
                                 </div>
-                              );
-                            })}
+                              ))
+                            ) : (
+                              <div>
+                                <Image
+                                  src={noProfiles}
+                                  className="m-auto"
+                                  alt="text"
+                                />
+                                <p className="text-center mt-3 font-medium">
+                                  У вас нет участников
+                                </p>
+                              </div>
+                            )}
                           </DialogContent>
                         </Dialog>
                       </DropdownMenuContent>
