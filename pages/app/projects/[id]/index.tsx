@@ -4,6 +4,7 @@ import {
   Chat,
   DotsThreeVertical,
   DownloadSimple,
+  Envelope,
   Files,
   FileVideo,
   Paperclip,
@@ -19,7 +20,6 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import api from "../../../../api";
-import { components } from "../../../../api/api-paths";
 import { Navigation } from "../../../../components/navigation";
 import {
   AlertDialog,
@@ -130,17 +130,55 @@ export const getServerSideProps = async (
         },
       }
     );
-
     const isAuthor = profile.data.id === project.data.profile_id;
-
-    return {
-      props: {
-        data: {
-          project: project!,
-          isAuthor: isAuthor!,
+    const userId = session.data.id;
+    try {
+      const { data: members } = await api.getProjectMembers(
+        Number.parseInt(context!.params!.id as string, 10),
+        {
+          page: 1,
+          per_page: 10,
         },
-      },
-    };
+        {
+          headers: {
+            Cookie: context.req.headers.cookie,
+          },
+        }
+      );
+      const pendingMembers = members.data?.filter(
+        (member) => member.status === "pending"
+      );
+
+      const acceptedMembers = members.data?.filter(
+        (member) => member.status === "accepted"
+      );
+      console.log(acceptedMembers);
+
+      return {
+        props: {
+          data: {
+            project: project!,
+            isAuthor: isAuthor!,
+            userId: userId!,
+            members: acceptedMembers!,
+            pendingMembers: pendingMembers!,
+          },
+        },
+      };
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        return {
+          props: {
+            data: {
+              userId: userId!,
+              project: project!,
+              isAuthor: isAuthor!,
+            },
+          },
+        };
+      }
+      console.error("Error fetching project members:", error);
+    }
   }
 };
 
@@ -154,8 +192,9 @@ export default function ProjectView({ data }: Props) {
   const [sent, setSent] = useState(false);
   const parsedId = Number.parseInt(id as string, 10) as number;
   const [largeScreen, setLargeScreen] = useState(false);
-  const [pendingMembers, setPendingMembers] =
-    useState<components["schemas"]["ProjectMember"][]>();
+  const inputRef = useRef(null);
+  const [error, setError] = useState("");
+  const scrollAreaRef = useRef(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -171,48 +210,54 @@ export default function ProjectView({ data }: Props) {
     };
   }, []);
 
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     api
-  //       .getMessages({
-  //         path: { chat_id: parsedId },
-  //         query: {
-  //           page: 1,
-  //           per_page: 10,
-  //         },
-  //       })
-  //       .then((response) => {
-  //         console.log(response.data.data);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error getting messages:", error);
-  //       });
-  //   }, 2000);
+  const [messages, setMessages] = useState([]);
 
-  //   return () => clearInterval(intervalId);
-  // }, []);
+  const [scrollCount, setScrollCount] = useState(0);
+  const intervalRef = useRef(null);
 
   useEffect(() => {
-    const fetchProjectMembers = async () => {
+    const fetchMessages = async () => {
       try {
-        const { data } = await api.getProjectMembers(parsedId, {
-          page: 1,
-          per_page: 10,
+        const { data: chatMessages } = await api.getMessages({
+          path: { chat_id: data.project.data.chat_id },
+          query: {
+            page: 1,
+            per_page: 1000,
+          },
         });
-
-        if (data.data) {
-          setPendingMembers(data.data);
-          console.log(pendingMembers);
+        if (chatMessages.data.length > 0) {
+          setMessages(chatMessages.data);
         }
       } catch (error) {
-        // Handle error if necessary
-        console.error(error);
+        console.error("Error getting messages:", error);
       }
     };
-    fetchProjectMembers();
-  }, [parsedId]);
 
-  useEffect(() => {}, []);
+    const intervalId = setInterval(fetchMessages, 1000);
+    return () => clearInterval(intervalId);
+  }, [data.project.data.chat_id]);
+
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      const scrollAreaElement = scrollAreaRef.current;
+
+      if (scrollAreaElement) {
+        scrollAreaElement.scrollTo({
+          top: scrollAreaElement.scrollHeight,
+          behavior: "smooth",
+        });
+        setScrollCount((prevCount) => prevCount + 1);
+      }
+    }, 1000);
+
+    return () => clearInterval(intervalRef.current);
+  }, []);
+
+  useEffect(() => {
+    if (scrollCount >= 2) {
+      clearInterval(intervalRef.current);
+    }
+  }, [scrollCount]);
 
   const {
     register,
@@ -297,7 +342,7 @@ export default function ProjectView({ data }: Props) {
     control: controlGeneral,
   } = useForm<GeneralValues>();
 
-  const onSubmitAbout = async (aboutFormData: any) => {
+  const onSubmitProject = async (aboutFormData: any) => {
     try {
       const { data } = await api.updateProject(
         { project_id: parsedId },
@@ -341,9 +386,23 @@ export default function ProjectView({ data }: Props) {
     router.reload();
   };
 
-  const inputRef = useRef(null);
+  const handleMemberAccept = async (project_id: number, member_id: number) => {
+    try {
+      await api.acceptProjectMember(project_id, member_id);
+      await router.reload();
+    } catch (error) {
+      console.error("Error adding project member:", error);
+    }
+  };
 
-  const [error, setError] = useState("");
+  const handleMemberReject = async (project_id: number, member_id: number) => {
+    try {
+      await api.rejectProjectMember(project_id, member_id);
+      await router.reload();
+    } catch (error) {
+      console.error("Error adding project member:", error);
+    }
+  };
 
   const handleClickAvatar = () => {
     (inputRef.current as unknown as HTMLInputElement).click();
@@ -374,6 +433,28 @@ export default function ProjectView({ data }: Props) {
       }
     }
   };
+
+  const [message, setMessage] = useState("");
+
+  const handleSendMessage = async () => {
+    try {
+      await api.sendMessage(parsedId, message);
+      setMessage("");
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  };
+
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     scrollAreaRef.current.scrollTo({
+  //       top: scrollAreaRef.current.scrollHeight,
+  //       behavior: "smooth",
+  //     });
+  //   }, 1000);
+
+  //   return () => clearInterval(interval);
+  // }, [scrollAreaRef]);
 
   return (
     <div>
@@ -418,7 +499,7 @@ export default function ProjectView({ data }: Props) {
             ) : (
               <div className="flex flex-col gap-5 sm:flex-row">
                 <Dialog>
-                  <DialogTrigger className="rounded-md bg-slate-700 p-2 text-sm text-white hover:bg-black">
+                  <DialogTrigger className="rounded-md bg-black p-2 text-sm text-white hover:bg-slate-700">
                     Заинтересоваться проектом
                   </DialogTrigger>
                   <DialogContent className="p-6 max-w-lg">
@@ -458,7 +539,7 @@ export default function ProjectView({ data }: Props) {
             )}
           </div>
 
-          <div className="grid min-h-[650px] grid-cols-1 gap-6 sm:grid-cols-10 ">
+          <div className="grid min-h-[650px] grid-cols-1 gap-6 sm:grid-cols-10">
             <div className="rounded-lg border sm:col-span-3">
               <div className="h-full bg-white p-6">
                 {editGeneral ? (
@@ -492,7 +573,7 @@ export default function ProjectView({ data }: Props) {
                       </p>
                     </div>
                     <form
-                      onSubmit={handleGeneral(onSubmitAbout)}
+                      onSubmit={handleGeneral(onSubmitProject)}
                       className="flex flex-col gap-2"
                     >
                       <Input
@@ -739,22 +820,109 @@ export default function ProjectView({ data }: Props) {
                     </Sheet>
                   )}
 
-                  {/* <Button
-                    variant="ghost"
-                    className="w-full"
-                    onClick={handleClick}
-                  >
-                    <div className="flex w-full items-center gap-3 text-sm font-semibold">
-                      <Chat className="w-6 h-6" /> Обсуждение проекта
-                    </div>
-                    <ArrowRight className="w-6 h-6" />
-                  </Button> */}
+                  {data.isAuthor ? (
+                    <Sheet>
+                      <SheetTrigger asChild>
+                        <Button variant="ghost" className="w-full">
+                          <div className="flex w-full items-center gap-3 text-sm font-semibold">
+                            <Envelope className="w-6 h-6" /> Заявки на участие
+                          </div>
+                          <ArrowRight className="w-6 h-6" />
+                        </Button>
+                      </SheetTrigger>
+                      <SheetContent
+                        position="right"
+                        size={largeScreen ? "sm" : "full"}
+                      >
+                        <SheetHeader>
+                          <SheetTitle>Заявки</SheetTitle>
+                        </SheetHeader>
+                        <div className="flex w-auto flex-col rounded-lg bg-white py-8">
+                          {data.pendingMembers?.map((member) => (
+                            <div key={member.id}>
+                              <Link
+                                href={`/app/profiles/${member.profile_id}/`}
+                              >
+                                <div className="grid items-center justify-center gap-4 rounded-lg border border-b-1 hover:border-lime-400 py-6 pl-6 pr-4 sm:grid-cols-10">
+                                  <div className="col-span-4">
+                                    <Image
+                                      src={getImageSrc(
+                                        member.profile?.avatar?.url
+                                      )}
+                                      width={0}
+                                      height={0}
+                                      unoptimized
+                                      className="rounded-md object-cover bg-slate-100 w-auto h-auto"
+                                      alt="test"
+                                    />
+                                  </div>
+                                  <div className="col-span-6">
+                                    <div className="flex flex-col gap-1">
+                                      <h1 className="font-bold">
+                                        {member?.profile?.display_name}
+                                      </h1>
+                                      <p className="text-xs">
+                                        {member?.profile?.industry}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <p className="col-span-10 bg-slate-100 p-2 rounded-md text-sm">
+                                    {member.application_message}
+                                  </p>
+                                </div>
+                              </Link>
+                              <div className="flex justify-end gap-3 mt-3">
+                                <Button
+                                  onClick={() =>
+                                    handleMemberReject(
+                                      member.project_id,
+                                      member.id
+                                    )
+                                  }
+                                  variant="outline"
+                                >
+                                  Отклонить
+                                </Button>
+                                <Button
+                                  variant="black"
+                                  onClick={() =>
+                                    handleMemberAccept(
+                                      member.project_id,
+                                      member.id
+                                    )
+                                  }
+                                >
+                                  Принять
+                                </Button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </SheetContent>
+                    </Sheet>
+                  ) : (
+                    ""
+                  )}
+                  {data.members ? (
+                    <Button
+                      variant="ghost"
+                      className="w-full"
+                      onClick={handleClick}
+                    >
+                      <div className="flex w-full items-center gap-3 text-sm font-semibold">
+                        <Chat className="w-6 h-6" /> Обсуждение проекта
+                      </div>
+                      <ArrowRight className="w-6 h-6" />
+                    </Button>
+                  ) : (
+                    ""
+                  )}
                 </div>
                 <div />
               </div>
             </div>
 
-            <div className="rounded-lg border bg-white sm:col-span-7 mb-4">
+            <div className="rounded-lg border bg-white sm:col-span-7">
               {isShown ? (
                 <Tabs defaultValue="about">
                   <TabsList className="flex justify-around border border-slate-100 bg-white p-9 text-lg font-semibold text-slate-300 w-full">
@@ -772,7 +940,7 @@ export default function ProjectView({ data }: Props) {
                   <TabsContent className="border-none" value="about">
                     <>
                       {editProjectAbout ? (
-                        <form onSubmit={handleAbout(onSubmitAbout)}>
+                        <form onSubmit={handleAbout(onSubmitProject)}>
                           <div className="flex flex-col gap-3">
                             <p className=" text-xl font-semibold text-slate-400">
                               О проекте
@@ -826,7 +994,7 @@ export default function ProjectView({ data }: Props) {
                   <TabsContent className="border-none" value="resource">
                     <>
                       {editProjectResources ? (
-                        <form onSubmit={handleResources(onSubmitAbout)}>
+                        <form onSubmit={handleResources(onSubmitProject)}>
                           <div className="flex flex-col gap-6">
                             <div className="flex flex-col gap-3">
                               <p className=" text-xl font-semibold text-slate-400">
@@ -872,16 +1040,15 @@ export default function ProjectView({ data }: Props) {
                                 Требуемые интеллектуальные ресурсы проекту
                               </p>
                               <TextArea
-                                className=" w-fit h-fit"
+                                className=""
                                 {...registerResources(
                                   "required_intellectual_resources"
                                 )}
-                              >
-                                {
+                                defaultValue={
                                   data.project.data
                                     .required_intellectual_resources
                                 }
-                              </TextArea>
+                              />
                             </div>
                           </div>
                           <div className="mt-5 flex justify-end gap-3 pt-4">
@@ -960,7 +1127,7 @@ export default function ProjectView({ data }: Props) {
                       value="profitability"
                     >
                       {editProjectROI ? (
-                        <form onSubmit={handleROI(onSubmitAbout)}>
+                        <form onSubmit={handleROI(onSubmitProject)}>
                           <div className="flex flex-col gap-3">
                             <p className=" text-xl font-semibold text-slate-400">
                               Ожидаемая рентабельность по проекту
@@ -1029,230 +1196,91 @@ export default function ProjectView({ data }: Props) {
                           <DialogTrigger className="text-base w-full p-2">
                             Участники проекта
                           </DialogTrigger>
-                          <DialogContent className="p-6">
-                            <DialogHeader>
+                          <DialogContent className="px-20 py-12 sm:max-w-[850px]">
+                            <DialogHeader className="items-center">
                               <DialogTitle>Участники Обсуждения</DialogTitle>
                             </DialogHeader>
-                            {pendingMembers?.map((member) => (
-                              <div key={member.id}>
-                                <p>{member.application_message}</p>
+                            <div className="grid grid-cols-2">
+                              <div className="grid items-center justify-center gap-4 rounded-lg border py-6 pl-6 pr-4 sm:grid-cols-10">
+                                <div className="col-span-4">
+                                  {/* <Image
+                                    src={getImageSrc(
+                                      data.members[0].profile?.avatar?.url
+                                    )}
+                                    width={0}
+                                    height={0}
+                                    unoptimized
+                                    className="rounded-md object-cover bg-slate-100 w-auto h-auto"
+                                    alt="test"
+                                  /> */}
+                                </div>
+                                <div className="col-span-6">
+                                  <div className="flex flex-col gap-1">
+                                    <h1 className="font-bold">
+                                      {/* {data.members[0].profile.display_name} */}
+                                    </h1>
+                                    <p className="text-sm">
+                                      {/* {data.members[0].profile?.industry} */}
+                                    </p>
+                                    <div className="flex justify-end gap-1 sm:justify-start">
+                                      <Button variant="subtle">
+                                        <Trash />
+                                        <span className="ml-2 text-xs">
+                                          Удалить участника
+                                        </span>
+                                      </Button>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
-                            ))}
+                            </div>
                           </DialogContent>
                         </Dialog>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
-                  <ScrollArea className=" h-[530px]">
-                    <div
-                      className={`my-1 flex flex-col ${
-                        isTrue ? "items-end self-end" : "items-start"
-                      }`}
-                    >
-                      <div
-                        className={`mt-2 max-w-96 rounded-lg px-2 py-1 ${
-                          isTrue ? "bg-lime-400 " : "flex items-end gap-3"
-                        }`}
-                      >
-                        <Image
-                          src={Test}
-                          width={34}
-                          className={` ${isTrue ? "hidden" : ""} rounded-full`}
-                          alt="test"
-                        />
-                        <div
-                          className={`mt-2 rounded-lg px-2 py-1 ${
-                            isTrue
-                              ? "bg-lime-400"
-                              : "grid max-max-w-96 items-end justify-end gap-3 border bg-slate-50"
-                          }`}
-                        >
-                          <p
-                            className={`font-semibold ${
-                              isTrue ? "hidden" : ""
-                            }`}
+                  <ScrollArea
+                    className="h-[530px] overflow-y-scroll"
+                    ref={scrollAreaRef}
+                  >
+                    {messages.map((message) => {
+                      if (message.user_id === data.userId) {
+                        return (
+                          <div
+                            key={message.id}
+                            className="my-1 flex flex-col items-end self-end"
                           >
-                            Ахметов Темирлан
-                          </p>
-                          <>
-                            <p className="text-sm">test message</p>
-                          </>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      className={`my-1 flex flex-col ${
-                        isTrue ? "items-end self-end" : "items-start"
-                      }`}
-                    >
-                      <div
-                        className={`mt-2 max-w-96 rounded-lg px-2 py-1 ${
-                          isTrue ? "bg-lime-400 " : "flex items-end gap-3"
-                        }`}
-                      >
-                        <Image
-                          src={Test}
-                          width={34}
-                          className={` ${isTrue ? "hidden" : ""} rounded-full`}
-                          alt="test"
-                        />
+                            <div className="mt-2 mr-2 rounded-lg p-2 bg-lime-300 grid items-end justify-end gap-3 max-w-md">
+                              <p className="text-sm">{message.message}</p>
+                            </div>
+                          </div>
+                        );
+                      }
+                      return (
                         <div
-                          className={`mt-2 rounded-lg px-2 py-1 ${
-                            isTrue
-                              ? "bg-lime-400"
-                              : "grid max-max-w-96 items-end justify-end gap-3 border bg-slate-50"
-                          }`}
+                          key={message.id}
+                          className="my-1 flex flex-col items-start self-start"
                         >
-                          <p
-                            className={`font-semibold ${
-                              isTrue ? "hidden" : ""
-                            }`}
-                          >
-                            Ахметов Темирлан
-                          </p>
-                          <>
-                            <p className="text-sm">test message</p>
-                          </>
+                          <div className="mt-2 ml-2 rounded-lg p-2 bg-slate-100 grid items-start justify-start gap-2 max-w-md">
+                            <p className="font-medium text-sm">
+                              {message.user.first_name} {message.user.last_name}
+                            </p>
+                            <p className="text-sm">{message.message}</p>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                    <div
-                      className={`my-1 flex flex-col ${
-                        isTrue ? "" : "items-end self-end"
-                      }`}
-                    >
-                      <div
-                        className={`mt-2 max-w-96 rounded-lg px-2 py-1 ${
-                          isTrue ? "bg-lime-400 " : "flex items-end gap-3"
-                        }`}
-                      >
-                        <div
-                          className={`mt-2 rounded-lg px-2 py-1 ${
-                            isTrue
-                              ? "bg-lime-400"
-                              : "grid max-max-w-96 items-end justify-end gap-3 border bg-slate-50"
-                          }`}
-                        >
-                          <p
-                            className={`font-semibold ${
-                              isTrue ? "hidden" : ""
-                            }`}
-                          >
-                            Ахметов Темирлан
-                          </p>
-                          <>
-                            <p className="text-sm">test message</p>
-                          </>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      className={`my-1 flex flex-col ${
-                        isTrue ? "items-end self-end" : "items-start"
-                      }`}
-                    >
-                      <div
-                        className={`mt-2 max-w-96 rounded-lg px-2 py-1 ${
-                          isTrue ? "bg-lime-400 " : "flex items-end gap-3"
-                        }`}
-                      >
-                        <Image
-                          src={Test}
-                          width={34}
-                          className={` ${isTrue ? "hidden" : ""} rounded-full`}
-                          alt="test"
-                        />
-                        <div
-                          className={`mt-2 rounded-lg px-2 py-1 ${
-                            isTrue
-                              ? "bg-lime-400"
-                              : "grid max-max-w-96 items-end justify-end gap-3 border bg-slate-50"
-                          }`}
-                        >
-                          <p
-                            className={`font-semibold ${
-                              isTrue ? "hidden" : ""
-                            }`}
-                          >
-                            Ахметов Темирлан
-                          </p>
-                          <>
-                            <p className="text-sm">test message</p>
-                          </>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      className={`my-1 flex flex-col ${
-                        isTrue ? "items-end self-end" : "items-start"
-                      }`}
-                    >
-                      <div
-                        className={`mt-2 max-w-96 rounded-lg px-2 py-1 ${
-                          isTrue ? "bg-lime-400 " : "flex items-end gap-3"
-                        }`}
-                      >
-                        <Image
-                          src={Test}
-                          width={34}
-                          className={` ${isTrue ? "hidden" : ""} rounded-full`}
-                          alt="test"
-                        />
-                        <div
-                          className={`mt-2 rounded-lg px-2 py-1 ${
-                            isTrue
-                              ? "bg-lime-400"
-                              : "grid max-max-w-96 items-end justify-end gap-3 border bg-slate-50"
-                          }`}
-                        >
-                          <p
-                            className={`font-semibold ${
-                              isTrue ? "hidden" : ""
-                            }`}
-                          >
-                            Ахметов Темирлан
-                          </p>
-                          <>
-                            <p className="text-sm">test message</p>
-                          </>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      className={`my-1 flex flex-col ${
-                        isTrue ? "" : "items-end self-end"
-                      }`}
-                    >
-                      <div
-                        className={`mt-2 max-w-96 rounded-lg px-2 py-1 ${
-                          isTrue ? "bg-lime-400 " : "flex items-end gap-3"
-                        }`}
-                      >
-                        <div
-                          className={`mt-2 rounded-lg px-2 py-1 ${
-                            isTrue
-                              ? "bg-lime-400"
-                              : "grid max-max-w-96 items-end justify-end gap-3 border bg-slate-50"
-                          }`}
-                        >
-                          <p
-                            className={`font-semibold ${
-                              isTrue ? "hidden" : ""
-                            }`}
-                          >
-                            Ахметов Темирлан
-                          </p>
-                          <>
-                            <p className="text-sm">test message</p>
-                          </>
-                        </div>
-                      </div>
-                    </div>
+                      );
+                    })}
                   </ScrollArea>
                   <div className="flex items-center justify-around px-6 pb-3 gap-2">
-                    <TextArea placeholder="Сообщение" className="max-h-11" />
+                    <Input
+                      onChange={(e) => setMessage(e.target.value)}
+                      value={message}
+                      placeholder="Сообщение"
+                      className="max-h-11"
+                    />
                     <Button
                       variant="outline"
+                      onClick={handleSendMessage}
                       className="bg-slate-100 rounded-full"
                     >
                       <Paperclip className="h-5 w-5" />

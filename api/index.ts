@@ -7,8 +7,8 @@ export interface AxiosError extends Error {
     data?: any;
   };
 }
-const API_BASE_URL = "https://limpid.kz/api";
-// const API_BASE_URL = "http://localhost:3000/api";
+// const API_BASE_URL = "https://limpid.kz/api";
+const API_BASE_URL = "http://localhost:3000/api";
 
 class APIClient {
   private axiosInstance = axios.create({
@@ -426,6 +426,39 @@ class APIClient {
     );
   }
 
+  async acceptProjectMember(
+    project_id: number,
+    member_id: number
+  ): Promise<AxiosResponse<{ data?: components["schemas"]["ProjectMember"] }>> {
+    return this.axiosInstance.post(
+      `/projects/${project_id}/members/${member_id}/accept`
+    );
+  }
+
+  async rejectProjectMember(
+    project_id: number,
+    member_id: number,
+    rejection_message?: string
+  ): Promise<AxiosResponse<{ data?: components["schemas"]["ProjectMember"] }>> {
+    const formData = new FormData();
+    if (rejection_message) {
+      formData.append("rejection_message", rejection_message);
+    }
+    return this.axiosInstance.post(
+      `/projects/${project_id}/members/${member_id}/reject`,
+      formData
+    );
+  }
+
+  async deleteProjectMember(
+    project_id: number,
+    member_id: number
+  ): Promise<AxiosResponse<void>> {
+    return this.axiosInstance.delete(
+      `/projects/${project_id}/members/${member_id}`
+    );
+  }
+
   // Chats
   async createChat(
     requestBody: paths["/chats"]["post"]["requestBody"]["content"]["multipart/form-data"],
@@ -473,21 +506,13 @@ class APIClient {
     });
   }
 
-  async postMessage(
-    params: paths["/chats/{chat_id}/messages"]["post"]["parameters"]["path"],
-    requestBody: paths["/chats/{chat_id}/messages"]["post"]["requestBody"]["content"]["multipart/form-data"],
-    config?: AxiosRequestConfig
-  ): Promise<
-    AxiosResponse<{
-      data?: components["schemas"]["Message"];
-    }>
-  > {
-    const { chat_id } = params;
-    return this.axiosInstance.post(
-      `/chats/${chat_id}/messages`,
-      requestBody,
-      config
-    );
+  async sendMessage(
+    chat_id: number,
+    message: string
+  ): Promise<AxiosResponse<{ data?: components["schemas"]["Message"] }>> {
+    const formData = new FormData();
+    formData.append("message", message);
+    return this.axiosInstance.post(`/chats/${chat_id}/messages`, formData);
   }
 
   // Organizations

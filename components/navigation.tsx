@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import React, { Fragment, SVGProps, useEffect, useState } from "react";
 import api from "../api";
 import { components } from "../api/api-paths";
+import getImageSrc from "../hooks/get-image-url";
 import testAva from "../images/avatars/defaultProfile.svg";
 import { Button } from "./primitives/button";
 import {
@@ -18,7 +19,6 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "./primitives/navigation-menu";
-import getImageSrc from "../hooks/get-image-url";
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
