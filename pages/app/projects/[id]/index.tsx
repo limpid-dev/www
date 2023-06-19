@@ -544,11 +544,7 @@ export default function ProjectView({ data }: Props) {
                 {editGeneral ? (
                   <div className="flex flex-col items-center gap-x-8 bg-white pt-5">
                     <Image
-                      src={
-                        data.project.data.logo?.url
-                          ? getImageSrc(data.project.data.logo.url)
-                          : Test
-                      }
+                      src={getImageSrc(data.project.data.logo.url) ?? Test}
                       alt="Photo by Alvaro Pinot"
                       width={0}
                       unoptimized
@@ -621,11 +617,7 @@ export default function ProjectView({ data }: Props) {
                   <>
                     <div className="flex flex-col items-center justify-center pt-12">
                       <Image
-                        src={
-                          data.project.data.logo?.url
-                            ? getImageSrc(data.project.data.logo.url)
-                            : Test
-                        }
+                        src={getImageSrc(data.project.data.logo?.url) ?? Test}
                         alt="Photo by Alvaro Pinot"
                         width={0}
                         unoptimized
@@ -692,9 +684,8 @@ export default function ProjectView({ data }: Props) {
                             <>
                               <Link
                                 href={
-                                  data.project.data.business_plan.url
-                                    ? getImageSrc(data.project.data.logo.url)
-                                    : Test
+                                  getImageSrc(data.project.data.logo?.url) ??
+                                  Test
                                 }
                               >
                                 <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-8 font-semibold hover:border-slate-700">
@@ -781,12 +772,9 @@ export default function ProjectView({ data }: Props) {
                                 <div className="m-auto mt-16 grid">
                                   <Link
                                     href={
-                                      data.project.data.video_introduction.url
-                                        ? getImageSrc(
-                                            data.project.data.video_introduction
-                                              .url
-                                          )
-                                        : Test
+                                      getImageSrc(
+                                        data.project.data.video_introduction.url
+                                      ) ?? Test
                                     }
                                   >
                                     <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-8 font-semibold hover:border-slate-700">
@@ -845,9 +833,11 @@ export default function ProjectView({ data }: Props) {
                                 <div className="grid items-center justify-center gap-4 rounded-lg border border-b-1 hover:border-lime-400 py-6 pl-6 pr-4 sm:grid-cols-10">
                                   <div className="col-span-4">
                                     <Image
-                                      src={getImageSrc(
-                                        member.profile?.avatar?.url
-                                      )}
+                                      src={
+                                        getImageSrc(
+                                          member.profile?.avatar?.url
+                                        ) ?? Test
+                                      }
                                       width={0}
                                       height={0}
                                       unoptimized
@@ -870,7 +860,7 @@ export default function ProjectView({ data }: Props) {
                                   </p>
                                 </div>
                               </Link>
-                              <div className="flex justify-end gap-3 mt-3">
+                              <div className="flex justify-end gap-3 my-3">
                                 <Button
                                   onClick={() =>
                                     handleMemberReject(
@@ -1199,9 +1189,10 @@ export default function ProjectView({ data }: Props) {
                             <DialogHeader className="items-center">
                               <DialogTitle>Участники Обсуждения</DialogTitle>
                             </DialogHeader>
-                            <div className="grid sm:grid-cols-2 gap-6 max-h-[650px] overflow-y-scroll">
-                              {data?.members?.length > 0 ? (
-                                data.members?.map((member) => (
+
+                            {data.members && data.members.length > 0 ? (
+                              <div className="grid sm:grid-cols-2 gap-6 max-h-[650px] overflow-y-scroll">
+                                {data.members?.map((member) => (
                                   <div
                                     key={member.id}
                                     className="grid gap-4 rounded-lg border py-6 pl-6 pr-4 sm:grid-cols-10"
@@ -1241,7 +1232,7 @@ export default function ProjectView({ data }: Props) {
                                             </span>
                                           </Button>
                                         </Link>
-                                        {data.isAuthor ? (
+                                        {data.isAuthor && (
                                           <Button
                                             variant="subtle"
                                             onClick={() =>
@@ -1256,26 +1247,24 @@ export default function ProjectView({ data }: Props) {
                                               Удалить участника
                                             </span>
                                           </Button>
-                                        ) : (
-                                          ""
                                         )}
                                       </div>
                                     </div>
                                   </div>
-                                ))
-                              ) : (
-                                <div>
-                                  <Image
-                                    src={noProfiles}
-                                    className="m-auto"
-                                    alt="text"
-                                  />
-                                  <p className="text-center mt-3 font-medium">
-                                    У вас нет участников
-                                  </p>
-                                </div>
-                              )}
-                            </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <div className="grid gap-6 max-h-[650px] overflow-y-scroll">
+                                <Image
+                                  src={noProfiles}
+                                  className="m-auto"
+                                  alt="text"
+                                />
+                                <p className="text-center mt-3 font-medium">
+                                  У вас нет участников
+                                </p>
+                              </div>
+                            )}
                           </DialogContent>
                         </Dialog>
                       </DropdownMenuContent>
@@ -1319,6 +1308,7 @@ export default function ProjectView({ data }: Props) {
                     />
                     <Button
                       variant="outline"
+                      type="submit"
                       onClick={handleSendMessage}
                       className="bg-slate-100 rounded-full"
                     >
