@@ -20,6 +20,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import api from "../../../../api";
+import { components, paths } from "../../../../api/api-paths";
 import { Navigation } from "../../../../components/navigation";
 import {
   AlertDialog,
@@ -185,7 +186,6 @@ export const getServerSideProps = async (
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 export default function ProjectView({ data }: Props) {
-  const isTrue = true;
   const [isShown, setIsShown] = useState(true);
   const router = useRouter();
   const { id } = router.query;
@@ -194,7 +194,6 @@ export default function ProjectView({ data }: Props) {
   const [largeScreen, setLargeScreen] = useState(false);
   const inputRef = useRef(null);
   const [error, setError] = useState("");
-  const scrollAreaRef = useRef(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -211,9 +210,6 @@ export default function ProjectView({ data }: Props) {
   }, []);
 
   const [messages, setMessages] = useState([]);
-
-  const [scrollCount, setScrollCount] = useState(0);
-  const intervalRef = useRef(null);
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -236,28 +232,6 @@ export default function ProjectView({ data }: Props) {
     const intervalId = setInterval(fetchMessages, 1000);
     return () => clearInterval(intervalId);
   }, [data.project.data.chat_id]);
-
-  useEffect(() => {
-    intervalRef.current = setInterval(() => {
-      const scrollAreaElement = scrollAreaRef.current;
-
-      if (scrollAreaElement) {
-        scrollAreaElement.scrollTo({
-          top: scrollAreaElement.scrollHeight,
-          behavior: "smooth",
-        });
-        setScrollCount((prevCount) => prevCount + 1);
-      }
-    }, 1000);
-
-    return () => clearInterval(intervalRef.current);
-  }, []);
-
-  useEffect(() => {
-    if (scrollCount >= 2) {
-      clearInterval(intervalRef.current);
-    }
-  }, [scrollCount]);
 
   const {
     register,
@@ -444,17 +418,6 @@ export default function ProjectView({ data }: Props) {
       console.error("Error sending message:", error);
     }
   };
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     scrollAreaRef.current.scrollTo({
-  //       top: scrollAreaRef.current.scrollHeight,
-  //       behavior: "smooth",
-  //     });
-  //   }, 1000);
-
-  //   return () => clearInterval(interval);
-  // }, [scrollAreaRef]);
 
   return (
     <div>
@@ -1200,49 +1163,50 @@ export default function ProjectView({ data }: Props) {
                             <DialogHeader className="items-center">
                               <DialogTitle>Участники Обсуждения</DialogTitle>
                             </DialogHeader>
-                            <div className="grid grid-cols-2">
-                              <div className="grid items-center justify-center gap-4 rounded-lg border py-6 pl-6 pr-4 sm:grid-cols-10">
-                                <div className="col-span-4">
-                                  {/* <Image
-                                    src={getImageSrc(
-                                      data.members[0].profile?.avatar?.url
-                                    )}
-                                    width={0}
-                                    height={0}
-                                    unoptimized
-                                    className="rounded-md object-cover bg-slate-100 w-auto h-auto"
-                                    alt="test"
-                                  /> */}
-                                </div>
-                                <div className="col-span-6">
-                                  <div className="flex flex-col gap-1">
-                                    <h1 className="font-bold">
-                                      {/* {data.members[0].profile.display_name} */}
-                                    </h1>
-                                    <p className="text-sm">
-                                      {/* {data.members[0].profile?.industry} */}
-                                    </p>
-                                    <div className="flex justify-end gap-1 sm:justify-start">
-                                      <Button variant="subtle">
-                                        <Trash />
-                                        <span className="ml-2 text-xs">
-                                          Удалить участника
-                                        </span>
-                                      </Button>
+                            {data.members?.map((member) => {
+                              return (
+                                <div className="grid grid-cols-2">
+                                  <div className="grid items-center justify-center gap-4 rounded-lg border py-6 pl-6 pr-4 sm:grid-cols-10">
+                                    <div className="col-span-4">
+                                      <Image
+                                        src={getImageSrc(
+                                          member.profile?.avatar?.url
+                                        )}
+                                        width={0}
+                                        height={0}
+                                        unoptimized
+                                        className="rounded-md object-cover bg-slate-100 w-auto h-auto"
+                                        alt="test"
+                                      />
+                                    </div>
+                                    <div className="col-span-6">
+                                      <div className="flex flex-col gap-2">
+                                        <h1 className="font-bold">
+                                          {member.profile?.display_name}
+                                        </h1>
+                                        <p className="text-xs">
+                                          {member.profile?.industry}
+                                        </p>
+                                        <div className="flex justify-end gap-1 sm:justify-start">
+                                          <Button variant="subtle">
+                                            <Trash />
+                                            <span className="ml-2 text-xs">
+                                              Удалить участника
+                                            </span>
+                                          </Button>
+                                        </div>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                            </div>
+                              );
+                            })}
                           </DialogContent>
                         </Dialog>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
-                  <ScrollArea
-                    className="h-[530px] overflow-y-scroll"
-                    ref={scrollAreaRef}
-                  >
+                  <ScrollArea className="h-[530px] overflow-y-scroll">
                     {messages.map((message) => {
                       if (message.user_id === data.userId) {
                         return (
