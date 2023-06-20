@@ -111,9 +111,9 @@ const navigation = [
   { name: "Проекты", href: "/app/projects" },
   { name: "Профили", href: "/app/profiles" },
   { name: "Организации", href: "/app/organizations" },
-  { name: "Продажи", href: "/app/auctions" },
-  { name: "Закупки", href: "/app/tenders" },
-  { name: "Чаты", href: "/app/chats" },
+  // { name: "Продажи", href: "/app/auctions" },
+  // { name: "Закупки", href: "/app/tenders" },
+  // // { name: "Чаты", href: "/app/chats" },
 ];
 
 const userNavigation = [{ name: "Настройки", href: "/app/settings" }];
@@ -255,7 +255,7 @@ export function Navigation() {
                         </ul>
                       </NavigationMenuContent>
                     </NavigationMenuItem>
-                    <NavigationMenuItem>
+                    {/* <NavigationMenuItem>
                       <Link href="/app/projects" legacyBehavior passHref>
                         <NavigationMenuLink
                           className={navigationMenuTriggerStyle()}
@@ -272,7 +272,7 @@ export function Navigation() {
                           Чаты
                         </NavigationMenuLink>
                       </Link>
-                    </NavigationMenuItem>
+                    </NavigationMenuItem> */}
                   </NavigationMenuList>
                 </NavigationMenu>
               </nav>
