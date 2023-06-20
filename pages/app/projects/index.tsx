@@ -55,10 +55,12 @@ export default function All() {
       setSelectedCheckboxes([...selectedCheckboxes, value]);
     }
   };
+
   const handleReset = () => {
     setSelectedCheckboxes([]);
     setSearchTerm("");
   };
+
   const [totalItems, setTotalItems] = useState<any>(1);
   const [data, setData] = useState<any>();
   const [loading, setLoading] = useState(true);
@@ -73,6 +75,7 @@ export default function All() {
   };
 
   const [searchTerm, setSearchTerm] = useState("");
+
   const [largeScreen, setLargeScreen] = useState(false);
   useEffect(() => {
     handleSearch();
@@ -103,6 +106,8 @@ export default function All() {
     );
 
     setData(profileDataArray);
+    setTotalItems(data.meta.total);
+
   };
 
   const handleRoute = async (project_id) => {

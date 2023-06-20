@@ -1776,6 +1776,51 @@ export interface paths {
       };
     };
   };
+  "/payments": {
+    get: {
+      responses: {
+        /** @description Sub_plans */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["SubPlans"][];
+            };
+          };
+        };
+      };
+    };
+    post: {
+      responses: {
+        /** @description Invoices */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["Invoices"][];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/payments/{sub_plan_id}": {
+    get: {
+      parameters: {
+        path: {
+          sub_plan_id: number;
+        };
+      };
+      responses: {
+        /** @description Invoices */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["Invoices"][];
+            };
+          };
+        };
+      };
+    };
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -1997,6 +2042,38 @@ export interface components {
       read_at?: string | null;
       /** Format: date-time */
       send_at?: string;
+    };
+    SubPlans: {
+      id?: number;
+      name?: string;
+      amount?: number;
+      projects_attempts?: number;
+      auctions_attempts?: number;
+      duration?: number;
+      /** Format: date-time */
+      created_at?: string;
+      /** Format: date-time */
+      updated_at?: string;
+    };
+    Invoices: {
+      id?: number;
+      user_id?: number;
+      plan_id?: number;
+      amount?: number;
+      currency?: string;
+      description?: string;
+      post_link?: string;
+      language?: string;
+      terminal?: string;
+      status?: string;
+      pay_id?: string;
+      cancel_token?: string;
+      check_url?: string;
+      invoice_id?: number;
+      /** Format: date-time */
+      created_at?: string;
+      /** Format: date-time */
+      updated_at?: string;
     };
   };
   responses: never;

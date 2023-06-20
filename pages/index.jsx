@@ -573,7 +573,7 @@ export function Footer() {
             <div className="-my-1 flex justify-center gap-x-6">
               <NavLink href="#features">{t("opportunities")}</NavLink>
               <NavLink href="#testimonials">{t("reviews")}</NavLink>
-              {/* <NavLink href="#pricing">{t("prices")}</NavLink> */}
+              <NavLink href="#pricing">{t("prices")}</NavLink>
             </div>
           </nav>
         </div>
@@ -671,6 +671,28 @@ export function Pricing() {
     { value: "annually", label: t("year"), priceSuffix: t("yearSuffix") },
   ];
 
+  const handlePayment = async (id) => {
+    const { data: response } = await api.getInvoices(id);
+    halyk.pay({
+      invoiceId: response.invoice.invoice_id,
+      language: response.invoice.language,
+      description: response.invoice.description,
+      terminal: response.invoice.terminal,
+      amount: response.invoice.amount,
+      currency: response.invoice.currency,
+      accountId: response.invoice.user_id,
+      auth: response.data,
+      postLink: "https://2299-45-86-82-147.ngrok-free.app",
+      failurePostLink: "http://localhost:3333/refused-payment",
+      cardSave: true,
+      backLink: "http://localhost:5500/",
+      failureBackLink: "",
+    });
+    if (response) {
+      console.log(response);
+    }
+  };
+
   const tiers = [
     {
       name: "START",
@@ -700,7 +722,11 @@ export function Pricing() {
     {
       name: "LIGHT",
       id: "tier-light",
-      href: "#",
+      href: {
+        monthly: "1",
+        annually: "3",
+        kvartal: "2",
+      },
       price: { monthly: "4990₸", annually: "37 990₸", kvartal: "12 990₸" },
       description: t("for_beginners"),
       features: {
@@ -959,8 +985,10 @@ export function Pricing() {
                 {tier.name === "START" ? (
                   ""
                 ) : (
-                  <a
-                    href={tier.href}
+                  <button
+                    onClick={() => {
+                      handlePayment(tier.href[frequency.value]);
+                    }}
                     aria-describedby={tier.id}
                     className={classNames(
                       tier.mostPopular
@@ -970,7 +998,7 @@ export function Pricing() {
                     )}
                   >
                     {t("start_now")}
-                  </a>
+                  </button>
                 )}
                 <ul className="mt-8 space-y-3 text-sm leading-6 text-gray-300 xl:mt-10">
                   {tier.features[frequency.value].map((feature) => (
@@ -1121,7 +1149,7 @@ function MobileNavigation() {
           >
             <MobileNavLink href="#features">{t("opportunities")}</MobileNavLink>
             <MobileNavLink href="#testimonials">{t("reviews")}</MobileNavLink>
-            {/* <MobileNavLink href="#pricing">{t("prices")}</MobileNavLink> */}
+            <MobileNavLink href="#pricing">{t("prices")}</MobileNavLink>
             <hr className="m-2 border-zinc-300/40" />
             <MobileNavLink href="/login">{t("log_in")}</MobileNavLink>
           </Popover.Panel>
@@ -1163,7 +1191,7 @@ export function Header() {
             <div className="hidden md:flex md:gap-x-6">
               <NavLink href="#features">{t("opportunities")}</NavLink>
               <NavLink href="#testimonials">{t("reviews")}</NavLink>
-              {/* <NavLink href="#pricing">{t("prices")}</NavLink> */}
+              <NavLink href="#pricing">{t("prices")}</NavLink>
             </div>
           </div>
           <div className="flex items-center gap-x-5 md:gap-x-8">
@@ -1347,7 +1375,7 @@ export default function Home() {
         </Container>
       </section>
 
-      {/* <Pricing /> */}
+      <Pricing />
       <Footer />
     </>
   );

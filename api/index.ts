@@ -603,6 +603,13 @@ class APIClient {
   > {
     return this.axiosInstance.get("/auctions", { params, ...config });
   }
+
+  // Payments
+  async getInvoices(
+    sub_plan_id: number
+  ): Promise<AxiosResponse<{ data?: components["schemas"]["Invoices"][] }>> {
+    return this.axiosInstance.get(`/payments/${sub_plan_id}`);
+  }
 }
 
 const api = new APIClient();
