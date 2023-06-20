@@ -47,12 +47,12 @@ const ListItem = React.forwardRef<
 ListItem.displayName = "ListItem";
 
 const components: { title: string; href: string; description: string }[] = [
-  // {
-  //   title: "Продажи",
-  //   href: "/app/auctions",
-  //   description:
-  //     "Аукцион продаж - процесс конкурентной продажи товаров или услуг, где участники предлагают наивысшую цену за лоты, предоставленные продавцом.",
-  // },
+  {
+    title: "Продажи",
+    href: "/app/auctions",
+    description:
+      "Аукцион продаж - процесс конкурентной продажи товаров или услуг, где участники предлагают наивысшую цену за лоты, предоставленные продавцом.",
+  },
   {
     title: "Закупки",
     href: "/app/tenders",
@@ -111,10 +111,11 @@ const navigation = [
   { name: "Проекты", href: "/app/projects" },
   { name: "Профили", href: "/app/profiles" },
   { name: "Организации", href: "/app/organizations" },
-  // { name: "Продажи", href: "/app/auctions" },
+  { name: "Продажи", href: "/app/auctions" },
   { name: "Закупки", href: "/app/tenders" },
-  // { name: "Чаты", href: "/app/chats" },
+  { name: "Чаты", href: "/app/chats" },
 ];
+
 const userNavigation = [{ name: "Настройки", href: "/app/settings" }];
 
 export function Navigation() {
@@ -203,24 +204,6 @@ export function Navigation() {
               >
                 <NavigationMenu>
                   <NavigationMenuList>
-                    {/* <NavigationMenuItem>
-                      <Link href="/app/chats" legacyBehavior passHref>
-                        <NavigationMenuLink
-                          className={navigationMenuTriggerStyle()}
-                        >
-                          Чаты
-                        </NavigationMenuLink>
-                      </Link>
-                    </NavigationMenuItem> */}
-                    <NavigationMenuItem>
-                      <Link href="/app/projects" legacyBehavior passHref>
-                        <NavigationMenuLink
-                          className={navigationMenuTriggerStyle()}
-                        >
-                          Проекты
-                        </NavigationMenuLink>
-                      </Link>
-                    </NavigationMenuItem>
                     <NavigationMenuItem>
                       <NavigationMenuTrigger>Профили</NavigationMenuTrigger>
                       <NavigationMenuContent>
@@ -271,6 +254,24 @@ export function Navigation() {
                           ))}
                         </ul>
                       </NavigationMenuContent>
+                    </NavigationMenuItem>
+                    <NavigationMenuItem>
+                      <Link href="/app/projects" legacyBehavior passHref>
+                        <NavigationMenuLink
+                          className={navigationMenuTriggerStyle()}
+                        >
+                          Проекты
+                        </NavigationMenuLink>
+                      </Link>
+                    </NavigationMenuItem>
+                    <NavigationMenuItem>
+                      <Link href="/app/chats" legacyBehavior passHref>
+                        <NavigationMenuLink
+                          className={navigationMenuTriggerStyle()}
+                        >
+                          Чаты
+                        </NavigationMenuLink>
+                      </Link>
                     </NavigationMenuItem>
                   </NavigationMenuList>
                 </NavigationMenu>
