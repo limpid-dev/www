@@ -682,15 +682,12 @@ export function Pricing() {
       currency: response.invoice.currency,
       accountId: response.invoice.user_id,
       auth: response.data,
-      postLink: "https://2299-45-86-82-147.ngrok-free.app",
+      postLink: response.invoice.post_link,
       failurePostLink: "http://localhost:3333/refused-payment",
       cardSave: true,
       backLink: "http://localhost:5500/",
       failureBackLink: "",
     });
-    if (response) {
-      console.log(response);
-    }
   };
 
   const tiers = [
