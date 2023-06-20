@@ -255,7 +255,7 @@ export function Navigation() {
                         </ul>
                       </NavigationMenuContent>
                     </NavigationMenuItem>
-                    {/* <NavigationMenuItem>
+                    <NavigationMenuItem>
                       <Link href="/app/projects" legacyBehavior passHref>
                         <NavigationMenuLink
                           className={navigationMenuTriggerStyle()}
@@ -272,7 +272,7 @@ export function Navigation() {
                           Чаты
                         </NavigationMenuLink>
                       </Link>
-                    </NavigationMenuItem> */}
+                    </NavigationMenuItem>
                   </NavigationMenuList>
                 </NavigationMenu>
               </nav>
