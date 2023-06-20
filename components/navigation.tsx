@@ -46,20 +46,20 @@ const ListItem = React.forwardRef<
 });
 ListItem.displayName = "ListItem";
 
-// const components: { title: string; href: string; description: string }[] = [
-//   {
-//     title: "Продажи",
-//     href: "/app/auctions",
-//     description:
-//       "Аукцион продаж - процесс конкурентной продажи товаров или услуг, где участники предлагают наивысшую цену за лоты, предоставленные продавцом.",
-//   },
-//   {
-//     title: "Закупки",
-//     href: "/app/tenders",
-//     description:
-//       "Аукцион закупок - это процесс конкурентного приобретения товаров или услуг, где потенциальные поставщики соревнуются друг с другом, предлагая наилучшие условия и цены для выполнения заказа.",
-//   },
-// ];
+const components: { title: string; href: string; description: string }[] = [
+  // {
+  //   title: "Продажи",
+  //   href: "/app/auctions",
+  //   description:
+  //     "Аукцион продаж - процесс конкурентной продажи товаров или услуг, где участники предлагают наивысшую цену за лоты, предоставленные продавцом.",
+  // },
+  {
+    title: "Закупки",
+    href: "/app/tenders",
+    description:
+      "Аукцион закупок - это процесс конкурентного приобретения товаров или услуг, где потенциальные поставщики соревнуются друг с другом, предлагая наилучшие условия и цены для выполнения заказа.",
+  },
+];
 
 export function Logo(props: SVGProps<SVGSVGElement>) {
   return (
@@ -111,8 +111,8 @@ const navigation = [
   { name: "Проекты", href: "/app/projects" },
   { name: "Профили", href: "/app/profiles" },
   { name: "Организации", href: "/app/organizations" },
-  // { name: "Закупки", href: "/app/auctions" },
-  // { name: "Продажи", href: "/app/tenders" },
+  // { name: "Продажи", href: "/app/auctions" },
+  { name: "Закупки", href: "/app/tenders" },
   // { name: "Чаты", href: "/app/chats" },
 ];
 const userNavigation = [{ name: "Настройки", href: "/app/settings" }];
@@ -256,7 +256,7 @@ export function Navigation() {
                         </ul>
                       </NavigationMenuContent>
                     </NavigationMenuItem>
-                    {/* <NavigationMenuItem>
+                    <NavigationMenuItem>
                       <NavigationMenuTrigger>Аукционы</NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <ul className="grid w-[400px] gap-3 p-4 md:w-[400px] md:grid-cols-1">
@@ -271,7 +271,7 @@ export function Navigation() {
                           ))}
                         </ul>
                       </NavigationMenuContent>
-                    </NavigationMenuItem> */}
+                    </NavigationMenuItem>
                   </NavigationMenuList>
                 </NavigationMenu>
               </nav>

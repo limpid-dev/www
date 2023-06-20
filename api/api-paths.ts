@@ -1281,7 +1281,7 @@ export interface paths {
           page: number;
           per_page?: number;
           user_id?: number;
-          industry?: string[];
+          industry?: string;
           search?: string;
         };
       };

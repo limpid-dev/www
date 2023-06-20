@@ -32,8 +32,8 @@ import {
   SheetTrigger,
 } from "../../../components/primitives/sheet";
 import { Skeleton } from "../../../components/primitives/skeleton";
-import testAva from "../../../images/projectDefault.svg";
 import getImageSrc from "../../../hooks/get-image-url";
+import testAva from "../../../images/projectDefault.svg";
 
 const tabs = [
   { name: "Все проекты", href: "/app/projects/", current: true },
@@ -107,7 +107,6 @@ export default function All() {
 
     setData(profileDataArray);
     setTotalItems(data.meta.total);
-
   };
 
   const handleRoute = async (project_id) => {

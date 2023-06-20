@@ -4,7 +4,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import api from "../../../api";
 import { GeneralLayout } from "../../../components/general-layout";
 import { Navigation } from "../../../components/navigation";
@@ -25,8 +25,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../../../components/primitives/sheet";
-import DefaultAvatar from "../../../images/avatars/defaultProfile.svg";
 import getImageSrc from "../../../hooks/get-image-url";
+import DefaultAvatar from "../../../images/avatars/defaultProfile.svg";
 
 const tabs = [
   { name: "Все профили", href: "/app/profiles/", current: true },
@@ -75,7 +75,7 @@ export default function Profiles() {
     }
   };
 
-  const handleSearch = async () => {
+  const handleSearch = useCallback(async () => {
     const industries = selectedCheckboxes
       .map((id) => {
         const option = Options.find((option) => option.id === id);
@@ -83,38 +83,21 @@ export default function Profiles() {
       })
       .filter(Boolean);
 
+    const industryString = industries.join(",");
+
     const { data } = await api.getProfiles({
       page: currentPage,
       per_page: 9,
-      industry: industries,
+      industry: industryString,
       search: searchTerm,
     });
 
     setProfilesData(data.data);
-  };
+  }, [selectedCheckboxes, currentPage, searchTerm]);
 
   useEffect(() => {
     handleSearch();
-  }, [selectedCheckboxes, searchTerm]);
-
-  useEffect(() => {
-    async function getProfiles() {
-      try {
-        const response = await api.getProfiles({
-          page: currentPage,
-          per_page: 9,
-        });
-        const data = response.data.data;
-        if (data.length > 0) {
-          setProfilesData(data);
-          setTotalItems(response.data.meta.total);
-        }
-      } catch (error) {
-        console.error("Error fetching profiles:", error);
-      }
-    }
-    getProfiles();
-  }, [currentPage]);
+  }, [selectedCheckboxes, searchTerm, handleSearch]);
 
   return (
     <div>

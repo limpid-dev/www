@@ -4,11 +4,12 @@ import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import api from "../../../api";
 import { components } from "../../../api/api-paths";
 import { GeneralLayout } from "../../../components/general-layout";
 import { Navigation } from "../../../components/navigation";
+import Pagination from "../../../components/pagination";
 import { Button } from "../../../components/primitives/button";
 import { Options } from "../../../components/primitives/options";
 import {
@@ -26,8 +27,8 @@ import {
   SheetTrigger,
 } from "../../../components/primitives/sheet";
 import { Skeleton } from "../../../components/primitives/skeleton";
-import DefaultAvatar from "../../../images/avatars/defaultProfile.svg";
 import getImageSrc from "../../../hooks/get-image-url";
+import DefaultAvatar from "../../../images/avatars/defaultProfile.svg";
 
 const tabs = [
   { name: "Все организации", href: "/app/organizations/", current: true },
@@ -36,7 +37,7 @@ const tabs = [
 
 export default function All() {
   const router = useRouter();
-
+  const [totalItems, setTotalItems] = useState<any>(1);
   const [loading, setLoading] = useState(true);
   const [profilesData, setProfilesData] =
     useState<components["schemas"]["Profile"][]>();
@@ -44,6 +45,8 @@ export default function All() {
     const selectedPage = event.target.value;
     router.push(selectedPage);
   };
+  const currentPage =
+    (Number.parseInt(router.query.page as string, 10) as number) || 1;
 
   const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -57,7 +60,7 @@ export default function All() {
     }
   };
 
-  const handleSearch = async () => {
+  const handleSearch = useCallback(async () => {
     const industries = selectedCheckboxes
       .map((id) => {
         const option = Options.find((option) => option.id === id);
@@ -65,20 +68,22 @@ export default function All() {
       })
       .filter(Boolean);
 
+    const industryString = industries.join(",");
+
     const { data } = await api.getOrganizations({
-      page: 1,
+      page: currentPage,
       per_page: 9,
-      industry: industries,
+      industry: industryString,
       search: searchTerm,
     });
 
     setProfilesData(data.data);
     setLoading(false);
-  };
+  }, [selectedCheckboxes, currentPage, searchTerm]);
 
   useEffect(() => {
     handleSearch();
-  }, [selectedCheckboxes, searchTerm]);
+  }, [selectedCheckboxes, searchTerm, handleSearch]);
 
   const handleReset = () => {
     setSelectedCheckboxes([]);
@@ -284,6 +289,12 @@ export default function All() {
           )}
         </div>
       </GeneralLayout>
+      <Pagination
+        renderPageLink={(page) => `/app/projects/?page=${page}`}
+        itemsPerPage={6}
+        totalItems={totalItems}
+        currentPage={currentPage}
+      />
     </>
   );
 }

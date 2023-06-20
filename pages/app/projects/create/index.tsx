@@ -184,6 +184,7 @@ export default function Create() {
                       {...register("required_money_amount", {})}
                     />
                     <Input
+                      type="number"
                       placeholder="Сумма в собственности"
                       {...register("owned_money_amount", {})}
                     />
