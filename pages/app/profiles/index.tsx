@@ -36,7 +36,7 @@ const tabs = [
 export default function Profiles() {
   const router = useRouter();
   const [profilesData, setProfilesData] = useState<any[]>([]);
-  const [totalItems, setTotalItems] = useState<number>(1);
+  const [totalItems, setTotalItems] = useState<any>(1);
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>): void => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
@@ -93,6 +93,7 @@ export default function Profiles() {
     });
 
     setProfilesData(data.data);
+    setTotalItems(data.meta.total);
   }, [selectedCheckboxes, currentPage, searchTerm]);
 
   useEffect(() => {

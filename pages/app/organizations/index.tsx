@@ -77,6 +77,7 @@ export default function All() {
       search: searchTerm,
     });
 
+    setTotalItems(data.meta.total);
     setProfilesData(data.data);
     setLoading(false);
   }, [selectedCheckboxes, currentPage, searchTerm]);
