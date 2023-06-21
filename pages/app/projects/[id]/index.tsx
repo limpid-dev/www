@@ -544,7 +544,7 @@ export default function ProjectView({ data }: Props) {
                 {editGeneral ? (
                   <div className="flex flex-col items-center gap-x-8 bg-white pt-5">
                     <Image
-                      src={getImageSrc(data.project.data.logo.url) ?? Test}
+                      src={getImageSrc(data.project.data.logo?.url) ?? Test}
                       alt="Photo by Alvaro Pinot"
                       width={0}
                       unoptimized
@@ -848,10 +848,10 @@ export default function ProjectView({ data }: Props) {
                                   <div className="col-span-6">
                                     <div className="flex flex-col gap-1">
                                       <h1 className="font-bold">
-                                        {member?.profile?.display_name}
+                                        {member.profile?.display_name}
                                       </h1>
                                       <p className="text-xs">
-                                        {member?.profile?.industry}
+                                        {member.profile?.industry}
                                       </p>
                                     </div>
                                   </div>
@@ -1192,7 +1192,7 @@ export default function ProjectView({ data }: Props) {
 
                             {data.members && data.members.length > 0 ? (
                               <div className="grid sm:grid-cols-2 gap-6 max-h-[650px] overflow-y-scroll">
-                                {data.members?.map((member) => (
+                                {data.members.map((member) => (
                                   <div
                                     key={member.id}
                                     className="grid gap-4 rounded-lg border py-6 pl-6 pr-4 sm:grid-cols-10"
@@ -1201,7 +1201,7 @@ export default function ProjectView({ data }: Props) {
                                       <Image
                                         src={
                                           getImageSrc(
-                                            member?.profile?.avatar?.url
+                                            member.profile?.avatar?.url
                                           ) ?? Test
                                         }
                                         width={0}

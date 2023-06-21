@@ -43,7 +43,10 @@ export default function Create() {
       purchase_price: data.purchase_price,
     });
     if (auction.data?.id) {
-      console.log("success");
+      router.push({
+        pathname: "/app/auctions/create/files",
+        query: { auctionId: auction.data.profile_id },
+      });
     }
   };
 

@@ -27,15 +27,16 @@ export default function Create() {
   } = useForm<FormValues>({});
 
   const onSubmit = async (data1: FormValues) => {
+    const formData = {
+      logo: data1.logo[0],
+      video_introduction: data1.video_introduction[0],
+      presentation: data1.presentation[0],
+      business_plan: data1.business_plan[0],
+    };
     try {
       const { data } = await api.updateProject(
         { project_id: parsedProjectId },
-        {
-          logo: data1.logo[0],
-          video_introduction: data1.video_introduction[0],
-          presentation: data1.presentation[0],
-          business_plan: data1.business_plan[0],
-        }
+        formData
       );
       if (data.data) {
         await router.push(`/app/projects/${parsedProjectId}`);

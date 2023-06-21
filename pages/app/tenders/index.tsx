@@ -39,7 +39,6 @@ export default function Tenders() {
           query: { page: 1, per_page: 9 },
         });
         setTenders(response.data.data || []);
-        console.log(tenders);
         setLoading(false);
       } catch (error) {
         setError("Error fetching tenders.");

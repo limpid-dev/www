@@ -44,7 +44,7 @@ export default function All() {
     <div>
       <Navigation />
       <div className="h-screen bg-slate-50 px-5 pt-8">
-        <div className="mx-auto max-w-screen-xl">
+        {/* <div className="mx-auto max-w-screen-xl">
           <p className=" text-sm">
             <span className="text-slate-300">Продажи</span>
           </p>
@@ -108,9 +108,6 @@ export default function All() {
                     <p className="text-base font-semibold">
                       Менеджер по туризму
                     </p>
-                    {/* <p className="rounded-2xl bg-lime-500 px-2 py-1 text-xs font-bold text-slate-100">
-                      в ТОПе
-                    </p> */}
                   </div>
                   <div className="grid grid-cols-2 gap-y-2.5">
                     <p className="text-sm text-slate-400">Заявки</p>
@@ -136,7 +133,7 @@ export default function All() {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

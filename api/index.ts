@@ -614,6 +614,24 @@ class APIClient {
     return this.axiosInstance.post("/auctions", body);
   }
 
+  async updateAuction(
+    auctionId: number,
+    auctionData: paths["/auctions/{auction_id}"]["patch"]["requestBody"]["content"]["multipart/form-data"]
+  ): Promise<AxiosResponse<{ data?: components["schemas"]["Auction"] }>> {
+    const formData = new FormData();
+    Object.entries(auctionData).forEach(([key, value]) => {
+      if (value) {
+        if (value instanceof File) {
+          formData.append(key, value);
+        } else if (typeof value === "string" || typeof value === "number") {
+          formData.append(key, String(value));
+        }
+      }
+    });
+
+    return this.axiosInstance.patch(`/auctions/${auctionId}`, formData);
+  }
+
   //Tenders
   async getTenders(
     params: paths["/tenders"]["get"]["parameters"],

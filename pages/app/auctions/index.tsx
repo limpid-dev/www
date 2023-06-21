@@ -2,7 +2,9 @@ import { CaretRight, Faders, SquaresFour } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import api from "../../../api";
+import { components } from "../../../api/api-paths";
 import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
 
@@ -19,6 +21,36 @@ export default function All() {
     const selectedPage = event.target.value;
     router.push(selectedPage);
   };
+
+  const [tenders, setTenders] = useState<components["schemas"]["Tender"][]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>("");
+
+  useEffect(() => {
+    const fetchTenders = async () => {
+      try {
+        const response = await api.getAuctions({
+          page: 1,
+          per_page: 9,
+        });
+        setTenders(response.data.data || []);
+        setLoading(false);
+      } catch (error) {
+        setError("Error fetching tenders.");
+        setLoading(false);
+      }
+    };
+
+    fetchTenders();
+  }, []);
+
+  if (loading) {
+    return <div>Loading tenders...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <div>

@@ -177,7 +177,7 @@ export default function TendersMy({ data }: Props) {
                     >
                       {tab.name}
                     </a>
-                  ))}
+                  ))} 
                 </nav>
               </div>
             </div>{" "}
