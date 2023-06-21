@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
+import api from "../../../../api";
 import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";
 import { Input } from "../../../../components/primitives/input";
@@ -20,10 +21,10 @@ interface FormValues {
   title: string;
   description: string;
   industry: string;
-  finishedAt: string;
-  type: string;
-  startingPrice: number;
-  purchasePrice: number;
+  duration: number;
+  purchase_type: string;
+  starting_price: number;
+  technical_specification: FileList;
 }
 
 export default function Create() {
@@ -31,7 +32,25 @@ export default function Create() {
 
   const { register, handleSubmit, control } = useForm<FormValues>({});
 
-  const onSubmit = async (data: FormValues) => {};
+  const onSubmit = async (data: FormValues) => {
+    const formData = new FormData();
+    formData.append("title", data.title);
+    formData.append("description", data.description);
+    formData.append("industry", data.industry);
+    formData.append("purchase_type", data.purchase_type);
+    formData.append("duration", `P${data.duration}D`);
+    formData.append("starting_price", String(data.starting_price));
+    formData.append("technical_specification", data.technical_specification[0]);
+
+    try {
+      const response = await api.createTender(formData);
+      if (response.data.data?.id) {
+        console.log("Success");
+      }
+    } catch (error) {
+      console.error("Error creating tender:", error);
+    }
+  };
 
   return (
     <>
@@ -48,14 +67,6 @@ export default function Create() {
           </div>
 
           <div className="rounded-lg bg-white shadow-sm">
-            <div className="flex divide-x overflow-auto gap-4 px-5">
-              <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-lime-600 text-lg sm:text-xl">
-                Общие данные
-              </div>
-              <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-lg sm:text-xl">
-                Документация
-              </div>
-            </div>
             <form
               onSubmit={handleSubmit(onSubmit)}
               className="p-10 max-w-screen-md mx-auto"
@@ -81,13 +92,14 @@ export default function Create() {
                 <TextArea
                   required
                   placeholder="Описание аукциона закупок"
+                  {...register("description")}
                   minLength={1}
                   maxLength={1024}
                 />
                 <div className="grid gap-4 sm:grid-cols-2 mt-4">
                   <Controller
                     control={control}
-                    name="type"
+                    name="purchase_type"
                     render={({ field }) => (
                       <Select
                         value={field.value}
@@ -133,19 +145,36 @@ export default function Create() {
                     )}
                   />
                   <Input
+                    {...register("duration", {
+                      valueAsNumber: true,
+                    })}
                     type="number"
                     required
                     placeholder="Длительность приема заявок (в днях)"
                     min={1}
                     max={21}
                   />
+                  <Input
+                    {...register("starting_price", {
+                      valueAsNumber: true,
+                    })}
+                    type="number"
+                    required
+                    placeholder="Стартовая цены"
+                    min={1}
+                    max={21}
+                  />
                 </div>
               </div>
+              <p className="ml-1 font-medium">Тех задание</p>
+              <Input {...register("technical_specification")} type="file" />
               <div className="flex justify-end gap-3 pt-4 ">
                 <Link href="/app/projects/my">
-                  <Button>Отмена</Button>
+                  <Button variant="subtle">Отмена</Button>
                 </Link>
-                <Button type="submit">Далее</Button>
+                <Button variant="black" type="submit">
+                  Далее
+                </Button>
               </div>
             </form>
           </div>

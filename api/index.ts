@@ -8,8 +8,8 @@ export interface AxiosError extends Error {
   };
 }
 
-const API_BASE_URL = "https://limpid.kz/api";
-// const API_BASE_URL = "http://localhost:3000/api";
+// const API_BASE_URL = "https://limpid.kz/api";
+const API_BASE_URL = "http://localhost:3000/api";
 
 class APIClient {
   private axiosInstance = axios.create({
@@ -388,7 +388,6 @@ class APIClient {
         }
       }
     });
-
     return this.axiosInstance.patch(`/projects/${project_id}`, formData);
   }
 
@@ -603,6 +602,43 @@ class APIClient {
     }>
   > {
     return this.axiosInstance.get("/auctions", { params, ...config });
+  }
+
+  async createAuction(
+    body: paths["/auctions"]["post"]["requestBody"]["content"]["multipart/form-data"]
+  ): Promise<
+    AxiosResponse<{
+      data?: components["schemas"]["Auction"];
+    }>
+  > {
+    return this.axiosInstance.post("/auctions", body);
+  }
+
+  //Tenders
+  async getTenders(
+    params: paths["/tenders"]["get"]["parameters"],
+    config?: AxiosRequestConfig
+  ): Promise<
+    AxiosResponse<{
+      meta?: components["schemas"]["Pagination"];
+      data?: components["schemas"]["Tender"][];
+    }>
+  > {
+    const { query: queryParams } = params;
+    return this.axiosInstance.get("/tenders", {
+      ...config,
+      params: queryParams,
+    });
+  }
+
+  async createTender(
+    body: paths["/tenders"]["post"]["requestBody"]["content"]["multipart/form-data"]
+  ): Promise<
+    AxiosResponse<{
+      data?: components["schemas"]["Tender"];
+    }>
+  > {
+    return this.axiosInstance.post("/tenders", body);
   }
 
   // Payments

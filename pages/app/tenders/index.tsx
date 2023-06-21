@@ -3,7 +3,9 @@ import clsx from "clsx";
 import { InferGetServerSidePropsType } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import api from "../../../api";
+import { components } from "../../../api/api-paths";
 import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
 import {
@@ -14,34 +16,6 @@ import {
   CardHeader,
   CardTitle,
 } from "../../../components/primitives/card";
-
-const calcTime = (date: string) => {
-  const now = new Date();
-
-  const finish = new Date(date);
-
-  const diff = finish.getTime() - now.getTime();
-
-  const hours = Math.floor(diff / 1000 / 60 / 60);
-
-  return hours > 0 ? hours : 0;
-};
-
-// export async function getServerSideProps() {
-//   const { data, meta } = await api.tenders.index({
-//     page: 1,
-//     perPage: 100,
-//   });
-
-//   return {
-//     props: {
-//       data: data!,
-//       meta: meta!,
-//     },
-//   };
-// }
-
-// type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 const tabs = [
   { name: "Все закупки", href: "/app/tenders", current: true },
@@ -54,6 +28,36 @@ export default function Tenders() {
     router.push(selectedPage);
   };
   const router = useRouter();
+  const [tenders, setTenders] = useState<components["schemas"]["Tender"][]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>("");
+
+  useEffect(() => {
+    const fetchTenders = async () => {
+      try {
+        const response = await api.getTenders({
+          query: { page: 1, per_page: 9 },
+        });
+        setTenders(response.data.data || []);
+        console.log(tenders);
+        setLoading(false);
+      } catch (error) {
+        setError("Error fetching tenders.");
+        setLoading(false);
+      }
+    };
+
+    fetchTenders();
+  }, []);
+
+  if (loading) {
+    return <div>Loading tenders...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
   return (
     <div className="min-h-screen bg-slate-50">
       <Navigation />

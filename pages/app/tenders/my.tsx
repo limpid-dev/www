@@ -181,7 +181,7 @@ export default function TendersMy({ data }: Props) {
                 </nav>
               </div>
             </div>{" "}
-            <Link href="/app/auctions/create">
+            <Link href="/app/tenders/create">
               <Button variant="black">
                 <Plus className="h-6 w-6" />
                 Создать закупки

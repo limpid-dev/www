@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
+import api from "../../../../api";
 import { GeneralLayout } from "../../../../components/general-layout";
 import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";
@@ -20,11 +21,11 @@ import { TextArea } from "../../../../components/primitives/text-area";
 interface FormValues {
   title: string;
   description: string;
-  finishedAt: string;
+  duration: number;
   industry: string;
   type: string;
-  startingPrice: number;
-  purchasePrice: number;
+  starting_price: number;
+  purchase_price: number;
 }
 
 export default function Create() {
@@ -32,7 +33,19 @@ export default function Create() {
 
   const { register, handleSubmit, control } = useForm<FormValues>({});
 
-  const onSubmit = async (data: FormValues) => {};
+  const onSubmit = async (data: FormValues) => {
+    const { data: auction } = await api.createAuction({
+      title: data.title,
+      description: data.description,
+      industry: data.industry,
+      duration: `P${data.duration}D`,
+      starting_price: data.starting_price,
+      purchase_price: data.purchase_price,
+    });
+    if (auction.data?.id) {
+      console.log("success");
+    }
+  };
 
   return (
     <>
@@ -81,6 +94,7 @@ export default function Create() {
               </div>
               <TextArea
                 required
+                {...register("description")}
                 placeholder="Описание аукциона"
                 minLength={1}
                 maxLength={1024}
@@ -96,7 +110,7 @@ export default function Create() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          <SelectLabel>Признак закупки</SelectLabel>
+                          <SelectLabel>Признак продажи</SelectLabel>
                           <SelectItem value="Товар">Товар</SelectItem>
                           <SelectItem value="Работа">Работа</SelectItem>
                           <SelectItem value="Услуга">Услуга</SelectItem>
@@ -131,16 +145,40 @@ export default function Create() {
                   type="number"
                   required
                   placeholder="Длительность приема заявок (в днях)"
+                  {...register("duration")}
                   min={1}
                   max={21}
                 />
               </div>
             </div>
+            <div className="mb-7">
+              <div className=" mb-5 text-lg font-semibold sm:text-2xl">
+                Цена
+              </div>
+              <div className="grid grid-cols-2 gap-7">
+                <Input
+                  {...register("starting_price", {
+                    valueAsNumber: true,
+                  })}
+                  type="number"
+                  placeholder="Стартовая цена"
+                />
+                <Input
+                  {...register("purchase_price", {
+                    valueAsNumber: true,
+                  })}
+                  type="number"
+                  placeholder="Цена мнгновенной продажи"
+                />
+              </div>
+            </div>
             <div className="flex justify-end gap-3 pt-4 ">
               <Link href="/app/projects/my">
-                <Button>Отмена</Button>
+                <Button variant="subtle">Отмена</Button>
               </Link>
-              <Button type="submit">Далее</Button>
+              <Button variant="black" type="submit">
+                Далее
+              </Button>
             </div>
           </form>
         </div>

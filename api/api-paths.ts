@@ -952,6 +952,25 @@ export interface paths {
       };
     };
   };
+  "/projects/{project_id}/membership": {
+    get: {
+      parameters: {
+        path: {
+          project_id: number;
+        };
+      };
+      responses: {
+        /** @description Project's membership */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["ProjectMember"];
+            };
+          };
+        };
+      };
+    };
+  };
   "/chats": {
     get: {
       parameters: {
@@ -1106,6 +1125,7 @@ export interface paths {
             photo_four?: string;
             /** Format: binary */
             photo_five?: string;
+            type?: string;
           };
         };
       };
@@ -1166,6 +1186,7 @@ export interface paths {
             starting_price?: number;
             purchase_price?: number;
             won_auction_bid_id?: number;
+            type?: string;
           };
         };
       };
@@ -1281,7 +1302,7 @@ export interface paths {
           page: number;
           per_page?: number;
           user_id?: number;
-          industry?: string;
+          industry?: string[];
           search?: string;
         };
       };
@@ -1640,6 +1661,7 @@ export interface paths {
             title: string;
             description: string;
             starting_price: number;
+            purchase_type: string;
             duration: number;
             /** Format: binary */
             tecnical_specification?: string;
@@ -1702,6 +1724,7 @@ export interface paths {
             duration?: number;
             /** Format: binary */
             tecnical_specification?: string;
+            purchase_type?: string;
           };
         };
       };
@@ -1711,6 +1734,99 @@ export interface paths {
           content: {
             "application/json": {
               data?: components["schemas"]["Tender"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/tenders/{tender_id}/bids": {
+    get: {
+      parameters: {
+        query: {
+          page: number;
+          per_page?: number;
+        };
+        path: {
+          tender_id: number;
+        };
+      };
+      responses: {
+        /** @description TenderBids */
+        200: {
+          content: {
+            "application/json": {
+              meta?: components["schemas"]["Pagination"];
+              data?: components["schemas"]["TenderBid"][];
+            };
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          tender_id: number;
+        };
+      };
+      requestBody: {
+        content: {
+          "multipart/form-data": {
+            price: number;
+          };
+        };
+      };
+      responses: {
+        /** @description TenderBid */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["TenderBid"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/tenders/{tender_id}/bids/{bid_id}": {
+    get: {
+      parameters: {
+        path: {
+          tender_id: number;
+          bid_id: number;
+        };
+      };
+      responses: {
+        /** @description TenderBid */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["TenderBid"];
+            };
+          };
+        };
+      };
+    };
+    patch: {
+      parameters: {
+        path: {
+          tender_id: number;
+          bid_id: number;
+        };
+      };
+      requestBody: {
+        content: {
+          "multipart/form-data": {
+            price?: number;
+          };
+        };
+      };
+      responses: {
+        /** @description Updated tender bid's data */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["TenderBid"];
             };
           };
         };
@@ -1961,6 +2077,7 @@ export interface components {
       duration?: string;
       starting_price?: number | null;
       purchase_price?: number | null;
+      type?: string;
       technical_specification?: components["schemas"]["Attachment"];
       photo_one?: components["schemas"]["Attachment"];
       photo_two?: components["schemas"]["Attachment"];
@@ -1992,6 +2109,8 @@ export interface components {
       applied_at?: string;
       accepted_at?: string | null;
       rejected_at?: string | null;
+      /** @enum {string} */
+      status?: "pending" | "accepted" | "rejected";
     };
     OrganizationMember: {
       id?: number;
@@ -2012,6 +2131,7 @@ export interface components {
       description?: string;
       industry?: string;
       starting_price?: number | null;
+      purchase_type?: string;
       duration?: string;
       technical_specification?: components["schemas"]["Attachment"];
       /** Format: date-time */

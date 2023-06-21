@@ -122,11 +122,7 @@ export default function Create() {
                   uppy={uppy}
                 />
               </div>
-              <Separator className="my-4" />
 
-              <div className="grid items-center justify-center">
-                <TechBuilder />
-              </div>
               <div className="mt-44 flex gap-8 max-w-screen-sm w-full mx-auto">
                 <Button
                   variant="subtle"

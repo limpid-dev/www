@@ -688,6 +688,9 @@ export function Pricing() {
       backLink: "http://localhost:5500/",
       failureBackLink: "",
     });
+    if (response) {
+      console.log(response);
+    }
   };
 
   const tiers = [
