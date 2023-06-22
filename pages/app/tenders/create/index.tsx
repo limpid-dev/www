@@ -60,7 +60,7 @@ export default function Create() {
         <Navigation />
         <div className="container mx-auto mb-4 max-w-screen-xl px-5 pt-8">
           <h1 className="text-sm">
-            <span className="text-slate-300">Аукцион / </span>
+            <span className="text-slate-300">Аукцион /</span>
             Создание аукциона закупок
           </h1>
 

@@ -156,7 +156,11 @@ export default function Tenders() {
                   router.push(`/app/tenders/${tender.id}`);
                 }
               }}
-              className="cursor-pointer"
+              className={`${
+                tender.verified_at
+                  ? " cursor-pointer border hover:border-black"
+                  : "unverified-class border"
+              }`}
             >
               <CardHeader>
                 <CardTitle>
