@@ -168,7 +168,7 @@ export default function Tender({ data }: Props) {
           {data.title}
         </h1>
 
-        <div className="">
+        <div className="mt-5">
           {data.verified_at ? (
             ""
           ) : (
@@ -193,7 +193,7 @@ export default function Tender({ data }: Props) {
                           className="overflow-hidden flex-[0_0_100%] min-w-0 relative "
                         >
                           <Image
-                            className="h-[19rem] w-full object-cover"
+                            className="h-[19rem] w-auto m-auto rounded-md"
                             src={getImageSrc(image.url) ?? DefaultImage}
                             width={0}
                             height={0}

@@ -114,7 +114,7 @@ export default function Tenders() {
             <div className="flex rounded-lg border">
               <input
                 type="search"
-                placeholder="Искать по проектам"
+                placeholder="Искать по тендерам"
                 className="rounded-lg border-none"
               />
               <Button

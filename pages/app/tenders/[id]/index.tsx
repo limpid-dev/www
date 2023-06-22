@@ -123,7 +123,7 @@ export default function Tender({ data }: Props) {
       <main className="min-h-screen bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
           <h1 className="text-sm">
-            <span className="text-slate-300">Аукционы / Продажи / </span>
+            <span className="text-slate-300">Аукционы / Закупки / </span>
             {data.title}
           </h1>
 
@@ -139,7 +139,7 @@ export default function Tender({ data }: Props) {
 
             <div className="p-10 mt-20 bg-white">
               <div className=" m-auto max-w-5xl rounded-md bg-white p-5 ">
-                <p className="text-slate-400">#123</p>
+                <p className="text-slate-400">#{data.id}</p>
                 <div className="m-auto max-w-3xl">
                   <h1 className="text-center text-3xl font-semibold">
                     {data.title}
