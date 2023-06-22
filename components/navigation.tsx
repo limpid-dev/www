@@ -111,8 +111,8 @@ const navigation = [
   { name: "Проекты", href: "/app/projects" },
   { name: "Профили", href: "/app/profiles" },
   { name: "Организации", href: "/app/organizations" },
-  // { name: "Продажи", href: "/app/auctions" },
-  // { name: "Закупки", href: "/app/tenders" },
+  { name: "Продажи", href: "/app/auctions" },
+  { name: "Закупки", href: "/app/tenders" },
   // // { name: "Чаты", href: "/app/chats" },
 ];
 
