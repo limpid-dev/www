@@ -152,7 +152,9 @@ export default function Tenders() {
             <Card
               key={tender.id}
               onClick={() => {
-                router.push(`/app/tenders/${tender.id}`);
+                if (tender.verified_at) {
+                  router.push(`/app/tenders/${tender.id}`);
+                }
               }}
               className="cursor-pointer"
             >

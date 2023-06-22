@@ -45,7 +45,9 @@ export default function Create() {
     try {
       const response = await api.createTender(formData);
       if (response.data.data?.id) {
-        console.log("Success");
+        router.push({
+          pathname: `/app/tenders/${response.data.data.id}`,
+        });
       }
     } catch (error) {
       console.error("Error creating tender:", error);
@@ -159,17 +161,14 @@ export default function Create() {
                       valueAsNumber: true,
                     })}
                     type="number"
-                    required
                     placeholder="Стартовая цены"
-                    min={1}
-                    max={21}
                   />
                 </div>
               </div>
               <p className="ml-1 font-medium">Тех задание</p>
               <Input {...register("technical_specification")} type="file" />
               <div className="flex justify-end gap-3 pt-4 ">
-                <Link href="/app/projects/my">
+                <Link href="/app/tenders">
                   <Button variant="subtle">Отмена</Button>
                 </Link>
                 <Button variant="black" type="submit">
