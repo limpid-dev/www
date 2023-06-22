@@ -1,8 +1,11 @@
 import {
+  CoinVertical,
+  FileArrowDown,
   Lightbulb,
   MaskHappy,
   Medal,
   ShieldWarning,
+  Spinner,
   Sun,
 } from "@phosphor-icons/react";
 import useEmblaCarousel, { EmblaOptionsType } from "embla-carousel-react";
@@ -11,7 +14,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
-import { Entity } from "../../../../../api/tender-bid";
 import api from "../../../../api";
 import { TenderBids } from "../../../../components/bids/bidSheet";
 import { Navigation } from "../../../../components/navigation";
@@ -51,6 +53,7 @@ import {
   SheetTrigger,
 } from "../../../../components/primitives/sheet";
 import { TextArea } from "../../../../components/primitives/text-area";
+import getImageSrc from "../../../../hooks/get-image-url";
 
 const calcTime = (date: string) => {
   const now = new Date();
@@ -69,32 +72,12 @@ export const getServerSideProps = async (
     id: string;
   }>
 ) => {
-  const { data } = await api.tenders.show(Number(context.params!.id));
-
-  const { data: files } = await api.tenders
-    .files(Number(context.params!.id))
-    .index({ page: 1, perPage: 100 });
-
-  if (!data) {
-    return {
-      notFound: true,
-    };
-  }
-  const { data: profile } = await api.profiles.show(data!.profileId);
-  const { data: user } = await api.users.show(profile!.userId);
-
-  const imagesArray = files?.filter(
-    (obj) => obj.mimeType === "image/png" || obj.mimeType === "image/jpeg"
-  );
-
+  const { data: tender } = await api.getTender(Number(context.params!.id));
+  console.log(tender.data);
   return {
     props: {
       data: {
-        ...data!,
-        user: user!,
-        profile: profile!,
-        files: files!,
-        images: imagesArray!,
+        ...tender.data!,
       },
     },
   };
@@ -137,7 +120,7 @@ export default function Tender({ data }: Props) {
   return (
     <>
       <Navigation />
-      <main className="min-h-[90vh] bg-slate-50">
+      <main className="min-h-screen bg-slate-50">
         <div className="mx-auto max-w-screen-xl px-5 pt-8">
           <h1 className="text-sm">
             <span className="text-slate-300">Аукционы / Продажи / </span>
@@ -145,7 +128,7 @@ export default function Tender({ data }: Props) {
           </h1>
 
           <div className="">
-            {data.verifiedAt ? (
+            {data.verified_at ? (
               ""
             ) : (
               <div className="flex gap-2 justify-center py-4 bg-lime-300  rounded-md my-4 font-bold text-base">
@@ -154,150 +137,149 @@ export default function Tender({ data }: Props) {
               </div>
             )}
 
-            <div className="p-10 bg-white">
-              <div className="grid grid-cols-10 gap-8  mt-2 rounded-md">
-                <div className="col-span-4">
-                  <div className="embla">
-                    <div
-                      className=" overflow-hidden rounded-md"
-                      ref={emblaMainRef}
-                    >
-                      <div className="flex flex-row h-auto ml-[-1rem] ">
-                        {data.images.map((image) => (
-                          <div
-                            key={image.id}
-                            className="overflow-hidden flex-[0_0_100%] min-w-0 relative "
-                          >
-                            <Image
-                              className="h-[19rem] w-full object-cover"
-                              src={image.url}
-                              width={0}
-                              height={0}
-                              unoptimized
-                              alt="Your alt text"
-                            />
-                          </div>
-                        ))}
+            <div className="p-10 mt-20 bg-white">
+              <div className=" m-auto max-w-5xl rounded-md bg-white p-5 ">
+                <p className="text-slate-400">#123</p>
+                <div className="m-auto max-w-3xl">
+                  <h1 className="text-center text-3xl font-semibold">
+                    {data.title}
+                  </h1>
+                  <h1 className="mb-7 mt-3 text-center text-base font-medium text-slate-300">
+                    {/* профиль название профессии */}
+                  </h1>
+                  <div className=" grid grid-cols-2 justify-around gap-4 p-3 sm:grid-cols-4">
+                    <div className="max-w-[160px] rounded-md bg-slate-100 p-3">
+                      <div className="flex justify-end ">
+                        <Spinner className="w-6 h-6 text-slate-500" />
+                      </div>
+                      <div>
+                        <p className="text-lg font-medium">
+                          {data.purchase_type}
+                        </p>
+                        <p className="text-xs">Вид</p>
                       </div>
                     </div>
-
-                    <div className="mt-[1.6rem]">
-                      <div className="overflow-hidden" ref={emblaThumbsRef}>
-                        <div className="flex flex-row ml-[-1rem]">
-                          {data.images.map((image, index) => (
-                            <Thumb
-                              key={index}
-                              onClick={() => onThumbClick(index)}
-                              selected={index === selectedIndex}
-                              index={index}
-                              imgSrc={image.url}
-                            />
-                          ))}
+                    <a
+                      target="_blank"
+                      rel="noreferrer"
+                      href={getImageSrc(data.technical_specification?.url)}
+                    >
+                      <div className="max-w-[160px] rounded-md bg-lime-100 p-3 border-2 hover:border-lime-300">
+                        <div className="flex justify-end ">
+                          <FileArrowDown className="w-6 h-6 text-slate-500" />
+                        </div>
+                        <div>
+                          <p className="text-lg font-medium">Документ</p>
+                          <p className="text-xs"> Посмотреть</p>
                         </div>
                       </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-100 mt-3 rounded-md p-3 flex flex-col gap-2">
-                    <p className=" font-medium">Продавец</p>
-                    <Link href={"/app/profiles/" + data.profileId}>
-                      <div className="flex items-center gap-5">
-                        <Image
-                          width={0}
-                          height={0}
-                          unoptimized
-                          className="w-10 h-10 object-cover rounded-md"
-                          alt="alte test"
-                          src={data.user.file.url}
-                        />
-                        <p className=" font-semibold">
-                          {data.user.firstName} {data.user.lastName}
-                        </p>
+                    </a>
+                    <div className="max-w-[160px] rounded-md bg-slate-100 p-3">
+                      <div className="flex justify-end ">
+                        <FileArrowDown className="w-6 h-6 text-slate-500" />
                       </div>
-                    </Link>
-                  </div>
-                </div>
-
-                <div className="col-span-6">
-                  <p className=" text-3xl font-semibold">{data.title}</p>
-
-                  <div className="grid grid-cols-4 gap-4 mt-7">
-                    <div className="bg-slate-100 p-3 rounded-md">
-                      <div className="flex justify-end">
-                        <Lightbulb className="w-6 h-6 text-slate-400" />
-                      </div>
-                      <p className="font-medium text-lg mt-4">Прием ставок</p>
-                      <p className="text-sm text-slate-500 font-medium">
-                        Cтатус
-                      </p>
-                    </div>
-
-                    <div className="bg-slate-100 p-3 rounded-md">
-                      <div className="flex justify-end">
-                        <Medal className="w-6 h-6 text-slate-400" />
-                      </div>
-                      <p className=" font-medium text-lg mt-4">
-                        {data.duration} часа(ов)
-                      </p>
-                      <p className="text-sm text-slate-500 font-medium">
-                        Длительность
-                      </p>
-                    </div>
-
-                    <div className="bg-slate-100 col-span-2 rounded-md p-3">
                       <div>
-                        <p className="text-slate-500 font-medium">
-                          Стартовая цена
+                        <p className="text-lg font-medium line-clamp-1">
+                          {data.industry}
                         </p>
-                        <p className=" font-semibold text-2xl mt-2">
-                          {data.startingPrice} тенге
-                        </p>
+                        <p className="text-xs">Сфера деятельности</p>
                       </div>
                     </div>
 
-                    <div className="bg-slate-100 p-3 rounded-md">
-                      <div className="flex justify-end">
-                        <MaskHappy className="w-6 h-6 text-slate-400" />
-                      </div>
-                      <p className=" font-medium text-lg mt-4">25.06.2023</p>
-                      <p className="text-sm text-slate-500 font-medium">
-                        Начало аукциона
-                      </p>
-                    </div>
-
-                    <TenderBids />
-
-                    <div className="bg-slate-100 col-span-2 rounded-md p-3">
-                      <div>
-                        <p className="text-slate-500 font-medium">
-                          Цена мгновенной продажи
-                        </p>
-                        <p className=" font-semibold text-2xl mt-2">
-                          {data.startingPrice} тенге
-                        </p>
-                      </div>
-                    </div>
+                    <Sheet>
+                      <SheetTrigger asChild>
+                        <div className="max-w-[160px] rounded-md bg-lime-100 p-3 border-2 hover:border-lime-300 cursor-pointer">
+                          <div className="flex justify-end ">
+                            <FileArrowDown className="w-6 h-6 text-slate-500" />
+                          </div>
+                          <div>
+                            <p className="text-lg font-medium">Ставки</p>
+                            <p className="text-xs">
+                              {/* {bids && bids.length > 0 ? bids.length : 0} */}
+                              1
+                            </p>
+                          </div>
+                        </div>
+                      </SheetTrigger>
+                      <SheetContent position="right" size="sm">
+                        <SheetHeader>
+                          <SheetTitle>Ставки</SheetTitle>
+                        </SheetHeader>
+                        {/* <div className="flex flex-col gap-6 pt-3">
+                          {data.wonAuctionBid ? (
+                            <div className="bg-slate-100 p-3 rounded-md w-full flex flex-col  gap-3">
+                              <p className="text-center font-semibold text-2xl">
+                                {data.wonAuctionBid
+                                  .price!.toString()
+                                  .replace(/\.?0+$/, "")}{" "}
+                                ₸
+                              </p>
+                              <div className="flex justify-between">
+                                <Link
+                                  href={`/app/profiles/${data.wonAuctionBid.profile_id}`}
+                                >
+                                  <Button variant="outline">Профиль</Button>
+                                </Link>
+                                <Link
+                                  href={`/app/profiles/${data.wonAuctionBid.profile_id}`}
+                                >
+                                  <Button variant="outline">
+                                    Написать сообщение
+                                  </Button>
+                                </Link>
+                              </div>
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                          {bids?.map((bid) => (
+                            <div key={bid.id}>
+                              <div className="bg-slate-100 p-3 rounded-md w-full">
+                                <p className=" text-center font-semibold text-2xl">
+                                  {bid.price!.toString().replace(/\.?0+$/, "")}{" "}
+                                  ₸
+                                </p>
+                              </div>
+                              <Image
+                                src={
+                                  getImageSrc(bid.profile?.avatar?.url) ??
+                                  DefaultImage
+                                }
+                                width={0}
+                                height={0}
+                                unoptimized
+                                className="object-cover w-6 h-6"
+                                alt=""
+                              />
+                            </div>
+                          ))}
+                        </div> */}
+                      </SheetContent>
+                    </Sheet>
                   </div>
-
-                  <div>
-                    <p className="font-semibold text-xl mt-11">Описание</p>
-                    <p className="mt-3">{data.description}</p>
+                  <div
+                    data-orientation="horizontal"
+                    role="none"
+                    className="bg-slate-200 h-[1px] w-full my-7"
+                  />
+                  <p className="text-lg font-semibold">Описание</p>
+                  <div className="mt-3 flex gap-3">
+                    <p className="p-4 bg-slate-100 rounded-md">
+                      {data.description}
+                    </p>
                   </div>
                 </div>
               </div>
               <Separator className="my-10" />
-              {data.verifiedAt ? (
+              {data.verified_at ? (
                 <div className=" flex justify-center gap-3">
-                  <Button variant="outline" className="w-3/12">
-                    Купить за 100 000
-                  </Button>
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button variant="black" className="w-3/12">
                         Сделать ставку
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-[725px]">
+                    <DialogContent className="sm:max-w-[725px] p-6">
                       <DialogHeader>
                         <DialogTitle>Сделайте ставку</DialogTitle>
                         <DialogDescription className="text-xs">
@@ -308,7 +290,7 @@ export default function Tender({ data }: Props) {
                       <div className="grid gap-4 py-4">
                         <p className="font-semibold">Стартовая цена</p>
                         <p className="bg-slate-100 text-2xl font-semibold p-4 rounded-md w-fit">
-                          {data.startingPrice}
+                          {data.starting_price}
                         </p>
 
                         <Form
@@ -343,8 +325,6 @@ export default function Tender({ data }: Props) {
                               Ваша ставка должна быть выше стартовый цены
                             </p>
                           </div>
-                          {/* <p>Комментарий</p>
-                          <TextArea /> */}
                           <DialogFooter className=" justify-center">
                             <Button variant="outline" className="w-3/4">
                               Отмета

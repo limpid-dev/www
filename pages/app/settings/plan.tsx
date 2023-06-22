@@ -31,46 +31,31 @@ const secondaryNavigation = [
   },
 ];
 
-// export const getServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const { data: session } = await api.session.show({
-//     headers: {
-//       Cookie: context.req.headers.cookie!,
-//     },
-//     credentials: "include",
-//   });
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const { data: session } = await api.getUser({
+    headers: {
+      Cookie: context.req.headers.cookie,
+    },
+  });
 
-//   if (session) {
-//     const { data: user } = await api.users.show(session.id);
-//     return {
-//       props: {
-//         data: {
-//           userInfo: user!,
-//         },
-//       },
-//     };
-//   }
-// };
+  console.log(session.data);
 
-// type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
+  return {
+    props: {
+      data: {
+        userInfo: session.data!,
+      },
+    },
+  };
+};
 
-export default function Settings() {
+type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+export default function Settings({ data }: Props) {
   const router = useRouter();
   const inputRef = useRef(null);
-
-  const handleClick = () => {
-    (inputRef.current as unknown as HTMLInputElement).click();
-  };
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const fileObj = event.target.files?.[0];
-    if (!fileObj) {
-      return;
-    }
-    api.users.avatar(data.userInfo.id, buildFormData(fileObj));
-    router.reload();
-  };
 
   return (
     <>
@@ -115,23 +100,20 @@ export default function Settings() {
                 Информация по вашему плану
               </h2>
               <Table>
-                <TableCaption>
-                  Детальная информация по вашему плану.
-                </TableCaption>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[100px]">План</TableHead>
-                    <TableHead>Статус</TableHead>
+                    <TableHead className="w-[150px]">План</TableHead>
                     <TableHead>Проектов осталось</TableHead>
                     <TableHead>Участия на аукционах</TableHead>
+                    <TableHead>Дата окончания подписки</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   <TableRow>
                     <TableCell className="font-medium">LIGHT</TableCell>
-                    <TableCell>Оплачено</TableCell>
-                    <TableCell>3</TableCell>
-                    <TableCell>7</TableCell>
+                    <TableCell>{data.userInfo.projects_attempts}</TableCell>
+                    <TableCell>{data.userInfo.auctions_attempts}</TableCell>
+                    <TableCell>{data.userInfo.payment_end}</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>

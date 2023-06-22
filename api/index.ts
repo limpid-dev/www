@@ -700,6 +700,12 @@ class APIClient {
     });
   }
 
+  async getTender(
+    tenderId: number
+  ): Promise<AxiosResponse<{ data?: components["schemas"]["Tender"] }>> {
+    return this.axiosInstance.get(`/tenders/${tenderId}`);
+  }
+
   async createTender(
     body: paths["/tenders"]["post"]["requestBody"]["content"]["multipart/form-data"]
   ): Promise<

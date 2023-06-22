@@ -42,12 +42,12 @@ function classNames(...classes: string[]): string {
 
 const secondaryNavigation = [
   { name: "Аккаунт", href: "#", icon: UserCircle, current: true },
-  // {
-  //   name: "План подписки",
-  //   href: "/app/settings/plan",
-  //   icon: Cube,
-  //   current: false,
-  // },
+  {
+    name: "План подписки",
+    href: "/app/settings/plan",
+    icon: Cube,
+    current: false,
+  },
 ];
 interface FormValues {
   first_name: string;

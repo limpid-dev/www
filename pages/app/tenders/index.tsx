@@ -22,6 +22,14 @@ const tabs = [
   { name: "Мои закупки", href: "/app/tenders/my", current: false },
 ];
 
+const calcTime = (date: string) => {
+  const now = new Date();
+  const finish = new Date(date);
+  const diff = finish.getTime() - now.getTime();
+  const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+  return days > 0 ? days : 0;
+};
+
 export default function Tenders() {
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
@@ -38,8 +46,11 @@ export default function Tenders() {
         const response = await api.getTenders({
           query: { page: 1, per_page: 9 },
         });
-        setTenders(response.data.data || []);
-        setLoading(false);
+        if (response.data.data) {
+          setTenders(response.data.data);
+          console.log(response.data.data);
+          setLoading(false);
+        }
       } catch (error) {
         setError("Error fetching tenders.");
         setLoading(false);
@@ -137,7 +148,7 @@ export default function Tenders() {
           </div>
         </div>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {/* {data.map((tender) => (
+          {tenders.map((tender) => (
             <Card
               key={tender.id}
               onClick={() => {
@@ -163,26 +174,15 @@ export default function Tenders() {
                     </span>
                   </div>
                   <div className="flex items-center justify-between gap-2 text-sm font-medium">
-                    <span>Осталось часов:</span>
+                    <span>Осталось дней:</span>
                     <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
                       {tender.finishedAt ? calcTime(tender.finishedAt) : "---"}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between gap-2 text-sm font-medium">
-                    <span>Стартовая сумма:</span>
-                    <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
-                      {tender.startingPrice
-                        ? new Intl.NumberFormat("kz-KZ", {
-                            style: "currency",
-                            currency: "KZT",
-                          }).format(tender.startingPrice)
-                        : "---"}{" "}
                     </span>
                   </div>
                 </div>
               </CardContent>
             </Card>
-          ))} */}
+          ))}
         </div>
       </div>
     </div>

@@ -296,15 +296,15 @@ export default function Tender({ data }: Props) {
                   )}{" "}
                   <Sheet>
                     <SheetTrigger asChild>
-                      <div className="bg-lime-200 p-3 rounded-md">
+                      <div className="bg-lime-100 p-3 rounded-md">
                         <div className="flex justify-end">
                           <Medal className="w-6 h-6 text-slate-400" />
                         </div>
                         <p className=" font-medium text-lg mt-4">
-                          {data.duration.days} дней
+                          {bids && bids.length > 0 ? bids.length : 0}
                         </p>
                         <p className="text-sm text-slate-500 font-medium">
-                          Длительность
+                          Ставки
                         </p>
                       </div>
                     </SheetTrigger>
