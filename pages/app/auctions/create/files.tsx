@@ -51,9 +51,12 @@ export default function Create() {
       newObject[propertyName] = file;
     });
 
-    console.log(uppy.getFiles());
     const { data } = await api.updateAuction(parsedId, newObject);
-    console.log(data);
+    if (data.data?.id) {
+      router.push({
+        pathname: `/app/auctions/${parsedId}`,
+      });
+    }
   };
   const [fileCount, setFileCount] = useState(0);
 

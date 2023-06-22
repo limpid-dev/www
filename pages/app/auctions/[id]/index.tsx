@@ -132,6 +132,9 @@ export default function Tender({ data }: Props) {
 
   const handleDeleteAuction = async () => {
     await api.deleteAuction(parsedId);
+    await router.push({
+      pathname: `/app/auctions/`,
+    });
   };
 
   const handlePurchasePrice = async () => {
@@ -258,7 +261,7 @@ export default function Tender({ data }: Props) {
                       <Medal className="w-6 h-6 text-slate-400" />
                     </div>
                     <p className=" font-medium text-lg mt-4">
-                      {data.duration.days} часа(ов)
+                      {data.duration.days} дня/дней
                     </p>
                     <p className="text-sm text-slate-500 font-medium">
                       Длительность
@@ -414,9 +417,8 @@ export default function Tender({ data }: Props) {
                     <div className="grid gap-4 py-4">
                       <p className="font-semibold">Стартовая цена</p>
                       <p className="bg-slate-100 text-2xl font-semibold p-4 rounded-md w-fit">
-                        {data
-                          .starting_price!.toString()
-                          .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 ")}{" "}
+                        {data.starting_price!.toString().replace(/\.?0+$/, "")}{" "}
+                        ₸
                       </p>
 
                       <Form
@@ -424,7 +426,7 @@ export default function Tender({ data }: Props) {
                           event.preventDefault();
 
                           const price = event.currentTarget.price.valueAsNumber;
-                          await api.createAuctionBid(data.id, price);
+                          await api.createAuctionBid(data.id, { price });
                         }}
                         className="flex flex-col gap-3"
                       >
