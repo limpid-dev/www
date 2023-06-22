@@ -766,7 +766,11 @@ export function Pricing() {
     {
       name: "STANDART",
       id: "tier-standart",
-      href: "#",
+      href: {
+        monthly: "4",
+        annually: "6",
+        kvartal: "5",
+      },
       price: { monthly: "8990", annually: "59 900₸", kvartal: "20 990₸" },
       description: t("strieve"),
       features: {
@@ -812,7 +816,10 @@ export function Pricing() {
     {
       name: "VIP",
       id: "tier-VIP",
-      href: "#",
+      href: {
+        annually: "8",
+        kvartal: "7",
+      },
       price: { monthly: "", annually: "639 900₸", kvartal: "199900₸" },
       description: t("unlimit"),
       features: {
