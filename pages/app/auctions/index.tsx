@@ -143,7 +143,10 @@ export default function All() {
 
           <div className="grid justify-center gap-6 md:grid-cols-2 lg:grid-cols-3">
             {auctions.map((auction) => (
-              <Link key={auction.id} href={`/app/auctions/${auction.id}`}>
+              <Link
+                key={auction.id}
+                href={auction.verifiedAt ? `/app/auctions/${auction.id}` : "#"}
+              >
                 <div className="min-w-[300px] rounded-2xl border border-slate-200 bg-white md:w-auto hover:border hover:border-black">
                   <div className="p-4">
                     <div className="flex flex-col gap-4">
