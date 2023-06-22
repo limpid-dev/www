@@ -145,7 +145,7 @@ export default function All() {
             {auctions.map((auction) => (
               <Link
                 key={auction.id}
-                href={auction.verifiedAt ? `/app/auctions/${auction.id}` : "#"}
+                href={auction.verified_at ? `/app/auctions/${auction.id}` : "#"}
               >
                 <div className="min-w-[300px] rounded-2xl border border-slate-200 bg-white md:w-auto hover:border hover:border-black">
                   <div className="p-4">
