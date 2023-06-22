@@ -217,9 +217,11 @@ const SheetDescription = React.forwardRef<
   />
 ));
 SheetDescription.displayName = SheetPrimitive.Description.displayName;
+const SheetClose = SheetPrimitive.Close;
 
 export {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
   SheetFooter,

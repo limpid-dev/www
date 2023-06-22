@@ -32,8 +32,8 @@ import {
   SelectValue,
 } from "../../../../components/primitives/select";
 import { TextArea } from "../../../../components/primitives/text-area";
-import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
 import getImageSrc from "../../../../hooks/get-image-url";
+import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
 
 interface FormValues {
   owned_material_resources: string;
@@ -72,7 +72,6 @@ export const getServerSideProps = async (
       },
     }
   );
-  console.log(profile);
   if (profile.data.user.first_name) {
     const isAuthor = session.data.id === profile.data.user_id;
     return {
@@ -211,7 +210,7 @@ export default function OneProfile({ data }: Props) {
                     <div className="flex flex-col items-center justify-center pt-12">
                       <Image
                         src={
-                          getImageSrc(data?.profile?.data?.avatar?.url) ??
+                          getImageSrc(data.profile.data.avatar?.url) ??
                           DefaultAva
                         }
                         width={0}
@@ -382,8 +381,7 @@ export default function OneProfile({ data }: Props) {
                   <div className="flex flex-col items-center justify-center pt-12">
                     <Image
                       src={
-                        getImageSrc(data?.profile?.data?.avatar?.url) ??
-                        DefaultAva
+                        getImageSrc(data.profile.data.avatar?.url) ?? DefaultAva
                       }
                       width={0}
                       height={0}

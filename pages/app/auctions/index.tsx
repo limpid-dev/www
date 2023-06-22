@@ -22,18 +22,21 @@ export default function All() {
     router.push(selectedPage);
   };
 
-  const [tenders, setTenders] = useState<components["schemas"]["Tender"][]>([]);
+  const [auctions, setAuctions] = useState<components["schemas"]["Auction"][]>(
+    []
+  );
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
 
   useEffect(() => {
-    const fetchTenders = async () => {
+    const fetchAuctions = async () => {
       try {
         const response = await api.getAuctions({
           page: 1,
           per_page: 9,
         });
-        setTenders(response.data.data || []);
+        setAuctions(response.data.data || []);
+        console.log(response.data.data);
         setLoading(false);
       } catch (error) {
         setError("Error fetching tenders.");
@@ -41,7 +44,7 @@ export default function All() {
       }
     };
 
-    fetchTenders();
+    fetchAuctions();
   }, []);
 
   if (loading) {
@@ -139,45 +142,60 @@ export default function All() {
           </div>
 
           <div className="grid justify-center gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <Link href="">
-              <div className="min-w-[300px] rounded-2xl border border-slate-200 bg-white md:w-auto hover:border hover:border-black">
-                <div className="p-4">
-                  <div className="flex flex-col gap-4">
-                    <div className="mb-2.5 flex flex-row justify-between">
-                      <div className="flex gap-2">
-                        <p className="text-sm">#121</p>
-                        <p className="text-base text-slate-400">
-                          Поехали с нами
+            {auctions.map((auction) => (
+              <Link key={auction.id} href={`/app/auctions/${auction.id}`}>
+                <div className="min-w-[300px] rounded-2xl border border-slate-200 bg-white md:w-auto hover:border hover:border-black">
+                  <div className="p-4">
+                    <div className="flex flex-col gap-4">
+                      <div className="mb-2.5 flex flex-row justify-between">
+                        <div className="flex gap-2">
+                          <p className="text-sm">{auction.type}</p>
+                          <p className="text-base text-slate-400" />
+                        </div>
+                        <p className=" text-sm text-slate-400">
+                          {auction.created_at &&
+                            new Date(auction.created_at).toLocaleDateString(
+                              "ru-RU",
+                              {
+                                day: "numeric",
+                                month: "numeric",
+                                year: "numeric",
+                              }
+                            )}
                         </p>
                       </div>
-                      <p className=" text-sm text-slate-400">02.01.2023</p>
-                    </div>
-                    <div className="mb-2.5 flex flex-row justify-between">
-                      <p className="text-base font-semibold">
-                        Менеджер по туризму
-                      </p>
-                      {/* <p className="rounded-2xl bg-lime-500 px-2 py-1 text-xs font-bold text-slate-100">
+                      <div className="mb-2.5 flex flex-row justify-between">
+                        <p className="text-base font-semibold">
+                          {auction.title}
+                        </p>
+                        {/* <p className="rounded-2xl bg-lime-500 px-2 py-1 text-xs font-bold text-slate-100">
                         в ТОПе
                       </p> */}
-                    </div>
-                    <div className="grid grid-cols-2 gap-y-2.5">
-                      <p className="text-sm text-slate-400">Заявки</p>
-                      <p className="w-fit items-center justify-center rounded-2xl bg-sky-50 px-2 pt-0.5 text-center text-xs text-sky-500">
-                        5
-                      </p>
-                      <p className="text-sm text-slate-400">Статус</p>
-                      <p className="w-fit items-center justify-center rounded-2xl bg-sky-50 px-2 pt-0.5 text-center text-xs text-sky-500">
-                        опубликован
-                      </p>
-                      <p className="text-sm text-slate-400">Прием заявок</p>
-                      <p className="w-fit items-center justify-center rounded-2xl bg-sky-50 px-2 pt-0.5 text-center text-xs text-sky-500">
-                        до 24.01.2023, 14:00
-                      </p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-y-2.5">
+                        <p className="text-sm text-slate-400">Статус</p>
+                        <p className="w-fit items-center justify-center rounded-2xl bg-sky-50 px-2 pt-0.5 text-center text-xs text-sky-500">
+                          {auction.verified_at ? "Опубликован" : "На модерации"}
+                        </p>
+                        <p className="text-sm text-slate-400">Прием заявок</p>
+                        <p className="w-fit items-center justify-center rounded-2xl bg-sky-50 px-2 pt-0.5 text-center text-xs text-sky-500">
+                          до{" "}
+                          {auction.finishedAt &&
+                            new Date(auction.finishedAt).toLocaleDateString(
+                              "ru-RU",
+                              {
+                                day: "numeric",
+                                month: "numeric",
+                                year: "numeric",
+                              }
+                            )}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </Link>
+              </Link>
+            ))}
           </div>
         </div>
       </div>

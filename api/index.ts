@@ -368,6 +368,57 @@ class APIClient {
     return this.axiosInstance.get(`/projects/${project_id}`, config);
   }
 
+  async getAuction(
+    auction_id: number,
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse<{ data?: components["schemas"]["Auction"] }>> {
+    return this.axiosInstance.get(`/auctions/${auction_id}`, config);
+  }
+
+  async deleteAuction(auctionId: number): Promise<AxiosResponse<void>> {
+    return this.axiosInstance.delete(`/auctions/${auctionId}`);
+  }
+
+  async getAuctionBids(
+    params: {
+      page: number;
+      per_page?: number;
+      auction_id?: number;
+      industry?: string[];
+      search?: string;
+    },
+    config?: AxiosRequestConfig
+  ): Promise<
+    AxiosResponse<{
+      meta?: components["schemas"]["Pagination"];
+      data?: components["schemas"]["AuctionBid"][];
+    }>
+  > {
+    const { auction_id, ...restParams } = params;
+    return this.axiosInstance.get(`/auctions/${auction_id}/bids`, {
+      ...config,
+      params: restParams,
+    });
+  }
+
+  async createAuctionBid(
+    auctionId: number,
+    price: number,
+    config?: AxiosRequestConfig
+  ): Promise<
+    AxiosResponse<{
+      data?: components["schemas"]["AuctionBid"];
+    }>
+  > {
+    const formData = new FormData();
+
+    return this.axiosInstance.post(
+      `/auctions/${auctionId}/bids`,
+      price,
+      config
+    );
+  }
+
   async updateProject(
     params: paths["/projects/{project_id}"]["patch"]["parameters"]["path"],
     projectData: paths["/projects/{project_id}"]["patch"]["requestBody"]["content"]["multipart/form-data"]

@@ -32,8 +32,8 @@ import {
   SelectValue,
 } from "../../../../components/primitives/select";
 import { TextArea } from "../../../../components/primitives/text-area";
-import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
 import getImageSrc from "../../../../hooks/get-image-url";
+import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
 
 interface FormValues {
   owned_material_resources: string;

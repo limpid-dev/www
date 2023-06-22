@@ -51,7 +51,7 @@ export default function Create() {
       newObject[propertyName] = file;
     });
 
-    console.log(newObject);
+    console.log(uppy.getFiles());
     const { data } = await api.updateAuction(parsedId, newObject);
     console.log(data);
   };

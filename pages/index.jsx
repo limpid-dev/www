@@ -683,9 +683,9 @@ export function Pricing() {
       accountId: response.invoice.user_id,
       auth: response.data,
       postLink: response.invoice.post_link,
-      failurePostLink: "http://localhost:3333/refused-payment",
+      failurePostLink: "https://limpid.kz",
       cardSave: true,
-      backLink: "http://localhost:5500/",
+      backLink: "https://limpid.kz",
       failureBackLink: "",
     });
     if (response) {

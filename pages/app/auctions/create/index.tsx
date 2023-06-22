@@ -37,6 +37,7 @@ export default function Create() {
     const { data: auction } = await api.createAuction({
       title: data.title,
       description: data.description,
+      type: data.type,
       industry: data.industry,
       duration: `P${data.duration}D`,
       starting_price: data.starting_price,
@@ -45,7 +46,7 @@ export default function Create() {
     if (auction.data?.id) {
       router.push({
         pathname: "/app/auctions/create/files",
-        query: { auctionId: auction.data.profile_id },
+        query: { auctionId: auction.data.id },
       });
     }
   };
