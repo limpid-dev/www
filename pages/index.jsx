@@ -551,7 +551,7 @@ export function Hero() {
             <iframe
               className="rounded-lg m-auto sm:w-[1024px]  w-[305px] sm:h-[712px] h-[370px] bg-slate-300"
               allowfullscreen="allowfullscreen"
-              src="https://www.youtube.com/embed/fPko2SHDnv8"
+              src="https://www.youtube.com/embed/Hlxassai_2k"
               title="YouTube video player"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             />
