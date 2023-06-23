@@ -171,17 +171,11 @@ export default function Test() {
                         maxLength={12}
                         className="text-black rounded-md border border-slate-300"
                         {...register("tin", {
-                          required: true,
                           maxLength: 12,
                           minLength: 12,
                         })}
                         placeholder="ИИН"
                       />
-                      {errors.tin && (
-                        <span className="text-sm text-red-600">
-                          Введите обязательное поле
-                        </span>
-                      )}
                     </div>
                     <Controller
                       control={control}

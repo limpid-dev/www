@@ -12,6 +12,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
+import { NumericFormat } from "react-number-format";
 import api from "../../../../api";
 import { components } from "../../../../api/api-paths";
 import { GeneralLayout } from "../../../../components/general-layout";
@@ -60,14 +61,11 @@ import DefaultImage from "../../../../images/avatars/defaultProfile.svg";
 
 function convertTimestamp(timestamp: string): string {
   const date = new Date(timestamp);
-
   const day = date.getDate().toString().padStart(2, "0");
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
   const year = date.getFullYear();
-
   const hours = date.getHours().toString().padStart(2, "0");
   const minutes = date.getMinutes().toString().padStart(2, "0");
-
   const convertedTimestamp = `${day}.${month}.${year}, ${hours}:${minutes}`;
   return convertedTimestamp;
 }
@@ -193,9 +191,11 @@ export default function Tender({ data }: Props) {
           {data.verified_at ? (
             ""
           ) : (
-            <div className="flex gap-2 justify-center py-4 bg-lime-300  rounded-md my-4 font-bold text-base">
-              <ShieldWarning className="w-6 h-6" /> Объявление на рассмотрении y
-              модератора: 1 день
+            <div className="flex gap-2 justify-center items-center p-3 bg-lime-300  rounded-md my-4 font-bold text-sm sm:text-base">
+              <ShieldWarning className="w-6 h-6" />{" "}
+              <span className="text-center">
+                Объявление на рассмотрении y модератора: 1 день
+              </span>
             </div>
           )}
 
@@ -208,9 +208,9 @@ export default function Tender({ data }: Props) {
                     ref={emblaMainRef}
                   >
                     <div className="flex flex-row h-auto ml-[-1rem] ">
-                      {data.images.map((image) => (
+                      {data.images.map((image, index) => (
                         <div
-                          key={image.id}
+                          key={index}
                           className="overflow-hidden flex-[0_0_100%] min-w-0 relative "
                         >
                           <Image
@@ -294,7 +294,14 @@ export default function Tender({ data }: Props) {
                         Стартовая цена
                       </p>
                       <p className=" font-semibold text-2xl mt-2">
-                        {data.starting_price!.toString().replace(/\.?0+$/, "")}{" "}
+                        <NumericFormat
+                          value={data
+                            .starting_price!.toString()
+                            .replace(/\.?0+$/, "")}
+                          allowLeadingZeros
+                          displayType="text"
+                          thousandSeparator=" "
+                        />{" "}
                         ₸
                       </p>
                     </div>
@@ -443,7 +450,14 @@ export default function Tender({ data }: Props) {
                         Цена мгновенной продажи
                       </p>
                       <p className=" font-semibold text-2xl mt-2">
-                        {data.purchase_price!.toString().replace(/\.?0+$/, "")}{" "}
+                        <NumericFormat
+                          value={data
+                            .purchase_price!.toString()
+                            .replace(/\.?0+$/, "")}
+                          allowLeadingZeros
+                          displayType="text"
+                          thousandSeparator=" "
+                        />{" "}
                         ₸
                       </p>
                     </div>
@@ -463,18 +477,29 @@ export default function Tender({ data }: Props) {
             ) : data.isAuthor ? (
               ""
             ) : (
-              <div className="flex justify-center gap-3">
+              <div className="flex flex-col sm:flex-row w-full justify-center gap-3">
                 <Button
                   variant="outline"
-                  className="w-4/12"
+                  className="w-full"
                   onClick={handlePurchasePrice}
                 >
                   Купить за{" "}
-                  {data.purchase_price!.toString().replace(/\.?0+$/, "")}
+                  <p>
+                    <NumericFormat
+                      className="ml-2"
+                      value={data
+                        .purchase_price!.toString()
+                        .replace(/\.?0+$/, "")}
+                      allowLeadingZeros
+                      displayType="text"
+                      thousandSeparator=" "
+                    />{" "}
+                    ₸
+                  </p>
                 </Button>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button variant="black" className="w-4/12">
+                    <Button variant="black" className="w-full">
                       Сделать ставку
                     </Button>
                   </DialogTrigger>
@@ -487,18 +512,54 @@ export default function Tender({ data }: Props) {
                       </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
-                      <p className="font-semibold">Стартовая цена</p>
-                      <p className="bg-slate-100 text-2xl font-semibold p-4 rounded-md w-fit">
-                        {data.starting_price!.toString().replace(/\.?0+$/, "")}{" "}
-                        ₸
-                      </p>
-
+                      <div className="flex gap-10">
+                        <div>
+                          <p className="font-semibold text-sm ml-1">
+                            Стартовая цена
+                          </p>
+                          <div className="flex gap-10">
+                            <p className="bg-slate-100 text-xl sm:text-2xl font-semibold p-4 rounded-md w-fit">
+                              <NumericFormat
+                                value={data
+                                  .starting_price!.toString()
+                                  .replace(/\.?0+$/, "")}
+                                allowLeadingZeros
+                                displayType="text"
+                                thousandSeparator=" "
+                              />{" "}
+                              ₸
+                            </p>
+                          </div>
+                        </div>
+                        <div>
+                          <p className="font-semibold text-sm ml-1">
+                            Последняя ваша ставка
+                          </p>
+                          <div className="flex gap-10">
+                            <p className="bg-slate-100 text-xl sm:text-2xl font-semibold p-4 rounded-md w-fit">
+                              <NumericFormat
+                                value={data
+                                  .starting_price!.toString()
+                                  .replace(/\.?0+$/, "")}
+                                allowLeadingZeros
+                                displayType="text"
+                                thousandSeparator=" "
+                              />{" "}
+                              ₸
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                       <Form
                         onSubmit={async (event) => {
                           event.preventDefault();
 
-                          const price = event.currentTarget.price.valueAsNumber;
+                          const priceInput = event.currentTarget.price.value;
+                          const price = Number.parseFloat(
+                            priceInput.replace(/\s/g, "")
+                          );
                           await api.createAuctionBid(data.id, { price });
+                          await router.reload();
                         }}
                         className="flex flex-col gap-3"
                       >
@@ -506,11 +567,13 @@ export default function Tender({ data }: Props) {
                         <div className="flex items-center gap-6">
                           <Field name="price">
                             <Label>Сумма</Label>
-                            <Input
+
+                            <NumericFormat
                               placeholder="KZT"
-                              type="number"
                               min={1}
                               name="price"
+                              customInput={Input}
+                              thousandSeparator=" "
                             />
                           </Field>
                           <p className="text-xs">
@@ -518,7 +581,7 @@ export default function Tender({ data }: Props) {
                           </p>
                         </div>
 
-                        <DialogFooter className="justify-center">
+                        <DialogFooter className="justify-center items-center gap-5">
                           <DialogClose className="w-3/4">
                             <Button className="w-full" variant="outline">
                               отмена
