@@ -1,4 +1,6 @@
 import {
+  ArrowCircleUp,
+  ArrowCircleUpRight,
   Lightbulb,
   MaskHappy,
   Medal,
@@ -11,6 +13,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import api from "../../../../api";
+import { components } from "../../../../api/api-paths";
 import { GeneralLayout } from "../../../../components/general-layout";
 import { Navigation } from "../../../../components/navigation";
 import {
@@ -27,6 +30,7 @@ import {
 import { Button } from "../../../../components/primitives/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -51,7 +55,22 @@ import {
 } from "../../../../components/primitives/sheet";
 import { TextArea } from "../../../../components/primitives/text-area";
 import getImageSrc from "../../../../hooks/get-image-url";
+import useTimeStampConverter from "../../../../hooks/useTimeStampConverter";
 import DefaultImage from "../../../../images/avatars/defaultProfile.svg";
+
+function convertTimestamp(timestamp: string): string {
+  const date = new Date(timestamp);
+
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear();
+
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+
+  const convertedTimestamp = `${day}.${month}.${year}, ${hours}:${minutes}`;
+  return convertedTimestamp;
+}
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext<{
@@ -78,6 +97,8 @@ export const getServerSideProps = async (
   const photoArray = Object.values(auction.data!)
     .filter((value) => typeof value === "object" && value !== null && value.url)
     .map((value) => value);
+
+  console.log(auction);
 
   return {
     props: {
@@ -128,7 +149,7 @@ export default function Tender({ data }: Props) {
     emblaMainApi.on("reInit", onSelect);
   }, [emblaMainApi, onSelect]);
 
-  const [bids, setBids] = useState();
+  const [bids, setBids] = useState<components["schemas"]["AuctionBid"][]>();
 
   const handleDeleteAuction = async () => {
     await api.deleteAuction(parsedId);
@@ -178,7 +199,7 @@ export default function Tender({ data }: Props) {
             </div>
           )}
 
-          <div className="p-10 bg-white">
+          <div className="p-10 bg-white rounded-md">
             <div className="grid grid-cols-10 gap-8  mt-2 rounded-md">
               <div className="col-span-4">
                 <div className="embla">
@@ -261,7 +282,7 @@ export default function Tender({ data }: Props) {
                       <Medal className="w-6 h-6 text-slate-400" />
                     </div>
                     <p className=" font-medium text-lg mt-4">
-                      {data.duration.days} дня/дней
+                      {JSON.parse(data.duration).days} дня/дней
                     </p>
                     <p className="text-sm text-slate-500 font-medium">
                       Длительность
@@ -301,7 +322,7 @@ export default function Tender({ data }: Props) {
                     <SheetTrigger asChild>
                       <div className="bg-lime-100 p-3 rounded-md">
                         <div className="flex justify-end">
-                          <Medal className="w-6 h-6 text-slate-400" />
+                          <ArrowCircleUpRight className="w-6 h-6 text-slate-400" />
                         </div>
                         <p className=" font-medium text-lg mt-4">
                           {bids && bids.length > 0 ? bids.length : 0}
@@ -311,32 +332,61 @@ export default function Tender({ data }: Props) {
                         </p>
                       </div>
                     </SheetTrigger>
-                    <SheetContent position="right" size="sm">
+                    <SheetContent position="right" size="default">
                       <SheetHeader>
                         <SheetTitle>Ставки</SheetTitle>
                       </SheetHeader>
                       <div className="flex flex-col gap-6 pt-3">
                         {data.wonAuctionBid ? (
-                          <div className="bg-slate-100 p-3 rounded-md w-full flex flex-col  gap-3">
-                            <p className="text-center font-semibold text-2xl">
-                              {data.wonAuctionBid
-                                .price!.toString()
-                                .replace(/\.?0+$/, "")}{" "}
-                              ₸
-                            </p>
-                            <div className="flex justify-between">
-                              <Link
-                                href={`/app/profiles/${data.wonAuctionBid.profile_id}`}
-                              >
-                                <Button variant="outline">Профиль</Button>
-                              </Link>
-                              <Link
-                                href={`/app/profiles/${data.wonAuctionBid.profile_id}`}
-                              >
-                                <Button variant="outline">
-                                  Написать сообщение
-                                </Button>
-                              </Link>
+                          <div className="flex flex-col rounded-md">
+                            <div className="flex justify-between bg-slate-100 px-6 py-3 rounded-t-md">
+                              <div className="flex gap-3 items-center">
+                                <Image
+                                  src={
+                                    getImageSrc(
+                                      data.wonAuctionBid.profile?.avatar?.url
+                                    ) ?? DefaultImage
+                                  }
+                                  width={0}
+                                  height={0}
+                                  unoptimized
+                                  className="object-cover w-9 h-9 rounded-md"
+                                  alt=""
+                                />
+                                {data.wonAuctionBid.profile?.display_name}{" "}
+                                <span className="p-1 rounded-lg text-sm text-white bg-lime-500">
+                                  Победитель
+                                </span>
+                              </div>
+                              <p className="text-center font-semibold text-2xl">
+                                {data.wonAuctionBid
+                                  .price!.toString()
+                                  .replace(/\.?0+$/, "")}{" "}
+                                ₸
+                              </p>
+                            </div>
+                            <Separator className="bg-white" />
+                            <div className="flex justify-between items-center bg-slate-100 px-6 py-3 rounded-b-md">
+                              <div className="flex flex-col text-xs gap-1">
+                                <p>Дата и время ставки:</p>
+                                {convertTimestamp(
+                                  data.wonAuctionBid.created_at
+                                )}
+                              </div>
+                              {data.isAuthor && (
+                                <div className="flex gap-3">
+                                  <Link
+                                    href={`/app/profiles/${data.wonAuctionBid.profile_id}`}
+                                  >
+                                    <Button variant="outline">Профиль</Button>
+                                  </Link>
+                                  <Link
+                                    href={`/app/profiles/${data.wonAuctionBid.profile_id}`}
+                                  >
+                                    <Button variant="black">Написать</Button>
+                                  </Link>
+                                </div>
+                              )}
                             </div>
                           </div>
                         ) : (
@@ -344,22 +394,44 @@ export default function Tender({ data }: Props) {
                         )}
                         {bids?.map((bid) => (
                           <div key={bid.id}>
-                            <div className="bg-slate-100 p-3 rounded-md w-full">
-                              <p className=" text-center font-semibold text-2xl">
-                                {bid.price!.toString().replace(/\.?0+$/, "")} ₸
-                              </p>
+                            <div className="flex flex-col rounded-md">
+                              <div className="flex justify-between bg-slate-100 px-6 py-3 rounded-t-md">
+                                <div className="flex gap-3 items-center">
+                                  <Image
+                                    src={
+                                      getImageSrc(bid.profile?.avatar?.url) ??
+                                      DefaultImage
+                                    }
+                                    width={0}
+                                    height={0}
+                                    unoptimized
+                                    className="object-cover w-9 h-9 rounded-md"
+                                    alt=""
+                                  />
+                                  <p>{bid.profile?.display_name}</p>
+                                </div>
+                                <p className="text-center font-semibold text-2xl">
+                                  {bid.price!.toString().replace(/\.?0+$/, "")}{" "}
+                                  ₸
+                                </p>
+                              </div>
+                              <Separator className="bg-white" />
+                              <div className="flex justify-between items-center bg-slate-100 px-6 py-3 rounded-b-md">
+                                <div className="flex gap-3">
+                                  <p className="text-xs">
+                                    Дата и время ставки:{" "}
+                                    {convertTimestamp(bid.created_at)}
+                                  </p>
+                                </div>
+                                {data.isAuthor && (
+                                  <Link
+                                    href={`/app/profiles/${bid.profile_id}`}
+                                  >
+                                    <Button variant="outline">Профиль</Button>
+                                  </Link>
+                                )}
+                              </div>
                             </div>
-                            <Image
-                              src={
-                                getImageSrc(bid.profile?.avatar?.url) ??
-                                DefaultImage
-                              }
-                              width={0}
-                              height={0}
-                              unoptimized
-                              className="object-cover w-6 h-6"
-                              alt=""
-                            />
                           </div>
                         ))}
                       </div>
@@ -447,9 +519,11 @@ export default function Tender({ data }: Props) {
                         </div>
 
                         <DialogFooter className="justify-center">
-                          <Button variant="outline" className="w-3/4">
-                            Отмена
-                          </Button>
+                          <DialogClose className="w-3/4">
+                            <Button className="w-full" variant="outline">
+                              отмена
+                            </Button>
+                          </DialogClose>
                           <Button
                             variant="black"
                             type="submit"

@@ -116,6 +116,7 @@ const DialogDescription = forwardRef<
   />
 ));
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
+const DialogClose = DialogPrimitive.Close;
 
 export {
   Dialog,
@@ -125,4 +126,5 @@ export {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 };

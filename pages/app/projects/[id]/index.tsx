@@ -161,8 +161,6 @@ export const getServerSideProps = async (
           member.status === "accepted" && member.profile_id === profile.data.id
       );
 
-      console.log(isMember);
-
       return {
         props: {
           data: {
@@ -224,7 +222,7 @@ export default function ProjectView({ data }: Props) {
     const fetchMessages = async () => {
       try {
         const { data: chatMessages } = await api.getMessages({
-          path: { chat_id: data.project.data.chat_id },
+          path: { chat_id: data.project.data.chat_id! },
           query: {
             page: 1,
             per_page: 1000,

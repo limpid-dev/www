@@ -31,6 +31,7 @@ import {
 import { Button } from "../../../../components/primitives/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -326,9 +327,11 @@ export default function Tender({ data }: Props) {
                             </p>
                           </div>
                           <DialogFooter className=" justify-center">
-                            <Button variant="outline" className="w-3/4">
-                              Отмета
-                            </Button>
+                            <DialogClose className="w-3/4">
+                              <Button className="w-full" variant="outline">
+                                отмена
+                              </Button>
+                            </DialogClose>
                             <Button
                               variant="black"
                               type="submit"
