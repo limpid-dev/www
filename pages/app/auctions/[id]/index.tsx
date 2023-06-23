@@ -1,6 +1,7 @@
 import {
   ArrowCircleUp,
   ArrowCircleUpRight,
+  FileArrowDown,
   Lightbulb,
   MaskHappy,
   Medal,
@@ -89,24 +90,48 @@ export const getServerSideProps = async (
       Cookie: context.req.headers.cookie,
     },
   });
-
   const isAuthor = auction.data?.profile_id === user.data.selected_profile_id;
-
   const photoArray = Object.values(auction.data!)
-    .filter((value) => typeof value === "object" && value !== null && value.url)
+    .filter(
+      (value) =>
+        typeof value === "object" &&
+        value !== null &&
+        value.url &&
+        value.extname !== "pdf" &&
+        value.extname !== "docx"
+    )
     .map((value) => value);
 
-  console.log(auction);
-
-  return {
-    props: {
-      data: {
-        ...auction.data,
-        isAuthor: isAuthor!,
-        images: photoArray!,
+  try {
+    const userBidResponse = await api.getUserAuctionBid(auction.data.id, {
+      headers: {
+        Cookie: context.req.headers.cookie,
       },
-    },
-  };
+    });
+    const userBid = userBidResponse.data;
+    if (userBid.data?.auction_id) {
+      return {
+        props: {
+          data: {
+            ...auction.data,
+            isAuthor: isAuthor!,
+            images: photoArray!,
+            userBid: userBid!,
+          },
+        },
+      };
+    }
+  } catch (error) {
+    return {
+      props: {
+        data: {
+          ...auction.data,
+          isAuthor: isAuthor!,
+          images: photoArray!,
+        },
+      },
+    };
+  }
 };
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
@@ -268,15 +293,37 @@ export default function Tender({ data }: Props) {
                 <p className=" text-3xl font-semibold">{data.title}</p>
 
                 <div className="grid sm:grid-cols-4 gap-4 mt-7">
-                  <div className="bg-slate-100 p-3 rounded-md">
-                    <div className="flex justify-end">
-                      <Lightbulb className="w-6 h-6 text-slate-400" />
+                  {data.technical_specification?.url ? (
+                    <a
+                      target="_blank"
+                      rel="noreferrer"
+                      href={getImageSrc(data.technical_specification.url)}
+                    >
+                      <div className="bg-lime-300 p-3 rounded-md border border-lime-300">
+                        <div className="flex justify-end">
+                          <FileArrowDown className="w-6 h-6 text-slate-400" />
+                        </div>
+                        <p className="font-medium text-lg mt-4">
+                          {data.verified_at ? "Документ" : "На модерацfdии"}
+                        </p>
+                        <p className="text-sm text-slate-500 font-medium">
+                          Cтатус
+                        </p>
+                      </div>
+                    </a>
+                  ) : (
+                    <div className="bg-slate-100 p-3 rounded-md">
+                      <div className="flex justify-end">
+                        <Lightbulb className="w-6 h-6 text-slate-400" />
+                      </div>
+                      <p className="font-medium text-lg mt-4">
+                        {data.verified_at ? "Прием ставок" : "На модерации"}
+                      </p>
+                      <p className="text-sm text-slate-500 font-medium">
+                        Cтатус
+                      </p>
                     </div>
-                    <p className="font-medium text-lg mt-4">
-                      {data.verified_at ? "Прием ставок" : "На модерации"}
-                    </p>
-                    <p className="text-sm text-slate-500 font-medium">Cтатус</p>
-                  </div>
+                  )}
                   <div className="bg-slate-100 p-3 rounded-md">
                     <div className="flex justify-end">
                       <Medal className="w-6 h-6 text-slate-400" />
@@ -327,7 +374,7 @@ export default function Tender({ data }: Props) {
                   )}{" "}
                   <Sheet>
                     <SheetTrigger asChild>
-                      <div className="bg-lime-100 p-3 rounded-md">
+                      <div className="bg-lime-100 p-3 rounded-md cursor-pointer">
                         <div className="flex justify-end">
                           <ArrowCircleUpRight className="w-6 h-6 text-slate-400" />
                         </div>
@@ -550,52 +597,107 @@ export default function Tender({ data }: Props) {
                           </div>
                         </div>
                       </div>
-                      <Form
-                        onSubmit={async (event) => {
-                          event.preventDefault();
+                      {data.userBid ? (
+                        <Form
+                          onSubmit={async (event) => {
+                            event.preventDefault();
 
-                          const priceInput = event.currentTarget.price.value;
-                          const price = Number.parseFloat(
-                            priceInput.replace(/\s/g, "")
-                          );
-                          await api.createAuctionBid(data.id, { price });
-                          await router.reload();
-                        }}
-                        className="flex flex-col gap-3"
-                      >
-                        <p>Ваша ставка</p>
-                        <div className="flex items-center gap-6">
-                          <Field name="price">
-                            <Label>Сумма</Label>
+                            const priceInput = event.currentTarget.price.value;
+                            const price = Number.parseFloat(
+                              priceInput.replace(/\s/g, "")
+                            );
+                            await api.updateAuctionBid(
+                              {
+                                auction_id: data.id,
+                                auction_bid_id: data.userBid.data.id,
+                              },
+                              { price }
+                            );
+                            await router.reload();
+                          }}
+                          className="flex flex-col gap-3"
+                        >
+                          <p>Ваша ставка</p>
+                          <div className="flex items-center gap-6">
+                            <Field name="price">
+                              <Label>Сумма</Label>
 
-                            <NumericFormat
-                              placeholder="KZT"
-                              min={1}
-                              name="price"
-                              customInput={Input}
-                              thousandSeparator=" "
-                            />
-                          </Field>
-                          <p className="text-xs">
-                            Ваша ставка должна быть выше стартовой цены
-                          </p>
-                        </div>
+                              <NumericFormat
+                                placeholder="KZT"
+                                min={1}
+                                name="price"
+                                customInput={Input}
+                                thousandSeparator=" "
+                              />
+                            </Field>
+                            <p className="text-xs">
+                              Ваша ставка должна быть выше стартовой цены
+                            </p>
+                          </div>
 
-                        <DialogFooter className="justify-center items-center gap-5">
-                          <DialogClose className="w-3/4">
-                            <Button className="w-full" variant="outline">
-                              отмена
+                          <DialogFooter className="justify-center items-center gap-5">
+                            <DialogClose className="w-3/4">
+                              <Button className="w-full" variant="outline">
+                                отмена
+                              </Button>
+                            </DialogClose>
+                            <Button
+                              variant="black"
+                              type="submit"
+                              className="w-3/4"
+                            >
+                              Отправить
                             </Button>
-                          </DialogClose>
-                          <Button
-                            variant="black"
-                            type="submit"
-                            className="w-3/4"
-                          >
-                            Отправить
-                          </Button>
-                        </DialogFooter>
-                      </Form>
+                          </DialogFooter>
+                        </Form>
+                      ) : (
+                        <Form
+                          onSubmit={async (event) => {
+                            event.preventDefault();
+
+                            const priceInput = event.currentTarget.price.value;
+                            const price = Number.parseFloat(
+                              priceInput.replace(/\s/g, "")
+                            );
+                            await api.createAuctionBid(data.id, { price });
+                            await router.reload();
+                          }}
+                          className="flex flex-col gap-3"
+                        >
+                          <p>Ваша def</p>
+                          <div className="flex items-center gap-6">
+                            <Field name="price">
+                              <Label>Сумма</Label>
+
+                              <NumericFormat
+                                placeholder="KZT"
+                                min={1}
+                                name="price"
+                                customInput={Input}
+                                thousandSeparator=" "
+                              />
+                            </Field>
+                            <p className="text-xs">
+                              Ваша ставка должна быть выше стартовой цены
+                            </p>
+                          </div>
+
+                          <DialogFooter className="justify-center items-center gap-5">
+                            <DialogClose className="w-3/4">
+                              <Button className="w-full" variant="outline">
+                                отмена
+                              </Button>
+                            </DialogClose>
+                            <Button
+                              variant="black"
+                              type="submit"
+                              className="w-3/4"
+                            >
+                              Отправить
+                            </Button>
+                          </DialogFooter>
+                        </Form>
+                      )}
                     </div>
                   </DialogContent>
                 </Dialog>

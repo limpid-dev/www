@@ -3,6 +3,7 @@
  * Do not make direct changes to the file.
  */
 
+
 export interface paths {
   "/users": {
     post: {
@@ -175,7 +176,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: components["schemas"]["Profile"][];
+              data?: (components["schemas"]["Profile"])[];
             };
           };
         };
@@ -300,7 +301,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: components["schemas"]["Certificate"][];
+              data?: (components["schemas"]["Certificate"])[];
             };
           };
         };
@@ -407,7 +408,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: components["schemas"]["Education"][];
+              data?: (components["schemas"]["Education"])[];
             };
           };
         };
@@ -510,7 +511,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: components["schemas"]["Experience"][];
+              data?: (components["schemas"]["Experience"])[];
             };
           };
         };
@@ -623,7 +624,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: components["schemas"]["Skill"][];
+              data?: (components["schemas"]["Skill"])[];
             };
           };
         };
@@ -718,8 +719,8 @@ export interface paths {
           page: number;
           per_page?: number;
           profile_id?: number;
-          industry?: string[];
-          stage?: string[];
+          industry?: (string)[];
+          stage?: (string)[];
           required_money_amount?: {
             min?: number;
             max?: number;
@@ -737,7 +738,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: components["schemas"]["Project"][];
+              data?: (components["schemas"]["Project"])[];
             };
           };
         };
@@ -872,7 +873,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: components["schemas"]["ProjectMember"][];
+              data?: (components["schemas"]["ProjectMember"])[];
             };
           };
         };
@@ -985,7 +986,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: components["schemas"]["Chat"][];
+              data?: (components["schemas"]["Chat"])[];
             };
           };
         };
@@ -995,7 +996,7 @@ export interface paths {
       requestBody: {
         content: {
           "multipart/form-data": {
-            user_ids: number[];
+            user_ids: (number)[];
             name: string;
           };
         };
@@ -1049,7 +1050,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: components["schemas"]["Message"][];
+              data?: (components["schemas"]["Message"])[];
             };
           };
         };
@@ -1087,7 +1088,7 @@ export interface paths {
           page: number;
           per_page?: number;
           profile_id?: number;
-          industry?: string[];
+          industry?: (string)[];
           search?: string;
         };
       };
@@ -1097,7 +1098,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: components["schemas"]["Auction"][];
+              data?: (components["schemas"]["Auction"])[];
             };
           };
         };
@@ -1187,6 +1188,16 @@ export interface paths {
             purchase_price?: number;
             won_auction_bid_id?: number;
             type?: string;
+            /** Format: binary */
+            photo_one?: string;
+            /** Format: binary */
+            photo_two?: string;
+            /** Format: binary */
+            photo_three?: string;
+            /** Format: binary */
+            photo_four?: string;
+            /** Format: binary */
+            photo_five?: string;
           };
         };
       };
@@ -1209,7 +1220,7 @@ export interface paths {
           page: number;
           per_page?: number;
           auction_id?: number;
-          industry?: string[];
+          industry?: (string)[];
           search?: string;
         };
       };
@@ -1219,7 +1230,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: components["schemas"]["AuctionBid"][];
+              data?: (components["schemas"]["AuctionBid"])[];
             };
           };
         };
@@ -1250,16 +1261,15 @@ export interface paths {
       };
     };
   };
-  "/auctions/{auction_id}/bids/{auction_bid_id}": {
+  "/auctions/{auction_id}/bids/user": {
     get: {
       parameters: {
         path: {
           auction_id: number;
-          auction_bid_id: number;
         };
       };
       responses: {
-        /** @description AuctionBid data */
+        /** @description One participant's AuctionBid data */
         200: {
           content: {
             "application/json": {
@@ -1269,6 +1279,8 @@ export interface paths {
         };
       };
     };
+  };
+  "/auctions/{auction_id}/bids/{auction_bid_id}": {
     patch: {
       parameters: {
         path: {
@@ -1302,7 +1314,7 @@ export interface paths {
           page: number;
           per_page?: number;
           user_id?: number;
-          industry?: string[];
+          industry?: (string)[];
           search?: string;
         };
       };
@@ -1312,7 +1324,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: components["schemas"]["Profile"][];
+              data?: (components["schemas"]["Profile"])[];
             };
           };
         };
@@ -1447,7 +1459,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: components["schemas"]["OrganizationMember"][];
+              data?: (components["schemas"]["OrganizationMember"])[];
             };
           };
         };
@@ -1544,7 +1556,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: components["schemas"]["Certificate"][];
+              data?: (components["schemas"]["Certificate"])[];
             };
           };
         };
@@ -1648,7 +1660,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: components["schemas"]["Tender"][];
+              data?: (components["schemas"]["Tender"])[];
             };
           };
         };
@@ -1661,8 +1673,9 @@ export interface paths {
             title: string;
             description: string;
             starting_price: number;
+            industry: string;
             purchase_type: string;
-            duration: number;
+            duration: string;
             /** Format: binary */
             tecnical_specification?: string;
           };
@@ -1721,7 +1734,8 @@ export interface paths {
             title?: string;
             description?: string;
             starting_price?: number;
-            duration?: number;
+            industry?: string;
+            duration?: string;
             /** Format: binary */
             tecnical_specification?: string;
             purchase_type?: string;
@@ -1757,7 +1771,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: components["schemas"]["TenderBid"][];
+              data?: (components["schemas"]["TenderBid"])[];
             };
           };
         };
@@ -1847,7 +1861,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: components["schemas"]["Notification"][];
+              data?: (components["schemas"]["Notification"])[];
             };
           };
         };
@@ -1899,7 +1913,7 @@ export interface paths {
         200: {
           content: {
             "application/json": {
-              data?: components["schemas"]["SubPlans"][];
+              data?: (components["schemas"]["SubPlans"])[];
             };
           };
         };
@@ -1911,7 +1925,7 @@ export interface paths {
         200: {
           content: {
             "application/json": {
-              data?: components["schemas"]["Invoices"][];
+              data?: (components["schemas"]["Invoices"])[];
             };
           };
         };
@@ -1930,7 +1944,7 @@ export interface paths {
         200: {
           content: {
             "application/json": {
-              data?: components["schemas"]["Invoices"][];
+              data?: (components["schemas"]["Invoices"])[];
             };
           };
         };
@@ -2074,7 +2088,7 @@ export interface components {
       title?: string;
       description?: string;
       industry?: string;
-      duration?: string;
+      duration?: components["schemas"]["Duration"];
       starting_price?: number | null;
       purchase_price?: number | null;
       type?: string;
@@ -2132,7 +2146,7 @@ export interface components {
       industry?: string;
       starting_price?: number | null;
       purchase_type?: string;
-      duration?: string;
+      duration?: components["schemas"]["Duration"];
       technical_specification?: components["schemas"]["Attachment"];
       /** Format: date-time */
       verified_at?: string;
@@ -2194,6 +2208,14 @@ export interface components {
       created_at?: string;
       /** Format: date-time */
       updated_at?: string;
+    };
+    Duration: {
+      years?: number | null;
+      months?: number | null;
+      days?: number | null;
+      hours?: number | null;
+      minutes?: number | null;
+      seconds?: number | null;
     };
   };
   responses: never;

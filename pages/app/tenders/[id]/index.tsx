@@ -9,13 +9,13 @@ import {
   Sun,
 } from "@phosphor-icons/react";
 import useEmblaCarousel, { EmblaOptionsType } from "embla-carousel-react";
-import { GetStaticPropsContext, InferGetServerSidePropsType } from "next";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
+import { NumericFormat } from "react-number-format";
 import api from "../../../../api";
-import { TenderBids } from "../../../../components/bids/bidSheet";
 import { Navigation } from "../../../../components/navigation";
 import {
   AlertDialog,
@@ -69,11 +69,18 @@ const calcTime = (date: string) => {
 };
 
 export const getServerSideProps = async (
-  context: GetStaticPropsContext<{
+  context: GetServerSidePropsContext<{
     id: string;
   }>
 ) => {
   const { data: tender } = await api.getTender(Number(context.params!.id));
+  const { data: user } = await api.getUser({
+    headers: {
+      Cookie: context.req.headers.cookie,
+    },
+  });
+  const isAuthor = tender.data?.profile_id === user.data.selected_profile_id;
+
   console.log(tender.data);
   return {
     props: {
@@ -272,11 +279,30 @@ export default function Tender({ data }: Props) {
                 </div>
               </div>
               <Separator className="my-10" />
-              {data.verified_at ? (
-                <div className=" flex justify-center gap-3">
+              {data.wonAuctionBid ? (
+                ""
+              ) : data.isAuthor ? (
+                ""
+              ) : (
+                <div className="flex flex-col sm:flex-row w-full justify-center gap-3">
+                  <Button variant="outline" className="w-full">
+                    Купить за{" "}
+                    <p>
+                      <NumericFormat
+                        className="ml-2"
+                        value={data
+                          .purchase_price!.toString()
+                          .replace(/\.?0+$/, "")}
+                        allowLeadingZeros
+                        displayType="text"
+                        thousandSeparator=" "
+                      />{" "}
+                      ₸
+                    </p>
+                  </Button>
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button variant="black" className="w-3/12">
+                      <Button variant="black" className="w-full">
                         Сделать ставку
                       </Button>
                     </DialogTrigger>
@@ -289,44 +315,76 @@ export default function Tender({ data }: Props) {
                         </DialogDescription>
                       </DialogHeader>
                       <div className="grid gap-4 py-4">
-                        <p className="font-semibold">Стартовая цена</p>
-                        <p className="bg-slate-100 text-2xl font-semibold p-4 rounded-md w-fit">
-                          {data.starting_price}
-                        </p>
-
+                        <div className="flex gap-10">
+                          <div>
+                            <p className="font-semibold text-sm ml-1">
+                              Стартовая цена
+                            </p>
+                            <div className="flex gap-10">
+                              <p className="bg-slate-100 text-xl sm:text-2xl font-semibold p-4 rounded-md w-fit">
+                                <NumericFormat
+                                  value={data
+                                    .starting_price!.toString()
+                                    .replace(/\.?0+$/, "")}
+                                  allowLeadingZeros
+                                  displayType="text"
+                                  thousandSeparator=" "
+                                />{" "}
+                                ₸
+                              </p>
+                            </div>
+                          </div>
+                          <div>
+                            <p className="font-semibold text-sm ml-1">
+                              Последняя ваша ставка
+                            </p>
+                            <div className="flex gap-10">
+                              <p className="bg-slate-100 text-xl sm:text-2xl font-semibold p-4 rounded-md w-fit">
+                                <NumericFormat
+                                  value={data
+                                    .starting_price!.toString()
+                                    .replace(/\.?0+$/, "")}
+                                  allowLeadingZeros
+                                  displayType="text"
+                                  thousandSeparator=" "
+                                />{" "}
+                                ₸
+                              </p>
+                            </div>
+                          </div>
+                        </div>
                         <Form
                           onSubmit={async (event) => {
                             event.preventDefault();
 
-                            const form = new FormData(event.currentTarget);
-                            const values = Object.fromEntries(
-                              form.entries()
-                            ) as unknown as {
-                              price: number;
-                            };
-
-                            const profileId = Number(
-                              localStorage.getItem("profileId")
+                            const priceInput = event.currentTarget.price.value;
+                            const price = Number.parseFloat(
+                              priceInput.replace(/\s/g, "")
                             );
-
-                            await api.tenders
-                              .bids(data.id)
-                              .store({ price: values.price, profileId });
+                            await api.createAuctionBid(data.id, { price });
+                            await router.reload();
                           }}
-                          action=""
                           className="flex flex-col gap-3"
                         >
                           <p>Ваша ставка</p>
                           <div className="flex items-center gap-6">
                             <Field name="price">
                               <Label>Сумма</Label>
-                              <Input placeholder="KZT" type="number" min={1} />
+
+                              <NumericFormat
+                                placeholder="KZT"
+                                min={1}
+                                name="price"
+                                customInput={Input}
+                                thousandSeparator=" "
+                              />
                             </Field>
                             <p className="text-xs">
-                              Ваша ставка должна быть выше стартовый цены
+                              Ваша ставка должна быть выше стартовой цены
                             </p>
                           </div>
-                          <DialogFooter className=" justify-center">
+
+                          <DialogFooter className="justify-center items-center gap-5">
                             <DialogClose className="w-3/4">
                               <Button className="w-full" variant="outline">
                                 отмена
@@ -345,7 +403,8 @@ export default function Tender({ data }: Props) {
                     </DialogContent>
                   </Dialog>
                 </div>
-              ) : (
+              )}
+              {data.isAuthor && data.verified_at ? (
                 <div className=" flex justify-center gap-3">
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
@@ -368,10 +427,9 @@ export default function Tender({ data }: Props) {
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
-                  <Button variant="black" className="w-3/12">
-                    Ускорить модерацию (3 часа)
-                  </Button>
                 </div>
+              ) : (
+                ""
               )}
             </div>
           </div>

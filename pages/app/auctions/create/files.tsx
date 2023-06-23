@@ -40,8 +40,15 @@ export default function Create() {
   const [fileDashboardOpen, setFileDashboardOpen] = useState(false);
   const { auctionId } = router.query;
   const parsedId = Number.parseInt(auctionId as string, 10) as number;
+  const [fileStore, setFileStore] = useState();
+  const [fileCount, setFileCount] = useState(0);
 
-  const onSubmit = async () => {
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setFileStore(file);
+  };
+
+  const onSubmit = async (file) => {
     const numberWords = ["one", "two", "three", "four", "five"];
 
     const newObject = {};
@@ -51,6 +58,7 @@ export default function Create() {
       newObject[propertyName] = file;
     });
 
+    newObject.technical_specification = fileStore;
     const { data } = await api.updateAuction(parsedId, newObject);
     if (data.data?.id) {
       router.push({
@@ -58,7 +66,6 @@ export default function Create() {
       });
     }
   };
-  const [fileCount, setFileCount] = useState(0);
 
   useEffect(() => {
     uppy.on("dashboard:modal-closed", () => setFileDashboardOpen(false));
@@ -118,7 +125,7 @@ export default function Create() {
                   open={fileDashboardOpen}
                   uppy={uppy}
                 />
-                <Input type="file" />
+                <Input type="file" onChange={handleFileChange} />
               </div>
 
               <div className="mt-44 flex gap-8 max-w-screen-sm w-full mx-auto">

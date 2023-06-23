@@ -368,6 +368,7 @@ class APIClient {
     return this.axiosInstance.get(`/projects/${project_id}`, config);
   }
 
+  // Auction
   async getAuction(
     auction_id: number,
     config?: AxiosRequestConfig
@@ -403,20 +404,31 @@ class APIClient {
 
   async createAuctionBid(
     auctionId: number,
-    price: number,
-    config?: AxiosRequestConfig
+    price: number
   ): Promise<
     AxiosResponse<{
       data?: components["schemas"]["AuctionBid"];
     }>
   > {
-    const formData = new FormData();
+    return this.axiosInstance.post(`/auctions/${auctionId}/bids`, price);
+  }
 
-    return this.axiosInstance.post(
-      `/auctions/${auctionId}/bids`,
-      price,
-      config
+  async updateAuctionBid(
+    pathParams: { auction_id: number; auction_bid_id: number },
+    auctionBidData: { [key: string]: any }
+  ): Promise<AxiosResponse<{ data?: components["schemas"]["AuctionBid"] }>> {
+    const { auction_id, auction_bid_id } = pathParams;
+    return this.axiosInstance.patch(
+      `/auctions/${auction_id}/bids/${auction_bid_id}`,
+      auctionBidData
     );
+  }
+
+  async getUserAuctionBid(
+    auctionId: number,
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse<{ data?: components["schemas"]["AuctionBid"] }>> {
+    return this.axiosInstance.get(`/auctions/${auctionId}/bids/user`, config);
   }
 
   async updateProject(

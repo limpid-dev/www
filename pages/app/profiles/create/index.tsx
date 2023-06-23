@@ -176,6 +176,9 @@ export default function Test() {
                         })}
                         placeholder="ИИН"
                       />
+                      <span className="text-sm text-slate-400 ml-2">
+                        Необязательное поле*
+                      </span>
                     </div>
                     <Controller
                       control={control}
