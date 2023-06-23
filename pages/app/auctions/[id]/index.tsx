@@ -200,8 +200,8 @@ export default function Tender({ data }: Props) {
           )}
 
           <div className="p-10 bg-white rounded-md">
-            <div className="grid grid-cols-10 gap-8  mt-2 rounded-md">
-              <div className="col-span-4">
+            <div className="grid sm:grid-cols-10 gap-8 mt-2 rounded-md">
+              <div className="sm:col-span-4">
                 <div className="embla">
                   <div
                     className=" overflow-hidden rounded-md"
@@ -228,7 +228,7 @@ export default function Tender({ data }: Props) {
 
                   <div className="mt-[1.6rem]">
                     <div className="overflow-hidden" ref={emblaThumbsRef}>
-                      <div className="flex flex-row ml-[-0.1rem]">
+                      <div className="flex gap-2 flex-row ml-[-0.1rem]">
                         {data.images.map((image, index) => (
                           <Thumb
                             key={index}
@@ -264,10 +264,10 @@ export default function Tender({ data }: Props) {
                 </Link>
               </div>
 
-              <div className="col-span-6">
+              <div className="sm:col-span-6">
                 <p className=" text-3xl font-semibold">{data.title}</p>
 
-                <div className="grid grid-cols-4 gap-4 mt-7">
+                <div className="grid sm:grid-cols-4 gap-4 mt-7">
                   <div className="bg-slate-100 p-3 rounded-md">
                     <div className="flex justify-end">
                       <Lightbulb className="w-6 h-6 text-slate-400" />
@@ -466,7 +466,7 @@ export default function Tender({ data }: Props) {
               <div className="flex justify-center gap-3">
                 <Button
                   variant="outline"
-                  className="w-3/12"
+                  className="w-4/12"
                   onClick={handlePurchasePrice}
                 >
                   Купить за{" "}
@@ -474,7 +474,7 @@ export default function Tender({ data }: Props) {
                 </Button>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button variant="black" className="w-3/12">
+                    <Button variant="black" className="w-4/12">
                       Сделать ставку
                     </Button>
                   </DialogTrigger>
