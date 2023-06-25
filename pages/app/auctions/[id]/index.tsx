@@ -1,5 +1,4 @@
 import {
-  ArrowCircleUp,
   ArrowCircleUpRight,
   FileArrowDown,
   Lightbulb,
@@ -47,17 +46,12 @@ import { Label } from "../../../../components/primitives/label";
 import { Separator } from "../../../../components/primitives/separator";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
-  SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "../../../../components/primitives/sheet";
-import { TextArea } from "../../../../components/primitives/text-area";
 import getImageSrc from "../../../../hooks/get-image-url";
-import useTimeStampConverter from "../../../../hooks/useTimeStampConverter";
 import DefaultImage from "../../../../images/avatars/defaultProfile.svg";
 
 function convertTimestamp(timestamp: string): string {
@@ -182,10 +176,40 @@ export default function Tender({ data }: Props) {
   };
 
   const handlePurchasePrice = async () => {
-    await api.createAuctionBid(data.id, { price: data.purchase_price });
-    await router.reload;
+    await api.createAuctionBid(data.id, {
+      price: data.purchase_price,
+    });
+    await router.reload();
   };
 
+  const handlePurchasePriceUpdate = async () => {
+    const priceInput = data.purchase_price;
+    const price1 = Number.parseFloat(priceInput.replace(/\s/g, ""));
+    await api.updateAuctionBid(
+      {
+        auction_id: data.id,
+        auction_bid_id: data.userBid.data.id,
+      },
+      { price: price1 }
+    );
+    await router.reload();
+  };
+
+  const [largeScreen, setLargeScreen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const newScreenWidth = window.innerWidth;
+      setLargeScreen(newScreenWidth > 896);
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   useEffect(() => {
     const fetchBids = async () => {
       try {
@@ -304,10 +328,10 @@ export default function Tender({ data }: Props) {
                           <FileArrowDown className="w-6 h-6 text-slate-400" />
                         </div>
                         <p className="font-medium text-lg mt-4">
-                          {data.verified_at ? "Документ" : "На модерацfdии"}
+                          {data.verified_at ? "Документ" : "На модерации"}
                         </p>
                         <p className="text-sm text-slate-500 font-medium">
-                          Cтатус
+                          Скачать
                         </p>
                       </div>
                     </a>
@@ -386,7 +410,10 @@ export default function Tender({ data }: Props) {
                         </p>
                       </div>
                     </SheetTrigger>
-                    <SheetContent position="right" size="default">
+                    <SheetContent
+                      position="right"
+                      size={largeScreen ? "default" : "full"}
+                    >
                       <SheetHeader>
                         <SheetTitle>Ставки</SheetTitle>
                       </SheetHeader>
@@ -525,25 +552,48 @@ export default function Tender({ data }: Props) {
               ""
             ) : (
               <div className="flex flex-col sm:flex-row w-full justify-center gap-3">
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={handlePurchasePrice}
-                >
-                  Купить за{" "}
-                  <p>
-                    <NumericFormat
-                      className="ml-2"
-                      value={data
-                        .purchase_price!.toString()
-                        .replace(/\.?0+$/, "")}
-                      allowLeadingZeros
-                      displayType="text"
-                      thousandSeparator=" "
-                    />{" "}
-                    ₸
-                  </p>
-                </Button>
+                {data.userBid ? (
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={handlePurchasePriceUpdate}
+                  >
+                    Купить за{" "}
+                    <p>
+                      <NumericFormat
+                        className="ml-2"
+                        value={data
+                          .purchase_price!.toString()
+                          .replace(/\.?0+$/, "")}
+                        allowLeadingZeros
+                        displayType="text"
+                        thousandSeparator=" "
+                      />{" "}
+                      ₸
+                    </p>
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={handlePurchasePrice}
+                  >
+                    Купить за{" "}
+                    <p>
+                      <NumericFormat
+                        className="ml-2"
+                        value={data
+                          .purchase_price!.toString()
+                          .replace(/\.?0+$/, "")}
+                        allowLeadingZeros
+                        displayType="text"
+                        thousandSeparator=" "
+                      />{" "}
+                      ₸
+                    </p>
+                  </Button>
+                )}
+
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="black" className="w-full">

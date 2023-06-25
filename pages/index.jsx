@@ -28,6 +28,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../components/primitives/select";
+import { ToastAction } from "../components/primitives/toast";
+import { toast } from "../hooks/useToast";
 import AstanaHub from "../images/astanaHub.png";
 import avatarImage1 from "../images/avatars/avatar-1.webp";
 import avatarImage2 from "../images/avatars/avatar-2.webp";
@@ -672,24 +674,39 @@ export function Pricing() {
   ];
 
   const handlePayment = async (id) => {
-    const { data: response } = await api.getInvoices(id);
-    halyk.pay({
-      invoiceId: response.invoice.invoice_id,
-      language: response.invoice.language,
-      description: response.invoice.description,
-      terminal: response.invoice.terminal,
-      amount: response.invoice.amount,
-      currency: response.invoice.currency,
-      accountId: response.invoice.user_id,
-      auth: response.data,
-      postLink: response.invoice.post_link,
-      failurePostLink: "https://limpid.kz",
-      cardSave: true,
-      backLink: "https://limpid.kz",
-      failureBackLink: "",
-    });
-    if (response) {
-      console.log(response);
+    try {
+      const { data: response } = await api.getInvoices(id);
+      halyk.pay({
+        invoiceId: response.invoice.invoice_id,
+        language: response.invoice.language,
+        description: response.invoice.description,
+        terminal: response.invoice.terminal,
+        amount: response.invoice.amount,
+        currency: response.invoice.currency,
+        accountId: response.invoice.user_id,
+        auth: response.data,
+        postLink: response.invoice.post_link,
+        failurePostLink: "https://limpid.kz",
+        cardSave: true,
+        backLink: "https://limpid.kz",
+        failureBackLink: "",
+      });
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        toast({
+          title: "Вы не вошли в аккаунт",
+          description: "Войдите в акканут",
+          variant: "destructive",
+          action: (
+            <ToastAction altText="try">
+              <a href={`${process.env.NEXT_PUBLIC_DOMAIN_URL}/login`}>Войти</a>
+            </ToastAction>
+          ),
+        });
+      } else {
+        // Handle other errors
+        console.error(error);
+      }
     }
   };
 
@@ -864,7 +881,7 @@ export function Pricing() {
     setFrequency(selectedFrequency);
   };
 
-  const [frequency, setFrequency] = useState(frequencies[1]);
+  const [frequency, setFrequency] = useState(frequencies[0]);
 
   return (
     <section

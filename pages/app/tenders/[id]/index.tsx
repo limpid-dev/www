@@ -1,21 +1,16 @@
 import {
-  CoinVertical,
+  ArrowCircleUpRight,
+  Briefcase,
   FileArrowDown,
-  Lightbulb,
-  MaskHappy,
-  Medal,
   ShieldWarning,
   Spinner,
-  Sun,
 } from "@phosphor-icons/react";
-import useEmblaCarousel, { EmblaOptionsType } from "embla-carousel-react";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { NumericFormat } from "react-number-format";
 import api from "../../../../api";
+import { components } from "../../../../api/api-paths";
 import { Navigation } from "../../../../components/navigation";
 import {
   AlertDialog,
@@ -39,7 +34,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../../../../components/primitives/dialog";
-import { Thumb } from "../../../../components/primitives/embla-thumbs";
 import { Field, Form } from "../../../../components/primitives/form";
 import { Input } from "../../../../components/primitives/input";
 import { Label } from "../../../../components/primitives/label";
@@ -47,13 +41,10 @@ import { Separator } from "../../../../components/primitives/separator";
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "../../../../components/primitives/sheet";
-import { TextArea } from "../../../../components/primitives/text-area";
 import getImageSrc from "../../../../hooks/get-image-url";
 
 const calcTime = (date: string) => {
@@ -81,11 +72,11 @@ export const getServerSideProps = async (
   });
   const isAuthor = tender.data?.profile_id === user.data.selected_profile_id;
 
-  console.log(tender.data);
   return {
     props: {
       data: {
         ...tender.data!,
+        isAuthor: isAuthor!,
       },
     },
   };
@@ -94,36 +85,29 @@ export const getServerSideProps = async (
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 export default function Tender({ data }: Props) {
-  const OPTIONS: EmblaOptionsType = { align: "center", loop: true };
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [emblaMainRef, emblaMainApi] = useEmblaCarousel(OPTIONS);
-  const [emblaThumbsRef, emblaThumbsApi] = useEmblaCarousel({
-    containScroll: "keepSnaps",
-    dragFree: true,
-  });
+  const router = useRouter();
+  const { id } = router.query as {
+    id: string;
+  };
+  const parsedId = Number.parseInt(id as string, 10) as number;
 
-  const onThumbClick = useCallback(
-    (index: number) => {
-      if (!emblaMainApi || !emblaThumbsApi) return;
-      emblaMainApi.scrollTo(index);
-    },
-    [emblaMainApi, emblaThumbsApi]
-  );
-
-  const onSelect = useCallback(() => {
-    if (!emblaMainApi || !emblaThumbsApi) return;
-    setSelectedIndex(emblaMainApi.selectedScrollSnap());
-    emblaThumbsApi.scrollTo(emblaMainApi.selectedScrollSnap());
-  }, [emblaMainApi, emblaThumbsApi, setSelectedIndex]);
+  const [bids, setBids] = useState<components["schemas"]["TenderBid"][]>();
 
   useEffect(() => {
-    if (!emblaMainApi) return;
-    onSelect();
-    emblaMainApi.on("select", onSelect);
-    emblaMainApi.on("reInit", onSelect);
-  }, [emblaMainApi, onSelect]);
-
-  const router = useRouter();
+    const fetchBids = async () => {
+      try {
+        const response = await api.getTenderBids(parsedId, {
+          page: 1,
+          per_page: 100,
+        });
+        setBids(response.data.data || []);
+      } catch (error) {
+        console.log("Error fetching tenders.");
+      }
+    };
+    const intervalId = setInterval(fetchBids, 1000);
+    return () => clearInterval(intervalId);
+  }, [parsedId]);
 
   return (
     <>
@@ -184,7 +168,7 @@ export default function Tender({ data }: Props) {
                     </a>
                     <div className="max-w-[160px] rounded-md bg-slate-100 p-3">
                       <div className="flex justify-end ">
-                        <FileArrowDown className="w-6 h-6 text-slate-500" />
+                        <Briefcase className="w-6 h-6 text-slate-500" />
                       </div>
                       <div>
                         <p className="text-lg font-medium line-clamp-1">
@@ -198,7 +182,7 @@ export default function Tender({ data }: Props) {
                       <SheetTrigger asChild>
                         <div className="max-w-[160px] rounded-md bg-lime-100 p-3 border-2 hover:border-lime-300 cursor-pointer">
                           <div className="flex justify-end ">
-                            <FileArrowDown className="w-6 h-6 text-slate-500" />
+                            <ArrowCircleUpRight className="w-6 h-6 text-slate-500" />
                           </div>
                           <div>
                             <p className="text-lg font-medium">Ставки</p>
@@ -213,8 +197,8 @@ export default function Tender({ data }: Props) {
                         <SheetHeader>
                           <SheetTitle>Ставки</SheetTitle>
                         </SheetHeader>
-                        {/* <div className="flex flex-col gap-6 pt-3">
-                          {data.wonAuctionBid ? (
+                        <div className="flex flex-col gap-6 pt-3">
+                          {/* {data.wonAuctionBid ? (
                             <div className="bg-slate-100 p-3 rounded-md w-full flex flex-col  gap-3">
                               <p className="text-center font-semibold text-2xl">
                                 {data.wonAuctionBid
@@ -239,7 +223,7 @@ export default function Tender({ data }: Props) {
                             </div>
                           ) : (
                             ""
-                          )}
+                          )} */}
                           {bids?.map((bid) => (
                             <div key={bid.id}>
                               <div className="bg-slate-100 p-3 rounded-md w-full">
@@ -248,7 +232,7 @@ export default function Tender({ data }: Props) {
                                   ₸
                                 </p>
                               </div>
-                              <Image
+                              {/* <Image
                                 src={
                                   getImageSrc(bid.profile?.avatar?.url) ??
                                   DefaultImage
@@ -258,10 +242,10 @@ export default function Tender({ data }: Props) {
                                 unoptimized
                                 className="object-cover w-6 h-6"
                                 alt=""
-                              />
+                              /> */}
                             </div>
                           ))}
-                        </div> */}
+                        </div>
                       </SheetContent>
                     </Sheet>
                   </div>
@@ -284,22 +268,7 @@ export default function Tender({ data }: Props) {
               ) : data.isAuthor ? (
                 ""
               ) : (
-                <div className="flex flex-col sm:flex-row w-full justify-center gap-3">
-                  <Button variant="outline" className="w-full">
-                    Купить за{" "}
-                    <p>
-                      <NumericFormat
-                        className="ml-2"
-                        value={data
-                          .purchase_price!.toString()
-                          .replace(/\.?0+$/, "")}
-                        allowLeadingZeros
-                        displayType="text"
-                        thousandSeparator=" "
-                      />{" "}
-                      ₸
-                    </p>
-                  </Button>
+                <div className="flex flex-col sm:flex-row w-6/12 gap-3 m-auto">
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button variant="black" className="w-full">
@@ -361,7 +330,7 @@ export default function Tender({ data }: Props) {
                             const price = Number.parseFloat(
                               priceInput.replace(/\s/g, "")
                             );
-                            await api.createAuctionBid(data.id, { price });
+                            await api.createTenderBid(data.id, { price });
                             await router.reload();
                           }}
                           className="flex flex-col gap-3"
