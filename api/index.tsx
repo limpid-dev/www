@@ -42,7 +42,7 @@ class APIClient {
       variant: "destructive",
       action: (
         <ToastAction altText="try">
-          <a href="http://localhost:3000/app/settings/plan">Купить</a>
+          <a href="https://limpid.kz/#pricing">Купить</a>
         </ToastAction>
       ),
     });
