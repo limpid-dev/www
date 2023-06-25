@@ -699,7 +699,7 @@ export function Pricing() {
           variant: "destructive",
           action: (
             <ToastAction altText="try">
-              <a href={`${process.env.NEXT_PUBLIC_DOMAIN_URL}/login`}>Войти</a>
+              <a href="https://limpid.kz/login">Войти</a>
             </ToastAction>
           ),
         });
