@@ -7,15 +7,23 @@ export interface PaginationProps {
   currentPage: number;
   itemsPerPage: number;
   renderPageLink: (page: number) => string;
+  firstPageUrl?: string;
+  lastPageUrl?: string;
+  nextPageUrl?: string;
+  previousPageUrl?: string | null;
 }
 
-export const dotts = -1;
+const dotts = -1;
 
 const Pagination = ({
   totalItems,
   currentPage,
   itemsPerPage,
   renderPageLink,
+  firstPageUrl,
+  lastPageUrl,
+  nextPageUrl,
+  previousPageUrl,
 }: PaginationProps) => {
   const pages = usePagination(totalItems, currentPage, itemsPerPage);
 
@@ -40,6 +48,22 @@ const Pagination = ({
             {pageNumber}
           </Link>
         )
+      )}
+      {previousPageUrl && (
+        <Link
+          href={previousPageUrl}
+          className="px-4 py-2 mx-1 text-lg font-semibold no-underline"
+        >
+          Previous
+        </Link>
+      )}
+      {nextPageUrl && (
+        <Link
+          href={nextPageUrl}
+          className="px-4 py-2 mx-1 text-lg font-semibold no-underline"
+        >
+          Next
+        </Link>
       )}
     </div>
   );

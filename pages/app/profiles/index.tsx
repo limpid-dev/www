@@ -36,6 +36,7 @@ const tabs = [
 export default function Profiles() {
   const router = useRouter();
   const [profilesData, setProfilesData] = useState<any[]>([]);
+  const [profilesMeta, setProfilesMeta] = useState<any>({});
   const [totalItems, setTotalItems] = useState<any>(1);
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>): void => {
     const selectedPage = event.target.value;
@@ -45,8 +46,11 @@ export default function Profiles() {
     (Number.parseInt(router.query.page as string, 10) as number) || 1;
 
   const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
+
   const [searchTerm, setSearchTerm] = useState("");
+
   const [largeScreen, setLargeScreen] = useState(false);
+
   useEffect(() => {
     const handleResize = () => {
       const newScreenWidth = window.innerWidth;
@@ -91,8 +95,8 @@ export default function Profiles() {
       industry: industryString,
       search: searchTerm,
     });
-
     setProfilesData(data.data);
+    setProfilesMeta(data.meta);
     setTotalItems(data.meta.total);
   }, [selectedCheckboxes, currentPage, searchTerm]);
 
@@ -340,10 +344,14 @@ export default function Profiles() {
         </div>
       </GeneralLayout>
       <Pagination
-        renderPageLink={(page) => `/app/profiles/?page=${page}`}
-        itemsPerPage={9}
         totalItems={totalItems}
         currentPage={currentPage}
+        itemsPerPage={9}
+        renderPageLink={(page) => `/app/profiles/?page=${page}`}
+        firstPageUrl={profilesMeta.first_page_url}
+        lastPageUrl={profilesMeta.last_page_url}
+        nextPageUrl={profilesMeta.next_page_url}
+        previousPageUrl={profilesMeta.previous_page_url}
       />
     </div>
   );
