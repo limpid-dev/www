@@ -1,21 +1,7 @@
 import Link from "next/link";
 import React from "react";
-import usePagination from "../hooks/usePagination";
 
-export interface PaginationProps {
-  totalItems: number;
-  currentPage: number;
-  itemsPerPage: number;
-  renderPageLink: (page: number) => string;
-  firstPageUrl?: string;
-  lastPageUrl?: string;
-  nextPageUrl?: string;
-  previousPageUrl?: string | null;
-}
-
-const dotts = -1;
-
-const Pagination = ({
+function Pagination({
   totalItems,
   currentPage,
   itemsPerPage,
@@ -24,49 +10,64 @@ const Pagination = ({
   lastPageUrl,
   nextPageUrl,
   previousPageUrl,
-}: PaginationProps) => {
-  const pages = usePagination(totalItems, currentPage, itemsPerPage);
+}) {
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-  return (
-    <div className="flex items-center justify-center py-5 bg-slate-50">
-      {pages.map((pageNumber, i) =>
-        pageNumber === dotts ? (
-          <span
-            key={i}
-            className="px-4 py-2 rounded-full text-sm font-semibold text-black"
-          >
-            ...
-          </span>
-        ) : (
-          <Link
-            key={i}
-            href={renderPageLink(pageNumber as number)}
-            className={`${
-              pageNumber === currentPage ? "text-lime-500" : "text-black"
-            } px-4 py-2 mx-1 rounded-full text-lg font-semibold no-underline`}
-          >
-            {pageNumber}
-          </Link>
-        )
-      )}
-      {previousPageUrl && (
-        <Link
-          href={previousPageUrl}
-          className="px-4 py-2 mx-1 text-lg font-semibold no-underline"
-        >
-          Previous
+  const getPageLink = (page) => {
+    return renderPageLink(page);
+  };
+
+  const renderPaginationLinks = () => {
+    const links = [];
+
+    // Render link for the first page
+    if (firstPageUrl) {
+      links.push(
+        <Link key="first" href={firstPageUrl}>
+          <a>First</a>
         </Link>
-      )}
-      {nextPageUrl && (
-        <Link
-          href={nextPageUrl}
-          className="px-4 py-2 mx-1 text-lg font-semibold no-underline"
-        >
+      );
+    }
+
+    // Render link for the previous page
+    if (previousPageUrl) {
+      links.push(
+        <Link key="previous" href={previousPageUrl}>
+          <a>Previous</a>
+        </Link>
+      );
+    }
+
+    // Render links for individual pages
+    for (let page = 1; page <= totalPages; page++) {
+      const pageLink = getPageLink(page);
+      links.push(
+        <Link key={page} href={pageLink}>
+          {page}
+        </Link>
+      );
+    }
+
+    // Render link for the next page
+    if (nextPageUrl) {
+      links.push(
+        <Link key="next" href={nextPageUrl}>
           Next
         </Link>
-      )}
-    </div>
-  );
-};
+      );
+    }
+
+    // Render link for the last page
+    if (lastPageUrl) {
+      links.push(
+        <Link key="last" href={lastPageUrl}>
+          Last
+        </Link>
+      );
+    }
+
+    return links;
+  };
+}
 
 export default Pagination;
