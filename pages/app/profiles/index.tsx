@@ -87,12 +87,10 @@ export default function Profiles() {
       })
       .filter(Boolean);
 
-    const industryString = industries.join(",");
-
     const { data } = await api.getProfiles({
       page: currentPage,
       per_page: 9,
-      industry: industryString,
+      industry: industries,
       search: searchTerm,
     });
     setProfilesData(data.data);
