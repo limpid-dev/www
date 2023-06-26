@@ -677,6 +677,7 @@ export function Pricing() {
     try {
       const { data: response } = await api.getInvoices(id);
       if (response.data) {
+        // eslint-disable-next-line no-undef
         halyk.pay({
           invoiceId: response.invoice.invoice_id,
           language: response.invoice.language,
@@ -1198,6 +1199,7 @@ export function Header() {
         }
       } catch (error) {
         if (error.response && error.response.status === 401) {
+          throw error;
         } else {
           console.error("An error occurred:", error);
         }
@@ -1361,9 +1363,11 @@ export default function Home() {
           </div>
           <ul className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-6 sm:gap-8 lg:mt-20 lg:max-w-none lg:grid-cols-3">
             {testimonials.map((column, columnIndex) => (
+              // eslint-disable-next-line react/no-array-index-key
               <li key={columnIndex}>
                 <ul className="flex flex-col gap-y-6 sm:gap-y-8">
                   {column.map((testimonial, testimonialIndex) => (
+                    // eslint-disable-next-line react/no-array-index-key
                     <li key={testimonialIndex}>
                       <figure className="relative rounded-2xl bg-white p-6 shadow-xl shadow-zinc-900/10">
                         <QuoteIcon className="absolute left-6 top-6 fill-zinc-100" />
