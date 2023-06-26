@@ -704,7 +704,6 @@ export function Pricing() {
           ),
         });
       } else {
-        // Handle other errors
         console.error(error);
       }
     }
