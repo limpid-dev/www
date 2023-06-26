@@ -29,7 +29,7 @@ class APIClient {
         if (error.response && error.response.status === 402) {
           this.handlePaymentRequiredError();
         }
-        return error;
+        return Promise.reject(error);
       }
     );
   }

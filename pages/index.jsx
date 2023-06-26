@@ -676,21 +676,23 @@ export function Pricing() {
   const handlePayment = async (id) => {
     try {
       const { data: response } = await api.getInvoices(id);
-      halyk.pay({
-        invoiceId: response.invoice.invoice_id,
-        language: response.invoice.language,
-        description: response.invoice.description,
-        terminal: response.invoice.terminal,
-        amount: response.invoice.amount,
-        currency: response.invoice.currency,
-        accountId: response.invoice.user_id,
-        auth: response.data,
-        postLink: response.invoice.post_link,
-        failurePostLink: "https://limpid.kz",
-        cardSave: true,
-        backLink: "https://limpid.kz",
-        failureBackLink: "",
-      });
+      if (response.data) {
+        halyk.pay({
+          invoiceId: response.invoice.invoice_id,
+          language: response.invoice.language,
+          description: response.invoice.description,
+          terminal: response.invoice.terminal,
+          amount: response.invoice.amount,
+          currency: response.invoice.currency,
+          accountId: response.invoice.user_id,
+          auth: response.data,
+          postLink: response.invoice.post_link,
+          failurePostLink: "https://limpid.kz",
+          cardSave: true,
+          backLink: "https://limpid.kz",
+          failureBackLink: "",
+        });
+      }
     } catch (error) {
       if (error.response && error.response.status === 401) {
         toast({
