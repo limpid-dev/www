@@ -10,10 +10,10 @@ function App({ Component, pageProps }: AppProps) {
     <div className="min-h-full">
       <Head>
         <title>LIM - все для людей</title>
-        <script src="https://epay.homebank.kz/payform/payment-api.js" />
       </Head>
       <Component {...pageProps} />
       <Toaster />
+      <Script src="https://epay.homebank.kz/payform/payment-api.js" />
       <Script defer data-domain="limpid.kz" src="/js/script.js" />
     </div>
   );

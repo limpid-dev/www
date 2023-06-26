@@ -6,6 +6,7 @@ import {
   Spinner,
 } from "@phosphor-icons/react";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { NumericFormat } from "react-number-format";
@@ -187,8 +188,7 @@ export default function Tender({ data }: Props) {
                           <div>
                             <p className="text-lg font-medium">Ставки</p>
                             <p className="text-xs">
-                              {/* {bids && bids.length > 0 ? bids.length : 0} */}
-                              1
+                              {bids && bids.length > 0 ? bids.length : 0}
                             </p>
                           </div>
                         </div>
@@ -198,7 +198,7 @@ export default function Tender({ data }: Props) {
                           <SheetTitle>Ставки</SheetTitle>
                         </SheetHeader>
                         <div className="flex flex-col gap-6 pt-3">
-                          {/* {data.wonAuctionBid ? (
+                          {data.wonAuctionBid ? (
                             <div className="bg-slate-100 p-3 rounded-md w-full flex flex-col  gap-3">
                               <p className="text-center font-semibold text-2xl">
                                 {data.wonAuctionBid
@@ -223,7 +223,7 @@ export default function Tender({ data }: Props) {
                             </div>
                           ) : (
                             ""
-                          )} */}
+                          )}
                           {bids?.map((bid) => (
                             <div key={bid.id}>
                               <div className="bg-slate-100 p-3 rounded-md w-full">
@@ -232,7 +232,7 @@ export default function Tender({ data }: Props) {
                                   ₸
                                 </p>
                               </div>
-                              {/* <Image
+                              <Image
                                 src={
                                   getImageSrc(bid.profile?.avatar?.url) ??
                                   DefaultImage
@@ -242,7 +242,7 @@ export default function Tender({ data }: Props) {
                                 unoptimized
                                 className="object-cover w-6 h-6"
                                 alt=""
-                              /> */}
+                              />
                             </div>
                           ))}
                         </div>

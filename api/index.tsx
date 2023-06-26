@@ -28,9 +28,8 @@ class APIClient {
       (error: AxiosError) => {
         if (error.response && error.response.status === 402) {
           this.handlePaymentRequiredError();
-          throw null;
         }
-        return Promise.reject(error);
+        return error;
       }
     );
   }
