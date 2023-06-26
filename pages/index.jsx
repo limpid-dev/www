@@ -704,6 +704,7 @@ export function Pricing() {
           ),
         });
       } else {
+        // Handle other errors
         console.error(error);
       }
     }
@@ -1195,6 +1196,7 @@ export function Header() {
         }
       } catch (error) {
         if (error.response && error.response.status === 401) {
+        } else {
           console.error("An error occurred:", error);
         }
       }
