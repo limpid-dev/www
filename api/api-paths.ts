@@ -1753,6 +1753,49 @@ export interface paths {
       };
     };
   };
+  "/tenders/{tender_id}/winner": {
+    get: {
+      parameters: {
+        path: {
+          tender_id: number;
+        };
+      };
+      responses: {
+        /** @description Tender winner */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["TenderBid"];
+            };
+          };
+        };
+      };
+    };
+    patch: {
+      parameters: {
+        path: {
+          tender_id: number;
+        };
+      };
+      requestBody: {
+        content: {
+          "multipart/form-data": {
+            won_tender_bid_id: number;
+          };
+        };
+      };
+      responses: {
+        /** @description Updated tender's data */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["Tender"];
+            };
+          };
+        };
+      };
+    };
+  };
   "/tenders/{tender_id}/bids": {
     get: {
       parameters: {
@@ -1948,6 +1991,38 @@ export interface paths {
       };
     };
   };
+  "/templates/": {
+    post: {
+      requestBody: {
+        content: {
+          "multipart/form-data": {
+            name_of_organisation: string;
+            name_of_service_to_be_purchased: string;
+            service_delivery_time: string;
+            place_of_service_rendering: string;
+            amount_of_advance_payment: string;
+            payment_terms: string;
+            guarantee_period: string;
+            detailed_description_of_service_requirements: string;
+            input_data?: string | null;
+            qualification_requirements_for_prospective_vendors?: string | null;
+            performance_security?: string | null;
+            special_contract_conditions?: string | null;
+          };
+        };
+      };
+      responses: {
+        /** @description Templates Generator */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["Templates"];
+            };
+          };
+        };
+      };
+    };
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -2001,6 +2076,7 @@ export interface components {
       tin_verified_at?: string | null;
       created_at?: string;
       updated_at?: string;
+      user?: components["schemas"]["User"];
     };
     Attachment: {
       url?: string | null;
@@ -2161,6 +2237,7 @@ export interface components {
       created_at?: string;
       /** Format: date-time */
       updated_at?: string;
+      profile?: components["schemas"]["Profile"];
     };
     Notification: {
       id?: number;
@@ -2213,6 +2290,20 @@ export interface components {
       hours?: number | null;
       minutes?: number | null;
       seconds?: number | null;
+    };
+    Templates: {
+      name_of_organisation?: string;
+      name_of_service_to_be_purchased?: string;
+      service_delivery_time?: string;
+      place_of_service_rendering?: string;
+      amount_of_advance_payment?: string;
+      payment_terms?: string;
+      guarantee_period?: string;
+      detailed_description_of_service_requirements?: string;
+      input_data?: string | null;
+      qualification_requirements_for_prospective_vendors?: string | null;
+      performance_security?: string | null;
+      special_contract_conditions?: string | null;
     };
   };
   responses: never;

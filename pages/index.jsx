@@ -1199,7 +1199,7 @@ export function Header() {
         }
       } catch (error) {
         if (error.response && error.response.status === 401) {
-          throw error;
+          throw new Error("Hello");
         } else {
           console.error("An error occurred:", error);
         }

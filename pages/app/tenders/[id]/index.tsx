@@ -7,6 +7,7 @@ import {
 } from "@phosphor-icons/react";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { NumericFormat } from "react-number-format";
@@ -47,6 +48,7 @@ import {
   SheetTrigger,
 } from "../../../../components/primitives/sheet";
 import getImageSrc from "../../../../hooks/get-image-url";
+import DefaultImage from "../../../../images/avatars/defaultProfile.svg";
 
 const calcTime = (date: string) => {
   const now = new Date();
@@ -60,6 +62,16 @@ const calcTime = (date: string) => {
   return hours > 0 ? hours : 0;
 };
 
+function convertTimestamp(timestamp: string): string {
+  const date = new Date(timestamp);
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear();
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  const convertedTimestamp = `${day}.${month}.${year}, ${hours}:${minutes}`;
+  return convertedTimestamp;
+}
 export const getServerSideProps = async (
   context: GetServerSidePropsContext<{
     id: string;
@@ -72,15 +84,37 @@ export const getServerSideProps = async (
     },
   });
   const isAuthor = tender.data?.profile_id === user.data.selected_profile_id;
-
-  return {
-    props: {
-      data: {
-        ...tender.data!,
-        isAuthor: isAuthor!,
+  console.log(tender.data);
+  try {
+    const { data: userBid } = await api.getTenderBid(
+      Number(context.params!.id),
+      {
+        headers: {
+          Cookie: context.req.headers.cookie,
+        },
+      }
+    );
+    if (userBid.data) {
+      return {
+        props: {
+          data: {
+            ...tender.data!,
+            isAuthor: isAuthor!,
+            userBid: userBid.data!,
+          },
+        },
+      };
+    }
+  } catch (error) {
+    return {
+      props: {
+        data: {
+          ...tender.data!,
+          isAuthor: isAuthor!,
+        },
       },
-    },
-  };
+    };
+  }
 };
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
@@ -193,32 +227,61 @@ export default function Tender({ data }: Props) {
                           </div>
                         </div>
                       </SheetTrigger>
-                      <SheetContent position="right" size="sm">
+                      <SheetContent position="right" size="default">
                         <SheetHeader>
                           <SheetTitle>Ставки</SheetTitle>
                         </SheetHeader>
                         <div className="flex flex-col gap-6 pt-3">
-                          {data.wonAuctionBid ? (
-                            <div className="bg-slate-100 p-3 rounded-md w-full flex flex-col  gap-3">
-                              <p className="text-center font-semibold text-2xl">
-                                {data.wonAuctionBid
-                                  .price!.toString()
-                                  .replace(/\.?0+$/, "")}{" "}
-                                ₸
-                              </p>
-                              <div className="flex justify-between">
-                                <Link
-                                  href={`/app/profiles/${data.wonAuctionBid.profile_id}`}
-                                >
-                                  <Button variant="outline">Профиль</Button>
-                                </Link>
-                                <Link
-                                  href={`/app/profiles/${data.wonAuctionBid.profile_id}`}
-                                >
-                                  <Button variant="outline">
-                                    Написать сообщение
-                                  </Button>
-                                </Link>
+                          {data.wonTenderBid ? (
+                            <div className="flex flex-col rounded-md">
+                              <div className="flex justify-between bg-slate-100 px-6 py-3 rounded-t-md">
+                                <div className="flex gap-3 items-center">
+                                  <Image
+                                    src={
+                                      getImageSrc(
+                                        data.wonTenderBid.profile?.avatar?.url
+                                      ) ?? DefaultImage
+                                    }
+                                    width={0}
+                                    height={0}
+                                    unoptimized
+                                    className="object-cover w-9 h-9 rounded-md"
+                                    alt=""
+                                  />
+                                  {data.wonTenderBid.profile?.display_name}{" "}
+                                  <span className="p-1 rounded-lg text-sm text-white bg-lime-500">
+                                    Победитель
+                                  </span>
+                                </div>
+                                <p className="text-center font-semibold text-2xl">
+                                  {data.wonTenderBid
+                                    .price!.toString()
+                                    .replace(/\.?0+$/, "")}{" "}
+                                  ₸
+                                </p>
+                              </div>
+                              <Separator className="bg-white" />
+                              <div className="flex justify-between items-center bg-slate-100 px-6 py-3 rounded-b-md">
+                                <div className="flex flex-col text-xs gap-1">
+                                  <p>Дата и время ставки:</p>
+                                  {convertTimestamp(
+                                    data.wonTenderBid.created_at
+                                  )}
+                                </div>
+                                {data.isAuthor && (
+                                  <div className="flex gap-3">
+                                    <Link
+                                      href={`/app/profiles/${data.wonTenderBid.profile_id}`}
+                                    >
+                                      <Button variant="outline">Профиль</Button>
+                                    </Link>
+                                    <Link
+                                      href={`/app/profiles/${data.wonTenderBid.profile_id}`}
+                                    >
+                                      <Button variant="black">Написать</Button>
+                                    </Link>
+                                  </div>
+                                )}
                               </div>
                             </div>
                           ) : (
@@ -226,23 +289,46 @@ export default function Tender({ data }: Props) {
                           )}
                           {bids?.map((bid) => (
                             <div key={bid.id}>
-                              <div className="bg-slate-100 p-3 rounded-md w-full">
-                                <p className=" text-center font-semibold text-2xl">
-                                  {bid.price!.toString().replace(/\.?0+$/, "")}{" "}
-                                  ₸
-                                </p>
+                              <div className="flex flex-col rounded-md">
+                                <div className="flex justify-between bg-slate-100 px-6 py-3 rounded-t-md">
+                                  <div className="flex gap-3 items-center">
+                                    <Image
+                                      src={
+                                        getImageSrc(bid.profile?.avatar?.url) ??
+                                        DefaultImage
+                                      }
+                                      width={0}
+                                      height={0}
+                                      unoptimized
+                                      className="object-cover w-9 h-9 rounded-md"
+                                      alt=""
+                                    />
+                                    <p>{bid.profile?.display_name}</p>
+                                  </div>
+                                  <p className="text-center font-semibold text-2xl">
+                                    {bid
+                                      .price!.toString()
+                                      .replace(/\.?0+$/, "")}{" "}
+                                    ₸
+                                  </p>
+                                </div>
+                                <Separator className="bg-white" />
+                                <div className="flex justify-between items-center bg-slate-100 px-6 py-3 rounded-b-md">
+                                  <div className="flex gap-3">
+                                    <p className="text-xs">
+                                      Дата и время ставки:{" "}
+                                      {convertTimestamp(bid.created_at)}
+                                    </p>
+                                  </div>
+                                  {data.isAuthor && (
+                                    <Link
+                                      href={`/app/profiles/${bid.profile_id}`}
+                                    >
+                                      <Button variant="outline">Профиль</Button>
+                                    </Link>
+                                  )}
+                                </div>
                               </div>
-                              <Image
-                                src={
-                                  getImageSrc(bid.profile?.avatar?.url) ??
-                                  DefaultImage
-                                }
-                                width={0}
-                                height={0}
-                                unoptimized
-                                className="object-cover w-6 h-6"
-                                alt=""
-                              />
                             </div>
                           ))}
                         </div>
@@ -263,7 +349,7 @@ export default function Tender({ data }: Props) {
                 </div>
               </div>
               <Separator className="my-10" />
-              {data.wonAuctionBid ? (
+              {data.wonTenderBid ? (
                 ""
               ) : data.isAuthor ? (
                 ""
@@ -303,24 +389,26 @@ export default function Tender({ data }: Props) {
                               </p>
                             </div>
                           </div>
-                          <div>
-                            <p className="font-semibold text-sm ml-1">
-                              Последняя ваша ставка
-                            </p>
-                            <div className="flex gap-10">
-                              <p className="bg-slate-100 text-xl sm:text-2xl font-semibold p-4 rounded-md w-fit">
-                                <NumericFormat
-                                  value={data
-                                    .starting_price!.toString()
-                                    .replace(/\.?0+$/, "")}
-                                  allowLeadingZeros
-                                  displayType="text"
-                                  thousandSeparator=" "
-                                />{" "}
-                                ₸
+                          {data.userBid.price && (
+                            <div>
+                              <p className="font-semibold text-sm ml-1">
+                                Последняя ваша ставка
                               </p>
+                              <div className="flex gap-10">
+                                <p className="bg-slate-100 text-xl sm:text-2xl font-semibold p-4 rounded-md w-fit">
+                                  <NumericFormat
+                                    value={data.userBid
+                                      .price!.toString()
+                                      .replace(/\.?0+$/, "")}
+                                    allowLeadingZeros
+                                    displayType="text"
+                                    thousandSeparator=" "
+                                  />{" "}
+                                  ₸
+                                </p>
+                              </div>
                             </div>
-                          </div>
+                          )}
                         </div>
                         <Form
                           onSubmit={async (event) => {
@@ -330,7 +418,7 @@ export default function Tender({ data }: Props) {
                             const price = Number.parseFloat(
                               priceInput.replace(/\s/g, "")
                             );
-                            await api.createTenderBid(data.id, { price });
+                            await api.createTenderBid(data.id, price);
                             await router.reload();
                           }}
                           className="flex flex-col gap-3"
@@ -349,7 +437,8 @@ export default function Tender({ data }: Props) {
                               />
                             </Field>
                             <p className="text-xs">
-                              Ваша ставка должна быть выше стартовой цены
+                              Ваша ставка должна быть ниже стартовой/последней
+                              ставки
                             </p>
                           </div>
 

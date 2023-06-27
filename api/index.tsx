@@ -782,6 +782,13 @@ class APIClient {
     return this.axiosInstance.get(endpoint, { ...config, params });
   }
 
+  async getTenderBid(
+    tenderId: number,
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse<{ data?: components["schemas"]["TenderBid"] }>> {
+    return this.axiosInstance.get(`/tenders/${tenderId}/bid`, config);
+  }
+
   // Payments
   async getInvoices(
     sub_plan_id: number
