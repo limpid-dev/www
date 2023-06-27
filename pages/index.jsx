@@ -721,21 +721,9 @@ export function Pricing() {
       price: {},
       description: t("price_start_desc"),
       features: {
-        monthly: [
-          t("price_start_feat_1"),
-          t("price_start_feat_2"),
-          t("price_start_feat_3"),
-        ],
-        annually: [
-          t("price_start_feat_1"),
-          t("price_start_feat_2"),
-          t("price_start_feat_3"),
-        ],
-        kvartal: [
-          t("price_start_feat_1"),
-          t("price_start_feat_2"),
-          t("price_start_feat_3"),
-        ],
+        monthly: [t("price_start_feat_2"), t("price_start_feat_3")],
+        annually: [t("price_start_feat_2"), t("price_start_feat_3")],
+        kvartal: [t("price_start_feat_2"), t("price_start_feat_3")],
       },
       mostPopular: false,
     },
