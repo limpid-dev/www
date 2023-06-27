@@ -1347,7 +1347,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <section
+      {/* <section
         id="testimonials"
         aria-label="What our customers are saying"
         className="bg-zinc-50 py-20 sm:py-32"
@@ -1403,7 +1403,7 @@ export default function Home() {
             ))}
           </ul>
         </Container>
-      </section>
+      </section> */}
 
       <Pricing />
       <Footer />

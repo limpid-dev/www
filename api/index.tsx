@@ -762,7 +762,8 @@ class APIClient {
     tenderId: number,
     price: number
   ): Promise<AxiosResponse<{ data?: components["schemas"]["TenderBid"] }>> {
-    return this.axiosInstance.post(`/tenders/${tenderId}/bids`, price);
+    const bidData = { price };
+    return this.axiosInstance.post(`/tenders/${tenderId}/bid`, bidData);
   }
 
   async getTenderBids(

@@ -3,7 +3,6 @@
  * Do not make direct changes to the file.
  */
 
-
 export interface paths {
   "/users": {
     post: {
@@ -1778,8 +1777,13 @@ export interface paths {
       };
     };
   };
-  "/tenders/bid": {
+  "/tenders/{tender_id}/bid": {
     get: {
+      parameters: {
+        path: {
+          tender_id: number;
+        };
+      };
       responses: {
         /** @description TenderBid */
         200: {
@@ -1792,6 +1796,11 @@ export interface paths {
       };
     };
     post: {
+      parameters: {
+        path: {
+          tender_id: number;
+        };
+      };
       requestBody: {
         content: {
           "multipart/form-data": {
@@ -1811,6 +1820,11 @@ export interface paths {
       };
     };
     patch: {
+      parameters: {
+        path: {
+          tender_id: number;
+        };
+      };
       requestBody: {
         content: {
           "multipart/form-data": {
