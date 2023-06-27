@@ -44,7 +44,7 @@ export default function Test() {
     const { data: profile } = await api.createProfile(data);
     if (profile.data.id) {
       router.push({
-        pathname: "/app/profiles/create/experiences",
+        pathname: "/app/profiles/create/contacts",
         query: { profileId: profile.data.id },
       });
     }
@@ -65,15 +65,6 @@ export default function Test() {
               <div className="flex divide-x overflow-auto gap-4 px-5">
                 <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-lime-600 text-lg sm:text-xl">
                   Общие данные
-                </div>
-                <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-lg sm:text-xl">
-                  Опыт работы
-                </div>
-                <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-lg sm:text-xl">
-                  Образование
-                </div>
-                <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-lg sm:text-xl">
-                  Сертификаты
                 </div>
                 <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-slate-300 text-lg sm:text-xl">
                   Соцсети

@@ -84,7 +84,7 @@ export const getServerSideProps = async (
     },
   });
   const isAuthor = tender.data?.profile_id === user.data.selected_profile_id;
-  console.log(tender.data);
+  console.log(tender);
   try {
     const { data: userBid } = await api.getTenderBid(
       Number(context.params!.id),
@@ -94,6 +94,7 @@ export const getServerSideProps = async (
         },
       }
     );
+
     if (userBid.data) {
       return {
         props: {
@@ -128,6 +129,12 @@ export default function Tender({ data }: Props) {
 
   const [bids, setBids] = useState<components["schemas"]["TenderBid"][]>();
 
+  const handleDeleteTender = async () => {
+    await api.deleteTender(parsedId);
+    await router.push({
+      pathname: `/app/tenders/`,
+    });
+  };
   useEffect(() => {
     const fetchBids = async () => {
       try {
@@ -389,7 +396,7 @@ export default function Tender({ data }: Props) {
                               </p>
                             </div>
                           </div>
-                          {/* {data.userBid.price && (
+                          {data.userBid?.price ? (
                             <div>
                               <p className="font-semibold text-sm ml-1">
                                 Последняя ваша ставка
@@ -408,7 +415,9 @@ export default function Tender({ data }: Props) {
                                 </p>
                               </div>
                             </div>
-                          )} */}
+                          ) : (
+                            ""
+                          )}
                         </div>
                         <Form
                           onSubmit={async (event) => {
@@ -479,7 +488,10 @@ export default function Tender({ data }: Props) {
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>Отмена</AlertDialogCancel>
-                        <AlertDialogAction className="w-[90px] bg-rose-600 hover:bg-red-900">
+                        <AlertDialogAction
+                          onClick={handleDeleteTender}
+                          className="w-[90px] bg-rose-600 hover:bg-red-900"
+                        >
                           Да
                         </AlertDialogAction>
                       </AlertDialogFooter>

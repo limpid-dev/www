@@ -7,8 +7,8 @@ import { components } from "../../../../api/api-paths";
 import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";
 import { Input } from "../../../../components/primitives/input";
-import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
 import getImageSrc from "../../../../hooks/get-image-url";
+import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
 
 interface FormValues {
   avatar?: File;
@@ -95,15 +95,6 @@ export default function Test() {
                 <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-lime-500 text-xl">
                   Общие данные
                 </div>
-                <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-lime-500 text-xl">
-                  Опыт работы
-                </div>
-                <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-lime-500 text-xl">
-                  Сертификаты
-                </div>
-                <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-lime-500 text-xl">
-                  Доп.материалы
-                </div>
                 <div className="border-b flex items-center justify-center border-slate-100 py-8 flex-1 whitespace-nowrap font-semibold text-lime-600 text-xl">
                   Соцсети
                 </div>
@@ -111,7 +102,7 @@ export default function Test() {
               <div className="flex justify-center items-center flex-col">
                 <div className="col-span-full flex items-center gap-x-8">
                   <Image
-                    src={getImageSrc(data?.avatar?.url) ?? DefaultAva}
+                    src={getImageSrc(data.avatar?.url) ?? DefaultAva}
                     width={0}
                     height={0}
                     unoptimized

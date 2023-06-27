@@ -758,6 +758,10 @@ class APIClient {
     return this.axiosInstance.post("/tenders", body);
   }
 
+  async deleteTender(tenderId: number): Promise<AxiosResponse<never>> {
+    return this.axiosInstance.delete(`/tenders/${tenderId}`);
+  }
+
   async createTenderBid(
     tenderId: number,
     price: number
