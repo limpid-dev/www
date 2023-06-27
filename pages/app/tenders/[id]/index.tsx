@@ -84,7 +84,6 @@ export const getServerSideProps = async (
     },
   });
   const isAuthor = tender.data?.profile_id === user.data.selected_profile_id;
-  console.log(tender);
   try {
     const { data: userBid } = await api.getTenderBid(
       Number(context.params!.id),

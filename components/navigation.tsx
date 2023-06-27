@@ -293,7 +293,7 @@ export function Navigation() {
                     {profession}
                   </p>
                 ) : (
-                  <p className="w-24 mr-3" />
+                  <p className="mr-3 rounded-md bg-slate-100 p-2 px-4 w-24 h-9" />
                 )}
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-4 flex-shrink-0">
