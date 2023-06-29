@@ -2,6 +2,7 @@ import { Plus } from "@phosphor-icons/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import TextareaAutosize from "react-textarea-autosize";
 import api from "../../../api";
 import { Button } from "../../primitives/button";
 import { TextArea } from "../../primitives/text-area";
@@ -132,13 +133,15 @@ export function EducationCreate({ profileId, isAddHandler }: any) {
                 </div>
 
                 <div>
-                  <TextArea
-                    className="rounded-md"
+                  <TextareaAutosize
+                    minRows={4}
+                    className="rounded-md w-full h-auto resize-none"
                     placeholder="Опишите ваше обучение"
                     {...register(`education.${index}.description`, {
                       required: "Please enter your first name.",
                     })}
                   />
+
                   {errors.education?.[index]?.description && (
                     <p className="ml-2 text-sm text-red-500">
                       Обязательное поле

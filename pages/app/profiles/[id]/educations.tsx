@@ -33,8 +33,8 @@ import {
 } from "../../../../components/primitives/select";
 import { TextArea } from "../../../../components/primitives/text-area";
 import { EducationCreate } from "../../../../components/profiles/create/education";
-import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
 import getImageSrc from "../../../../hooks/get-image-url";
+import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
 
 const dateFormatter = (arg: string) => {
   return new Date(arg).getFullYear().toString();
@@ -636,7 +636,7 @@ export default function Education({ data }: Props) {
                             <div className=" text-lg font-semibold">
                               {item.started_at}
                             </div>
-                            <>-</>
+                            <> - </>
                             <div className=" text-lg font-semibold">
                               {item.finished_at}
                             </div>
