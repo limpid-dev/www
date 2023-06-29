@@ -228,11 +228,11 @@ export default function Profiles() {
 
         <div className="grid gap-6 sm:grid-cols-3">
           <React.Fragment>
-            {profilesData.map((profile, profileIndex) => {
+            {profilesData.map((profile) => {
               if (!profile.is_visible) {
                 return (
                   <div
-                    key={profileIndex}
+                    key={profile.id}
                     className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black"
                   >
                     <div className="grid grid-cols-10 h-[160px]">
@@ -271,7 +271,7 @@ export default function Profiles() {
                 );
               }
               return (
-                <Link key={profileIndex} href={`/app/profiles/${profile.id}`}>
+                <Link key={profile.id} href={`/app/profiles/${profile.id}`}>
                   <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
                     <div className="grid grid-cols-10 h-[160px]">
                       <div className="col-span-4 mr-3">
