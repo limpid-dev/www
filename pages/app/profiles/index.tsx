@@ -1,4 +1,4 @@
-import { Faders, MagnifyingGlass, SquaresFour } from "@phosphor-icons/react";
+import { Eye, MagnifyingGlass, SquaresFour } from "@phosphor-icons/react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import clsx from "clsx";
 import Image from "next/image";
@@ -6,16 +6,12 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import api from "../../../api";
+import { components } from "../../../api/api-paths";
 import { GeneralLayout } from "../../../components/general-layout";
 import { Navigation } from "../../../components/navigation";
 import Pagination from "../../../components/pagination";
 import { Button } from "../../../components/primitives/button";
 import { Options } from "../../../components/primitives/options";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "../../../components/primitives/popover";
 import {
   Sheet,
   SheetContent,
@@ -35,42 +31,62 @@ const tabs = [
 
 export default function Profiles() {
   const router = useRouter();
-  const [profilesData, setProfilesData] = useState<any[]>([]);
-  const [profilesMeta, setProfilesMeta] = useState<any>({});
-  const [totalItems, setTotalItems] = useState<any>(1);
-  const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>): void => {
-    const selectedPage = event.target.value;
-    router.push(selectedPage);
-  };
   const currentPage =
     (Number.parseInt(router.query.page as string, 10) as number) || 1;
 
-  const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
+  const [profilesData, setProfilesData] = useState<
+    components["schemas"]["Profile"][]
+  >([]);
+  const [profilesMeta, setProfilesMeta] = useState<
+    components["schemas"]["Pagination"]
+  >({});
+
+  const [selectedCheckboxes, setSelectedCheckboxes] = useState<number[]>([]);
 
   const [searchTerm, setSearchTerm] = useState("");
 
   const [largeScreen, setLargeScreen] = useState(false);
-
   useEffect(() => {
     const handleResize = () => {
       const newScreenWidth = window.innerWidth;
       setLargeScreen(newScreenWidth > 896);
     };
-
     handleResize();
-
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
 
+  const handleSearch = useCallback(async () => {
+    const industries = selectedCheckboxes
+      .map((id) => {
+        const option = Options.find((option) => option.id === id);
+        return option ? option.name : null;
+      })
+      .filter(Boolean) as string[];
+
+    const { data } = await api.getProfiles({
+      page: currentPage,
+      per_page: 9,
+      industry: industries,
+      search: searchTerm,
+    });
+
+    setProfilesData(data.data);
+    setProfilesMeta(data.meta);
+  }, [selectedCheckboxes, currentPage, searchTerm]);
+
+  useEffect(() => {
+    handleSearch();
+  }, [selectedCheckboxes, searchTerm, handleSearch]);
+
   const handleReset = () => {
     setSelectedCheckboxes([]);
     setSearchTerm("");
   };
 
-  const handleCheckboxChange = (event) => {
+  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
     if (selectedCheckboxes.includes(value)) {
       setSelectedCheckboxes(selectedCheckboxes.filter((id) => id !== value));
@@ -79,29 +95,10 @@ export default function Profiles() {
     }
   };
 
-  const handleSearch = useCallback(async () => {
-    const industries = selectedCheckboxes
-      .map((id) => {
-        const option = Options.find((option) => option.id === id);
-        return option ? option.name : null;
-      })
-      .filter(Boolean);
-
-    const { data } = await api.getProfiles({
-      page: currentPage,
-      per_page: 9,
-      industry: industries,
-      search: searchTerm,
-    });
-    setProfilesData(data.data);
-    setProfilesMeta(data.meta);
-    setTotalItems(data.meta.total);
-    console.log(data.meta);
-  }, [selectedCheckboxes, currentPage, searchTerm]);
-
-  useEffect(() => {
-    handleSearch();
-  }, [selectedCheckboxes, searchTerm, handleSearch]);
+  const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>): void => {
+    const selectedPage = event.target.value;
+    router.push(selectedPage);
+  };
 
   return (
     <div>
@@ -242,7 +239,7 @@ export default function Profiles() {
                       <div className="col-span-4 mr-3">
                         <Image
                           src={
-                            getImageSrc(profile?.avatar?.url) ?? DefaultAvatar
+                            getImageSrc(profile.avatar?.url) ?? DefaultAvatar
                           }
                           width={0}
                           height={0}
@@ -252,20 +249,20 @@ export default function Profiles() {
                         />
                       </div>
                       <div className="col-span-6 flex flex-col gap-1">
-                        <p>{profile.display_name}</p>
+                        <p className="line-clamp-1 ">{profile.display_name}</p>
                         <p className="line-clamp-1">
                           {profile.user?.first_name} {profile.user?.last_name}
                         </p>
                         <p className="line-clamp-1 w-auto text-xs text-slate-600">
                           {profile.industry}
                         </p>
-                        <p className="line-clamp-2 w-auto text-xs text-slate-500">
-                          {profile.title}
+                        <p className="line-clamp-1 w-auto text-xs text-slate-500">
+                          {profile.display_name}
                         </p>
-                        <p className="line-clamp-2 w-auto text-sm text-slate-400">
+                        <p className="line-clamp-1 w-auto text-sm text-slate-400">
                           {profile.location}
                         </p>
-                        <p className="line-clamp-2 text-xs">
+                        <p className="line-clamp-1 text-xs">
                           {profile.description}
                         </p>
                       </div>
@@ -276,11 +273,11 @@ export default function Profiles() {
               return (
                 <Link key={profileIndex} href={`/app/profiles/${profile.id}`}>
                   <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
-                    <div className="grid grid-cols-10 h-[140px]">
+                    <div className="grid grid-cols-10 h-[150px]">
                       <div className="col-span-4 mr-3">
                         <Image
                           src={
-                            getImageSrc(profile?.avatar?.url) ?? DefaultAvatar
+                            getImageSrc(profile.avatar?.url) ?? DefaultAvatar
                           }
                           width={0}
                           height={0}
@@ -289,23 +286,36 @@ export default function Profiles() {
                           className="h-32 w-32 rounded-lg object-cover"
                         />
                       </div>
-                      <div className="col-span-6 flex flex-col gap-1">
+                      <div className="col-span-6 flex flex-col gap-2">
                         <p>{profile.display_name}</p>
-                        <p className="line-clamp-1">
-                          {profile.user?.first_name} {profile.user?.last_name}
+                        <p className="line-clamp-2 w-auto text-xs text-slate-500">
+                          {profile.location}
                         </p>
                         <p className="line-clamp-1 w-auto text-xs text-slate-600">
                           {profile.industry}
                         </p>
+                        <p className="line-clamp-1 w-auto text-xs text-slate-500">
+                          {profile.display_name}
+                        </p>
                         <p className="line-clamp-2 w-auto text-xs text-slate-500">
-                          {profile.title}
-                        </p>
-                        <p className="line-clamp-2 w-auto text-sm text-slate-400">
-                          {profile.location}
-                        </p>
-                        <p className="line-clamp-2 text-xs">
                           {profile.description}
                         </p>
+                        <div className="flex gap-10">
+                          <p className="line-clamp-1 text-xs text-slate-400">
+                            {profile.created_at &&
+                              new Date(profile.created_at).toLocaleDateString(
+                                "ru-RU",
+                                {
+                                  day: "numeric",
+                                  month: "numeric",
+                                  year: "numeric",
+                                }
+                              )}
+                          </p>
+                          <p className="line-clamp-1 text-xs flex gap-2 items-center text-slate-400">
+                            <Eye className="w-4 h-4" /> {profile.views}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -315,14 +325,17 @@ export default function Profiles() {
           </React.Fragment>
         </div>
       </GeneralLayout>
-      <Pagination
-        totalItems={totalItems}
-        currentPage={currentPage}
-        itemsPerPage={9}
-        renderPageLink={(page) => `/app/profiles/?page=${page}`}
-        firstPageUrl={profilesMeta.first_page_url}
-        lastPageUrl={profilesMeta.last_page_url}
-      />
+
+      {profilesMeta.total !== undefined && (
+        <Pagination
+          totalItems={profilesMeta.total}
+          currentPage={currentPage}
+          itemsPerPage={9}
+          renderPageLink={(page) => `/app/profiles/?page=${page}`}
+          firstPageUrl={profilesMeta.first_page_url}
+          lastPageUrl={profilesMeta.last_page_url}
+        />
+      )}
     </div>
   );
 }
