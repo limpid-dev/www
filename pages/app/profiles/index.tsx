@@ -24,6 +24,7 @@ import {
 import { Skeleton } from "../../../components/primitives/skeleton";
 import getImageSrc from "../../../hooks/get-image-url";
 import DefaultAvatar from "../../../images/avatars/defaultProfile.svg";
+import IncognitoProfile from "../../../images/avatars/incognitoProfile.png";
 
 const tabs = [
   { name: "Все профили", href: "/app/profiles/", current: true },
@@ -254,9 +255,7 @@ export default function Profiles() {
                       <div className="grid grid-cols-10 h-[160px]">
                         <div className="col-span-4 mr-3">
                           <Image
-                            src={
-                              getImageSrc(profile.avatar?.url) ?? DefaultAvatar
-                            }
+                            src={IncognitoProfile}
                             width={0}
                             height={0}
                             unoptimized
