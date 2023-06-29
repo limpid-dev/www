@@ -26,6 +26,10 @@ export default function All() {
     []
   );
 
+  const [auctionsMeta, setAuctionsMeta] = useState<
+    components["schemas"]["Pagination"]
+  >({});
+
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
 
