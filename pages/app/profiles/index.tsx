@@ -231,15 +231,15 @@ export default function Profiles() {
 
         {loading ? (
           <div className="grid gap-6 sm:grid-cols-3">
-            <Skeleton className=" h-[160px] rounded-full" />
-            <Skeleton className=" h-[160px] rounded-full" />
-            <Skeleton className=" h-[160px] rounded-full" />
-            <Skeleton className=" h-[160px] rounded-full" />
-            <Skeleton className=" h-[160px] rounded-full" />
-            <Skeleton className=" h-[160px] rounded-full" />
-            <Skeleton className=" h-[160px] rounded-full" />
-            <Skeleton className=" h-[160px] rounded-full" />
-            <Skeleton className=" h-[160px] rounded-full" />
+            <Skeleton className=" h-[194px] rounded-full" />
+            <Skeleton className=" h-[194px] rounded-full" />
+            <Skeleton className=" h-[194px] rounded-full" />
+            <Skeleton className=" h-[194px] rounded-full" />
+            <Skeleton className=" h-[194px] rounded-full" />
+            <Skeleton className=" h-[194px] rounded-full" />
+            <Skeleton className=" h-[194px] rounded-full" />
+            <Skeleton className=" h-[194px] rounded-full" />
+            <Skeleton className=" h-[194px] rounded-full" />
           </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-3">
