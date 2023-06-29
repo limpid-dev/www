@@ -21,6 +21,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../../../components/primitives/sheet";
+import { Skeleton } from "../../../components/primitives/skeleton";
 import getImageSrc from "../../../hooks/get-image-url";
 import DefaultAvatar from "../../../images/avatars/defaultProfile.svg";
 
@@ -33,6 +34,7 @@ export default function Profiles() {
   const router = useRouter();
   const currentPage =
     (Number.parseInt(router.query.page as string, 10) as number) || 1;
+  const [loading, setLoading] = useState(true);
 
   const [profilesData, setProfilesData] = useState<
     components["schemas"]["Profile"][]
@@ -75,6 +77,7 @@ export default function Profiles() {
 
     setProfilesData(data.data);
     setProfilesMeta(data.meta);
+    setLoading(false);
   }, [selectedCheckboxes, currentPage, searchTerm]);
 
   useEffect(() => {
@@ -226,104 +229,120 @@ export default function Profiles() {
           </div>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-3">
-          <React.Fragment>
-            {profilesData.map((profile) => {
-              if (!profile.is_visible) {
-                return (
-                  <div
-                    key={profile.id}
-                    className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black"
-                  >
-                    <div className="grid grid-cols-10 h-[160px]">
-                      <div className="col-span-4 mr-3">
-                        <Image
-                          src={
-                            getImageSrc(profile.avatar?.url) ?? DefaultAvatar
-                          }
-                          width={0}
-                          height={0}
-                          unoptimized
-                          alt="test"
-                          className="h-32 w-32 rounded-lg object-cover bg-slate-100"
-                        />
-                      </div>
-                      <div className="col-span-6 flex flex-col gap-1">
-                        <p className="line-clamp-1 ">{profile.display_name}</p>
-                        <p className="line-clamp-1">
-                          {profile.user?.first_name} {profile.user?.last_name}
-                        </p>
-                        <p className="line-clamp-1 w-auto text-xs text-slate-600">
-                          {profile.industry}
-                        </p>
-                        <p className="line-clamp-1 w-auto text-xs text-slate-500">
-                          {profile.display_name}
-                        </p>
-                        <p className="line-clamp-1 w-auto text-sm text-slate-400">
-                          {profile.location}
-                        </p>
-                        <p className="line-clamp-1 text-xs">
-                          {profile.description}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                );
-              }
-              return (
-                <Link key={profile.id} href={`/app/profiles/${profile.id}`}>
-                  <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
-                    <div className="grid grid-cols-10 h-[160px]">
-                      <div className="col-span-4 mr-3">
-                        <Image
-                          src={
-                            getImageSrc(profile.avatar?.url) ?? DefaultAvatar
-                          }
-                          width={0}
-                          height={0}
-                          unoptimized
-                          alt="test"
-                          className="h-32 w-32 rounded-lg object-cover"
-                        />
-                      </div>
-                      <div className="col-span-6 flex flex-col gap-2">
-                        <p>{profile.display_name}</p>
-                        <p className="line-clamp-2 w-auto text-xs text-slate-500">
-                          {profile.location}
-                        </p>
-                        <p className="line-clamp-1 w-auto text-xs text-slate-600">
-                          {profile.industry}
-                        </p>
-                        <p className="line-clamp-1 w-auto text-xs text-slate-500">
-                          {profile.display_name}
-                        </p>
-                        <p className="line-clamp-2 w-auto text-xs text-slate-500">
-                          {profile.description}
-                        </p>
-                        <div className="flex gap-10">
-                          <p className="line-clamp-1 text-xs text-slate-400">
-                            {profile.created_at &&
-                              new Date(profile.created_at).toLocaleDateString(
-                                "ru-RU",
-                                {
-                                  day: "numeric",
-                                  month: "numeric",
-                                  year: "numeric",
-                                }
-                              )}
+        {loading ? (
+          <div className="grid gap-6 sm:grid-cols-3">
+            <Skeleton className=" h-[160px] rounded-full" />
+            <Skeleton className=" h-[160px] rounded-full" />
+            <Skeleton className=" h-[160px] rounded-full" />
+            <Skeleton className=" h-[160px] rounded-full" />
+            <Skeleton className=" h-[160px] rounded-full" />
+            <Skeleton className=" h-[160px] rounded-full" />
+            <Skeleton className=" h-[160px] rounded-full" />
+            <Skeleton className=" h-[160px] rounded-full" />
+            <Skeleton className=" h-[160px] rounded-full" />
+          </div>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-3">
+            <React.Fragment>
+              {profilesData.map((profile) => {
+                if (!profile.is_visible) {
+                  return (
+                    <div
+                      key={profile.id}
+                      className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black"
+                    >
+                      <div className="grid grid-cols-10 h-[160px]">
+                        <div className="col-span-4 mr-3">
+                          <Image
+                            src={
+                              getImageSrc(profile.avatar?.url) ?? DefaultAvatar
+                            }
+                            width={0}
+                            height={0}
+                            unoptimized
+                            alt="test"
+                            className="h-32 w-32 rounded-lg object-cover bg-slate-100"
+                          />
+                        </div>
+                        <div className="col-span-6 flex flex-col gap-1">
+                          <p className="line-clamp-1 ">
+                            {profile.display_name}
                           </p>
-                          <p className="line-clamp-1 text-xs flex gap-2 items-center text-slate-400">
-                            <Eye className="w-4 h-4" /> {profile.views}
+                          <p className="line-clamp-1">
+                            {profile.user?.first_name} {profile.user?.last_name}
+                          </p>
+                          <p className="line-clamp-1 w-auto text-xs text-slate-600">
+                            {profile.industry}
+                          </p>
+                          <p className="line-clamp-1 w-auto text-xs text-slate-500">
+                            {profile.display_name}
+                          </p>
+                          <p className="line-clamp-1 w-auto text-sm text-slate-400">
+                            {profile.location}
+                          </p>
+                          <p className="line-clamp-1 text-xs">
+                            {profile.description}
                           </p>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </React.Fragment>
-        </div>
+                  );
+                }
+                return (
+                  <Link key={profile.id} href={`/app/profiles/${profile.id}`}>
+                    <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
+                      <div className="grid grid-cols-10 h-[160px]">
+                        <div className="col-span-4 mr-3">
+                          <Image
+                            src={
+                              getImageSrc(profile.avatar?.url) ?? DefaultAvatar
+                            }
+                            width={0}
+                            height={0}
+                            unoptimized
+                            alt="test"
+                            className="h-32 w-32 rounded-lg object-cover"
+                          />
+                        </div>
+                        <div className="col-span-6 flex flex-col gap-2">
+                          <p>{profile.display_name}</p>
+                          <p className="line-clamp-2 w-auto text-xs text-slate-500">
+                            {profile.location}
+                          </p>
+                          <p className="line-clamp-1 w-auto text-xs text-slate-600">
+                            {profile.industry}
+                          </p>
+                          <p className="line-clamp-1 w-auto text-xs text-slate-500">
+                            {profile.display_name}
+                          </p>
+                          <p className="line-clamp-2 w-auto text-xs text-slate-500">
+                            {profile.description}
+                          </p>
+                          <div className="flex gap-10">
+                            <p className="line-clamp-1 text-xs text-slate-400">
+                              {profile.created_at &&
+                                new Date(profile.created_at).toLocaleDateString(
+                                  "ru-RU",
+                                  {
+                                    day: "numeric",
+                                    month: "numeric",
+                                    year: "numeric",
+                                  }
+                                )}
+                            </p>
+                            <p className="line-clamp-1 text-xs flex gap-2 items-center text-slate-400">
+                              <Eye className="w-4 h-4" /> {profile.views}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </React.Fragment>
+          </div>
+        )}
       </GeneralLayout>
 
       {profilesMeta.total !== undefined && (
