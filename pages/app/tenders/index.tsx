@@ -1,18 +1,16 @@
-import { Check, Faders, SquaresFour } from "@phosphor-icons/react";
+import { Faders, SquaresFour } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { InferGetServerSidePropsType } from "next";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import api from "../../../api";
 import { components } from "../../../api/api-paths";
 import { Navigation } from "../../../components/navigation";
+import Pagination from "../../../components/pagination";
 import { Button } from "../../../components/primitives/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "../../../components/primitives/card";
@@ -31,12 +29,20 @@ const calcTime = (date: string) => {
 };
 
 export default function Tenders() {
+  const router = useRouter();
+
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
   };
-  const router = useRouter();
+  const currentPage =
+    (Number.parseInt(router.query.page as string, 10) as number) || 1;
   const [tenders, setTenders] = useState<components["schemas"]["Tender"][]>([]);
+
+  const [tendersMeta, setTendersMeta] = useState<
+    components["schemas"]["Pagination"]
+  >({});
+
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
 
@@ -44,10 +50,11 @@ export default function Tenders() {
     const fetchTenders = async () => {
       try {
         const response = await api.getTenders({
-          query: { page: 1, per_page: 9 },
+          query: { page: currentPage, per_page: 9 },
         });
-        if (response.data.data) {
+        if (response.data.data && response.data.meta) {
           setTenders(response.data.data);
+          setTendersMeta(response.data.meta);
           setLoading(false);
         }
       } catch (error) {
@@ -57,7 +64,7 @@ export default function Tenders() {
     };
 
     fetchTenders();
-  }, []);
+  }, [currentPage]);
 
   return (
     <>
@@ -186,6 +193,16 @@ export default function Tenders() {
           </div>
         </div>
       </div>
+      {tendersMeta.total !== undefined && (
+        <Pagination
+          totalItems={tendersMeta.total}
+          currentPage={currentPage}
+          itemsPerPage={9}
+          renderPageLink={(page) => `/app/profiles/?page=${page}`}
+          firstPageUrl={tendersMeta.first_page_url}
+          lastPageUrl={tendersMeta.last_page_url}
+        />
+      )}
     </>
   );
 }

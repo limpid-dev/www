@@ -1,4 +1,4 @@
-import { CaretRight, Faders, SquaresFour } from "@phosphor-icons/react";
+import { Faders, SquaresFour } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -194,6 +194,16 @@ export default function All() {
           </div>
         </div>
       </div>
+      {/* {profilesMeta.total !== undefined && (
+        <Pagination
+          totalItems={profilesMeta.total}
+          currentPage={currentPage}
+          itemsPerPage={9}
+          renderPageLink={(page) => `/app/profiles/?page=${page}`}
+          firstPageUrl={profilesMeta.first_page_url}
+          lastPageUrl={profilesMeta.last_page_url}
+        />
+      )} */}
     </>
   );
 }
