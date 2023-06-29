@@ -135,7 +135,7 @@ export function EducationCreate({ profileId, isAddHandler }: any) {
                 <div>
                   <TextareaAutosize
                     minRows={4}
-                    className="rounded-md w-full h-auto resize-none"
+                    className="rounded-md w-full h-auto resize-none text-sm"
                     placeholder="Опишите ваше обучение"
                     {...register(`education.${index}.description`, {
                       required: "Please enter your first name.",
