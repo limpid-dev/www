@@ -235,7 +235,7 @@ export default function Profiles() {
                     key={profileIndex}
                     className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black"
                   >
-                    <div className="grid grid-cols-10 h-[140px]">
+                    <div className="grid grid-cols-10 h-[160px]">
                       <div className="col-span-4 mr-3">
                         <Image
                           src={
@@ -273,7 +273,7 @@ export default function Profiles() {
               return (
                 <Link key={profileIndex} href={`/app/profiles/${profile.id}`}>
                   <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
-                    <div className="grid grid-cols-10 h-[150px]">
+                    <div className="grid grid-cols-10 h-[160px]">
                       <div className="col-span-4 mr-3">
                         <Image
                           src={
