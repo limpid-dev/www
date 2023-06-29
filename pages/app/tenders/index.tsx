@@ -48,7 +48,6 @@ export default function Tenders() {
         });
         if (response.data.data) {
           setTenders(response.data.data);
-          console.log(response.data.data);
           setLoading(false);
         }
       } catch (error) {
@@ -59,14 +58,6 @@ export default function Tenders() {
 
     fetchTenders();
   }, []);
-
-  if (loading) {
-    return <div>Loading tenders...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
 
   return (
     <div className="min-h-screen bg-slate-50">

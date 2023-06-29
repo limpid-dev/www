@@ -25,6 +25,7 @@ export default function All() {
   const [auctions, setAuctions] = useState<components["schemas"]["Auction"][]>(
     []
   );
+
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
 
@@ -36,7 +37,6 @@ export default function All() {
           per_page: 9,
         });
         setAuctions(response.data.data || []);
-        console.log(response.data.data);
         setLoading(false);
       } catch (error) {
         setError("Error fetching tenders.");
@@ -47,16 +47,8 @@ export default function All() {
     fetchAuctions();
   }, []);
 
-  if (loading) {
-    return <div>Loading tenders...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
-
   return (
-    <div>
+    <>
       <Navigation />
       <div className="h-screen bg-slate-50 px-5 pt-8">
         <div className="mx-auto max-w-screen-xl">
@@ -202,6 +194,6 @@ export default function All() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
