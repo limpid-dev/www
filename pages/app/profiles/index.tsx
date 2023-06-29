@@ -96,6 +96,7 @@ export default function Profiles() {
     setProfilesData(data.data);
     setProfilesMeta(data.meta);
     setTotalItems(data.meta.total);
+    console.log(data.meta);
   }, [selectedCheckboxes, currentPage, searchTerm]);
 
   useEffect(() => {
@@ -117,7 +118,7 @@ export default function Profiles() {
                 onChange={handleSelectChange}
                 id="tabs"
                 name="tabs"
-                className="block w-full  border-gray-300 focus:border-lime-500 focus:ring-lime-500"
+                className="block w-full  border-gray-300 focus:border-lime-500 focus:ring-lime-500 rounded-md"
                 defaultValue="/app/profiles/"
               >
                 {tabs.map((tab) => (
@@ -164,33 +165,6 @@ export default function Profiles() {
               </Button>
             </div>
             <div className="flex gap-4">
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline">
-                    <Faders className="h-6 w-6" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <div className="flex items-center gap-3 bg-slate-50 rounded-md p-3">
-                    <input
-                      type="checkbox"
-                      name=""
-                      id=""
-                      className="rounded-md"
-                    />
-                    <p className="text-sm">Сначала новые</p>
-                  </div>
-                  <div className="flex items-center gap-3 bg-slate-50 rounded-md p-3 mt-3">
-                    <input
-                      type="checkbox"
-                      name=""
-                      id=""
-                      className="rounded-md"
-                    />
-                    <p className="text-sm">Сначала старые</p>
-                  </div>
-                </PopoverContent>
-              </Popover>
               <Sheet>
                 <SheetTrigger asChild>
                   <Button variant="outline">
@@ -348,8 +322,6 @@ export default function Profiles() {
         renderPageLink={(page) => `/app/profiles/?page=${page}`}
         firstPageUrl={profilesMeta.first_page_url}
         lastPageUrl={profilesMeta.last_page_url}
-        nextPageUrl={profilesMeta.next_page_url}
-        previousPageUrl={profilesMeta.previous_page_url}
       />
     </div>
   );

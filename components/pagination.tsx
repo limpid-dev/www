@@ -49,20 +49,20 @@ const Pagination = ({
           </Link>
         )
       )}
-      {previousPageUrl && (
+      {firstPageUrl && (
         <Link
-          href={previousPageUrl}
+          href={`/app/profiles${firstPageUrl}`}
           className="px-4 py-2 mx-1 text-lg font-semibold no-underline"
         >
-          Previous
+          Начало
         </Link>
       )}
-      {nextPageUrl && (
+      {lastPageUrl && (
         <Link
-          href={nextPageUrl}
+          href={`/app/profiles${lastPageUrl}`}
           className="px-4 py-2 mx-1 text-lg font-semibold no-underline"
         >
-          Next
+          Конец
         </Link>
       )}
     </div>

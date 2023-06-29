@@ -1211,22 +1211,22 @@ export function Header() {
             </div>
           </div>
           <div className="flex items-center gap-x-5 md:gap-x-8">
-            <div className="hidden md:block">
+            <div className=" md:block">
               {userData ? (
-                <NavLink href="/app/projects">
-                  {userData.first_name} {userData.last_name}
-                </NavLink>
+                <NavLink href="/app/projects">{userData.first_name}</NavLink>
               ) : (
                 <NavLink href="/login">{t("log_in")}</NavLink>
               )}
             </div>
 
             {!userData && (
-              <NavLink href="/register">
-                <Button color="lime" className="hidden lg:inline rounded-lg">
-                  {t("signup_today")}
-                </Button>
-              </NavLink>
+              <div className={`${!userData ? "hidden" : ""}`}>
+                <NavLink href="/register">
+                  <Button color="lime" className="hidden lg:inline rounded-lg">
+                    {t("signup_today")}
+                  </Button>
+                </NavLink>
+              </div>
             )}
             <div>
               <Select
@@ -1246,7 +1246,7 @@ export function Header() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectItem value="ru">Русский язык</SelectItem>
+                    <SelectItem value="ru">Русский</SelectItem>
                     <SelectItem value="kz">Қазақ тілі</SelectItem>
                     <SelectItem value="en">English</SelectItem>
                   </SelectGroup>
