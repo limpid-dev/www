@@ -99,8 +99,8 @@ export default function Test() {
                   Соцсети
                 </div>
               </div>
-              <div className="flex justify-center items-center flex-col">
-                <div className="col-span-full flex items-center gap-x-8">
+              <div className="flex justify-center items-center flex-col p-10">
+                <div className="col-span-full flex flex-col gap-3 items-center gap-x-8">
                   <Image
                     src={getImageSrc(data.avatar?.url) ?? DefaultAva}
                     width={0}
