@@ -267,9 +267,6 @@ export default function All() {
                         <p className="line-clamp-2 w-auto text-xs text-slate-600">
                           {profile.industry}
                         </p>
-                        <p className="line-clamp-2 w-auto text-xs text-slate-500">
-                          {profile.display_name}
-                        </p>
                         <p className="line-clamp-2 w-auto text-sm text-slate-400">
                           {profile.location}
                         </p>
