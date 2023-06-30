@@ -1,23 +1,9 @@
-import "@uppy/core/dist/style.css";
-import "@uppy/dashboard/dist/style.css";
-import "@uppy/drag-drop/dist/style.css";
-import { Paperclip, Plus, Question } from "@phosphor-icons/react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@radix-ui/react-tooltip";
-import { Uppy } from "@uppy/core";
-import Russian from "@uppy/locales/lib/ru_RU";
-import { DashboardModal } from "@uppy/react";
+import { Plus } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FormEvent, useEffect, useState } from "react";
 import api from "../../../api";
-// import { buildFormData } from "../../../api/files";
 import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
 import {
@@ -27,35 +13,36 @@ import {
   CardHeader,
   CardTitle,
 } from "../../../components/primitives/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../../../components/primitives/dialog";
-import {
-  Field,
-  Form,
-  Input,
-  Label,
-  Textarea,
-} from "../../../components/primitives/form";
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { data: session } = await api.getUser({
+    headers: {
+      Cookie: context.req.headers.cookie,
+    },
+  });
+
+  const { data: tenders } = await api.getTenders({
+    query: {
+      page: 1,
+      per_page: 10,
+    },
+  });
+
+  return {
+    props: {
+      ...tenders!,
+    },
+  };
+}
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 const calcTime = (date: string) => {
   const now = new Date();
-
   const finish = new Date(date);
-
   const diff = finish.getTime() - now.getTime();
-
-  const hours = Math.floor(diff / 1000 / 60 / 60);
-
-  return hours > 0 ? hours : 0;
+  const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+  return days > 0 ? days : 0;
 };
 
 const tabs = [
@@ -63,82 +50,12 @@ const tabs = [
   { name: "Мои закупки", href: "/app/tenders/my", current: true },
 ];
 
-const uppy = new Uppy({
-  locale: Russian,
-  restrictions: {
-    allowedFileTypes: [
-      ".jpg",
-      ".jpeg",
-      ".png",
-      ".pdf",
-      ".docx",
-      ".doc",
-      ".pptx",
-      ".ppt",
-      ".xlsx",
-      ".xls",
-    ],
-    maxFileSize: 1024 * 1024 * 8,
-  },
-});
-
 export default function TendersMy({ data }: Props) {
   const router = useRouter();
-  const [fileDashboardOpen, setFileDashboardOpen] = useState(false);
 
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
-  };
-
-  useEffect(() => {
-    uppy.on("dashboard:modal-closed", () => setFileDashboardOpen(false));
-  }, []);
-
-  const [fileCount, setFileCount] = useState(0);
-
-  useEffect(() => {
-    uppy.on("file-added", () => setFileCount(uppy.getFiles().length));
-    uppy.on("file-removed", () => setFileCount(uppy.getFiles().length));
-  }, []);
-
-  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
-
-    const values = Object.fromEntries(form.entries()) as unknown as {
-      title: string;
-      description: string;
-      duration: number;
-      startingPrice?: number;
-    };
-
-    const profileId = localStorage.getItem("profileId");
-
-    if (!profileId) {
-      // eslint-disable-next-line no-alert
-      alert("Необходимо создать профиль");
-      return;
-    }
-
-    const { data } = await api.tenders.store({
-      title: values.title,
-      description: values.description,
-      duration: values.duration,
-      profileId: Number.parseInt(profileId, 10),
-      startingPrice: values.startingPrice,
-    });
-
-    if (data) {
-      const files = uppy.getFiles().map((file) => {
-        const formData = buildFormData(file.data);
-        return api.tenders.files(data.id).store(formData);
-      });
-
-      const t = await Promise.allSettled(files);
-
-      router.push(`/app/tenders/${data.id}`);
-    }
   };
 
   return (
@@ -187,90 +104,9 @@ export default function TendersMy({ data }: Props) {
                 Создать закупки
               </Button>
             </Link>
-            <Dialog
-              onOpenChange={(open) => {
-                if (!open) {
-                  uppy.getFiles().forEach((file) => {
-                    uppy.removeFile(file.id);
-                  });
-                }
-              }}
-            >
-              <DialogTrigger asChild />
-              <DialogContent className={clsx("p-6")}>
-                <DialogHeader>
-                  <DialogTitle>Создать закупки</DialogTitle>
-                  <DialogDescription>
-                    Заполните форму, чтобы создать закупки.
-                  </DialogDescription>
-                </DialogHeader>
-                <Form onSubmit={onSubmit} id="form">
-                  <Field name="title">
-                    <Label>Название</Label>
-                    <Input required minLength={1} maxLength={255} />
-                  </Field>
-                  <Field name="description">
-                    <Label>Описание</Label>
-                    <Textarea required minLength={1} maxLength={1024} />
-                  </Field>
-                  <Field name="duration">
-                    <div className="flex gap-3">
-                      <Label>Срок приема заявок</Label>{" "}
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Question className="h-6 w-6" />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Сколько дней будет длиться аукцион</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
-                    <Input
-                      type="number"
-                      required
-                      min={1}
-                      max={31}
-                      defaultValue={24}
-                    />
-                  </Field>
-                  <Field name="startingPrice">
-                    <Label>Стартовая цена</Label>
-                    <Input type="number" placeholder="Опционально" min={1} />
-                  </Field>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="space-x-2"
-                    onClick={() => setFileDashboardOpen(true)}
-                  >
-                    <Paperclip
-                      weight="bold"
-                      className="h-4 w-4 text-zinc-800"
-                    />
-                    <span>Прикрепление файлов</span>
-                    <span className="font-semibold">
-                      {fileCount > 0 && `${fileCount} выбран(о)`}
-                    </span>
-                  </Button>
-                  <DashboardModal
-                    proudlyDisplayPoweredByUppy={false}
-                    hideUploadButton
-                    open={fileDashboardOpen}
-                    uppy={uppy}
-                  />
-                  <DialogFooter>
-                    <Button type="submit" className="rounded-lg">
-                      Создать закупки
-                    </Button>
-                  </DialogFooter>
-                </Form>
-              </DialogContent>
-            </Dialog>
           </div>
-          {/* <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {data.map((tender) => (
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {data?.map((tender) => (
               <Card
                 key={tender.id}
                 onClick={() => {
@@ -296,7 +132,7 @@ export default function TendersMy({ data }: Props) {
                       </span>
                     </div>
                     <div className="flex items-center justify-between gap-2 text-sm font-medium">
-                      <span>Осталось часов:</span>
+                      <span>Осталось дней:</span>
                       <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
                         {tender.finishedAt
                           ? calcTime(tender.finishedAt)
@@ -318,48 +154,9 @@ export default function TendersMy({ data }: Props) {
                 </CardContent>
               </Card>
             ))}
-          </div> */}
+          </div>
         </div>
       </div>
     </>
   );
 }
-
-// export async function getServerSideProps(context: GetServerSidePropsContext) {
-//   const session = await api.session.show({
-//     headers: {
-//       Cookie: context.req.headers.cookie!,
-//     },
-//     credentials: "include",
-//   });
-
-//   const profiles = await api.profiles.index({
-//     page: 1,
-//     perPage: 100,
-//     filters: {
-//       userId: session.data!.id,
-//     },
-//   });
-
-//   const tndrs = profiles.data!.map((profile) =>
-//     api.tenders
-//       .index({
-//         page: 1,
-//         perPage: 100,
-//         filters: {
-//           profileId: profile.id,
-//         },
-//       })
-//       .then((tenders) => tenders.data)
-//   );
-
-//   const tenders = await Promise.all(tndrs);
-
-//   const flat = tenders.flat().filter(Boolean) as Entity[];
-
-//   return {
-//     props: {
-//       data: flat,
-//     },
-//   };
-// }

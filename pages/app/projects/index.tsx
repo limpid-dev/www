@@ -85,7 +85,7 @@ export default function All() {
         const option = Options.find((option) => option.id === id);
         return option ? option.name : null;
       })
-      .filter(Boolean);
+      .filter(Boolean) as string[];
 
     const { data } = await api.getProjects({
       page: 1,
