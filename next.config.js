@@ -13,7 +13,7 @@ const nextConfig = {
   },
 
   // images: { domains: ["object.pscloud.io"] },
-  images: { domains: ["127.0.0.1","object.pscloud.io"] },
+  images: { domains: ["object.pscloud.io"] },
 
   async rewrites() {
     return [

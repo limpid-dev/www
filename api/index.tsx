@@ -1,4 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import { ToastAction } from "../components/primitives/toast";
+import { toast } from "../hooks/useToast";
 import { components, paths } from "./api-paths";
 
 export interface AxiosError extends Error {
@@ -9,13 +11,41 @@ export interface AxiosError extends Error {
 }
 
 const API_BASE_URL = "https://limpid.kz/api";
+const ClIENT_URL = "https://limpid.kz/";
+
 // const API_BASE_URL = "http://localhost:3000/api";
+// const ClIENT_URL = "http://localhost:3000/";
 
 class APIClient {
   private axiosInstance = axios.create({
     baseURL: API_BASE_URL,
     withCredentials: true,
   });
+
+  constructor() {
+    this.axiosInstance.interceptors.response.use(
+      (response: AxiosResponse) => response,
+      (error: AxiosError) => {
+        if (error.response && error.response.status === 402) {
+          this.handlePaymentRequiredError();
+        }
+        return Promise.reject(error);
+      }
+    );
+  }
+
+  private handlePaymentRequiredError() {
+    toast({
+      title: "Нет попыток",
+      description: "Купите подписку",
+      variant: "destructive",
+      action: (
+        <ToastAction altText="try">
+          <a href="https://limpid.kz/#pricing">Купить</a>
+        </ToastAction>
+      ),
+    });
+  }
 
   // Users
   async createUser(
@@ -368,6 +398,36 @@ class APIClient {
     return this.axiosInstance.get(`/projects/${project_id}`, config);
   }
 
+  async updateProject(
+    params: paths["/projects/{project_id}"]["patch"]["parameters"]["path"],
+    projectData: paths["/projects/{project_id}"]["patch"]["requestBody"]["content"]["multipart/form-data"]
+  ): Promise<
+    AxiosResponse<{
+      data?: components["schemas"]["Project"];
+    }>
+  > {
+    const { project_id } = params;
+    const formData = new FormData();
+    Object.entries(projectData).forEach(([key, value]) => {
+      if (value) {
+        if (value instanceof File) {
+          formData.append(key, value);
+        }
+        if (typeof value === "string") {
+          formData.append(key, value);
+        }
+      }
+    });
+    return this.axiosInstance.patch(`/projects/${project_id}`, formData);
+  }
+
+  async deleteProject(
+    params: paths["/projects/{project_id}"]["delete"]["parameters"]["path"]
+  ): Promise<AxiosResponse<void>> {
+    const { project_id } = params;
+    return this.axiosInstance.delete(`/projects/${project_id}`);
+  }
+
   // Auction
   async getAuction(
     auction_id: number,
@@ -429,36 +489,6 @@ class APIClient {
     config?: AxiosRequestConfig
   ): Promise<AxiosResponse<{ data?: components["schemas"]["AuctionBid"] }>> {
     return this.axiosInstance.get(`/auctions/${auctionId}/bids/user`, config);
-  }
-
-  async updateProject(
-    params: paths["/projects/{project_id}"]["patch"]["parameters"]["path"],
-    projectData: paths["/projects/{project_id}"]["patch"]["requestBody"]["content"]["multipart/form-data"]
-  ): Promise<
-    AxiosResponse<{
-      data?: components["schemas"]["Project"];
-    }>
-  > {
-    const { project_id } = params;
-    const formData = new FormData();
-    Object.entries(projectData).forEach(([key, value]) => {
-      if (value) {
-        if (value instanceof File) {
-          formData.append(key, value);
-        }
-        if (typeof value === "string") {
-          formData.append(key, value);
-        }
-      }
-    });
-    return this.axiosInstance.patch(`/projects/${project_id}`, formData);
-  }
-
-  async deleteProject(
-    params: paths["/projects/{project_id}"]["delete"]["parameters"]["path"]
-  ): Promise<AxiosResponse<void>> {
-    const { project_id } = params;
-    return this.axiosInstance.delete(`/projects/${project_id}`);
   }
 
   // Project members
@@ -726,6 +756,41 @@ class APIClient {
     }>
   > {
     return this.axiosInstance.post("/tenders", body);
+  }
+
+  async deleteTender(tenderId: number): Promise<AxiosResponse<never>> {
+    return this.axiosInstance.delete(`/tenders/${tenderId}`);
+  }
+
+  async createTenderBid(
+    tenderId: number,
+    price: number
+  ): Promise<AxiosResponse<{ data?: components["schemas"]["TenderBid"] }>> {
+    const bidData = { price };
+    return this.axiosInstance.post(`/tenders/${tenderId}/bid`, bidData);
+  }
+
+  async getTenderBids(
+    tenderId: number,
+    queryParams: { page: number; per_page?: number },
+    config?: AxiosRequestConfig
+  ): Promise<
+    AxiosResponse<{
+      meta?: components["schemas"]["Pagination"];
+      data?: components["schemas"]["TenderBid"][];
+    }>
+  > {
+    const endpoint = `/tenders/${tenderId}/bids`;
+    const { page, per_page } = queryParams;
+    const params = { page, per_page };
+    return this.axiosInstance.get(endpoint, { ...config, params });
+  }
+
+  async getTenderBid(
+    tenderId: number,
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse<{ data?: components["schemas"]["TenderBid"] }>> {
+    return this.axiosInstance.get(`/tenders/${tenderId}/bid`, config);
   }
 
   // Payments

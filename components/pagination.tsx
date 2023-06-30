@@ -7,15 +7,23 @@ export interface PaginationProps {
   currentPage: number;
   itemsPerPage: number;
   renderPageLink: (page: number) => string;
+  firstPageUrl?: string;
+  lastPageUrl?: string;
+  nextPageUrl?: string;
+  previousPageUrl?: string | null;
 }
 
-export const dotts = -1;
+const dotts = -1;
 
 const Pagination = ({
   totalItems,
   currentPage,
   itemsPerPage,
   renderPageLink,
+  firstPageUrl,
+  lastPageUrl,
+  nextPageUrl,
+  previousPageUrl,
 }: PaginationProps) => {
   const pages = usePagination(totalItems, currentPage, itemsPerPage);
 

@@ -203,6 +203,12 @@ export default function ProjectView({ data }: Props) {
   const [error, setErrors] = useState("");
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevents the default form submission behavior
+      handleSendMessage();
+    }
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -681,10 +687,9 @@ export default function ProjectView({ data }: Props) {
                           ) : (
                             <>
                               <Link
-                                href={
-                                  getImageSrc(data.project.data.logo?.url) ??
-                                  Test
-                                }
+                                href={getImageSrc(
+                                  data.project.data.business_plan.url
+                                )}
                               >
                                 <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-8 font-semibold hover:border-slate-700">
                                   <DownloadSimple className="h-14 w-14" />
@@ -1296,6 +1301,7 @@ export default function ProjectView({ data }: Props) {
                         </div>
                       );
                     })}
+                    <div id="anchor" className=" overflow-anchor" />
                   </ScrollArea>
                   <div className="flex items-center justify-around px-6 pb-3 gap-2">
                     <Input
@@ -1303,6 +1309,7 @@ export default function ProjectView({ data }: Props) {
                       value={message}
                       placeholder="Сообщение"
                       className="max-h-11"
+                      onKeyDown={handleKeyPress}
                     />
                     <Button
                       variant="outline"

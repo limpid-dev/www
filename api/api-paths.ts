@@ -3,7 +3,6 @@
  * Do not make direct changes to the file.
  */
 
-
 export interface paths {
   "/users": {
     post: {
@@ -166,7 +165,7 @@ export interface paths {
           page: number;
           per_page?: number;
           user_id?: number;
-          industry?: string;
+          industry?: string[];
           search?: string;
         };
       };
@@ -176,7 +175,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["Profile"])[];
+              data?: components["schemas"]["Profile"][];
             };
           };
         };
@@ -301,7 +300,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["Certificate"])[];
+              data?: components["schemas"]["Certificate"][];
             };
           };
         };
@@ -408,7 +407,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["Education"])[];
+              data?: components["schemas"]["Education"][];
             };
           };
         };
@@ -511,7 +510,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["Experience"])[];
+              data?: components["schemas"]["Experience"][];
             };
           };
         };
@@ -624,7 +623,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["Skill"])[];
+              data?: components["schemas"]["Skill"][];
             };
           };
         };
@@ -719,8 +718,8 @@ export interface paths {
           page: number;
           per_page?: number;
           profile_id?: number;
-          industry?: (string)[];
-          stage?: (string)[];
+          industry?: string[];
+          stage?: string[];
           required_money_amount?: {
             min?: number;
             max?: number;
@@ -738,7 +737,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["Project"])[];
+              data?: components["schemas"]["Project"][];
             };
           };
         };
@@ -873,7 +872,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["ProjectMember"])[];
+              data?: components["schemas"]["ProjectMember"][];
             };
           };
         };
@@ -986,7 +985,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["Chat"])[];
+              data?: components["schemas"]["Chat"][];
             };
           };
         };
@@ -996,7 +995,7 @@ export interface paths {
       requestBody: {
         content: {
           "multipart/form-data": {
-            user_ids: (number)[];
+            user_ids: number[];
             name: string;
           };
         };
@@ -1050,7 +1049,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["Message"])[];
+              data?: components["schemas"]["Message"][];
             };
           };
         };
@@ -1088,7 +1087,7 @@ export interface paths {
           page: number;
           per_page?: number;
           profile_id?: number;
-          industry?: (string)[];
+          industry?: string[];
           search?: string;
         };
       };
@@ -1098,7 +1097,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["Auction"])[];
+              data?: components["schemas"]["Auction"][];
             };
           };
         };
@@ -1220,7 +1219,7 @@ export interface paths {
           page: number;
           per_page?: number;
           auction_id?: number;
-          industry?: (string)[];
+          industry?: string[];
           search?: string;
         };
       };
@@ -1230,7 +1229,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["AuctionBid"])[];
+              data?: components["schemas"]["AuctionBid"][];
             };
           };
         };
@@ -1314,7 +1313,7 @@ export interface paths {
           page: number;
           per_page?: number;
           user_id?: number;
-          industry?: (string)[];
+          industry?: string[];
           search?: string;
         };
       };
@@ -1324,7 +1323,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["Profile"])[];
+              data?: components["schemas"]["Profile"][];
             };
           };
         };
@@ -1459,7 +1458,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["OrganizationMember"])[];
+              data?: components["schemas"]["OrganizationMember"][];
             };
           };
         };
@@ -1556,7 +1555,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["Certificate"])[];
+              data?: components["schemas"]["Certificate"][];
             };
           };
         };
@@ -1660,7 +1659,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["Tender"])[];
+              data?: components["schemas"]["Tender"][];
             };
           };
         };
@@ -1754,6 +1753,49 @@ export interface paths {
       };
     };
   };
+  "/tenders/{tender_id}/winner": {
+    get: {
+      parameters: {
+        path: {
+          tender_id: number;
+        };
+      };
+      responses: {
+        /** @description Tender winner */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["TenderBid"];
+            };
+          };
+        };
+      };
+    };
+    patch: {
+      parameters: {
+        path: {
+          tender_id: number;
+        };
+      };
+      requestBody: {
+        content: {
+          "multipart/form-data": {
+            won_tender_bid_id: number;
+          };
+        };
+      };
+      responses: {
+        /** @description Updated tender's data */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["Tender"];
+            };
+          };
+        };
+      };
+    };
+  };
   "/tenders/{tender_id}/bids": {
     get: {
       parameters: {
@@ -1771,7 +1813,26 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["TenderBid"])[];
+              data?: components["schemas"]["TenderBid"][];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/tenders/{tender_id}/bid": {
+    get: {
+      parameters: {
+        path: {
+          tender_id: number;
+        };
+      };
+      responses: {
+        /** @description TenderBid */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["TenderBid"];
             };
           };
         };
@@ -1801,31 +1862,10 @@ export interface paths {
         };
       };
     };
-  };
-  "/tenders/{tender_id}/bids/{bid_id}": {
-    get: {
-      parameters: {
-        path: {
-          tender_id: number;
-          bid_id: number;
-        };
-      };
-      responses: {
-        /** @description TenderBid */
-        200: {
-          content: {
-            "application/json": {
-              data?: components["schemas"]["TenderBid"];
-            };
-          };
-        };
-      };
-    };
     patch: {
       parameters: {
         path: {
           tender_id: number;
-          bid_id: number;
         };
       };
       requestBody: {
@@ -1861,7 +1901,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["Notification"])[];
+              data?: components["schemas"]["Notification"][];
             };
           };
         };
@@ -1913,7 +1953,7 @@ export interface paths {
         200: {
           content: {
             "application/json": {
-              data?: (components["schemas"]["SubPlans"])[];
+              data?: components["schemas"]["SubPlans"][];
             };
           };
         };
@@ -1925,7 +1965,7 @@ export interface paths {
         200: {
           content: {
             "application/json": {
-              data?: (components["schemas"]["Invoices"])[];
+              data?: components["schemas"]["Invoices"][];
             };
           };
         };
@@ -1944,7 +1984,39 @@ export interface paths {
         200: {
           content: {
             "application/json": {
-              data?: (components["schemas"]["Invoices"])[];
+              data?: components["schemas"]["Invoices"][];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/templates/": {
+    post: {
+      requestBody: {
+        content: {
+          "multipart/form-data": {
+            name_of_organisation: string;
+            name_of_service_to_be_purchased: string;
+            service_delivery_time: string;
+            place_of_service_rendering: string;
+            amount_of_advance_payment: string;
+            payment_terms: string;
+            guarantee_period: string;
+            detailed_description_of_service_requirements: string;
+            input_data?: string | null;
+            qualification_requirements_for_prospective_vendors?: string | null;
+            performance_security?: string | null;
+            special_contract_conditions?: string | null;
+          };
+        };
+      };
+      responses: {
+        /** @description Templates Generator */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["Templates"];
             };
           };
         };
@@ -2004,6 +2076,7 @@ export interface components {
       tin_verified_at?: string | null;
       created_at?: string;
       updated_at?: string;
+      user?: components["schemas"]["User"];
     };
     Attachment: {
       url?: string | null;
@@ -2164,6 +2237,7 @@ export interface components {
       created_at?: string;
       /** Format: date-time */
       updated_at?: string;
+      profile?: components["schemas"]["Profile"];
     };
     Notification: {
       id?: number;
@@ -2216,6 +2290,20 @@ export interface components {
       hours?: number | null;
       minutes?: number | null;
       seconds?: number | null;
+    };
+    Templates: {
+      name_of_organisation?: string;
+      name_of_service_to_be_purchased?: string;
+      service_delivery_time?: string;
+      place_of_service_rendering?: string;
+      amount_of_advance_payment?: string;
+      payment_terms?: string;
+      guarantee_period?: string;
+      detailed_description_of_service_requirements?: string;
+      input_data?: string | null;
+      qualification_requirements_for_prospective_vendors?: string | null;
+      performance_security?: string | null;
+      special_contract_conditions?: string | null;
     };
   };
   responses: never;

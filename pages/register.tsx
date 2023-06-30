@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import { GetStaticProps } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -50,7 +51,15 @@ export default function Register() {
         }
       })
       .catch((error) => {
-        console.error("Error creating user:", error);
+        if (error instanceof Error) {
+          const status = (error as AxiosError).response?.status;
+          if (status === 422) {
+            setErrors((prev) => ({
+              ...prev,
+              email: true,
+            }));
+          }
+        }
       });
   };
 
@@ -94,7 +103,6 @@ export default function Register() {
           <Label>{t("password")}</Label>
           <Input
             type="password"
-            pattern="(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&_-])[A-Za-z\d@$!%*#?&_-]+"
             autoComplete="new-password"
             minLength={8}
             required

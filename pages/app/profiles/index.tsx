@@ -1,4 +1,4 @@
-import { Faders, MagnifyingGlass, SquaresFour } from "@phosphor-icons/react";
+import { Eye, MagnifyingGlass, SquaresFour } from "@phosphor-icons/react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import clsx from "clsx";
 import Image from "next/image";
@@ -6,16 +6,12 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import api from "../../../api";
+import { components } from "../../../api/api-paths";
 import { GeneralLayout } from "../../../components/general-layout";
 import { Navigation } from "../../../components/navigation";
 import Pagination from "../../../components/pagination";
 import { Button } from "../../../components/primitives/button";
 import { Options } from "../../../components/primitives/options";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "../../../components/primitives/popover";
 import {
   Sheet,
   SheetContent,
@@ -25,8 +21,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../../../components/primitives/sheet";
+import { Skeleton } from "../../../components/primitives/skeleton";
 import getImageSrc from "../../../hooks/get-image-url";
 import DefaultAvatar from "../../../images/avatars/defaultProfile.svg";
+import IncognitoProfile from "../../../images/avatars/incognitoProfile.png";
 
 const tabs = [
   { name: "Все профили", href: "/app/profiles/", current: true },
@@ -35,38 +33,64 @@ const tabs = [
 
 export default function Profiles() {
   const router = useRouter();
-  const [profilesData, setProfilesData] = useState<any[]>([]);
-  const [totalItems, setTotalItems] = useState<any>(1);
-  const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>): void => {
-    const selectedPage = event.target.value;
-    router.push(selectedPage);
-  };
   const currentPage =
     (Number.parseInt(router.query.page as string, 10) as number) || 1;
+  const [loading, setLoading] = useState(true);
 
-  const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
+  const [profilesData, setProfilesData] = useState<
+    components["schemas"]["Profile"][]
+  >([]);
+  const [profilesMeta, setProfilesMeta] = useState<
+    components["schemas"]["Pagination"]
+  >({});
+
+  const [selectedCheckboxes, setSelectedCheckboxes] = useState<number[]>([]);
+
   const [searchTerm, setSearchTerm] = useState("");
+
   const [largeScreen, setLargeScreen] = useState(false);
   useEffect(() => {
     const handleResize = () => {
       const newScreenWidth = window.innerWidth;
       setLargeScreen(newScreenWidth > 896);
     };
-
     handleResize();
-
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
 
+  const handleSearch = useCallback(async () => {
+    const industries = selectedCheckboxes
+      .map((id) => {
+        const option = Options.find((option) => option.id === id);
+        return option ? option.name : null;
+      })
+      .filter(Boolean) as string[];
+
+    const { data } = await api.getProfiles({
+      page: currentPage,
+      per_page: 9,
+      industry: industries,
+      search: searchTerm,
+    });
+
+    setProfilesData(data.data);
+    setProfilesMeta(data.meta);
+    setLoading(false);
+  }, [selectedCheckboxes, currentPage, searchTerm]);
+
+  useEffect(() => {
+    handleSearch();
+  }, [selectedCheckboxes, searchTerm, handleSearch]);
+
   const handleReset = () => {
     setSelectedCheckboxes([]);
     setSearchTerm("");
   };
 
-  const handleCheckboxChange = (event) => {
+  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
     if (selectedCheckboxes.includes(value)) {
       setSelectedCheckboxes(selectedCheckboxes.filter((id) => id !== value));
@@ -75,30 +99,10 @@ export default function Profiles() {
     }
   };
 
-  const handleSearch = useCallback(async () => {
-    const industries = selectedCheckboxes
-      .map((id) => {
-        const option = Options.find((option) => option.id === id);
-        return option ? option.name : null;
-      })
-      .filter(Boolean);
-
-    const industryString = industries.join(",");
-
-    const { data } = await api.getProfiles({
-      page: currentPage,
-      per_page: 9,
-      industry: industryString,
-      search: searchTerm,
-    });
-
-    setProfilesData(data.data);
-    setTotalItems(data.meta.total);
-  }, [selectedCheckboxes, currentPage, searchTerm]);
-
-  useEffect(() => {
-    handleSearch();
-  }, [selectedCheckboxes, searchTerm, handleSearch]);
+  const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>): void => {
+    const selectedPage = event.target.value;
+    router.push(selectedPage);
+  };
 
   return (
     <div>
@@ -115,7 +119,7 @@ export default function Profiles() {
                 onChange={handleSelectChange}
                 id="tabs"
                 name="tabs"
-                className="block w-full  border-gray-300 focus:border-lime-500 focus:ring-lime-500"
+                className="block w-full  border-gray-300 focus:border-lime-500 focus:ring-lime-500 rounded-md"
                 defaultValue="/app/profiles/"
               >
                 {tabs.map((tab) => (
@@ -162,33 +166,6 @@ export default function Profiles() {
               </Button>
             </div>
             <div className="flex gap-4">
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline">
-                    <Faders className="h-6 w-6" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <div className="flex items-center gap-3 bg-slate-50 rounded-md p-3">
-                    <input
-                      type="checkbox"
-                      name=""
-                      id=""
-                      className="rounded-md"
-                    />
-                    <p className="text-sm">Сначала новые</p>
-                  </div>
-                  <div className="flex items-center gap-3 bg-slate-50 rounded-md p-3 mt-3">
-                    <input
-                      type="checkbox"
-                      name=""
-                      id=""
-                      className="rounded-md"
-                    />
-                    <p className="text-sm">Сначала старые</p>
-                  </div>
-                </PopoverContent>
-              </Popover>
               <Sheet>
                 <SheetTrigger asChild>
                   <Button variant="outline">
@@ -253,98 +230,130 @@ export default function Profiles() {
           </div>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-3">
-          <React.Fragment>
-            {profilesData.map((profile, profileIndex) => {
-              if (!profile.is_visible) {
+        {loading ? (
+          <div className="grid gap-6 sm:grid-cols-3">
+            <Skeleton className=" h-[194px] rounded-full" />
+            <Skeleton className=" h-[194px] rounded-full" />
+            <Skeleton className=" h-[194px] rounded-full" />
+            <Skeleton className=" h-[194px] rounded-full" />
+            <Skeleton className=" h-[194px] rounded-full" />
+            <Skeleton className=" h-[194px] rounded-full" />
+            <Skeleton className=" h-[194px] rounded-full" />
+            <Skeleton className=" h-[194px] rounded-full" />
+            <Skeleton className=" h-[194px] rounded-full" />
+          </div>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-3">
+            <React.Fragment>
+              {profilesData.map((profile) => {
+                if (!profile.is_visible) {
+                  return (
+                    <div
+                      key={profile.id}
+                      className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black"
+                    >
+                      <div className="grid grid-cols-10 h-[160px]">
+                        <div className="col-span-4 mr-3">
+                          <Image
+                            src={IncognitoProfile}
+                            width={0}
+                            height={0}
+                            unoptimized
+                            alt="test"
+                            className="h-32 w-32 rounded-lg object-cover bg-slate-100"
+                          />
+                        </div>
+                        <div className="col-span-6 flex flex-col gap-1">
+                          <p className="line-clamp-1 ">
+                            {profile.display_name}
+                          </p>
+                          <p className="line-clamp-1">
+                            {profile.user?.first_name} {profile.user?.last_name}
+                          </p>
+                          <p className="line-clamp-1 w-auto text-xs text-slate-600">
+                            {profile.industry}
+                          </p>
+                          <p className="line-clamp-1 w-auto text-xs text-slate-500">
+                            {profile.display_name}
+                          </p>
+                          <p className="line-clamp-1 w-auto text-sm text-slate-400">
+                            {profile.location}
+                          </p>
+                          <p className="line-clamp-1 text-xs">
+                            {profile.description}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
                 return (
-                  <div
-                    key={profileIndex}
-                    className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black"
-                  >
-                    <div className="grid grid-cols-10 h-[140px]">
-                      <div className="col-span-4 mr-3">
-                        <Image
-                          src={
-                            getImageSrc(profile?.avatar?.url) ?? DefaultAvatar
-                          }
-                          width={0}
-                          height={0}
-                          unoptimized
-                          alt="test"
-                          className="h-32 w-32 rounded-lg object-cover bg-slate-100"
-                        />
-                      </div>
-                      <div className="col-span-6 flex flex-col gap-1">
-                        <p>{profile.display_name}</p>
-                        <p className="line-clamp-1">
-                          {profile.user?.first_name} {profile.user?.last_name}
-                        </p>
-                        <p className="line-clamp-1 w-auto text-xs text-slate-600">
-                          {profile.industry}
-                        </p>
-                        <p className="line-clamp-2 w-auto text-xs text-slate-500">
-                          {profile.title}
-                        </p>
-                        <p className="line-clamp-2 w-auto text-sm text-slate-400">
-                          {profile.location}
-                        </p>
-                        <p className="line-clamp-2 text-xs">
-                          {profile.description}
-                        </p>
+                  <Link key={profile.id} href={`/app/profiles/${profile.id}`}>
+                    <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
+                      <div className="grid grid-cols-10 h-[160px]">
+                        <div className="col-span-4 mr-3">
+                          <Image
+                            src={
+                              getImageSrc(profile.avatar?.url) ?? DefaultAvatar
+                            }
+                            width={0}
+                            height={0}
+                            unoptimized
+                            alt="test"
+                            className="h-32 w-32 rounded-lg object-cover"
+                          />
+                        </div>
+                        <div className="col-span-6 flex flex-col gap-2">
+                          <p>{profile.display_name}</p>
+                          <p className="line-clamp-2 w-auto text-xs text-slate-500">
+                            {profile.location}
+                          </p>
+                          <p className="line-clamp-1 w-auto text-xs text-slate-600">
+                            {profile.industry}
+                          </p>
+                          <p className="line-clamp-1 w-auto text-xs text-slate-500">
+                            {profile.display_name}
+                          </p>
+                          <p className="line-clamp-2 w-auto text-xs text-slate-500">
+                            {profile.description}
+                          </p>
+                          <div className="flex gap-10">
+                            <p className="line-clamp-1 text-xs text-slate-400">
+                              {profile.created_at &&
+                                new Date(profile.created_at).toLocaleDateString(
+                                  "ru-RU",
+                                  {
+                                    day: "numeric",
+                                    month: "numeric",
+                                    year: "numeric",
+                                  }
+                                )}
+                            </p>
+                            <p className="line-clamp-1 text-xs flex gap-2 items-center text-slate-400">
+                              <Eye className="w-4 h-4" /> {profile.views}
+                            </p>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 );
-              }
-              return (
-                <Link key={profileIndex} href={`/app/profiles/${profile.id}`}>
-                  <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
-                    <div className="grid grid-cols-10 h-[140px]">
-                      <div className="col-span-4 mr-3">
-                        <Image
-                          src={
-                            getImageSrc(profile?.avatar?.url) ?? DefaultAvatar
-                          }
-                          width={0}
-                          height={0}
-                          unoptimized
-                          alt="test"
-                          className="h-32 w-32 rounded-lg object-cover"
-                        />
-                      </div>
-                      <div className="col-span-6 flex flex-col gap-1">
-                        <p>{profile.display_name}</p>
-                        <p className="line-clamp-1">
-                          {profile.user?.first_name} {profile.user?.last_name}
-                        </p>
-                        <p className="line-clamp-1 w-auto text-xs text-slate-600">
-                          {profile.industry}
-                        </p>
-                        <p className="line-clamp-2 w-auto text-xs text-slate-500">
-                          {profile.title}
-                        </p>
-                        <p className="line-clamp-2 w-auto text-sm text-slate-400">
-                          {profile.location}
-                        </p>
-                        <p className="line-clamp-2 text-xs">
-                          {profile.description}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </React.Fragment>
-        </div>
+              })}
+            </React.Fragment>
+          </div>
+        )}
       </GeneralLayout>
-      <Pagination
-        renderPageLink={(page) => `/app/profiles/?page=${page}`}
-        itemsPerPage={9}
-        totalItems={totalItems}
-        currentPage={currentPage}
-      />
+
+      {profilesMeta.total !== undefined && (
+        <Pagination
+          totalItems={profilesMeta.total}
+          currentPage={currentPage}
+          itemsPerPage={9}
+          renderPageLink={(page) => `/app/profiles/?page=${page}`}
+          firstPageUrl={profilesMeta.first_page_url}
+          lastPageUrl={profilesMeta.last_page_url}
+        />
+      )}
     </div>
   );
 }

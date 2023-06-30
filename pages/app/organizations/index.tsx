@@ -1,4 +1,4 @@
-import { Faders, MagnifyingGlass, SquaresFour } from "@phosphor-icons/react";
+import { MagnifyingGlass, SquaresFour } from "@phosphor-icons/react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import clsx from "clsx";
 import Image from "next/image";
@@ -12,11 +12,6 @@ import { Navigation } from "../../../components/navigation";
 import Pagination from "../../../components/pagination";
 import { Button } from "../../../components/primitives/button";
 import { Options } from "../../../components/primitives/options";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "../../../components/primitives/popover";
 import {
   Sheet,
   SheetContent,
@@ -240,9 +235,9 @@ export default function All() {
             </div>
           ) : (
             <>
-              {profilesData?.map((profile, profileIndex) => (
+              {profilesData?.map((profile) => (
                 <Link
-                  key={profileIndex}
+                  key={profile.id}
                   href={`/app/organizations/${profile.id}`}
                 >
                   <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
@@ -272,9 +267,6 @@ export default function All() {
                         <p className="line-clamp-2 w-auto text-xs text-slate-600">
                           {profile.industry}
                         </p>
-                        <p className="line-clamp-2 w-auto text-xs text-slate-500">
-                          {profile.title}
-                        </p>
                         <p className="line-clamp-2 w-auto text-sm text-slate-400">
                           {profile.location}
                         </p>
@@ -291,8 +283,8 @@ export default function All() {
         </div>
       </GeneralLayout>
       <Pagination
-        renderPageLink={(page) => `/app/projects/?page=${page}`}
-        itemsPerPage={6}
+        renderPageLink={(page) => `/app/organizations/?page=${page}`}
+        itemsPerPage={9}
         totalItems={totalItems}
         currentPage={currentPage}
       />

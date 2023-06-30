@@ -28,6 +28,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../components/primitives/select";
+import { ToastAction } from "../components/primitives/toast";
+import { toast } from "../hooks/useToast";
 import AstanaHub from "../images/astanaHub.png";
 import avatarImage1 from "../images/avatars/avatar-1.webp";
 import avatarImage2 from "../images/avatars/avatar-2.webp";
@@ -672,24 +674,42 @@ export function Pricing() {
   ];
 
   const handlePayment = async (id) => {
-    const { data: response } = await api.getInvoices(id);
-    halyk.pay({
-      invoiceId: response.invoice.invoice_id,
-      language: response.invoice.language,
-      description: response.invoice.description,
-      terminal: response.invoice.terminal,
-      amount: response.invoice.amount,
-      currency: response.invoice.currency,
-      accountId: response.invoice.user_id,
-      auth: response.data,
-      postLink: response.invoice.post_link,
-      failurePostLink: "https://limpid.kz",
-      cardSave: true,
-      backLink: "https://limpid.kz",
-      failureBackLink: "",
-    });
-    if (response) {
-      console.log(response);
+    try {
+      const { data: response } = await api.getInvoices(id);
+      if (response.data) {
+        // eslint-disable-next-line no-undef
+        halyk.pay({
+          invoiceId: response.invoice.invoice_id,
+          language: response.invoice.language,
+          description: response.invoice.description,
+          terminal: response.invoice.terminal,
+          amount: response.invoice.amount,
+          currency: response.invoice.currency,
+          accountId: response.invoice.user_id,
+          auth: response.data,
+          postLink: response.invoice.post_link,
+          failurePostLink: "https://limpid.kz",
+          cardSave: true,
+          backLink: "https://limpid.kz",
+          failureBackLink: "",
+        });
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        toast({
+          title: "Вы не вошли в аккаунт",
+          description: "Войдите в акканут",
+          variant: "destructive",
+          action: (
+            <ToastAction altText="try">
+              <a href="https://limpid.kz/login">Войти</a>
+            </ToastAction>
+          ),
+        });
+      } else {
+        // Handle other errors
+        console.error(error);
+      }
     }
   };
 
@@ -701,21 +721,9 @@ export function Pricing() {
       price: {},
       description: t("price_start_desc"),
       features: {
-        monthly: [
-          t("price_start_feat_1"),
-          t("price_start_feat_2"),
-          t("price_start_feat_3"),
-        ],
-        annually: [
-          t("price_start_feat_1"),
-          t("price_start_feat_2"),
-          t("price_start_feat_3"),
-        ],
-        kvartal: [
-          t("price_start_feat_1"),
-          t("price_start_feat_2"),
-          t("price_start_feat_3"),
-        ],
+        monthly: [t("price_start_feat_2"), t("price_start_feat_3")],
+        annually: [t("price_start_feat_2"), t("price_start_feat_3")],
+        kvartal: [t("price_start_feat_2"), t("price_start_feat_3")],
       },
       mostPopular: false,
     },
@@ -864,7 +872,7 @@ export function Pricing() {
     setFrequency(selectedFrequency);
   };
 
-  const [frequency, setFrequency] = useState(frequencies[1]);
+  const [frequency, setFrequency] = useState(frequencies[0]);
 
   return (
     <section
@@ -1179,6 +1187,7 @@ export function Header() {
         }
       } catch (error) {
         if (error.response && error.response.status === 401) {
+          throw new Error("Hello");
         } else {
           console.error("An error occurred:", error);
         }
@@ -1202,22 +1211,22 @@ export function Header() {
             </div>
           </div>
           <div className="flex items-center gap-x-5 md:gap-x-8">
-            <div className="hidden md:block">
+            <div className=" md:block">
               {userData ? (
-                <NavLink href="/app/projects">
-                  {userData.first_name} {userData.last_name}
-                </NavLink>
+                <NavLink href="/app/projects">{userData.first_name}</NavLink>
               ) : (
                 <NavLink href="/login">{t("log_in")}</NavLink>
               )}
             </div>
 
             {!userData && (
-              <NavLink href="/register">
-                <Button color="lime" className="hidden lg:inline rounded-lg">
-                  {t("signup_today")}
-                </Button>
-              </NavLink>
+              <div className={`${!userData ? "hidden" : ""}`}>
+                <NavLink href="/register">
+                  <Button color="lime" className="hidden lg:inline rounded-lg">
+                    {t("signup_today")}
+                  </Button>
+                </NavLink>
+              </div>
             )}
             <div>
               <Select
@@ -1237,7 +1246,7 @@ export function Header() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectItem value="ru">Русский язык</SelectItem>
+                    <SelectItem value="ru">Русский</SelectItem>
                     <SelectItem value="kz">Қазақ тілі</SelectItem>
                     <SelectItem value="en">English</SelectItem>
                   </SelectGroup>
@@ -1326,7 +1335,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <section
+      {/* <section
         id="testimonials"
         aria-label="What our customers are saying"
         className="bg-zinc-50 py-20 sm:py-32"
@@ -1342,9 +1351,11 @@ export default function Home() {
           </div>
           <ul className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-6 sm:gap-8 lg:mt-20 lg:max-w-none lg:grid-cols-3">
             {testimonials.map((column, columnIndex) => (
+              // eslint-disable-next-line react/no-array-index-key
               <li key={columnIndex}>
                 <ul className="flex flex-col gap-y-6 sm:gap-y-8">
                   {column.map((testimonial, testimonialIndex) => (
+                    // eslint-disable-next-line react/no-array-index-key
                     <li key={testimonialIndex}>
                       <figure className="relative rounded-2xl bg-white p-6 shadow-xl shadow-zinc-900/10">
                         <QuoteIcon className="absolute left-6 top-6 fill-zinc-100" />
@@ -1380,7 +1391,7 @@ export default function Home() {
             ))}
           </ul>
         </Container>
-      </section>
+      </section> */}
 
       <Pricing />
       <Footer />

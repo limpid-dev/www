@@ -1,6 +1,5 @@
-import { Anchor, CaretRight, SquaresFour } from "@phosphor-icons/react";
+import { CaretRight, SquaresFour } from "@phosphor-icons/react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { PopoverAnchor } from "@radix-ui/react-popover";
 import clsx from "clsx";
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel, { EmblaOptionsType } from "embla-carousel-react";
@@ -9,7 +8,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import api from "../../../api";
-import { GeneralLayout } from "../../../components/general-layout";
 import { Navigation } from "../../../components/navigation";
 import Pagination from "../../../components/pagination";
 import { Button } from "../../../components/primitives/button";
@@ -87,7 +85,7 @@ export default function All() {
         const option = Options.find((option) => option.id === id);
         return option ? option.name : null;
       })
-      .filter(Boolean);
+      .filter(Boolean) as string[];
 
     const { data } = await api.getProjects({
       page: 1,
@@ -324,15 +322,18 @@ export default function All() {
 
           {loading ? (
             <div className="grid gap-6 sm:grid-cols-2">
-              <Skeleton className=" h-[150px] rounded-full" />
-              <Skeleton className=" h-[150px] rounded-full" />
-              <Skeleton className=" h-[150px] rounded-full" />
+              <Skeleton className=" h-[220px] rounded-full" />
+              <Skeleton className=" h-[220px] rounded-full" />
+              <Skeleton className=" h-[220px] rounded-full" />
+              <Skeleton className=" h-[220px] rounded-full" />
+              <Skeleton className=" h-[220px] rounded-full" />
+              <Skeleton className=" h-[220px] rounded-full" />
             </div>
           ) : (
             <>
               <div className="grid gap-6 sm:grid-cols-2">
-                {data.map((project, projectIndex) => (
-                  <div key={projectIndex}>
+                {data.map((project) => (
+                  <div key={project.id}>
                     <div className=" rounded-2xl border border-slate-200 bg-white hover:border-black">
                       <div className="p-4">
                         <div className="grid w-full grid-cols-10 gap-4 h-48">

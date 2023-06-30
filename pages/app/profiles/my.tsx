@@ -4,12 +4,10 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent } from "react";
 import api from "../../../api";
-import { components } from "../../../api/api-paths";
 import { GeneralLayout } from "../../../components/general-layout";
 import { Navigation } from "../../../components/navigation";
-import Pagination from "../../../components/pagination";
 import { Button } from "../../../components/primitives/button";
 import {
   Dialog,
@@ -18,7 +16,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../../../components/primitives/dialog";
-import { Skeleton } from "../../../components/primitives/skeleton";
 import AnalyzingMarket from "../../../images/analyzingMarket.svg";
 import NoProfiles from "../../../images/noProfiles.svg";
 import onLaptop from "../../../images/onLaptop.svg";
@@ -48,7 +45,6 @@ export const getServerSideProps = async (
         },
       }
     );
-
     return {
       props: {
         data: {
@@ -87,14 +83,14 @@ function Profiles({ data }: Props) {
         <Navigation />
         <GeneralLayout>
           <p className="text-sm text-slate-300">Профили</p>
-          <div className="my-5 flex flex-col items-end justify-end gap-4 md:mb-12 md:flex-row md:justify-between">
+          <div className="my-5 flex items-center justify-center gap-4 md:mb-12 md:flex-row md:justify-between">
             <div>
               <div className="sm:hidden">
                 <select
                   onChange={handleSelectChange}
                   id="tabs"
                   name="tabs"
-                  className="block w-full  border-gray-300 focus:border-lime-500 focus:ring-lime-500"
+                  className="block w-full rounded-md border-gray-300 focus:border-lime-500 focus:ring-lime-500"
                   defaultValue="/app/profiles/my"
                 >
                   {tabs.map((tab) => (
@@ -126,10 +122,7 @@ function Profiles({ data }: Props) {
             </div>
             <Dialog>
               <DialogTrigger asChild>
-                <Button
-                  variant="black"
-                  className="flex gap-3 text-xs sm:text-sm"
-                >
+                <Button variant="black" className="flex gap-3">
                   <Plus className="w-5 h-5" /> Создать профиль
                 </Button>
               </DialogTrigger>
@@ -168,26 +161,24 @@ function Profiles({ data }: Props) {
             </Dialog>
           </div>
 
-          {data.profiles.data.length > 0 ? (
-            <>
-              <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-                {data.profiles.data.map((profile) => (
-                  <Link key={profile.id} href={`/app/profiles/${profile.id}`}>
-                    <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-8 font-semibold hover:border-slate-700 sm:max-w-[400px]">
-                      <Image
-                        unoptimized
-                        className="h-14 w-14"
-                        src={ProfileDefault}
-                        alt="some"
-                      />
-                      <p className="mt-3 text-center text-base sm:text-xl ">
-                        {profile.display_name}
-                      </p>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </>
+          {data.profiles && data.profiles.data.length > 0 ? (
+            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+              {data.profiles.data.map((profile) => (
+                <Link key={profile.id} href={`/app/profiles/${profile.id}`}>
+                  <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-8 font-semibold hover:border-slate-700 sm:max-w-[400px]">
+                    <Image
+                      unoptimized
+                      className="h-14 w-14"
+                      src={ProfileDefault}
+                      alt="some"
+                    />
+                    <p className="mt-3 text-center text-base sm:text-xl ">
+                      {profile.display_name}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
           ) : (
             <div className="flex flex-col items-center justify-center gap-8">
               <Image src={NoProfiles} alt="Нет профилей" />
