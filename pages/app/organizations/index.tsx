@@ -1,4 +1,4 @@
-import { Faders, MagnifyingGlass, SquaresFour } from "@phosphor-icons/react";
+import { MagnifyingGlass, SquaresFour } from "@phosphor-icons/react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import clsx from "clsx";
 import Image from "next/image";
@@ -12,11 +12,6 @@ import { Navigation } from "../../../components/navigation";
 import Pagination from "../../../components/pagination";
 import { Button } from "../../../components/primitives/button";
 import { Options } from "../../../components/primitives/options";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "../../../components/primitives/popover";
 import {
   Sheet,
   SheetContent,
@@ -291,7 +286,7 @@ export default function All() {
         </div>
       </GeneralLayout>
       <Pagination
-        renderPageLink={(page) => `/app/projects/?page=${page}`}
+        renderPageLink={(page) => `/app/organizations/?page=${page}`}
         itemsPerPage={6}
         totalItems={totalItems}
         currentPage={currentPage}
