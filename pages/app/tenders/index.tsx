@@ -288,7 +288,7 @@ export default function Tenders() {
           totalItems={tendersMeta.total}
           currentPage={currentPage}
           itemsPerPage={9}
-          renderPageLink={(page) => `/app/profiles/?page=${page}`}
+          renderPageLink={(page) => `/app/tenders/?page=${page}`}
           firstPageUrl={tendersMeta.first_page_url}
           lastPageUrl={tendersMeta.last_page_url}
         />

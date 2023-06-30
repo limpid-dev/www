@@ -49,22 +49,6 @@ const Pagination = ({
           </Link>
         )
       )}
-      {firstPageUrl && (
-        <Link
-          href={`/app/profiles${firstPageUrl}`}
-          className="px-4 py-2 mx-1 text-lg font-semibold no-underline"
-        >
-          Начало
-        </Link>
-      )}
-      {lastPageUrl && (
-        <Link
-          href={`/app/profiles${lastPageUrl}`}
-          className="px-4 py-2 mx-1 text-lg font-semibold no-underline"
-        >
-          Конец
-        </Link>
-      )}
     </div>
   );
 };

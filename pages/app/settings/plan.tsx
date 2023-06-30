@@ -3,23 +3,18 @@ import "@uppy/dashboard/dist/style.min.css";
 import { Cube, UserCircle } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { useRef } from "react";
 import api from "../../../api";
-// import { buildFormData } from "../../../api/files";
 import { Navigation } from "../../../components/navigation";
-import { Button } from "../../../components/primitives/button";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "../../../components/primitives/table";
-import DefaultAva from "../../../images/avatars/defaultProfile.svg";
 
 const secondaryNavigation = [
   { name: "Аккаунт", href: "/app/settings/", icon: UserCircle, current: false },
@@ -54,13 +49,9 @@ export const getServerSideProps = async (
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 export default function Settings({ data }: Props) {
-  const router = useRouter();
-  const inputRef = useRef(null);
-
   return (
     <>
       <Navigation />
-
       <div className="mx-auto max-w-7xl pt-16 lg:flex lg:gap-x-16 lg:px-8">
         <aside className="flex overflow-x-auto border-b border-gray-900/5 py-4 lg:block lg:w-64 lg:flex-none lg:border-0 lg:py-16">
           <nav className="flex-none px-4 sm:px-6 lg:px-0">
@@ -110,7 +101,9 @@ export default function Settings({ data }: Props) {
                 </TableHeader>
                 <TableBody>
                   <TableRow>
-                    <TableCell className="font-medium">LIGHT</TableCell>
+                    <TableCell className="font-medium">
+                      {data.userInfo.plan_id === null && "Start"}
+                    </TableCell>
                     <TableCell>{data.userInfo.projects_attempts}</TableCell>
                     <TableCell>{data.userInfo.auctions_attempts}</TableCell>
                     <TableCell>{data.userInfo.payment_end}</TableCell>

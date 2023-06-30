@@ -1,11 +1,9 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import api from "../../../../api";
 import { Navigation } from "../../../../components/navigation";
 import { Button } from "../../../../components/primitives/button";
 import { Input } from "../../../../components/primitives/input";
-import { Label } from "../../../../components/primitives/label";
 import { Options } from "../../../../components/primitives/options";
 import {
   Select,

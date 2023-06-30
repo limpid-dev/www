@@ -1,12 +1,24 @@
-import { Faders, SquaresFour } from "@phosphor-icons/react";
+import { Faders, MagnifyingGlass, SquaresFour } from "@phosphor-icons/react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import api from "../../../api";
 import { components } from "../../../api/api-paths";
 import { Navigation } from "../../../components/navigation";
+import Pagination from "../../../components/pagination";
 import { Button } from "../../../components/primitives/button";
+import { Options } from "../../../components/primitives/options";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../../../components/primitives/sheet";
 
 const tabs = [
   { name: "Все продажи", href: "/app/auctions/", current: true },
@@ -16,7 +28,8 @@ const tabs = [
 export default function All() {
   const [search, setSearch] = useState("");
   const router = useRouter();
-
+  const currentPage =
+    (Number.parseInt(router.query.page as string, 10) as number) || 1;
   const handleSelectChange = (event: any) => {
     const selectedPage = event.target.value;
     router.push(selectedPage);
@@ -30,31 +43,66 @@ export default function All() {
     components["schemas"]["Pagination"]
   >({});
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [largeScreen, setLargeScreen] = useState(false);
+  useEffect(() => {
+    const handleResize = () => {
+      const newScreenWidth = window.innerWidth;
+      setLargeScreen(newScreenWidth > 896);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
+  const [selectedCheckboxes, setSelectedCheckboxes] = useState<number[]>([]);
+
+  const handleSearch = useCallback(async () => {
+    const industries = selectedCheckboxes
+      .map((id) => {
+        const option = Options.find((option) => option.id === id);
+        return option ? option.name : null;
+      })
+      .filter(Boolean);
+
+    const { data } = await api.getAuctions({
+      page: currentPage,
+      per_page: 9,
+      industry: industries,
+      search: searchTerm,
+    });
+
+    setAuctions(data.data);
+    setAuctionsMeta(data.meta);
+    setLoading(false);
+  }, [selectedCheckboxes, currentPage, searchTerm]);
 
   useEffect(() => {
-    const fetchAuctions = async () => {
-      try {
-        const response = await api.getAuctions({
-          page: 1,
-          per_page: 9,
-        });
-        setAuctions(response.data.data || []);
-        setLoading(false);
-      } catch (error) {
-        setError("Error fetching tenders.");
-        setLoading(false);
-      }
-    };
+    handleSearch();
+  }, [selectedCheckboxes, searchTerm, handleSearch]);
 
-    fetchAuctions();
-  }, []);
+  const handleReset = () => {
+    setSelectedCheckboxes([]);
+    setSearchTerm("");
+  };
+
+  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const value = Number(event.target.value);
+    if (selectedCheckboxes.includes(value)) {
+      setSelectedCheckboxes(selectedCheckboxes.filter((id) => id !== value));
+    } else {
+      setSelectedCheckboxes([...selectedCheckboxes, value]);
+    }
+  };
 
   return (
     <>
       <Navigation />
-      <div className="h-screen bg-slate-50 px-5 pt-8">
+      <div className="min-h-screen bg-slate-50 px-5 pt-8">
         <div className="mx-auto max-w-screen-xl">
           <p className=" text-sm text-slate-300">Продажи</p>
           <div className="my-5 flex flex-col items-center justify-end gap-4 md:mb-12 md:flex-row  md:justify-between">
@@ -97,42 +145,83 @@ export default function All() {
                 </nav>
               </div>
             </div>
-            <div className="flex flex-wrap items-end justify-end gap-3">
-              <div className="flex rounded-lg border">
+            <div className="flex justify-end flex-wrap gap-3">
+              <div className="flex rounded-md border">
                 <input
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                   type="search"
-                  placeholder="Искать по аукционам"
+                  placeholder="Искать по проектам"
                   className="rounded-lg border-none"
                 />
                 <Button
-                  type="submit"
+                  onClick={handleSearch}
                   className=" bg-transparent ring-0 ring-transparent hover:bg-slate-100 active:bg-slate-200"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="black"
-                    className="h-6 w-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                    />
-                  </svg>
+                  <MagnifyingGlass className="w-6 h-6 text-black" />
                 </Button>
               </div>
               <div className="flex gap-4">
-                <Button variant="outline">
-                  <Faders className="h-6 w-6" />
-                </Button>
-                <Button variant="outline">
-                  <SquaresFour className="h-6 w-6" />
-                </Button>
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="outline">
+                      <SquaresFour className="w-6 h-6" />
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent
+                    position="right"
+                    size={largeScreen ? "default" : "full"}
+                  >
+                    <SheetHeader>
+                      <SheetTitle>Сфера деятельности</SheetTitle>
+                      <SheetDescription>
+                        Выберите сферы деятельности интересующие вас
+                      </SheetDescription>
+                    </SheetHeader>
+                    <div className="grid grid-cols-2 gap-4 py-4 overflow-auto h-[74%] sm:h-[85%]">
+                      {Options.map((option) => (
+                        <div
+                          key={option.id}
+                          className="flex items-center gap-3 bg-slate-50 rounded-md p-3"
+                        >
+                          <input
+                            type="checkbox"
+                            value={option.id}
+                            checked={selectedCheckboxes.includes(option.id)}
+                            onChange={handleCheckboxChange}
+                            className="rounded-md"
+                          />
+                          <p className="text-sm">{option.name}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <SheetFooter
+                      className={clsx("flex justify-between gap-3 pt-3")}
+                    >
+                      <DialogPrimitive.Close aria-label="Close" asChild>
+                        <Button
+                          type="reset"
+                          variant="outline"
+                          onClick={handleReset}
+                          className="w-full"
+                        >
+                          Сбросить
+                        </Button>
+                      </DialogPrimitive.Close>
+                      <DialogPrimitive.Close aria-label="Close" asChild>
+                        <Button
+                          type="submit"
+                          className={clsx(
+                            " bg-slate-900 text-white hover:bg-slate-800 w-full"
+                          )}
+                          variant="subtle"
+                        >
+                          Применить
+                        </Button>
+                      </DialogPrimitive.Close>
+                    </SheetFooter>
+                  </SheetContent>
+                </Sheet>
               </div>
             </div>
           </div>
@@ -198,16 +287,16 @@ export default function All() {
           </div>
         </div>
       </div>
-      {/* {profilesMeta.total !== undefined && (
+      {auctionsMeta.total !== undefined && (
         <Pagination
-          totalItems={profilesMeta.total}
+          totalItems={auctionsMeta.total}
           currentPage={currentPage}
           itemsPerPage={9}
-          renderPageLink={(page) => `/app/profiles/?page=${page}`}
-          firstPageUrl={profilesMeta.first_page_url}
-          lastPageUrl={profilesMeta.last_page_url}
+          renderPageLink={(page) => `/app/auctions/?page=${page}`}
+          firstPageUrl={auctionsMeta.first_page_url}
+          lastPageUrl={auctionsMeta.last_page_url}
         />
-      )} */}
+      )}
     </>
   );
 }
