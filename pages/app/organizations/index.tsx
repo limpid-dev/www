@@ -235,9 +235,9 @@ export default function All() {
             </div>
           ) : (
             <>
-              {profilesData?.map((profile, profileIndex) => (
+              {profilesData?.map((profile) => (
                 <Link
-                  key={profileIndex}
+                  key={profile.id}
                   href={`/app/organizations/${profile.id}`}
                 >
                   <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
@@ -268,7 +268,7 @@ export default function All() {
                           {profile.industry}
                         </p>
                         <p className="line-clamp-2 w-auto text-xs text-slate-500">
-                          {profile.title}
+                          {profile.display_name}
                         </p>
                         <p className="line-clamp-2 w-auto text-sm text-slate-400">
                           {profile.location}
