@@ -287,7 +287,7 @@ export default function All() {
       </GeneralLayout>
       <Pagination
         renderPageLink={(page) => `/app/organizations/?page=${page}`}
-        itemsPerPage={6}
+        itemsPerPage={9}
         totalItems={totalItems}
         currentPage={currentPage}
       />
