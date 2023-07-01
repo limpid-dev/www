@@ -96,37 +96,34 @@ export const getServerSideProps = async (
     )
     .map((value) => value);
 
-  try {
-    const userBidResponse = await api.getUserAuctionBid(auction.data.id, {
-      headers: {
-        Cookie: context.req.headers.cookie,
-      },
-    });
-    const userBid = userBidResponse.data;
-    console.log(userBid);
-    if (userBid.data?.auction_id) {
-      return {
-        props: {
-          data: {
-            ...auction.data,
-            isAuthor: isAuthor!,
-            images: photoArray!,
-            userBid: userBid!,
-          },
-        },
-      };
-    }
-  } catch (error) {
+  const userBidResponse = await api.getUserAuctionBid(auction.data.id, {
+    headers: {
+      Cookie: context.req.headers.cookie,
+    },
+  });
+  const userBid = userBidResponse.data;
+
+  if (userBid.data?.auction_id) {
     return {
       props: {
         data: {
           ...auction.data,
           isAuthor: isAuthor!,
           images: photoArray!,
+          userBid: userBid!,
         },
       },
     };
   }
+  return {
+    props: {
+      data: {
+        ...auction.data,
+        isAuthor: isAuthor!,
+        images: photoArray!,
+      },
+    },
+  };
 };
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
