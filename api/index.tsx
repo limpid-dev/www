@@ -565,16 +565,27 @@ class APIClient {
   }
 
   async getChats(
-    params?: paths["/chats"]["get"]["parameters"]["query"],
     config?: AxiosRequestConfig
   ): Promise<
     AxiosResponse<{
-      meta: components["schemas"]["Pagination"];
       data: components["schemas"]["Chat"][];
     }>
   > {
     return this.axiosInstance.get("/chats", {
-      params,
+      ...config,
+    });
+  }
+
+
+  async getChat(
+    id:number,
+    config?: AxiosRequestConfig
+  ): Promise<
+    AxiosResponse<{
+      data: components["schemas"]["Chat"];
+    }>
+  > {
+    return this.axiosInstance.get(`/chat/${id}`, {
       ...config,
     });
   }
@@ -585,16 +596,14 @@ class APIClient {
     config?: AxiosRequestConfig
   ): Promise<
     AxiosResponse<{
-      meta: components["schemas"]["Pagination"];
+      // meta: components["schemas"]["Pagination"];
       data: components["schemas"]["Message"][];
     }>
   > {
     const {
       path: { chat_id },
-      query,
     } = params;
     return this.axiosInstance.get(`/chats/${chat_id}/messages`, {
-      params: query,
       ...config,
     });
   }

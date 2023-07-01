@@ -15,6 +15,7 @@ function App({ Component, pageProps }: AppProps) {
       <Toaster />
       <Script src="https://epay.homebank.kz/payform/payment-api.js" />
       <Script defer data-domain="limpid.kz" src="/js/script.js" />
+      <Script defer src="https://epay.homebank.kz/payform/payment-api.js" />
     </div>
   );
 }
