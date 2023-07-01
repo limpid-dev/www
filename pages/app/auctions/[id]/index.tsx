@@ -101,29 +101,35 @@ export const getServerSideProps = async (
       Cookie: context.req.headers.cookie,
     },
   });
-  const userBid = userBidResponse.data;
 
-  if (userBid.data?.auction_id) {
+  try {
+    const { data: userBid } = await api.getAuction(Number(context.params!.id), {
+      headers: {
+        Cookie: context.req.headers.cookie,
+      },
+    });
+
+    if (userBid.data) {
+      return {
+        props: {
+          data: {
+            ...auction.data!,
+            isAuthor: isAuthor!,
+            userBid: userBid.data!,
+          },
+        },
+      };
+    }
+  } catch (error) {
     return {
       props: {
         data: {
-          ...auction.data,
+          ...auction.data!,
           isAuthor: isAuthor!,
-          images: photoArray!,
-          userBid: userBid!,
         },
       },
     };
   }
-  return {
-    props: {
-      data: {
-        ...auction.data,
-        isAuthor: isAuthor!,
-        images: photoArray!,
-      },
-    },
-  };
 };
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;

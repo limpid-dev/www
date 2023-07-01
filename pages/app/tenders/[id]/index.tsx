@@ -95,8 +95,6 @@ export const getServerSideProps = async (
       }
     );
 
-    console.log(userBid);
-
     if (userBid.data) {
       return {
         props: {
@@ -464,7 +462,10 @@ export default function Tender({ data }: Props) {
                               const price = Number.parseFloat(
                                 priceInput.replace(/\s/g, "")
                               );
-                              await api.updateTenderBid(data.userBid.tender_id, price);
+                              await api.updateTenderBid(
+                                data.userBid.tender_id,
+                                price
+                              );
 
                               await router.reload();
                             }}
