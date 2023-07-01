@@ -342,7 +342,7 @@ export default function Tender({ data }: Props) {
                         <Lightbulb className="w-6 h-6 text-slate-400" />
                       </div>
                       <p className="font-medium text-lg mt-4">
-                        {data.verified_at ? "Прием ставок" : "На модерации"}
+                        {new Date(data.finishedAt) < new Date() && "Завершен"}
                       </p>
                       <p className="text-sm text-slate-500 font-medium">
                         Cтатус
@@ -549,7 +549,7 @@ export default function Tender({ data }: Props) {
 
             {data.wonAuctionBid ? (
               ""
-            ) : (data.isAuthor ? (
+            ) : data.isAuthor ? (
               ""
             ) : (
               <div className="flex flex-col sm:flex-row w-full justify-center gap-3">
@@ -757,7 +757,7 @@ export default function Tender({ data }: Props) {
                   </DialogContent>
                 </Dialog>
               </div>
-            ))}
+            )}
 
             {data.isAuthor && data.verified_at ? (
               <div className=" flex justify-center gap-3">
