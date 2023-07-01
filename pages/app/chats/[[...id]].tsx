@@ -77,17 +77,22 @@ export default function Chats() {
   };
 
   useEffect(() => {
-    api.getChats().then(({ data: { data } }) => {
-      setChats(data)
-      const c = data.at(0)
-      if (c) {
-        setChatId(c.id!)
-        setChat(c)
-        router.push(`/app/chats/${c.id}`, undefined)
-      }
-
-    })
-  }, []);
+    if(!router.query.id){
+      api.getChats().then(({ data: { data } }) => {
+        setChats(data)
+        const c = data.at(0)
+        if (c) {
+          setChatId(c.id!)
+          setChat(c)
+          router.push(`/app/chats/${c.id}`, undefined)
+        }
+  
+      })
+    }
+    if(router.query.id){
+      setChatId(parseInt(router.query.id as string))
+    }
+  }, [router]);
 
   useEffect(() => {
     if (chatId) {
