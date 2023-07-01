@@ -21,18 +21,20 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   });
 
-  const { data: tenders } = await api.getTenders({
-    query: {
-      page: 1,
-      per_page: 10,
-    },
-  });
-
-  return {
-    props: {
-      ...tenders!,
-    },
-  };
+  if (session.data.selected_profile_id) {
+    const { data: tenders } = await api.getTenders({
+      query: {
+        page: 1,
+        per_page: 10,
+        profile_id: session.data.selected_profile_id,
+      },
+    });
+    return {
+      props: {
+        ...tenders!,
+      },
+    };
+  }
 }
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
@@ -106,7 +108,7 @@ export default function TendersMy({ data }: Props) {
             </Link>
           </div>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {data?.map((tender) => (
+            {data.map((tender) => (
               <Card
                 key={tender.id}
                 onClick={() => {
