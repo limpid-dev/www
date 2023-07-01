@@ -629,7 +629,7 @@ export default function Tender({ data }: Props) {
                             </p>
                           </div>
                         </div>
-                        {data.userBid.data?.price ? (
+                        {data.userBid?.data?.price ? (
                           <div>
                             <p className="font-semibold text-sm ml-1">
                               Последняя ваша ставка
