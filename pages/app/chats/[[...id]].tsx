@@ -264,11 +264,15 @@ export default function Chats() {
                       </div> 
                       }
                       return <div key={m.id} className="flex items-end mr-auto gap-3">
-                        <Image
+                        {/* <Image
                           src={testAva}
                           className="w-[34px] h-[34px] ml-3 rounded-lg col-span-2"
                           alt="test"
-                        />
+                        /> */}
+                        <div className="text-sm rounded-lg w-8 h-8 flex justify-center items-center bg-lime-400 text-black">
+                          {(m as any).user.first_name[0]}
+                          {(m as any).user.last_name[0]}
+                        </div>
                         <p className="text-sm bg-slate-200 h-min p-3 rounded-lg w-3/4 ">
                           {m.message}
                         </p>
