@@ -96,26 +96,24 @@ export const getServerSideProps = async (
     )
     .map((value) => value);
 
-  const userBidResponse = await api.getUserAuctionBid(auction.data.id, {
-    headers: {
-      Cookie: context.req.headers.cookie,
-    },
-  });
-
   try {
-    const { data: userBid } = await api.getAuction(Number(context.params!.id), {
-      headers: {
-        Cookie: context.req.headers.cookie,
-      },
-    });
-
-    if (userBid.data) {
+    const userBidResponse = await api.getUserAuctionBid(
+      Number(context.params!.id),
+      {
+        headers: {
+          Cookie: context.req.headers.cookie,
+        },
+      }
+    );
+    const userBid = userBidResponse.data;
+    if (userBid.data?.auction_id) {
       return {
         props: {
           data: {
             ...auction.data!,
             isAuthor: isAuthor!,
-            userBid: userBid.data!,
+            images: photoArray!,
+            userBid: userBid!,
           },
         },
       };
@@ -126,6 +124,7 @@ export const getServerSideProps = async (
         data: {
           ...auction.data!,
           isAuthor: isAuthor!,
+          images: photoArray!,
         },
       },
     };
