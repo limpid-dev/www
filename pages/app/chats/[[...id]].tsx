@@ -269,7 +269,7 @@ export default function Chats() {
                           className="w-[34px] h-[34px] ml-3 rounded-lg col-span-2"
                           alt="test"
                         /> */}
-                        <div className="text-sm rounded-lg w-8 h-8 flex justify-center items-center bg-lime-400 text-black font-medium p-1 ml-3 col-span-2">
+                        <div className="text-sm rounded-lg w-8 h-8 flex justify-center items-center bg-lime-400 text-black font-medium p-2 ml-3 col-span-2">
                           {(m as any).user.first_name[0]}
                           {(m as any).user.last_name[0]}
                         </div>
