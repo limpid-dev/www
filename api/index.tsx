@@ -10,11 +10,11 @@ export interface AxiosError extends Error {
   };
 }
 
-const API_BASE_URL = "https://limpid.kz/api";
-const ClIENT_URL = "https://limpid.kz/";
+// const API_BASE_URL = "https://limpid.kz/api";
+// const ClIENT_URL = "https://limpid.kz/";
 
-// const API_BASE_URL = "http://localhost:3000/api";
-// const ClIENT_URL = "http://localhost:3000/";
+const API_BASE_URL = "http://localhost:3000/api";
+const ClIENT_URL = "http://localhost:3000/";
 
 class APIClient {
   private axiosInstance = axios.create({
@@ -564,9 +564,7 @@ class APIClient {
     return this.axiosInstance.post("/chats", requestBody, config);
   }
 
-  async getChats(
-    config?: AxiosRequestConfig
-  ): Promise<
+  async getChats(config?: AxiosRequestConfig): Promise<
     AxiosResponse<{
       data: components["schemas"]["Chat"][];
     }>
@@ -576,9 +574,8 @@ class APIClient {
     });
   }
 
-
   async getChat(
-    id:number,
+    id: number,
     config?: AxiosRequestConfig
   ): Promise<
     AxiosResponse<{

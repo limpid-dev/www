@@ -79,7 +79,6 @@ export const getServerSideProps = async (
   }>
 ) => {
   const { data: tender } = await api.getTender(Number(context.params!.id));
-
   const { data: user } = await api.getUser({
     headers: {
       Cookie: context.req.headers.cookie,
@@ -95,6 +94,8 @@ export const getServerSideProps = async (
         },
       }
     );
+
+    console.log(userBid);
 
     if (userBid.data) {
       return {
@@ -463,7 +464,7 @@ export default function Tender({ data }: Props) {
                               const price = Number.parseFloat(
                                 priceInput.replace(/\s/g, "")
                               );
-                              await api.updateTenderBid(data.userBid.id, price);
+                              await api.updateTenderBid(data.userBid.tender_id, price);
 
                               await router.reload();
                             }}
