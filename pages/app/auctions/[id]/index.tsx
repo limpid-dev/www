@@ -103,6 +103,7 @@ export const getServerSideProps = async (
       },
     });
     const userBid = userBidResponse.data;
+    console.log(userBid);
     if (userBid.data?.auction_id) {
       return {
         props: {
@@ -548,7 +549,7 @@ export default function Tender({ data }: Props) {
 
             {data.wonAuctionBid ? (
               ""
-            ) : data.isAuthor ? (
+            ) : (data.isAuthor ? (
               ""
             ) : (
               <div className="flex flex-col sm:flex-row w-full justify-center gap-3">
@@ -628,24 +629,28 @@ export default function Tender({ data }: Props) {
                             </p>
                           </div>
                         </div>
-                        <div>
-                          <p className="font-semibold text-sm ml-1">
-                            Последняя ваша ставка
-                          </p>
-                          <div className="flex gap-10">
-                            <p className="bg-slate-100 text-xl sm:text-2xl font-semibold p-4 rounded-md w-fit">
-                              <NumericFormat
-                                value={data
-                                  .starting_price!.toString()
-                                  .replace(/\.?0+$/, "")}
-                                allowLeadingZeros
-                                displayType="text"
-                                thousandSeparator=" "
-                              />{" "}
-                              ₸
+                        {data.userBid.data?.price ? (
+                          <div>
+                            <p className="font-semibold text-sm ml-1">
+                              Последняя ваша ставка
                             </p>
+                            <div className="flex gap-10">
+                              <p className="bg-slate-100 text-xl sm:text-2xl font-semibold p-4 rounded-md w-fit">
+                                <NumericFormat
+                                  value={data.userBid.data
+                                    .price!.toString()
+                                    .replace(/\.?0+$/, "")}
+                                  allowLeadingZeros
+                                  displayType="text"
+                                  thousandSeparator=" "
+                                />{" "}
+                                ₸
+                              </p>
+                            </div>
                           </div>
-                        </div>
+                        ) : (
+                          ""
+                        )}
                       </div>
                       {data.userBid ? (
                         <Form
@@ -752,7 +757,7 @@ export default function Tender({ data }: Props) {
                   </DialogContent>
                 </Dialog>
               </div>
-            )}
+            ))}
 
             {data.isAuthor && data.verified_at ? (
               <div className=" flex justify-center gap-3">

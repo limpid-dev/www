@@ -4,6 +4,7 @@ import {
   FileArrowDown,
   ShieldWarning,
   Spinner,
+  Timer,
 } from "@phosphor-icons/react";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
@@ -78,6 +79,7 @@ export const getServerSideProps = async (
   }>
 ) => {
   const { data: tender } = await api.getTender(Number(context.params!.id));
+
   const { data: user } = await api.getUser({
     headers: {
       Cookie: context.req.headers.cookie,
@@ -134,6 +136,7 @@ export default function Tender({ data }: Props) {
       pathname: `/app/tenders/`,
     });
   };
+
   useEffect(() => {
     const fetchBids = async () => {
       try {
@@ -146,6 +149,7 @@ export default function Tender({ data }: Props) {
         console.log("Error fetching tenders.");
       }
     };
+
     const intervalId = setInterval(fetchBids, 1000);
     return () => clearInterval(intervalId);
   }, [parsedId]);
@@ -192,21 +196,35 @@ export default function Tender({ data }: Props) {
                         <p className="text-xs">Вид</p>
                       </div>
                     </div>
-                    <a
-                      target="_blank"
-                      rel="noreferrer"
-                      href={getImageSrc(data.technical_specification?.url)}
-                    >
-                      <div className="max-w-[160px] rounded-md bg-lime-100 p-3 border-2 hover:border-lime-300">
+                    {data.technical_specification?.url ? (
+                      <a
+                        target="_blank"
+                        rel="noreferrer"
+                        href={getImageSrc(data.technical_specification.url)}
+                      >
+                        <div className="max-w-[160px] rounded-md bg-lime-100 p-3 border-2 hover:border-lime-300">
+                          <div className="flex justify-end ">
+                            <FileArrowDown className="w-6 h-6 text-slate-500" />
+                          </div>
+                          <div>
+                            <p className="text-lg font-medium">Документ</p>
+                            <p className="text-xs"> Посмотреть</p>
+                          </div>
+                        </div>
+                      </a>
+                    ) : (
+                      <div className="max-w-[160px] bg-slate-100  rounded-md p-3">
                         <div className="flex justify-end ">
-                          <FileArrowDown className="w-6 h-6 text-slate-500" />
+                          <Timer className="w-6 h-6 text-slate-500" />
                         </div>
                         <div>
-                          <p className="text-lg font-medium">Документ</p>
-                          <p className="text-xs"> Посмотреть</p>
+                          <p className="text-lg font-medium">Длительность</p>
+                          <p className="text-xs">
+                            {JSON.parse(data.duration).days} дня/дней
+                          </p>
                         </div>
                       </div>
-                    </a>
+                    )}
                     <div className="max-w-[160px] rounded-md bg-slate-100 p-3">
                       <div className="flex justify-end ">
                         <Briefcase className="w-6 h-6 text-slate-500" />
@@ -326,13 +344,30 @@ export default function Tender({ data }: Props) {
                                       {convertTimestamp(bid.created_at)}
                                     </p>
                                   </div>
-                                  {data.isAuthor && (
-                                    <Link
-                                      href={`/app/profiles/${bid.profile_id}`}
-                                    >
-                                      <Button variant="outline">Профиль</Button>
-                                    </Link>
-                                  )}
+                                  <div className="flex flex-col gap-y-3">
+                                    {data.isAuthor && (
+                                      <Link
+                                        href={`/app/profiles/${bid.profile_id}`}
+                                      >
+                                        <Button
+                                          variant="outline"
+                                          className="w-full text-xs"
+                                        >
+                                          Профиль
+                                        </Button>
+                                      </Link>
+                                    )}
+                                    {data.wonTenderBid ? (
+                                      ""
+                                    ) : (
+                                      <Button
+                                        variant="outline"
+                                        className="w-full text-xs"
+                                      >
+                                        Выбрать победителя
+                                      </Button>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -355,7 +390,7 @@ export default function Tender({ data }: Props) {
                 </div>
               </div>
               <Separator className="my-10" />
-              {data.wonTenderBid ? (
+              {new Date(data.finishedAt) < new Date() ? (
                 ""
               ) : data.isAuthor ? (
                 ""
@@ -418,53 +453,105 @@ export default function Tender({ data }: Props) {
                             ""
                           )}
                         </div>
-                        <Form
-                          onSubmit={async (event) => {
-                            event.preventDefault();
+                        {data.userBid ? (
+                          <Form
+                            onSubmit={async (event) => {
+                              event.preventDefault();
 
-                            const priceInput = event.currentTarget.price.value;
-                            const price = Number.parseFloat(
-                              priceInput.replace(/\s/g, "")
-                            );
-                            await api.createTenderBid(data.id, price);
-                            await router.reload();
-                          }}
-                          className="flex flex-col gap-3"
-                        >
-                          <p>Ваша ставка</p>
-                          <div className="flex items-center gap-6">
-                            <Field name="price">
-                              <Label>Сумма</Label>
+                              const priceInput =
+                                event.currentTarget.price.value;
+                              const price = Number.parseFloat(
+                                priceInput.replace(/\s/g, "")
+                              );
+                              await api.updateTenderBid(data.userBid.id, price);
 
-                              <NumericFormat
-                                placeholder="KZT"
-                                min={1}
-                                name="price"
-                                customInput={Input}
-                                thousandSeparator=" "
-                              />
-                            </Field>
-                            <p className="text-xs">
-                              Ваша ставка должна быть ниже стартовой/последней
-                              ставки
-                            </p>
-                          </div>
+                              await router.reload();
+                            }}
+                            className="flex flex-col gap-3"
+                          >
+                            <p>Ваша ставка</p>
+                            <div className="flex items-center gap-6">
+                              <Field name="price">
+                                <Label>Сумма</Label>
 
-                          <DialogFooter className="justify-center items-center gap-5">
-                            <DialogClose className="w-3/4">
-                              <Button className="w-full" variant="outline">
-                                отмена
+                                <NumericFormat
+                                  placeholder="KZT"
+                                  min={1}
+                                  name="price"
+                                  customInput={Input}
+                                  thousandSeparator=" "
+                                />
+                              </Field>
+                              <p className="text-xs">
+                                Ваша ставка должна быть выше стартовой цены
+                              </p>
+                            </div>
+
+                            <DialogFooter className="justify-center items-center gap-5">
+                              <DialogClose className="w-3/4">
+                                <Button className="w-full" variant="outline">
+                                  отмена
+                                </Button>
+                              </DialogClose>
+                              <Button
+                                variant="black"
+                                type="submit"
+                                className="w-3/4"
+                              >
+                                Отправить
                               </Button>
-                            </DialogClose>
-                            <Button
-                              variant="black"
-                              type="submit"
-                              className="w-3/4"
-                            >
-                              Отправить
-                            </Button>
-                          </DialogFooter>
-                        </Form>
+                            </DialogFooter>
+                          </Form>
+                        ) : (
+                          <Form
+                            onSubmit={async (event) => {
+                              event.preventDefault();
+
+                              const priceInput =
+                                event.currentTarget.price.value;
+                              const price = Number.parseFloat(
+                                priceInput.replace(/\s/g, "")
+                              );
+                              await api.createTenderBid(data.id, price);
+                              await router.reload();
+                            }}
+                            className="flex flex-col gap-3"
+                          >
+                            <p>Ваша ставка</p>
+                            <div className="flex items-center gap-6">
+                              <Field name="price">
+                                <Label>Сумма</Label>
+
+                                <NumericFormat
+                                  placeholder="KZT"
+                                  min={1}
+                                  name="price"
+                                  customInput={Input}
+                                  thousandSeparator=" "
+                                />
+                              </Field>
+                              <p className="text-xs">
+                                Ваша ставка должна быть ниже стартовой/последней
+                                ставки
+                              </p>
+                            </div>
+
+                            <DialogFooter className="justify-center items-center gap-5">
+                              <DialogClose className="w-3/4">
+                                <Button className="w-full" variant="outline">
+                                  отмена
+                                </Button>
+                              </DialogClose>
+                              <Button
+                                variant="black"
+                                type="submit"
+                                className="w-3/4"
+                              >
+                                Отправить
+                              </Button>
+                            </DialogFooter>
+                          </Form>
+                        )}
                       </div>
                     </DialogContent>
                   </Dialog>

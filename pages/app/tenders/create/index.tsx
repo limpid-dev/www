@@ -24,7 +24,7 @@ interface FormValues {
   duration: number;
   purchase_type: string;
   starting_price: number;
-  technical_specification: FileList;
+  technical_specification: FileList | undefined;
 }
 
 export default function Create() {
@@ -40,8 +40,12 @@ export default function Create() {
     formData.append("purchase_type", data.purchase_type);
     formData.append("duration", `P${data.duration}D`);
     formData.append("starting_price", String(data.starting_price));
-    formData.append("technical_specification", data.technical_specification[0]);
-
+    if (data.technical_specification[0] !== undefined) {
+      formData.append(
+        "technical_specification",
+        data.technical_specification[0]
+      );
+    }
     try {
       const response = await api.createTender(formData);
       if (response.data.data?.id) {
