@@ -3,7 +3,6 @@
  * Do not make direct changes to the file.
  */
 
-
 export interface paths {
   "/users": {
     post: {
@@ -176,7 +175,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["Profile"])[];
+              data?: components["schemas"]["Profile"][];
             };
           };
         };
@@ -301,7 +300,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["Certificate"])[];
+              data?: components["schemas"]["Certificate"][];
             };
           };
         };
@@ -408,7 +407,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["Education"])[];
+              data?: components["schemas"]["Education"][];
             };
           };
         };
@@ -511,7 +510,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["Experience"])[];
+              data?: components["schemas"]["Experience"][];
             };
           };
         };
@@ -624,7 +623,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["Skill"])[];
+              data?: components["schemas"]["Skill"][];
             };
           };
         };
@@ -719,8 +718,8 @@ export interface paths {
           page: number;
           per_page?: number;
           profile_id?: number;
-          industry?: (string)[];
-          stage?: (string)[];
+          industry?: string[];
+          stage?: string[];
           required_money_amount?: {
             min?: number;
             max?: number;
@@ -738,7 +737,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["Project"])[];
+              data?: components["schemas"]["Project"][];
             };
           };
         };
@@ -873,7 +872,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["ProjectMember"])[];
+              data?: components["schemas"]["ProjectMember"][];
             };
           };
         };
@@ -979,7 +978,7 @@ export interface paths {
         200: {
           content: {
             "application/json": {
-              data?: (components["schemas"]["Chat"])[];
+              data?: components["schemas"]["Chat"][];
             };
           };
         };
@@ -989,7 +988,7 @@ export interface paths {
       requestBody: {
         content: {
           "multipart/form-data": {
-            user_ids: (number)[];
+            user_ids: number[];
             name: string;
           };
         };
@@ -1048,7 +1047,7 @@ export interface paths {
         200: {
           content: {
             "application/json": {
-              data?: (components["schemas"]["Message"])[];
+              data?: components["schemas"]["Message"][];
             };
           };
         };
@@ -1086,7 +1085,7 @@ export interface paths {
           page: number;
           per_page?: number;
           profile_id?: number;
-          industry?: (string)[];
+          industry?: string[];
           search?: string;
         };
       };
@@ -1096,7 +1095,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["Auction"])[];
+              data?: components["schemas"]["Auction"][];
             };
           };
         };
@@ -1218,7 +1217,7 @@ export interface paths {
           page: number;
           per_page?: number;
           auction_id?: number;
-          industry?: (string)[];
+          industry?: string[];
           search?: string;
         };
       };
@@ -1228,7 +1227,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["AuctionBid"])[];
+              data?: components["schemas"]["AuctionBid"][];
             };
           };
         };
@@ -1312,7 +1311,7 @@ export interface paths {
           page: number;
           per_page?: number;
           user_id?: number;
-          industry?: (string)[];
+          industry?: string[];
           search?: string;
         };
       };
@@ -1322,7 +1321,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["Profile"])[];
+              data?: components["schemas"]["Profile"][];
             };
           };
         };
@@ -1457,7 +1456,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["OrganizationMember"])[];
+              data?: components["schemas"]["OrganizationMember"][];
             };
           };
         };
@@ -1554,7 +1553,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["Certificate"])[];
+              data?: components["schemas"]["Certificate"][];
             };
           };
         };
@@ -1651,7 +1650,7 @@ export interface paths {
           page: number;
           per_page?: number;
           profile_id?: number;
-          industry?: (string)[];
+          industry?: string[];
           search?: string;
         };
       };
@@ -1661,7 +1660,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["Tender"])[];
+              data?: components["schemas"]["Tender"][];
             };
           };
         };
@@ -1815,7 +1814,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["TenderBid"])[];
+              data?: components["schemas"]["TenderBid"][];
             };
           };
         };
@@ -1903,7 +1902,7 @@ export interface paths {
           content: {
             "application/json": {
               meta?: components["schemas"]["Pagination"];
-              data?: (components["schemas"]["Notification"])[];
+              data?: components["schemas"]["Notification"][];
             };
           };
         };
@@ -1955,7 +1954,7 @@ export interface paths {
         200: {
           content: {
             "application/json": {
-              data?: (components["schemas"]["SubPlans"])[];
+              data?: components["schemas"]["SubPlans"][];
             };
           };
         };
@@ -1967,7 +1966,7 @@ export interface paths {
         200: {
           content: {
             "application/json": {
-              data?: (components["schemas"]["Invoices"])[];
+              data?: components["schemas"]["Invoices"][];
             };
           };
         };
@@ -1986,7 +1985,7 @@ export interface paths {
         200: {
           content: {
             "application/json": {
-              data?: (components["schemas"]["Invoices"])[];
+              data?: components["schemas"]["Invoices"][];
             };
           };
         };

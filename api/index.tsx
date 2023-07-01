@@ -802,6 +802,16 @@ class APIClient {
     return this.axiosInstance.get(`/tenders/${tenderId}/bid`, config);
   }
 
+  async updateTenderBid(
+    tenderId: number,
+    price?: number
+  ): Promise<AxiosResponse<{ data?: components["schemas"]["TenderBid"] }>> {
+    const requestBody = {
+      price,
+    };
+    return this.axiosInstance.patch(`/tenders/${tenderId}/bid`, requestBody);
+  }
+
   // Payments
   async getInvoices(
     sub_plan_id: number
