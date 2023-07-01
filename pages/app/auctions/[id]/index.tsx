@@ -97,20 +97,18 @@ export const getServerSideProps = async (
     .map((value) => value);
 
   try {
-    const userBidResponse = await api.getUserAuctionBid(
-      Number(context.params!.id),
-      {
-        headers: {
-          Cookie: context.req.headers.cookie,
-        },
-      }
-    );
+    const userBidResponse = await api.getUserAuctionBid(auction.data.id, {
+      headers: {
+        Cookie: context.req.headers.cookie,
+      },
+    });
     const userBid = userBidResponse.data;
+    console.log(userBid);
     if (userBid.data?.auction_id) {
       return {
         props: {
           data: {
-            ...auction.data!,
+            ...auction.data,
             isAuthor: isAuthor!,
             images: photoArray!,
             userBid: userBid!,
@@ -122,7 +120,7 @@ export const getServerSideProps = async (
     return {
       props: {
         data: {
-          ...auction.data!,
+          ...auction.data,
           isAuthor: isAuthor!,
           images: photoArray!,
         },
@@ -344,7 +342,7 @@ export default function Tender({ data }: Props) {
                         <Lightbulb className="w-6 h-6 text-slate-400" />
                       </div>
                       <p className="font-medium text-lg mt-4">
-                        {new Date(data.finishedAt) < new Date() && "Завершен"}
+                        {data.verified_at ? "Прием ставок" : "На модерации"}
                       </p>
                       <p className="text-sm text-slate-500 font-medium">
                         Cтатус
