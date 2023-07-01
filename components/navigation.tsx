@@ -113,7 +113,7 @@ const navigation = [
   { name: "Организации", href: "/app/organizations" },
   { name: "Продажи", href: "/app/auctions" },
   { name: "Закупки", href: "/app/tenders" },
-  // // { name: "Чаты", href: "/app/chats" },
+  { name: "Чаты", href: "/app/chats" },
 ];
 
 const userNavigation = [{ name: "Настройки", href: "/app/settings" }];
