@@ -226,11 +226,11 @@ export default function Chats() {
             </nav> */}
             <div className="flex flex-col gap-8">
               {chats.map((c) => <Link key={c.id} href={`/app/chats/${c.id}`} className="grid grid-cols-10 justify-center items-center">
-                <Image
+                {/* <Image
                   src={testAva}
                   className="w-[55px] h-[55px] rounded-lg col-span-2"
                   alt="test"
-                />
+                /> */}
                 <div className="col-span-7">
                   <p className="font-bold">{c.name}</p>
                   <p className="line-clamp-2 text-sm">
