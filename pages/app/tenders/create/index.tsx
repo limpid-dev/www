@@ -37,7 +37,9 @@ export default function Create() {
     formData.append("title", data.title);
     formData.append("description", data.description);
     formData.append("industry", data.industry);
-    formData.append("purchase_type", data.purchase_type);
+    if (data.purchase_type !== undefined) {
+      formData.append("purchase_type", data.purchase_type);
+    }
     formData.append("duration", `P${data.duration}D`);
     formData.append("starting_price", String(data.starting_price));
     if (data.technical_specification[0] !== undefined) {
