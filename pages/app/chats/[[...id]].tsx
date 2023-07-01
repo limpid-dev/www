@@ -1,6 +1,7 @@
 import {
   Clipboard,
   Faders,
+  PaperPlaneRight,
   Paperclip,
   SquaresFour,
 } from "@phosphor-icons/react";
@@ -9,7 +10,7 @@ import { InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ChangeEvent, useEffect } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import api from "../../../api";
 import { GeneralLayout } from "../../../components/general-layout";
 import { Navigation } from "../../../components/navigation";
@@ -27,6 +28,9 @@ import {
 import { TextArea } from "../../../components/primitives/text-area";
 import testAva from "../../../images/avatars/avatar-2.webp";
 import DefaultAvatar from "../../../images/avatars/defaultProfile.svg";
+import { components } from "../../../api/api-paths";
+import { useSelectedProfile } from "../profiles/[id]";
+import axios from "axios";
 
 const tabs = [
   { name: "Личные", href: "/app/auctions/", current: true },
@@ -59,7 +63,13 @@ const tabs = [
 // type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 export default function Chats() {
+  const profile = useSelectedProfile()
   const router = useRouter();
+  const [chats, setChats] = useState<components['schemas']['Chat'][]>([])
+  const [chat, setChat] = useState<components['schemas']['Chat'] | null>(null)
+  const [chatId, setChatId] = useState<number | null>(null)
+  const [messages, setMessages] = useState<components['schemas']['Message'][]>()
+
 
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>): void => {
     const selectedPage = event.target.value;
@@ -67,21 +77,45 @@ export default function Chats() {
   };
 
   useEffect(() => {
-    async function fetchChats() {
-      const response = await api.getChats({
-        page: 1,
-        per_page: 100,
-      });
-      console.log(response.data.data);
-    }
-    fetchChats();
+    api.getChats().then(({ data: { data } }) => {
+      setChats(data)
+      const c = data.at(0)
+      if (c) {
+        setChatId(c.id!)
+        setChat(c)
+        router.push(`/app/chats/${c.id}`, undefined)
+      }
+
+    })
   }, []);
+
+  useEffect(() => {
+    if (chatId) {
+      axios.get(`/api/chats/${chatId}`).then((v)=>v.data.data).then((v)=>{
+        setChat(v)
+      })
+      
+      const id = setInterval(() => {
+        api.getMessages({
+          path: {
+            chat_id: chatId
+          }
+        }).then(({ data: { data } }) => {
+          setMessages(data)
+        })
+      }, 1000)
+
+      return () => clearInterval(id)
+    }
+  }, [
+    chatId
+  ])
 
   return (
     <div>
       <Navigation />
       <GeneralLayout>
-        <p className="text-sm text-slate-300">Профили</p>
+        {/* <p className="text-sm text-slate-300">Профили</p>
         <div className="my-5 flex flex-col items-center justify-end gap-4 md:mb-12 md:flex-row">
           <div className="flex flex-wrap gap-3">
             <div className="flex rounded-md border">
@@ -161,11 +195,11 @@ export default function Chats() {
               </Sheet>
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="grid gap-10 sm:grid-cols-10">
           <div className="col-span-4 h-[70vh] bg-white rounded-md border p-8">
-            <nav
+            {/* <nav
               className="flex justify-center space-x-4 w-fit m-auto rounded-3xl p-2 bg-slate-50"
               aria-label="Tabs"
             >
@@ -184,64 +218,85 @@ export default function Chats() {
                   {tab.name}
                 </a>
               ))}
-            </nav>
-            <div>
-              <div className="grid grid-cols-10 pt-8 justify-center items-center">
+            </nav> */}
+            <div className="flex flex-col gap-8">
+              {chats.map((c) => <Link key={c.id} href={`/app/chats/${c.id}`} className="grid grid-cols-10 justify-center items-center">
                 <Image
                   src={testAva}
                   className="w-[55px] h-[55px] rounded-lg col-span-2"
                   alt="test"
                 />
                 <div className="col-span-7">
-                  <p className="font-bold">Nurgali Almaz</p>
+                  <p className="font-bold">{c.name}</p>
                   <p className="line-clamp-2 text-sm">
-                    Вы: Да, я собрал почти все необходимые документы, кроме Вы:
-                    Да, я собрал почти все необходимые документы, кроме ...
+                    {(c as any).messages.at(0)?.message ?? "Нет сообщений..."}
                   </p>
                 </div>
-                <div className="col-span-1 flex flex-col gap-2 items-end">
-                  <p className="text-slate-400 text-sm">17:33</p>
-                  <p className="bg-lime-500 rounded-full w-min px-2 text-white">
-                    1
-                  </p>
-                </div>
-              </div>
+              </Link>)}
             </div>
           </div>
           <div className="col-span-6 border rounded-md">
             <div className="text-center bg-slate-100 font-semibold py-3 rounded-t-md">
-              Nurgali Almaz
+              {chat?.name}
             </div>
             <div className="bg-white rounded-b-md">
               <div className=" h-[59vh] rounded-b-md pt-3 overflow-auto">
-                <div className="flex justify-center items-center ">
+                {/* <div className="flex justify-center items-center ">
                   <p className="text-slate-500 bg-slate-50 text-sm mb-2 p-2 rounded-2xl">
                     30 апреля
                   </p>
-                </div>
-                <div className="flex items-end gap-3">
-                  <Image
-                    src={testAva}
-                    className="w-[34px] h-[34px] ml-3 rounded-lg col-span-2"
-                    alt="test"
-                  />
-                  <p className="text-sm bg-slate-200 h-min p-3 rounded-lg w-3/4 ">
-                    Салют, я Артур. Есть опыт в работе с тепличными комплексами,
-                    думаю, что смогу быть полезен. Напиши мне на ватсап. 8 707
-                    777 77 77
-                  </p>
-                  <p className="text-xs">17:33</p>
+                </div> */}
+
+                <div className="flex flex-col gap-6">
+                  {
+                    messages?.map(m => {
+                      if(profile?.user_id === m.user_id) {
+                        return <div key={m.id} className="flex items-end gap-3 ml-auto mr-3">
+                        <p className="text-sm bg-slate-200 h-min p-3 rounded-lg w-3/4">
+                          {m.message}
+                        </p>
+                        <p className="text-xs">{new Date(m.created_at!.toString()).getHours()}:{new Date(m.created_at!.toString()).getMinutes()}</p>
+                      </div> 
+                      }
+                      return <div key={m.id} className="flex items-end mr-auto gap-3">
+                        <Image
+                          src={testAva}
+                          className="w-[34px] h-[34px] ml-3 rounded-lg col-span-2"
+                          alt="test"
+                        />
+                        <p className="text-sm bg-slate-200 h-min p-3 rounded-lg w-3/4 ">
+                          {m.message}
+                        </p>
+                        <p className="text-xs">{new Date(m.created_at!.toString()).getHours()}:{new Date(m.created_at!.toString()).getMinutes()}</p>
+                      </div>
+                    })
+                  }
                 </div>
               </div>
-              <div className="flex items-center justify-around gap-3 px-6 pb-3 rounded-b-md">
+              <form onSubmit={async (e) => {
+                e.preventDefault()
+                const formData = new FormData(e.currentTarget)
+                const values = Object.fromEntries(formData.entries()) as {
+                  message: string
+                }
+
+                await api.sendMessage(chat!.id!, values.message);
+
+                (e.target as any)?.reset()
+              }
+
+
+              } className="flex items-center justify-around gap-3 px-6 pb-3 rounded-b-md">
                 <TextArea
+                  required
+                  name="message"
                   placeholder="Сообщение"
                   className=" h-[38px] w-[90%]"
                 />
-                <Button variant="outline" className="bg-slate-100">
-                  <Paperclip />
+                <Button type="submit" variant="outline" className="bg-slate-100">
+                  <PaperPlaneRight />
                 </Button>
-              </div>
+              </form>
             </div>
           </div>
         </div>
