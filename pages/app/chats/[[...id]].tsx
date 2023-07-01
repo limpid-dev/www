@@ -77,6 +77,7 @@ export default function Chats() {
   };
 
   useEffect(() => {
+    if(router.isReady){
     if(!router.query.id){
       api.getChats().then(({ data: { data } }) => {
         setChats(data)
@@ -90,8 +91,12 @@ export default function Chats() {
       })
     }
     if(router.query.id){
+      api.getChats().then(({ data: { data } }) => {
+        setChats(data)
+      })
       setChatId(parseInt(router.query.id as string))
     }
+  }
   }, [router]);
 
   useEffect(() => {
