@@ -549,7 +549,7 @@ export default function Tender({ data }: Props) {
 
             {data.wonAuctionBid ? (
               ""
-            ) : data.isAuthor ? (
+            ) : (data.isAuthor ? (
               ""
             ) : (
               <div className="flex flex-col sm:flex-row w-full justify-center gap-3">
@@ -757,7 +757,7 @@ export default function Tender({ data }: Props) {
                   </DialogContent>
                 </Dialog>
               </div>
-            )}
+            ))}
 
             {data.isAuthor && data.verified_at ? (
               <div className=" flex justify-center gap-3">

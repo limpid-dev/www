@@ -739,7 +739,7 @@ export function Pricing() {
       description: t("for_beginners"),
       features: {
         monthly: [
-          t("price_start_feat_1"),
+          // t("price_start_feat_1"),
           t("price_start_feat_2_d", {
             project_count: "3",
           }),
@@ -749,7 +749,7 @@ export function Pricing() {
           }),
         ],
         annually: [
-          t("price_start_feat_1"),
+          // t("price_start_feat_1"),
           t("price_start_feat_2_d", {
             project_count: "3",
           }),
@@ -759,7 +759,7 @@ export function Pricing() {
           }),
         ],
         kvartal: [
-          t("price_start_feat_1"),
+          // t("price_start_feat_1"),
           t("price_start_feat_2_d", {
             project_count: "9",
           }),
@@ -783,7 +783,7 @@ export function Pricing() {
       description: t("strieve"),
       features: {
         monthly: [
-          t("price_start_feat_1"),
+          // t("price_start_feat_1"),
           t("price_start_feat_2_d", {
             project_count: "5",
           }),
@@ -795,7 +795,7 @@ export function Pricing() {
           "Настройка видимости Профиля",
         ],
         annually: [
-          t("price_start_feat_1"),
+          // t("price_start_feat_1"),
           t("price_start_feat_2_d", {
             project_count: "60",
           }),
@@ -807,7 +807,7 @@ export function Pricing() {
           t("visibility"),
         ],
         kvartal: [
-          t("price_start_feat_1"),
+          // t("price_start_feat_1"),
           t("price_start_feat_2_d", {
             project_count: "15",
           }),
@@ -832,7 +832,7 @@ export function Pricing() {
       description: t("unlimit"),
       features: {
         monthly: [
-          t("price_start_feat_1"),
+          // t("price_start_feat_1"),
           t("unlimit_project_create"),
           t("unlimited_access"),
           t("free_verification"),
@@ -842,7 +842,7 @@ export function Pricing() {
           t("private_meet_SEO"),
         ],
         annually: [
-          t("price_start_feat_1"),
+          // t("price_start_feat_1"),
           t("unlimit_project_create"),
           t("unlimited_access"),
           t("free_verification"),
@@ -852,7 +852,7 @@ export function Pricing() {
           t("private_meet_SEO"),
         ],
         kvartal: [
-          t("price_start_feat_1"),
+          // t("price_start_feat_1"),
           t("unlimit_project_create"),
           t("unlimited_access"),
           t("free_verification"),

@@ -82,8 +82,7 @@ function Profiles({ data }: Props) {
       <div>
         <Navigation />
         <GeneralLayout>
-          <p className="text-sm text-slate-300">Профили</p>
-          <div className="my-5 flex items-center justify-center gap-4 md:mb-12 md:flex-row md:justify-between">
+          <div className="my-5 flex items-center justify-center gap-4 md:mb-12 h-[42px] md:flex-row md:justify-between">
             <div>
               <div className="sm:hidden">
                 <select

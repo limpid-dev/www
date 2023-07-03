@@ -11,6 +11,7 @@ import { GeneralLayout } from "../../../components/general-layout";
 import { Navigation } from "../../../components/navigation";
 import Pagination from "../../../components/pagination";
 import { Button } from "../../../components/primitives/button";
+import { Input } from "../../../components/primitives/input";
 import { Options } from "../../../components/primitives/options";
 import {
   Sheet,
@@ -108,8 +109,7 @@ export default function Profiles() {
     <div>
       <Navigation />
       <GeneralLayout>
-        <p className="text-sm text-slate-300">Профили</p>
-        <div className="my-5 flex flex-col items-end justify-end gap-4 md:mb-12 md:flex-row md:justify-between">
+        <div className="my-5 flex flex-col items-center justify-center gap-4 md:mb-12 md:flex-row md:justify-between">
           <div>
             <div className="sm:hidden">
               <label htmlFor="tabs" className="sr-only">
@@ -149,9 +149,9 @@ export default function Profiles() {
               </nav>
             </div>
           </div>
-          <div className="flex justify-end flex-wrap gap-3">
+          <div className="flex justify-center items-center flex-wrap gap-3">
             <div className="flex rounded-md border">
-              <input
+              <Input
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 type="search"
@@ -162,7 +162,7 @@ export default function Profiles() {
                 onClick={handleSearch}
                 className=" bg-transparent ring-0 ring-transparent hover:bg-slate-100 active:bg-slate-200"
               >
-                <MagnifyingGlass className="w-6 h-6 text-black" />
+                <MagnifyingGlass className="w-5 h-5 text-black" />
               </Button>
             </div>
             <div className="flex gap-4">
