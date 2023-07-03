@@ -232,15 +232,15 @@ export default function Profiles() {
 
         {loading ? (
           <div className="grid gap-6 sm:grid-cols-3">
-            <Skeleton className=" h-[194px] rounded-full" />
-            <Skeleton className=" h-[194px] rounded-full" />
-            <Skeleton className=" h-[194px] rounded-full" />
-            <Skeleton className=" h-[194px] rounded-full" />
-            <Skeleton className=" h-[194px] rounded-full" />
-            <Skeleton className=" h-[194px] rounded-full" />
-            <Skeleton className=" h-[194px] rounded-full" />
-            <Skeleton className=" h-[194px] rounded-full" />
-            <Skeleton className=" h-[194px] rounded-full" />
+            <Skeleton className=" h-[204px] rounded-full" />
+            <Skeleton className=" h-[204px] rounded-full" />
+            <Skeleton className=" h-[204px] rounded-full" />
+            <Skeleton className=" h-[204px] rounded-full" />
+            <Skeleton className=" h-[204px] rounded-full" />
+            <Skeleton className=" h-[204px] rounded-full" />
+            <Skeleton className=" h-[204px] rounded-full" />
+            <Skeleton className=" h-[204px] rounded-full" />
+            <Skeleton className=" h-[204px] rounded-full" />
           </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-3">
@@ -252,7 +252,7 @@ export default function Profiles() {
                       key={profile.id}
                       className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black"
                     >
-                      <div className="grid grid-cols-10 h-[160px]">
+                      <div className="grid grid-cols-10 h-[170px]">
                         <div className="col-span-4 mr-3">
                           <Image
                             src={IncognitoProfile}
