@@ -48,7 +48,7 @@ function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     async function fetchUser() {
       const { data } = await api.getUser();
-      if (data.data.is_product_tour_completed === false) {
+      if (data.data.is_product_tour_completed === true) {
         setVerification(true);
       }
     }
