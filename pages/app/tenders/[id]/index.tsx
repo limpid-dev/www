@@ -356,7 +356,7 @@ export default function Tender({ data }: Props) {
                                         </Button>
                                       </Link>
                                     )}
-                                    {data.wonTenderBid ? (
+                                    {data.wonTenderBid && data.isAuthor ? (
                                       ""
                                     ) : (
                                       <Button

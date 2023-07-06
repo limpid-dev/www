@@ -143,6 +143,7 @@ export interface paths {
             patronymic?: string | null;
             born_at?: string | null;
             selected_profile_id?: number | null;
+            is_product_tour_completed?: number | null;
           };
         };
       };
@@ -2052,6 +2053,7 @@ export interface components {
       born_at?: string | null;
       created_at?: string;
       updated_at?: string;
+      is_product_tour_completed?: boolean;
     };
     Profile: {
       id?: number;

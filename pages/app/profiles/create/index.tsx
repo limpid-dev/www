@@ -110,7 +110,7 @@ export default function Test() {
                       />
                       {errors.location && (
                         <span className="text-sm text-red-600">
-                          Введите обязательное поле
+                          Обязательное поле
                         </span>
                       )}
                     </div>
@@ -145,7 +145,7 @@ export default function Test() {
                           <p>
                             {errors.industry && (
                               <span className="text-sm text-red-600">
-                                Введите обязательное поле
+                                Обязательное поле
                               </span>
                             )}
                           </p>
@@ -190,7 +190,7 @@ export default function Test() {
                           <p>
                             {errors.industry && (
                               <span className="text-sm text-red-600">
-                                Введите обязательное поле
+                                Обязательное поле
                               </span>
                             )}
                           </p>
@@ -207,7 +207,7 @@ export default function Test() {
                     />
                     {errors.description && (
                       <span className="text-sm text-red-600">
-                        Введите обязательное поле
+                        Обязательное поле
                       </span>
                     )}
                   </div>

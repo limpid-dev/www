@@ -120,11 +120,11 @@ const DialogClose = DialogPrimitive.Close;
 
 export {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose,
 };

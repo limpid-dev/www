@@ -47,7 +47,7 @@ export default function Login() {
     try {
       await api.loginUser(values.email, values.password);
 
-      await router.push({ pathname: "/app/projects" });
+      await router.push({ pathname: "/app/profiles/my" });
     } catch (error) {
       if (error instanceof Error) {
         const status = (error as AxiosError).response?.status;
