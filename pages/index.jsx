@@ -539,7 +539,7 @@ export function Hero() {
         </Link>
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="outline">
+            <Button variant="outline" className="inline-block relative">
               <svg
                 aria-hidden="true"
                 className="h-3 w-3 flex-none fill-lime-600 group-active:fill-current"
@@ -547,6 +547,7 @@ export function Hero() {
                 <path d="m9.997 6.91-7.583 3.447A1 1 0 0 1 1 9.447V2.553a1 1 0 0 1 1.414-.91L9.997 5.09c.782.355.782 1.465 0 1.82Z" />
               </svg>
               <span className="ml-3">{t("open_video")}</span>
+              <span className="animate-ping absolute top-0 right-0.5 block h-2 w-2 rounded-full ring-2 ring-green-400 bg-green-600" />
             </Button>
           </DialogTrigger>
           <DialogContent className="p-6 sm:max-w-6xl sm:w-[1200px] sm:h-[812px]">
