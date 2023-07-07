@@ -79,6 +79,7 @@ export const getServerSideProps = async (
   }>
 ) => {
   const { data: tender } = await api.getTender(Number(context.params!.id));
+  console.log(tender);
   const { data: user } = await api.getUser({
     headers: {
       Cookie: context.req.headers.cookie,
@@ -356,16 +357,23 @@ export default function Tender({ data }: Props) {
                                         </Button>
                                       </Link>
                                     )}
-                                    {data.wonTenderBid && data.isAuthor ? (
-                                      ""
-                                    ) : (
-                                      <Button
-                                        variant="outline"
-                                        className="w-full text-xs"
-                                      >
-                                        Выбрать победителя
-                                      </Button>
-                                    )}
+                                    {data.finishedAt
+                                      ? data.isAuthor &&
+                                        data.won_tender_bid && (
+                                          <Button
+                                            variant="outline"
+                                            onClick={() => {
+                                              api.updateTenderWinner(
+                                                parsedId,
+                                                bid.id
+                                              );
+                                            }}
+                                            className="w-full text-xs"
+                                          >
+                                            Выбрать победителя
+                                          </Button>
+                                        )
+                                      : ""}
                                   </div>
                                 </div>
                               </div>
