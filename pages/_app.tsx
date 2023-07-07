@@ -20,30 +20,58 @@ import { Toaster } from "../components/primitives/toaster";
 import AUCTIONS from "../images/screenshots/allAuctions.webp";
 import PROJECTS from "../images/screenshots/allProjects.webp";
 import TENDERS from "../images/screenshots/allTenders.webp";
+import AUCTIONSMOBILE from "../images/screenshots/auctionsMobile.png";
 import PROFILECREATE from "../images/screenshots/profileCreate.png";
+import PROFILECREATEMOBILE from "../images/screenshots/profileCreateSmall.png";
+import PROJECTSMOBILE from "../images/screenshots/projectMobile.png";
+import TENDERSMOBILE from "../images/screenshots/tendersMobile.png";
 
 function App({ Component, pageProps }: AppProps) {
+  const [largeScreen, setLargeScreen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const newScreenWidth = window.innerWidth;
+      setLargeScreen(newScreenWidth > 896);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const [verification, setVerification] = useState(false);
-  const images = [PROFILECREATE, PROJECTS, AUCTIONS, TENDERS];
+  const largeScreenImages = [PROFILECREATE, PROJECTS, AUCTIONS, TENDERS];
+  const smallScreenImages = [
+    PROFILECREATEMOBILE,
+    PROJECTSMOBILE,
+    AUCTIONSMOBILE,
+    TENDERSMOBILE,
+  ];
+
   const descriptions = [
     "Создайте профиль - без него ничего не получится!",
     "Обозревайте проекты для совместной работы или создайте свой",
-    "Участвуйте на аукционах",
-    "Участвуйте на продажах",
+    "Участвуйте на продажах, нет никаких ограничений",
+    "Участвуйте на закупках, конкурентная среда и полная прозрачность",
   ];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const nextImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    setCurrentImageIndex(
+      (prevIndex) => (prevIndex + 1) % largeScreenImages.length
+    );
   };
 
   const prevImage = () => {
     setCurrentImageIndex(
-      (prevIndex) => (prevIndex - 1 + images.length) % images.length
+      (prevIndex) =>
+        (prevIndex - 1 + largeScreenImages.length) % largeScreenImages.length
     );
   };
 
-  const isLastImage = currentImageIndex === images.length - 1;
+  const isLastImage = currentImageIndex === largeScreenImages.length - 1;
 
   useEffect(() => {
     async function fetchUser() {
@@ -69,15 +97,19 @@ function App({ Component, pageProps }: AppProps) {
         <DialogContent className="sm:max-w-[825px] p-10">
           <DialogHeader>
             <DialogTitle>Тур по продукту</DialogTitle>
-            <DialogDescription className="text-slate-900 text-[22px]">
+            <DialogDescription className="text-slate-900 sm:text-[22px]">
               {descriptions[currentImageIndex]}
             </DialogDescription>
           </DialogHeader>
           <div className="image-container">
             <Image
-              src={images[currentImageIndex]}
+              src={
+                largeScreen
+                  ? largeScreenImages[currentImageIndex]
+                  : smallScreenImages[currentImageIndex]
+              }
               alt="Image"
-              className="rounded-md"
+              className="rounded-md max-h-96 w-auto m-auto"
             />
           </div>
           <div className="flex justify-end gap-5">

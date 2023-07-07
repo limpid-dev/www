@@ -50,6 +50,7 @@ export default function Profiles() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const [largeScreen, setLargeScreen] = useState(false);
+
   useEffect(() => {
     const handleResize = () => {
       const newScreenWidth = window.innerWidth;
