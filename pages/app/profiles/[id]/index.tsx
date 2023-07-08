@@ -7,6 +7,8 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import api from "../../../../api";
+import { components } from "../../../../api/api-paths";
+import { CreateChatButton } from "../../../../components/chats/create-chat-button";
 import { Navigation } from "../../../../components/navigation";
 import {
   AlertDialog,
@@ -34,8 +36,6 @@ import {
 import { TextArea } from "../../../../components/primitives/text-area";
 import getImageSrc from "../../../../hooks/get-image-url";
 import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
-import { CreateChatButton } from "../../../../components/chats/create-chat-button";
-import { components } from "../../../../api/api-paths";
 
 interface FormValues {
   owned_material_resources: string;
@@ -90,22 +90,27 @@ export const getServerSideProps = async (
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-export const useSelectedProfile = ()=> {
-  const [data,setData] = useState<components['schemas']['Profile']|null>(null)
+export const useSelectedProfile = () => {
+  const [data, setData] = useState<components["schemas"]["Profile"] | null>(
+    null
+  );
 
-  useEffect(()=>{
-    api.getUser().then(({data:{data:{selected_profile_id}}})=>{
-      api.getProfileById(selected_profile_id!).then(({data:{data}})=>{
-        setData(data)
-      })
-    })
+  useEffect(() => {
+    api.getUser().then(
+      ({
+        data: {
+          data: { selected_profile_id },
+        },
+      }) => {
+        api.getProfileById(selected_profile_id!).then(({ data: { data } }) => {
+          setData(data);
+        });
+      }
+    );
+  }, []);
 
-  },[
-
-  ])
-
-  return data
-}
+  return data;
+};
 
 export default function OneProfile({ data }: Props) {
   const router = useRouter();
@@ -162,7 +167,7 @@ export default function OneProfile({ data }: Props) {
     formState: { errors },
   } = useForm<FormValues>();
 
-  const selectedProfile = useSelectedProfile()
+  const selectedProfile = useSelectedProfile();
 
   const onSubmit = async (data1: FormValues) => {
     try {
@@ -225,7 +230,7 @@ export default function OneProfile({ data }: Props) {
     }
   };
 
-  console.log(selectedProfile)
+  console.log(selectedProfile);
 
   return (
     <div>
@@ -260,16 +265,16 @@ export default function OneProfile({ data }: Props) {
               </div>
             ) : (
               <>
-              <CreateChatButton
-              className="px-4 py-2 text-sm bg-black text-white font-medium rounded-md"
-              userIds={[
-                data.profile.data.user_id!,
-                selectedProfile?.user_id!
-              ]}
-                name={`${data.profile.data.user?.first_name} ${data.profile.data.user?.last_name}, ${selectedProfile?.user?.first_name} ${selectedProfile?.user?.last_name}`}
-              >
-                Написать сообщение
-              </CreateChatButton>
+                <CreateChatButton
+                  className="px-4 py-2 text-sm bg-black text-white font-medium rounded-md"
+                  userIds={[
+                    data.profile.data.user_id!,
+                    selectedProfile?.user_id!,
+                  ]}
+                  name={`${data.profile.data.user?.first_name} ${data.profile.data.user?.last_name}, ${selectedProfile?.user?.first_name} ${selectedProfile?.user?.last_name}`}
+                >
+                  Написать сообщение
+                </CreateChatButton>
               </>
             )}
           </div>

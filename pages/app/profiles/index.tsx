@@ -7,12 +7,21 @@ import { useRouter } from "next/router";
 import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import api from "../../../api";
 import { components } from "../../../api/api-paths";
+import { CreateChatButton } from "../../../components/chats/create-chat-button";
 import { GeneralLayout } from "../../../components/general-layout";
 import { Navigation } from "../../../components/navigation";
 import Pagination from "../../../components/pagination";
 import { Button } from "../../../components/primitives/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../../../components/primitives/card";
 import { Input } from "../../../components/primitives/input";
 import { Options } from "../../../components/primitives/options";
+import { Separator } from "../../../components/primitives/separator";
 import {
   Sheet,
   SheetContent,
@@ -86,6 +95,16 @@ export default function Profiles() {
   useEffect(() => {
     handleSearch();
   }, [selectedCheckboxes, searchTerm, handleSearch]);
+  const [user, setUser] = useState();
+  useEffect(() => {
+    async function fetchUser() {
+      const { data: sessionData } = await api.getUser();
+      if (sessionData.data.id) {
+        setUser(sessionData.data);
+      }
+    }
+    fetchUser();
+  }, []);
 
   const handleReset = () => {
     setSelectedCheckboxes([]);
@@ -251,9 +270,9 @@ export default function Profiles() {
                   return (
                     <div
                       key={profile.id}
-                      className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black"
+                      className="rounded-lg border border-slate-200 bg-white p-4"
                     >
-                      <div className="grid grid-cols-10 h-[170px]">
+                      <div className="grid grid-cols-10">
                         <div className="col-span-4 mr-3">
                           <Image
                             src={IncognitoProfile}
@@ -268,30 +287,25 @@ export default function Profiles() {
                           <p className="line-clamp-1 ">
                             {profile.display_name}
                           </p>
-                          <p className="line-clamp-1">
-                            {profile.user?.first_name} {profile.user?.last_name}
-                          </p>
                           <p className="line-clamp-1 w-auto text-xs text-slate-600">
                             {profile.industry}
                           </p>
-                          <p className="line-clamp-1 w-auto text-xs text-slate-500">
-                            {profile.display_name}
-                          </p>
-                          <p className="line-clamp-1 w-auto text-sm text-slate-400">
-                            {profile.location}
-                          </p>
-                          <p className="line-clamp-1 text-xs">
-                            {profile.description}
-                          </p>
+                          <p>Скрытый профиль</p>
                         </div>
                       </div>
                     </div>
                   );
                 }
                 return (
-                  <Link key={profile.id} href={`/app/profiles/${profile.id}`}>
-                    <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-black">
-                      <div className="grid grid-cols-10 h-[170px]">
+                  <Card
+                    key={profile.id}
+                    onClick={() => {
+                      router.push(`/app/profiles/${profile.id}`);
+                    }}
+                    className="cursor-pointer border hover:border-black"
+                  >
+                    <CardContent className="pt-6">
+                      <div className="grid grid-cols-10">
                         <div className="col-span-4 mr-3">
                           <Image
                             src={
@@ -304,19 +318,10 @@ export default function Profiles() {
                             className="h-32 w-32 rounded-lg object-cover"
                           />
                         </div>
-                        <div className="col-span-6 flex flex-col gap-2">
+                        <div className="col-span-6 flex flex-col gap-[11px]">
                           <p>{profile.display_name}</p>
-                          <p className="line-clamp-2 w-auto text-xs text-slate-500">
-                            {profile.location}
-                          </p>
                           <p className="line-clamp-1 w-auto text-xs text-slate-600">
                             {profile.industry}
-                          </p>
-                          <p className="line-clamp-1 w-auto text-xs text-slate-500">
-                            {profile.display_name}
-                          </p>
-                          <p className="line-clamp-2 w-auto text-xs text-slate-500">
-                            {profile.description}
                           </p>
                           <div className="flex gap-10">
                             <p className="line-clamp-1 text-xs text-slate-400">
@@ -334,10 +339,14 @@ export default function Profiles() {
                               <Eye className="w-4 h-4" /> {profile.views}
                             </p>
                           </div>
+                          <CreateChatButton
+                            userIds={[user?.id, profile.user_id]}
+                            name={`${user?.first_name} ${user?.last_name}, ${profile.user?.first_name} ${profile.user?.last_name}`}
+                          />
                         </div>
                       </div>
-                    </div>
-                  </Link>
+                    </CardContent>
+                  </Card>
                 );
               })}
             </React.Fragment>
