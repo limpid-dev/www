@@ -266,7 +266,7 @@ export default function OneProfile({ data }: Props) {
             ) : (
               <>
                 <CreateChatButton
-                  className="px-4 py-2 text-sm bg-black text-white font-medium rounded-md"
+                  className=""
                   userIds={[
                     data.profile.data.user_id!,
                     selectedProfile?.user_id!,

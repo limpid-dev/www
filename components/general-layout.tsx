@@ -6,7 +6,7 @@ interface Props {
 
 export function GeneralLayout({ children }: Props) {
   return (
-    <div className="min-h-screen bg-slate-50 pt-8 px-5">
+    <div className="min-h-[90vh] bg-slate-50 pt-8 px-5">
       <div className="mx-auto max-w-screen-xl">{children}</div>
     </div>
   );

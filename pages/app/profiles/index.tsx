@@ -351,17 +351,17 @@ export default function Profiles() {
             </React.Fragment>
           </div>
         )}
-        {profilesMeta.total !== undefined && (
-          <Pagination
-            totalItems={profilesMeta.total}
-            currentPage={currentPage}
-            itemsPerPage={9}
-            renderPageLink={(page) => `/app/profiles/?page=${page}`}
-            firstPageUrl={profilesMeta.first_page_url}
-            lastPageUrl={profilesMeta.last_page_url}
-          />
-        )}
-      </GeneralLayout>
+      </GeneralLayout>{" "}
+      {profilesMeta.total !== undefined && (
+        <Pagination
+          totalItems={profilesMeta.total}
+          currentPage={currentPage}
+          itemsPerPage={9}
+          renderPageLink={(page) => `/app/profiles/?page=${page}`}
+          firstPageUrl={profilesMeta.first_page_url}
+          lastPageUrl={profilesMeta.last_page_url}
+        />
+      )}
     </div>
   );
 }
