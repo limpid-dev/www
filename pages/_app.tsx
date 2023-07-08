@@ -92,6 +92,7 @@ function App({ Component, pageProps }: AppProps) {
       <Head>
         <title>LIM - все для людей</title>
       </Head>
+      <Component {...pageProps} />
       <Dialog open={verification} onOpenChange={setVerification}>
         <DialogTrigger />
         <DialogContent className="sm:max-w-[825px] p-10">
@@ -128,7 +129,6 @@ function App({ Component, pageProps }: AppProps) {
           </div>
         </DialogContent>
       </Dialog>
-      <Component {...pageProps} />
       <Toaster />
       <Script src="https://epay.homebank.kz/payform/payment-api.js" />
       <Script defer data-domain="limpid.kz" src="/js/script.js" />
