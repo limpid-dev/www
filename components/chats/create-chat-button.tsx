@@ -24,11 +24,12 @@ export const CreateChatButton = forwardRef<HTMLButtonElement, Props>(
           onClick?.(e);
           await router.push(`/app/chats/${chat.data.data?.id!}`);
         }}
-        className="text-xs w-11/12 font-bold"
+        className="text-xs sm:w-11/12 font-bold"
         ref={ref}
         {...props}
       >
-        <Chat className="w-6 h-6 mr-3" /> Написать сообщение
+        <Chat className="w-4 h-4 mr-1 sm:mr-3 sm:w-6 sm:h-6" /> Написать
+        сообщение
       </Button>
     );
   }
