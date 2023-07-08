@@ -1,14 +1,5 @@
-import {
-  Clipboard,
-  Faders,
-  Paperclip,
-  PaperPlaneRight,
-  SquaresFour,
-} from "@phosphor-icons/react";
+import { PaperPlaneRight } from "@phosphor-icons/react";
 import axios from "axios";
-import clsx from "clsx";
-import { InferGetServerSidePropsType } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -17,19 +8,7 @@ import { components } from "../../../api/api-paths";
 import { GeneralLayout } from "../../../components/general-layout";
 import { Navigation } from "../../../components/navigation";
 import { Button } from "../../../components/primitives/button";
-import { Options } from "../../../components/primitives/options";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "../../../components/primitives/sheet";
 import { TextArea } from "../../../components/primitives/text-area";
-import testAva from "../../../images/avatars/avatar-2.webp";
-import DefaultAvatar from "../../../images/avatars/defaultProfile.svg";
 import { useSelectedProfile } from "../profiles/[id]";
 
 const tabs = [
@@ -210,7 +189,7 @@ export default function Chats() {
         </div> */}
 
         <div className="grid gap-10 sm:grid-cols-10">
-          <div className="col-span-4 h-[74vh] bg-white rounded-md border p-8">
+          <div className="sm:col-span-4 h-[74vh] bg-white rounded-md border p-8 order-last sm:order-first overflow-auto">
             {/* <nav
               className="flex justify-center space-x-4 w-fit m-auto rounded-3xl p-2 bg-slate-50"
               aria-label="Tabs"
@@ -253,7 +232,7 @@ export default function Chats() {
               ))}
             </div>
           </div>
-          <div className="col-span-6 border rounded-md">
+          <div className="sm:col-span-6 border rounded-md">
             <div className="text-center bg-slate-100 font-semibold py-3 rounded-t-md">
               {chat?.name}
             </div>
@@ -318,7 +297,7 @@ export default function Chats() {
 
                   (e.target as any)?.reset();
                 }}
-                className="flex items-center justify-around gap-3 px-6 my-3 rounded-b-md"
+                className="flex items-center justify-around gap-3 px-6 py-3 rounded-b-md"
               >
                 <TextArea
                   required
