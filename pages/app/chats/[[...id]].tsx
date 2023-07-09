@@ -11,35 +11,25 @@ import { Button } from "../../../components/primitives/button";
 import { TextArea } from "../../../components/primitives/text-area";
 import { useSelectedProfile } from "../profiles/[id]";
 
+function getCharacterAfterComma(str: any) {
+  const commaIndex = str.indexOf(",");
+
+  if (commaIndex === -1 || commaIndex === str.length - 1) {
+    return null; // No comma found or it's the last character
+  }
+
+  return str.charAt(commaIndex + 2);
+}
+
+function removeSubstring(originalString, stringToRemove) {
+  const resultString = originalString.replace(stringToRemove, "").trim();
+  return resultString;
+}
+
 const tabs = [
   { name: "Личные", href: "/app/auctions/", current: true },
   { name: "Проекты", href: "/app/auctions/my", current: false },
 ];
-
-// export const getServerSideProps = async () => {
-//   const { data: profiles } = await api.profiles.index({
-//     page: 1,
-//     perPage: 100,
-//   });
-
-//   const withUsers = profiles!.map(async (d) => {
-//     const user = await api.users.show(d.userId);
-
-//     return { ...d, user: user.data! };
-//   });
-
-//   const w = await Promise.all(withUsers);
-
-//   return {
-//     props: {
-//       data: {
-//         profilesWithUser: w!,
-//       },
-//     },
-//   };
-// };
-
-// type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 export default function Chats() {
   const profile = useSelectedProfile();
@@ -54,6 +44,18 @@ export default function Chats() {
     const selectedPage = event.target.value;
     router.push(selectedPage);
   };
+
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    async function fetchUser() {
+      const { data: sessionData } = await api.getUser();
+      if (sessionData.data.id) {
+        setUser(sessionData.data);
+      }
+    }
+    fetchUser();
+  }, []);
 
   useEffect(() => {
     if (router.isReady) {
@@ -223,7 +225,22 @@ export default function Chats() {
                   alt="test"
                 /> */}
                   <div className="col-span-7">
-                    <p className="font-bold">{c.name}</p>
+                    <div className="flex items-center gap-3">
+                      <div className="text-sm rounded-lg w-8 h-8 flex justify-center items-center bg-lime-400 text-black font-medium p-2 col-span-2">
+                        {
+                          removeSubstring(
+                            c.name,
+                            ", " + user.first_name + " " + user.last_name
+                          )[0]
+                        }
+                      </div>
+                      <p className="font-bold">
+                        {removeSubstring(
+                          c.name,
+                          ", " + user.first_name + " " + user.last_name
+                        )}
+                      </p>
+                    </div>
                     <p className="line-clamp-2 text-sm">
                       {(c as any).messages.at(0)?.message ?? "Нет сообщений..."}
                     </p>

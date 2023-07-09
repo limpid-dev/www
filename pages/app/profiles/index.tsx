@@ -95,7 +95,9 @@ export default function Profiles() {
   useEffect(() => {
     handleSearch();
   }, [selectedCheckboxes, searchTerm, handleSearch]);
+
   const [user, setUser] = useState();
+
   useEffect(() => {
     async function fetchUser() {
       const { data: sessionData } = await api.getUser();
