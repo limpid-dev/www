@@ -22,7 +22,11 @@ function getCharacterAfterComma(str: any) {
 }
 
 function removeSubstring(originalString, stringToRemove) {
-  const resultString = originalString.replace(stringToRemove, "").trim();
+  const regex = new RegExp(stringToRemove, "g");
+  const resultString = originalString
+    .replace(regex, "")
+    .replace(/,/g, "")
+    .trim();
   return resultString;
 }
 
@@ -217,7 +221,7 @@ export default function Chats() {
                 <Link
                   key={c.id}
                   href={`/app/chats/${c.id}`}
-                  className="grid grid-cols-10 justify-center items-center"
+                  className="grid grid-cols-10 justify-center items-cente hover:bg-slate-100 p-3 rounded-md"
                 >
                   {/* <Image
                   src={testAva}
@@ -237,7 +241,7 @@ export default function Chats() {
                       <p className="font-bold">
                         {removeSubstring(
                           c.name,
-                          ", " + user.first_name + " " + user.last_name
+                          user.first_name + " " + user.last_name
                         )}
                       </p>
                     </div>
