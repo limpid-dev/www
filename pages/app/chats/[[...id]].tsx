@@ -234,7 +234,7 @@ export default function Chats() {
                         {
                           removeSubstring(
                             c.name,
-                            ", " + user.first_name + " " + user.last_name
+                            user.first_name + " " + user.last_name
                           )[0]
                         }
                       </div>
