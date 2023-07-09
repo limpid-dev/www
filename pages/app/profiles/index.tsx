@@ -2,7 +2,6 @@ import { Eye, MagnifyingGlass, SquaresFour } from "@phosphor-icons/react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import clsx from "clsx";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import api from "../../../api";
@@ -12,16 +11,9 @@ import { GeneralLayout } from "../../../components/general-layout";
 import { Navigation } from "../../../components/navigation";
 import Pagination from "../../../components/pagination";
 import { Button } from "../../../components/primitives/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../../../components/primitives/card";
+import { Card, CardContent } from "../../../components/primitives/card";
 import { Input } from "../../../components/primitives/input";
 import { Options } from "../../../components/primitives/options";
-import { Separator } from "../../../components/primitives/separator";
 import {
   Sheet,
   SheetContent,
@@ -53,9 +45,13 @@ export default function Profiles() {
   const [profilesMeta, setProfilesMeta] = useState<
     components["schemas"]["Pagination"]
   >({});
+  const [user, setUser] = useState<components["schemas"]["User"]>({});
 
   const [selectedCheckboxes, setSelectedCheckboxes] = useState<number[]>([]);
-
+  const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>): void => {
+    const selectedPage = event.target.value;
+    router.push(selectedPage);
+  };
   const [searchTerm, setSearchTerm] = useState("");
 
   const [largeScreen, setLargeScreen] = useState(false);
@@ -70,6 +66,16 @@ export default function Profiles() {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
+  }, []);
+
+  useEffect(() => {
+    async function fetchUser() {
+      const { data: sessionData } = await api.getUser();
+      if (sessionData.data.id) {
+        setUser(sessionData.data);
+      }
+    }
+    fetchUser();
   }, []);
 
   const handleSearch = useCallback(async () => {
@@ -96,18 +102,6 @@ export default function Profiles() {
     handleSearch();
   }, [selectedCheckboxes, searchTerm, handleSearch]);
 
-  const [user, setUser] = useState();
-
-  useEffect(() => {
-    async function fetchUser() {
-      const { data: sessionData } = await api.getUser();
-      if (sessionData.data.id) {
-        setUser(sessionData.data);
-      }
-    }
-    fetchUser();
-  }, []);
-
   const handleReset = () => {
     setSelectedCheckboxes([]);
     setSearchTerm("");
@@ -120,11 +114,6 @@ export default function Profiles() {
     } else {
       setSelectedCheckboxes([...selectedCheckboxes, value]);
     }
-  };
-
-  const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>): void => {
-    const selectedPage = event.target.value;
-    router.push(selectedPage);
   };
 
   return (
@@ -341,8 +330,9 @@ export default function Profiles() {
                             </p>
                           </div>
                           <CreateChatButton
-                            userIds={[user?.id, profile.user_id]}
-                            name={`${user?.first_name} ${user?.last_name}, ${profile.user?.first_name} ${profile.user?.last_name}`}
+                            //number|undefined
+                            userIds={[user.id!, profile.user_id!]}
+                            name={`${user.first_name} ${user.last_name}, ${profile.user?.first_name} ${profile.user?.last_name}`}
                           />
                         </div>
                       </div>

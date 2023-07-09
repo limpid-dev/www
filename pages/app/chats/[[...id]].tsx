@@ -216,7 +216,7 @@ export default function Chats() {
                 </a>
               ))}
             </nav> */}
-            <div className="flex flex-col gap-8">
+            <div className="flex flex-col gap-3">
               {chats.map((c) => (
                 <Link
                   key={c.id}
