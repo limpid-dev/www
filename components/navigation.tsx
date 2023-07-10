@@ -134,19 +134,19 @@ export function Navigation() {
   const [notifications, setNotifications] = useState<
     components["schemas"]["Notification"][]
   >([]);
+  const [isRead, setIsRead] = useState(false);
+
   const handleMarkAsRead = (notificationId: number) => {
     api
       .markNotificationAsRead(notificationId)
-      .then((response) => {
-        // Handle the successful response
-        console.log("Notification marked as read:", response.data);
-        // Perform any additional actions if needed
+      .then(() => {
+        setIsRead(true);
       })
       .catch((error) => {
-        // Handle errors
         console.error("Error marking notification as read:", error);
       });
   };
+
   useEffect(() => {
     async function fetchProfiles() {
       const { data: sessionData } = await api.getUser();
@@ -345,6 +345,7 @@ export function Navigation() {
                             <p className="text-xs">
                               {notification.description}
                             </p>
+                            {isRead && <p className="text-xs">Read</p>}
                           </div>
                         </Link>
                       </div>

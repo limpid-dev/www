@@ -3,8 +3,6 @@ import "@uppy/dashboard/dist/style.min.css";
 import { Cube, UserCircle } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import { useRouter } from "next/router";
-import { useRef } from "react";
 import api from "../../../api";
 import { Navigation } from "../../../components/navigation";
 import {
@@ -34,7 +32,6 @@ export const getServerSideProps = async (
       Cookie: context.req.headers.cookie,
     },
   });
-
   console.log(session.data);
 
   return {
