@@ -329,16 +329,16 @@ export function Navigation() {
                   <PopoverContent className="max-h-[500px] overflow-auto">
                     {notifications.map((notification) => (
                       <div key={notification.id}>
-                        <button
-                          className="absolute right-4 block"
-                          onClick={() => handleMarkAsRead(notification.id)}
-                        >
-                          <XCircle className=" w-4 h-4" />
-                        </button>
                         <Link
                           href={`/app/projects/${notification.meta.project_id}`}
                         >
-                          <div className="bg-slate-100 hover:bg-slate-200 max-w-[280px] p-3 rounded-md mb-3">
+                          <div className="relative bg-slate-100 hover:bg-slate-200 max-w-[280px] p-3 rounded-md mb-3">
+                            <button
+                              className="absolute top-0 right-0 block"
+                              onClick={() => handleMarkAsRead(notification.id)}
+                            >
+                              <XCircle className="w-4 h-4" />
+                            </button>
                             <p className="text-xs font-semibold">
                               {notification.title}
                             </p>
