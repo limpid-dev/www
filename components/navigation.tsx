@@ -134,13 +134,18 @@ export function Navigation() {
   const [notifications, setNotifications] = useState<
     components["schemas"]["Notification"][]
   >([]);
-  const [isRead, setIsRead] = useState(false);
 
-  const handleMarkAsRead = (notificationId: number) => {
+  const [clickedNotifications, setClickedNotifications] = useState([]);
+  const [isRead, setIsRead] = useState({});
+
+  const handleMarkAsRead = (notificationId) => {
     api
       .markNotificationAsRead(notificationId)
       .then(() => {
-        setIsRead(true);
+        setClickedNotifications((prevClickedNotifications) => [
+          ...prevClickedNotifications,
+          notificationId,
+        ]);
       })
       .catch((error) => {
         console.error("Error marking notification as read:", error);
@@ -345,7 +350,13 @@ export function Navigation() {
                             <p className="text-xs">
                               {notification.description}
                             </p>
-                            {isRead && <p className="text-xs">Read</p>}
+                            {clickedNotifications.includes(notification.id) && (
+                              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white">
+                                <p className="text-sm font-semibold">
+                                  I am clicked
+                                </p>
+                              </div>
+                            )}
                           </div>
                         </Link>
                       </div>
