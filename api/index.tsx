@@ -824,6 +824,24 @@ class APIClient {
   ): Promise<AxiosResponse<{ data?: components["schemas"]["Invoices"][] }>> {
     return this.axiosInstance.get(`/payments/${sub_plan_id}`);
   }
+
+  //Notifications
+  async getNotifications(
+    page: number,
+    perPage?: number
+  ): Promise<
+    AxiosResponse<{
+      meta?: components["schemas"]["Pagination"];
+      data?: components["schemas"]["Notification"][];
+    }>
+  > {
+    const params = {
+      page,
+      per_page: perPage,
+    };
+
+    return this.axiosInstance.get("/notifications", { params });
+  }
 }
 
 const api = new APIClient();

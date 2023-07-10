@@ -1,5 +1,5 @@
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { List, X } from "@phosphor-icons/react";
+import { Bell, List, X } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,6 +19,8 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "./primitives/navigation-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "./primitives/popover";
+import { Separator } from "./primitives/separator";
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
@@ -129,6 +131,9 @@ export function Navigation() {
     useState<components["schemas"]["Profile"]>();
   const [profession, setProfession] = useState<string>();
   const [avatarUrl, setAvatarUrl] = useState<string>();
+  const [notifications, setNotifications] = useState<
+    components["schemas"]["Notification"][]
+  >([]);
 
   useEffect(() => {
     async function fetchProfiles() {
@@ -175,6 +180,23 @@ export function Navigation() {
       }
     }
     fetchProfiles();
+  }, []);
+
+  useEffect(() => {
+    const page = 1; // Replace with the desired page number
+    const perPage = 10; // Replace with the desired number of notifications per page
+
+    api
+      .getNotifications(page, perPage)
+      .then((response) => {
+        // Handle the successful response
+        const notificationsData = response.data.data || [];
+        setNotifications(notificationsData);
+      })
+      .catch((error) => {
+        // Handle errors
+        console.error("Error retrieving notifications:", error);
+      });
   }, []);
 
   const handleLogout = async () => {
@@ -288,6 +310,28 @@ export function Navigation() {
                 </Disclosure.Button>
               </div>
               <div className="hidden lg:relative lg:z-10 lg:ml-4 lg:flex lg:items-center">
+                <Popover>
+                  <PopoverTrigger className="p-3 border mr-3 rounded-full hover:bg-slate-50">
+                    <Bell className="w-4 h-4 hover:text-slate-700 " />
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    {notifications.map((notification) => (
+                      <Link
+                        key={notification.id}
+                        href={`/app/projects/${notification.meta.project_id}`}
+                      >
+                        <div className="bg-slate-100 hover:bg-slate-200 max-w-[280px] p-3 rounded-md mb-3">
+                          <p className="text-xs font-semibold">
+                            {notification.title}
+                          </p>
+                          <p className="text-xs">{notification.description}</p>
+                        </div>
+                      </Link>
+                    ))}
+                  </PopoverContent>
+                </Popover>
+
+                <Separator orientation="vertical" className="mr-3" />
                 {profilesData[0]?.display_name ? (
                   <p className="mr-3 rounded-md bg-slate-100 p-2 text-sm text-slate-700 px-4 text-ellipsis w-24 whitespace-nowrap overflow-hidden">
                     {profession}
