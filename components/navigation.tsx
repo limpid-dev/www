@@ -314,7 +314,7 @@ export function Navigation() {
                   <PopoverTrigger className="p-3 border mr-3 rounded-full hover:bg-slate-50">
                     <Bell className="w-4 h-4 hover:text-slate-700 " />
                   </PopoverTrigger>
-                  <PopoverContent className="max-h-500 overflow-auto">
+                  <PopoverContent className="max-h-[500px] overflow-auto">
                     {notifications.map((notification) => (
                       <Link
                         key={notification.id}
