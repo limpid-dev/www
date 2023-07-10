@@ -78,7 +78,7 @@ export default function Chats() {
         api.getChats().then(({ data: { data } }) => {
           setChats(data);
         });
-        setChatId(Number.parseInt(router.query.id as string));
+        setChatId(Number.parseInt(router.query.id as string, 10));
       }
     }
   }, [router]);

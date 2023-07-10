@@ -1,5 +1,5 @@
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bell, List, X } from "@phosphor-icons/react";
+import { Bell, List, X, XCircle } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
@@ -134,7 +134,19 @@ export function Navigation() {
   const [notifications, setNotifications] = useState<
     components["schemas"]["Notification"][]
   >([]);
-
+  const handleMarkAsRead = (notificationId: number) => {
+    api
+      .markNotificationAsRead(notificationId)
+      .then((response) => {
+        // Handle the successful response
+        console.log("Notification marked as read:", response.data);
+        // Perform any additional actions if needed
+      })
+      .catch((error) => {
+        // Handle errors
+        console.error("Error marking notification as read:", error);
+      });
+  };
   useEffect(() => {
     async function fetchProfiles() {
       const { data: sessionData } = await api.getUser();
@@ -316,17 +328,26 @@ export function Navigation() {
                   </PopoverTrigger>
                   <PopoverContent className="max-h-[500px] overflow-auto">
                     {notifications.map((notification) => (
-                      <Link
-                        key={notification.id}
-                        href={`/app/projects/${notification.meta.project_id}`}
-                      >
-                        <div className="bg-slate-100 hover:bg-slate-200 max-w-[280px] p-3 rounded-md mb-3">
-                          <p className="text-xs font-semibold">
-                            {notification.title}
-                          </p>
-                          <p className="text-xs">{notification.description}</p>
-                        </div>
-                      </Link>
+                      <div key={notification.id}>
+                        <button
+                          className="absolute right-4 block"
+                          onClick={() => handleMarkAsRead(notification.id)}
+                        >
+                          <XCircle className=" w-4 h-4" />
+                        </button>
+                        <Link
+                          href={`/app/projects/${notification.meta.project_id}`}
+                        >
+                          <div className="bg-slate-100 hover:bg-slate-200 max-w-[280px] p-3 rounded-md mb-3">
+                            <p className="text-xs font-semibold">
+                              {notification.title}
+                            </p>
+                            <p className="text-xs">
+                              {notification.description}
+                            </p>
+                          </div>
+                        </Link>
+                      </div>
                     ))}
                   </PopoverContent>
                 </Popover>

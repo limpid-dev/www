@@ -842,6 +842,12 @@ class APIClient {
 
     return this.axiosInstance.get("/notifications", { params });
   }
+
+  async markNotificationAsRead(
+    notificationId: number
+  ): Promise<AxiosResponse<{ data?: components["schemas"]["Notification"] }>> {
+    return this.axiosInstance.post(`/notifications/${notificationId}/read`);
+  }
 }
 
 const api = new APIClient();
