@@ -1,4 +1,4 @@
-import { Pen, Plus, Trash } from "@phosphor-icons/react";
+import { Pen, Star, Trash } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
@@ -20,6 +20,14 @@ import {
   AlertDialogTrigger,
 } from "../../../../components/primitives/alert-dialog";
 import { Button } from "../../../../components/primitives/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../../../../components/primitives/dialog";
 import { Input } from "../../../../components/primitives/input";
 import { Options } from "../../../../components/primitives/options";
 import {
@@ -32,24 +40,23 @@ import {
   SelectValue,
 } from "../../../../components/primitives/select";
 import { TextArea } from "../../../../components/primitives/text-area";
-import { ExperienceCreate } from "../../../../components/profiles/create/experience";
 import getImageSrc from "../../../../hooks/get-image-url";
 import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
 
-const dateFormatter = (arg: string) => {
-  return new Date(arg).getFullYear().toString();
-};
 interface FormValuesGeneral {
   industry: string;
   location: string;
   description: string;
-  display_name: string;
-  avatar?: File;
-  instagram_url: string;
-  whatsapp_url: string;
-  website_url: string;
-  telegram_url: string;
-  two_gis_url: string;
+  title: string;
+}
+
+interface FormValuesReviews {
+  comment: string;
+  cooperation_type: string;
+  ranking_role: string;
+  rated_role: string;
+  cooperation_url: string;
+  rating_number: number;
 }
 
 export const getServerSideProps = async (
@@ -72,38 +79,40 @@ export const getServerSideProps = async (
     }
   );
 
-  const { data: experiences } = await api.getExperiences(
-    Number.parseInt(context!.params!.id as string, 10),
-    {
-      page: 1,
-      per_page: 10,
-    },
-    {
-      headers: {
-        cookie: context.req.headers.cookie,
-      },
-    }
-  );
   const isAuthor =
     session.data.id &&
     profile.data.user_id &&
     session.data.id === profile.data.user_id;
 
-  if (profile && experiences) {
-    const updatedItems = experiences.data.map((item) => {
-      return {
-        ...item,
-        started_at: dateFormatter(item.started_at),
-        finished_at: dateFormatter(item.finished_at),
-      };
-    });
+  if (profile.data.id) {
+    const { data: userProjects } = await api.getProjects(
+      {
+        page: 1,
+        per_page: 20,
+        profile_id: profile.data.id,
+      },
+      {
+        headers: {
+          cookie: context.req.headers.cookie,
+        },
+      }
+    );
+    const { data: userRatings } = await api.getProfileRatings(
+      profile.data.id,
+      1,
+      20
+    );
+
+    console.log(userRatings);
+
     return {
       props: {
         data: {
           ...session,
           profile: profile!,
           isAuthor: isAuthor!,
-          experiences: updatedItems!,
+          projects: userProjects!,
+          ratings: userRatings!,
         },
       },
     };
@@ -112,11 +121,48 @@ export const getServerSideProps = async (
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-export default function Experiences({ data }: Props) {
+export default function ProfileReviews({ data }: Props) {
   const router = useRouter();
   const { id } = router.query;
   const parsedId = Number.parseInt(id as string, 10) as number;
 
+  const [editGeneral, setEditGeneral] = useState(false);
+  const [error, setError] = useState("");
+
+  const {
+    register,
+    formState: { errors: errors },
+    handleSubmit: handleSubmit2,
+    control,
+  } = useForm<FormValuesGeneral>();
+
+  const {
+    register: register2,
+    formState: { errors: errors2 },
+    handleSubmit,
+    control: control2,
+  } = useForm<FormValuesReviews>();
+
+  const onSubmit = async (reviewData: FormValuesReviews) => {
+    const { data } = await api.createProfileRating(parsedId, reviewData);
+  };
+
+  const onSubmit2 = async (data1: FormValuesGeneral) => {
+    try {
+      const { data } = await api.updateProfile(parsedId, data1);
+      router.reload();
+    } catch (error) {
+      setError("Что то пошло не так, попробуйте позже");
+    }
+  };
+
+  const handleDeleteProfile = async () => {
+    await api.deleteProfile(parsedId);
+
+    await router.push({
+      pathname: "/app/profiles/my",
+    });
+  };
   const tabs = [
     { name: "Ресурсы", href: `/app/profiles/${id}`, current: false },
     {
@@ -137,83 +183,28 @@ export default function Experiences({ data }: Props) {
     {
       name: "Опыт работы",
       href: `/app/profiles/${id}/experiences`,
-      current: true,
+      current: false,
     },
     {
       name: "Отзывы",
       href: `/app/profiles/${id}/reviews`,
-      current: false,
+      current: true,
     },
   ];
 
-  const [isAdd, setIsAdd] = useState(true);
-
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm<FormValuesGeneral>();
-  const [error, setError] = useState("");
-
-  const {
-    register: register2,
-    formState: { errors: errors2 },
-    handleSubmit: handleSubmit2,
-    control,
-  } = useForm<FormValuesGeneral>();
-
-  const onSubmit2 = async (data1: FormValuesGeneral) => {
-    try {
-      const { data } = await api.updateProfile(parsedId, data1);
-      router.reload();
-    } catch (error) {
-      setError("Что то пошло не так, попробуйте позже");
-    }
-  };
-
-  const [editGeneral, setEditGeneral] = useState(false);
   const editGeneralInfo = () => {
     setEditGeneral((current: boolean) => !current);
-  };
-
-  const handleSelectChange = (event: any) => {
-    const selectedPage = event.target.value;
-    router.push(selectedPage);
-  };
-
-  const isAddHandler = () => {
-    setIsAdd((current: boolean) => !current);
-  };
-
-  const handleDeleteProfile = async () => {
-    await api.deleteProfile(parsedId);
-
-    await router.push({
-      pathname: "/app/profiles/my",
-    });
-  };
-
-  const handleDelete = async (experienceId: number) => {
-    try {
-      await api.deleteExperience({
-        profile_id: parsedId,
-        experience_id: experienceId,
-      });
-      await router.reload();
-    } catch (error_) {
-      console.error("Failed to delete experience:", error_);
-    }
   };
 
   const inputRef = useRef(null);
   const handleClick = () => {
     (inputRef.current as unknown as HTMLInputElement).click();
   };
+
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const fileObj = event.target.files?.[0];
-    console.log(fileObj);
     if (!fileObj) {
       return;
     }
@@ -226,13 +217,15 @@ export default function Experiences({ data }: Props) {
       }
     } catch (error) {
       if (error.response && error.response.status === 422) {
-        setError("Размер файла не более 1 МБ");
+        setError("Размер не более 1 МБ");
       } else {
         console.log("Error:", error);
       }
     }
   };
 
+  const [rating, setRating] = useState(5);
+  const [hover, setHover] = useState(null);
   return (
     <div>
       <Navigation />
@@ -265,7 +258,164 @@ export default function Experiences({ data }: Props) {
                 </AlertDialog>
               </div>
             ) : (
-              <></>
+              <>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="outline">Оставить отзыв</Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[525px] p-6">
+                    <DialogHeader>
+                      <DialogTitle>Отзыв</DialogTitle>
+                    </DialogHeader>
+                    <form
+                      onSubmit={handleSubmit(onSubmit)}
+                      className="flex flex-col gap-2"
+                    >
+                      <div className="flex justify-between gap-4">
+                        <Controller
+                          control={control2}
+                          name="rated_role"
+                          rules={{ required: true }}
+                          render={({ field }) => (
+                            <Select
+                              value={field.value}
+                              onValueChange={field.onChange}
+                            >
+                              <SelectTrigger className=" text-black rounded-md flex-1 max-w-full text-ellipsis whitespace-nowrap overflow-hidden w-full">
+                                <SelectValue placeholder="Роль оцениваемого" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectGroup>
+                                  <SelectItem value="creator">
+                                    Создатель
+                                  </SelectItem>
+                                  <SelectItem value="winner">
+                                    Победитель
+                                  </SelectItem>
+                                  <SelectItem value="participant">
+                                    Участник
+                                  </SelectItem>
+                                </SelectGroup>
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                        <Controller
+                          control={control2}
+                          name="ranking_role"
+                          rules={{ required: true }}
+                          render={({ field }) => (
+                            <Select
+                              value={field.value}
+                              onValueChange={field.onChange}
+                            >
+                              <SelectTrigger className="px-5 text-black rounded-md flex-1 max-w-full text-ellipsis whitespace-nowrap overflow-hidden w-full">
+                                <SelectValue placeholder="Ваша роль" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectGroup>
+                                  <SelectItem value="creator">
+                                    Создатель
+                                  </SelectItem>
+                                  <SelectItem value="winner">
+                                    Победитель
+                                  </SelectItem>
+                                  <SelectItem value="participant">
+                                    Участник
+                                  </SelectItem>
+                                </SelectGroup>
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                      </div>
+                      <div className="flex gap-5">
+                        <Controller
+                          control={control2}
+                          name="cooperation_type"
+                          rules={{ required: true }}
+                          render={({ field }) => (
+                            <Select
+                              value={field.value}
+                              onValueChange={field.onChange}
+                            >
+                              <SelectTrigger className="flex-1">
+                                <SelectValue placeholder="Кооперация" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectGroup>
+                                  <SelectLabel>Вы частник</SelectLabel>
+                                  <SelectItem value="auction">
+                                    Аукциона
+                                  </SelectItem>
+                                  <SelectItem value="tender">
+                                    Тендера
+                                  </SelectItem>
+                                  <SelectItem value="project">
+                                    Проекта
+                                  </SelectItem>
+                                </SelectGroup>
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                        <Input
+                          type="url"
+                          className="flex-2"
+                          placeholder="Ссылка на аукцион/тендер/проект"
+                          {...register2("cooperation_url")}
+                        />
+                      </div>
+
+                      <TextArea {...register2("comment")} />
+                      <div className="flex gap-4">
+                        <div className="flex">
+                          {[...new Array(5)].map((star, index) => {
+                            const currentRating = index + 1;
+                            return (
+                              // eslint-disable-next-line jsx-a11y/label-has-associated-control
+                              <label key={index}>
+                                <Input
+                                  type="radio"
+                                  {...register2("rating_number")}
+                                  value={currentRating}
+                                  checked={currentRating === rating}
+                                  className="bg-red-200 hidden"
+                                  onClick={() => {
+                                    setRating(currentRating);
+                                  }}
+                                />
+                                <Star
+                                  className="w-6 h-6"
+                                  color={
+                                    currentRating <= (hover || rating)
+                                      ? "#ffc107"
+                                      : "#e4e5e9"
+                                  }
+                                  weight="fill"
+                                  onMouseEnter={() => setHover(currentRating)}
+                                  onMouseLeave={() => setHover(null)}
+                                />
+                              </label>
+                            );
+                          })}
+                        </div>
+
+                        {rating === 5 && <p>Отлично</p>}
+                        {rating === 4 && <p>Хорошо</p>}
+                        {rating === 3 && <p>Удовлетворительно</p>}
+                        {rating === 2 && <p>Плохо</p>}
+                        {rating === 1 && <p>Ужасно</p>}
+                      </div>
+                      <DialogFooter>
+                        <Button variant="black" type="submit">
+                          Отправить отзыв
+                        </Button>
+                      </DialogFooter>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+              </>
             )}
           </div>
 
@@ -296,7 +446,7 @@ export default function Experiences({ data }: Props) {
                       <p className="mt-2 text-xs leading-5 text-gray-400">
                         JPG или PNG. 1MB макс.
                       </p>
-                      <p className="mt-2 text-xs leading-5 text-red-500">
+                      <p className="mt-2 text-xs leading-5 text-red-500 text-center">
                         {error}
                       </p>
                     </div>
@@ -598,16 +748,13 @@ export default function Experiences({ data }: Props) {
                     Select a tab
                   </label>
                   <select
-                    onChange={handleSelectChange}
                     id="tabs"
                     name="tabs"
                     className="block w-full  border-gray-300 focus:border-lime-500 focus:ring-lime-500"
-                    defaultValue={`/app/profiles/${id}/experiences`}
+                    defaultValue={`/app/profiles/${id}/projects`}
                   >
                     {tabs.map((tab) => (
-                      <option key={tab.name} value={tab.href}>
-                        {tab.name}
-                      </option>
+                      <option key={tab.name}>{tab.name}</option>
                     ))}
                   </select>
                 </div>
@@ -644,119 +791,26 @@ export default function Experiences({ data }: Props) {
                 </div>
               </div>
               <div className="p-6">
-                <p className=" pb-4 text-xl font-semibold text-slate-400">
-                  Опыт работы
-                </p>
-                {isAdd ? (
-                  <>
-                    {data.experiences.map((item) => (
-                      <div key={item.id}>
-                        <div className="grid sm:grid-cols-10 grid-cols-1 gap-y-5">
-                          <div className="col-span-3 flex gap-5">
-                            <div className=" text-lg font-semibold">
-                              {item.started_at}
-                            </div>
-                            <>-</>
-                            <div className=" text-lg font-semibold">
-                              {item.finished_at}
-                            </div>
-                          </div>
-                          <div className="col-span-5">
-                            <p className=" text-lg font-semibold">
-                              {item.institution}
-                            </p>
-                            <p className=" text-sm font-semibold">
-                              {item.title}
-                            </p>
-                            <p className=" text-sm flex flex-wrap">
+                <div className="grid gap-5 md:grid-cols-2">
+                  {data.ratings?.data?.map((item, index) => (
+                    <div className="grid items-center justify-center gap-4 rounded-lg border py-6 pl-6 pr-4 sm:h-48 hover:border-black sm:grid-cols-10">
+                      <div className="sm:col-span-4"></div>
+                      <div className="sm:col-span-6">
+                        <div className="flex flex-col gap-1">
+                          <h1 className="text-sm font-semibold">
+                            {item.comment}
+                          </h1>
+                          {/* <p className="text-sm">{item.industry}</p>
+                          <div className="flex items-center gap-4">
+                            <p className=" line-clamp-2 text-sm text-slate-400">
                               {item.description}
                             </p>
-                          </div>
-                          {data.isAuthor && (
-                            <div className="col-span-2">
-                              <div className="flex justify-end gap-6">
-                                <Button
-                                  variant="outline"
-                                  color="zinc"
-                                  onClick={() => {
-                                    setIsAdd(false);
-                                    router.push({
-                                      pathname: `/app/profiles/${id}/experiences`,
-                                      query: { itemId: item.id },
-                                    });
-                                  }}
-                                >
-                                  <Pen className="h-6 w-6" />
-                                </Button>
-
-                                <AlertDialog>
-                                  <AlertDialogTrigger asChild>
-                                    <Button variant="outline">
-                                      <Trash className="h-6 w-6" />
-                                    </Button>
-                                  </AlertDialogTrigger>
-                                  <AlertDialogContent>
-                                    <AlertDialogHeader>
-                                      <AlertDialogTitle>
-                                        Удалить опыт работы?
-                                      </AlertDialogTitle>
-                                      <AlertDialogDescription>
-                                        Восстановить опыт работы будет
-                                        невозможно
-                                      </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                      <AlertDialogCancel>
-                                        Отмена
-                                      </AlertDialogCancel>
-                                      <AlertDialogAction
-                                        onClick={() => handleDelete(item.id)}
-                                      >
-                                        Удалить
-                                      </AlertDialogAction>
-                                    </AlertDialogFooter>
-                                  </AlertDialogContent>
-                                </AlertDialog>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                        <div className="relative py-6">
-                          <div
-                            className="absolute inset-0 flex items-center"
-                            aria-hidden="true"
-                          >
-                            <div className="w-full border-t border-gray-300" />
-                          </div>
+                          </div> */}
                         </div>
                       </div>
-                    ))}
-
-                    {data.isAuthor && (
-                      <div className="flex items-center justify-end text-sm text-sky-500 underline">
-                        <Plus />
-                        <button
-                          onClick={() => {
-                            setIsAdd(false);
-                            router.push({
-                              pathname: `/app/profiles/${id}/experiences`,
-                              query: {},
-                            });
-                          }}
-                        >
-                          Добавить опыт работы
-                        </button>
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <ExperienceCreate
-                      profileId={parsedId}
-                      isAddHandler={isAddHandler}
-                    />
-                  </>
-                )}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

@@ -166,7 +166,7 @@ export interface paths {
           page: number;
           per_page?: number;
           user_id?: number;
-          industry?: string[];
+          industry?: string;
           search?: string;
         };
       };
@@ -706,6 +706,111 @@ export interface paths {
           content: {
             "application/json": {
               data?: components["schemas"]["Skill"];
+            };
+          };
+        };
+      };
+    };
+  };
+  "/profiles/{profile_id}/ratings": {
+    get: {
+      parameters: {
+        query: {
+          page: number;
+          per_page?: number;
+        };
+        path: {
+          profile_id: number;
+        };
+      };
+      responses: {
+        /** @description Profile's ratings */
+        200: {
+          content: {
+            "application/json": {
+              meta?: components["schemas"]["Pagination"];
+              data?: components["schemas"]["Rating"][];
+            };
+          };
+        };
+      };
+    };
+    post: {
+      parameters: {
+        path: {
+          profile_id: number;
+        };
+      };
+      requestBody: {
+        content: {
+          "multipart/form-data": {
+            comment: string;
+            cooperation_type: string;
+            ranking_role: string;
+            rated_role: string;
+            cooperation_url: string;
+            rating_number: number;
+          };
+        };
+      };
+    };
+  };
+  "/profiles/{profile_id}/ratings/{rating_id}": {
+    get: {
+      parameters: {
+        path: {
+          profile_id: number;
+          rating_id: number;
+        };
+      };
+      responses: {
+        /** @description Rating data */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["Rating"];
+            };
+          };
+        };
+      };
+    };
+    delete: {
+      parameters: {
+        path: {
+          profile_id: number;
+          rating_id: number;
+        };
+      };
+      responses: {
+        /** @description Rating is deleted */
+        200: never;
+      };
+    };
+    patch: {
+      parameters: {
+        path: {
+          profile_id: number;
+          rating_id: number;
+        };
+      };
+      requestBody: {
+        content: {
+          "multipart/form-data": {
+            comment?: string;
+            cooperation_type?: string;
+            ranking_role?: string;
+            rated_role?: string;
+            cooperation_url?: string;
+            rating_number?: number;
+          };
+        };
+      };
+      responses: {
+        /** @description Updated rating's data */
+        200: {
+          content: {
+            "application/json": {
+              data?: components["schemas"]["Rating"];
             };
           };
         };
@@ -2307,6 +2412,22 @@ export interface components {
       qualification_requirements_for_prospective_vendors?: string | null;
       performance_security?: string | null;
       special_contract_conditions?: string | null;
+    };
+    Rating: {
+      ratedProfileId?: number;
+      ranking_profile_id?: number;
+      comment?: string;
+      cooperation_type?: string;
+      ranking_role?: string;
+      rated_role?: string;
+      cooperation_url?: string;
+      rating_number?: number;
+      /** Format: date-time */
+      verified_at?: string;
+      /** Format: date-time */
+      created_at?: string;
+      /** Format: date-time */
+      updated_at?: string;
     };
   };
   responses: never;

@@ -119,7 +119,7 @@ export default function OneProfile({ data }: Props) {
   };
 
   const tabs = [
-    { name: "Ресурсы", href: `/app/profiles/${id}/`, current: true },
+    { name: "Ресурсы", href: `/app/profiles/${id}`, current: true },
     {
       name: "Образование",
       href: `/app/profiles/${id}/educations`,
@@ -138,6 +138,11 @@ export default function OneProfile({ data }: Props) {
     {
       name: "Опыт работы",
       href: `/app/profiles/${id}/experiences`,
+      current: false,
+    },
+    {
+      name: "Отзывы",
+      href: `/app/profiles/${id}/reviews`,
       current: false,
     },
   ];

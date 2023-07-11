@@ -34,9 +34,9 @@ import {
 import { TextArea } from "../../../../components/primitives/text-area";
 import { CertificationCreate } from "../../../../components/profiles/create/certification";
 import SkillsCreate from "../../../../components/profiles/create/skills";
+import getImageSrc from "../../../../hooks/get-image-url";
 import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
 import Badge from "../../../../images/badge.svg";
-import getImageSrc from "../../../../hooks/get-image-url";
 
 interface FormValuesGeneral {
   industry: string;
@@ -118,8 +118,9 @@ export default function Certifications({ data }: Props) {
   const inputRef = useRef(null);
   const parsedId = Number.parseInt(id as string, 10) as number;
   const [error, setError] = useState<string>();
+
   const tabs = [
-    { name: "Ресурсы", href: `/app/profiles/${id}/`, current: false },
+    { name: "Ресурсы", href: `/app/profiles/${id}`, current: false },
     {
       name: "Образование",
       href: `/app/profiles/${id}/educations`,
@@ -138,6 +139,11 @@ export default function Certifications({ data }: Props) {
     {
       name: "Опыт работы",
       href: `/app/profiles/${id}/experiences`,
+      current: false,
+    },
+    {
+      name: "Отзывы",
+      href: `/app/profiles/${id}/reviews`,
       current: false,
     },
   ];

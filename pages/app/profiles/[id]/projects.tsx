@@ -4,7 +4,7 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import api from "../../../../api";
 import { Navigation } from "../../../../components/navigation";
@@ -32,9 +32,8 @@ import {
   SelectValue,
 } from "../../../../components/primitives/select";
 import { TextArea } from "../../../../components/primitives/text-area";
-import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
-import Badge from "../../../../images/badge.svg";
 import getImageSrc from "../../../../hooks/get-image-url";
+import DefaultAva from "../../../../images/avatars/defaultProfile.svg";
 
 interface FormValuesGeneral {
   industry: string;
@@ -149,6 +148,11 @@ export default function ProfileProjects({ data }: Props) {
     {
       name: "Опыт работы",
       href: `/app/profiles/${id}/experiences`,
+      current: false,
+    },
+    {
+      name: "Отзывы",
+      href: `/app/profiles/${id}/reviews`,
       current: false,
     },
   ];

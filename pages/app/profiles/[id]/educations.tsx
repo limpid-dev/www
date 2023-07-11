@@ -138,6 +138,11 @@ export default function Education({ data }: Props) {
       href: `/app/profiles/${id}/experiences`,
       current: false,
     },
+    {
+      name: "Отзывы",
+      href: `/app/profiles/${id}/reviews`,
+      current: false,
+    },
   ];
 
   const {

@@ -1,15 +1,12 @@
 import "@uppy/core/dist/style.min.css";
 import "@uppy/dashboard/dist/style.min.css";
-import { Switch } from "@headlessui/react";
 import { Cube, UserCircle } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import Image from "next/image";
 import { useRouter } from "next/router";
-import { ChangeEvent, ChangeEventHandler, useRef, useState } from "react";
+import { ChangeEventHandler, useState } from "react";
 import { useForm } from "react-hook-form";
 import api from "../../../api";
-// import { buildFormData } from "../../../api/files";
 import { Navigation } from "../../../components/navigation";
 import {
   AlertDialog,
@@ -26,7 +23,6 @@ import { Button } from "../../../components/primitives/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -34,7 +30,6 @@ import {
 } from "../../../components/primitives/dialog";
 import { Input } from "../../../components/primitives/input";
 import { Label } from "../../../components/primitives/label";
-import DefaultAva from "../../../images/avatars/defaultProfile.svg";
 
 function classNames(...classes: string[]): string {
   return classes.filter(Boolean).join(" ");
@@ -49,6 +44,7 @@ const secondaryNavigation = [
     current: false,
   },
 ];
+
 interface FormValues {
   first_name: string;
   last_name: string;

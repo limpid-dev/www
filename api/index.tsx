@@ -848,6 +848,34 @@ class APIClient {
   ): Promise<AxiosResponse<{ data?: components["schemas"]["Notification"] }>> {
     return this.axiosInstance.post(`/notifications/${notificationId}/read`);
   }
+
+  async createProfileRating(
+    profileId: number,
+    ratingData: paths["/profiles/{profile_id}/ratings"]["post"]["requestBody"]["content"]["multipart/form-data"]
+  ): Promise<AxiosResponse<{ data?: components["schemas"]["Rating"] }>> {
+    return this.axiosInstance.post(
+      `/profiles/${profileId}/ratings`,
+      ratingData
+    );
+  }
+
+  async getProfileRatings(
+    profileId: number,
+    page: number,
+    perPage?: number
+  ): Promise<
+    AxiosResponse<{
+      meta?: components["schemas"]["Pagination"];
+      data?: components["schemas"]["Rating"][];
+    }>
+  > {
+    const params = {
+      page,
+      per_page: perPage,
+    };
+
+    return this.axiosInstance.get(`/profiles/${profileId}/ratings`, { params });
+  }
 }
 
 const api = new APIClient();

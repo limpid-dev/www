@@ -21,20 +21,19 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   });
 
-  if (session.data.selected_profile_id) {
-    const { data: tenders } = await api.getTenders({
-      query: {
-        page: 1,
-        per_page: 10,
-        profile_id: session.data.selected_profile_id,
-      },
-    });
-    return {
-      props: {
-        ...tenders!,
-      },
-    };
-  }
+  const { data: tenders } = await api.getTenders({
+    query: {
+      page: 1,
+      per_page: 10,
+      profile_id: session.data.selected_profile_id,
+    },
+  });
+
+  return {
+    props: {
+      ...tenders!,
+    },
+  };
 }
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;

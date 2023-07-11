@@ -18,9 +18,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../../../components/primitives/dialog";
+import getImageSrc from "../../../hooks/get-image-url";
 import NoProjects from "../../../images/noProjects.svg";
 import testAva from "../../../images/projectDefault.svg";
-import getImageSrc from "../../../hooks/get-image-url";
 
 const tabs = [
   { name: "Все проекты", href: "/app/projects/", current: false },
