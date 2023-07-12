@@ -104,6 +104,7 @@ export const getServerSideProps = async (
     );
 
     console.log(userRatings);
+    console.log(userRatings.data[0].rankingProfile);
 
     return {
       props: {
@@ -793,21 +794,25 @@ export default function ProfileReviews({ data }: Props) {
               <div className="p-6">
                 <div className="grid gap-5 md:grid-cols-2">
                   {data.ratings?.data?.map((item, index) => (
-                    <div className="grid items-center justify-center gap-4 rounded-lg border py-6 pl-6 pr-4 sm:h-48 hover:border-black sm:grid-cols-10">
-                      <div className="sm:col-span-4"></div>
-                      <div className="sm:col-span-6">
-                        <div className="flex flex-col gap-1">
-                          <h1 className="text-sm font-semibold">
-                            {item.comment}
-                          </h1>
-                          {/* <p className="text-sm">{item.industry}</p>
-                          <div className="flex items-center gap-4">
-                            <p className=" line-clamp-2 text-sm text-slate-400">
-                              {item.description}
-                            </p>
-                          </div> */}
+                    <div className="flex flex-col gap-2 rounded-lg bg-slate-100 p-3 min-h-[140px] ">
+                      <div className="flex justify-between">
+                        <div className="flex gap-2 justify-center items-center">
+                          <Image
+                            src={getImageSrc(item.rankingProfile.avatar.url)}
+                            alt={""}
+                            unoptimized
+                            width={0}
+                            height={0}
+                            className="w-10 h-10"
+                          />
+                          <p>{item.rankingProfile.display_name}</p>
                         </div>
+                        <p className="flex gap-2 justify-center items-center text-lime-500">
+                          <Star weight="fill" />
+                          {item.rating_number}
+                        </p>
                       </div>
+                      <p className="text-sm font-semibold ">{item.comment}</p>
                     </div>
                   ))}
                 </div>
