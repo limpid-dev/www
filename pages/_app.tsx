@@ -88,47 +88,49 @@ function App({ Component, pageProps }: AppProps) {
   };
 
   return (
-    <div className="bg-slate-50">
+    <div>
       <Head>
         <title>LIM - все для людей</title>
       </Head>
+      <div className="hidden">
+        <Dialog open={verification} onOpenChange={setVerification}>
+          <DialogTrigger />
+          <DialogContent className="sm:max-w-[825px] p-10">
+            <DialogHeader>
+              <DialogTitle>Тур по продукту</DialogTitle>
+              <DialogDescription className="text-slate-900 sm:text-[20px]">
+                {descriptions[currentImageIndex]}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="image-container">
+              <Image
+                src={
+                  largeScreen
+                    ? largeScreenImages[currentImageIndex]
+                    : smallScreenImages[currentImageIndex]
+                }
+                alt="Image"
+                className="rounded-md max-h-96 w-auto m-auto"
+              />
+            </div>
+            <div className="flex justify-end gap-5">
+              {currentImageIndex > 0 && (
+                <Button variant="subtle" onClick={prevImage}>
+                  Назад
+                </Button>
+              )}
+              {isLastImage ? (
+                <DialogClose>
+                  <Button onClick={() => onSubmit()}>Начать!</Button>
+                </DialogClose>
+              ) : (
+                <Button onClick={nextImage}>Далее</Button>
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
       <Component {...pageProps} />
-      <Dialog open={verification} onOpenChange={setVerification}>
-        <DialogTrigger />
-        <DialogContent className="sm:max-w-[825px] p-10">
-          <DialogHeader>
-            <DialogTitle>Тур по продукту</DialogTitle>
-            <DialogDescription className="text-slate-900 sm:text-[20px]">
-              {descriptions[currentImageIndex]}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="image-container">
-            <Image
-              src={
-                largeScreen
-                  ? largeScreenImages[currentImageIndex]
-                  : smallScreenImages[currentImageIndex]
-              }
-              alt="Image"
-              className="rounded-md max-h-96 w-auto m-auto"
-            />
-          </div>
-          <div className="flex justify-end gap-5">
-            {currentImageIndex > 0 && (
-              <Button variant="subtle" onClick={prevImage}>
-                Назад
-              </Button>
-            )}
-            {isLastImage ? (
-              <DialogClose>
-                <Button onClick={() => onSubmit()}>Начать!</Button>
-              </DialogClose>
-            ) : (
-              <Button onClick={nextImage}>Далее</Button>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
       <Toaster />
       <Script src="https://epay.homebank.kz/payform/payment-api.js" />
       <Script defer data-domain="limpid.kz" src="/js/script.js" />

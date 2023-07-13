@@ -158,14 +158,6 @@ export default function OneProfile({ data }: Props) {
     router.push(selectedPage);
   };
 
-  const handleDeleteProfile = async () => {
-    await api.deleteProfile(parsedId);
-
-    await router.push({
-      pathname: "/app/profiles/my",
-    });
-  };
-
   const {
     register,
     handleSubmit,
@@ -245,29 +237,7 @@ export default function OneProfile({ data }: Props) {
         <div className="mx-auto max-w-screen-xl">
           <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline">
             {data.isAuthor ? (
-              <div className="flex gap-5">
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="outline">
-                      <Trash className="h-6 w-6" />
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Удалить профиль?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Восстановить профиль будет невозможно
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Отмена</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => handleDeleteProfile()}>
-                        Удалить
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </div>
+              <></>
             ) : (
               <>
                 <CreateChatButton
