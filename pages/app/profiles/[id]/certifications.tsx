@@ -242,7 +242,7 @@ export default function Certifications({ data }: Props) {
 
       <div className="min-h-screen bg-slate-50 px-5 pt-8">
         <div className="mx-auto max-w-screen-xl">
-          <div className="my-7 flex flex-col items-end justify-end gap-4 sm:mb-0 md:mb-11 md:flex-row md:items-baseline"></div>
+          <div className="h-28"></div>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-10 ">
             <div className="rounded-lg border sm:col-span-3">
               {editGeneral ? (
