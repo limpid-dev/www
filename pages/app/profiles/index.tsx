@@ -116,6 +116,12 @@ export default function Profiles() {
     }
   };
 
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
+
   return (
     <div>
       <Navigation />
@@ -166,7 +172,7 @@ export default function Profiles() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 type="search"
-                placeholder="Искать по проектам"
+                placeholder="Искать по профилям"
                 className="rounded-lg border-none"
               />
               <Button
@@ -193,11 +199,32 @@ export default function Profiles() {
                       Выберите сферы деятельности интересующие вас
                     </SheetDescription>
                   </SheetHeader>
-                  <div className="grid grid-cols-2 gap-4 py-4 overflow-auto h-[74%] sm:h-[85%]">
-                    {Options.map((option) => (
+
+                  <div className="flex rounded-md border my-3">
+                    <Input
+                      type="search"
+                      className="rounded-lg border-none"
+                      value={searchQuery}
+                      onChange={handleSearchChange}
+                      placeholder="Поиск..."
+                    />
+                    <Button
+                      disabled
+                      className=" bg-transparent ring-0 ring-transparent hover:bg-slate-100 active:bg-slate-200"
+                    >
+                      <MagnifyingGlass className="w-5 h-5 text-black" />
+                    </Button>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 py-4 overflow-auto max-h-[67%] sm:max-h-[79%]">
+                    {Options.filter((option) =>
+                      option.name
+                        .toLowerCase()
+                        .includes(searchQuery.toLowerCase())
+                    ).map((option) => (
                       <div
                         key={option.id}
-                        className="flex items-center gap-3 bg-slate-50 rounded-md p-3"
+                        className="flex items-center gap-3 bg-slate-50 rounded-md p-3 h-min"
                       >
                         <input
                           type="checkbox"

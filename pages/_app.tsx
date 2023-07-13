@@ -88,7 +88,7 @@ function App({ Component, pageProps }: AppProps) {
   };
 
   return (
-    <div className="min-h-full">
+    <div className="bg-slate-50">
       <Head>
         <title>LIM - все для людей</title>
       </Head>
@@ -98,7 +98,7 @@ function App({ Component, pageProps }: AppProps) {
         <DialogContent className="sm:max-w-[825px] p-10">
           <DialogHeader>
             <DialogTitle>Тур по продукту</DialogTitle>
-            <DialogDescription className="text-slate-900 sm:text-[22px]">
+            <DialogDescription className="text-slate-900 sm:text-[20px]">
               {descriptions[currentImageIndex]}
             </DialogDescription>
           </DialogHeader>
