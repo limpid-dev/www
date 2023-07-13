@@ -1,4 +1,4 @@
-import { Plus, Trash } from "@phosphor-icons/react";
+import { CaretRight, Plus, TagChevron, Trash } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
@@ -185,23 +185,9 @@ function Profiles({ data }: Props) {
           {data.profiles && data.profiles.data.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
               {data.profiles.data.map((profile) => (
-                // <Link key={profile.id} href={`/app/profiles/${profile.id}`}>
-                //   <div className=" flex w-auto flex-col items-center justify-center rounded-lg border-[1px] bg-white py-8 font-semibold hover:border-slate-700 sm:max-w-[400px]">
-                //     <Image
-                //       unoptimized
-                //       className="h-14 w-14"
-                //       src={ProfileDefault}
-                //       alt="some"
-                //     />
-                //     <p className="mt-3 text-center text-base sm:text-xl ">
-                //       {profile.display_name}
-                //     </p>
-                //   </div>
-                // </Link>
-                <Link
+                <div
                   key={profile.id}
-                  href={`/app/profiles/${profile.id}`}
-                  className="rounded-lg bg-white p-4 border hover:border-slate-700"
+                  className="rounded-lg border bg-white p-4"
                 >
                   <div className="grid grid-cols-10">
                     <div className="col-span-4 mr-3">
@@ -221,37 +207,48 @@ function Profiles({ data }: Props) {
                       <p className="line-clamp-1 w-auto text-xs text-slate-600">
                         {profile.industry}
                       </p>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button
-                            variant="outline"
-                            className="w-10 !rounded-full !p-0 !m-0"
-                          >
-                            <Trash className="h-6 w-6 rounded-full " />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              Удалить профиль?
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Восстановить профиль будет невозможно
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Отмена</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleDeleteProfile(profile.id)}
+                      <div className="flex justify-between mt-6">
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className="w-10 !rounded-full !p-0 !m-0"
                             >
-                              Удалить
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
+                              <Trash className="h-6 w-6 rounded-full " />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                Удалить профиль?
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Восстановить профиль будет невозможно
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Отмена</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDeleteProfile(profile.id)}
+                              >
+                                Удалить
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                        <Button
+                          variant="black"
+                          className="w-10 !rounded-full !p-0 !m-0"
+                          onClick={() =>
+                            router.push(`/app/profiles/${profile.id}`)
+                          }
+                        >
+                          <CaretRight className="h-5 w-5 rounded-full " />
+                        </Button>
+                      </div>
                     </div>
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
           ) : (
