@@ -255,7 +255,9 @@ export default function Tenders() {
                   <CardTitle>
                     #{tender.id} {tender.title}
                   </CardTitle>
-                  <CardDescription>{tender.description}</CardDescription>
+                  <CardDescription className="line-clamp-3">
+                    {tender.description}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">

@@ -229,7 +229,7 @@ function Profiles({ data }: Props) {
                             <AlertDialogFooter>
                               <AlertDialogCancel>Отмена</AlertDialogCancel>
                               <AlertDialogAction
-                                onClick={() => handleDeleteProfile(profile.id)}
+                                onClick={() => handleDeleteProfile(profile.id!)}
                               >
                                 Удалить
                               </AlertDialogAction>
