@@ -265,21 +265,20 @@ export default function Tenders() {
                       <span>Статус:</span>
                       <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
                         {tender.finishedAt &&
-                          new Date(tender.finishedAt).getTime() > Date.now() &&
-                          "Идет"}
+                        new Date(tender.finishedAt).getTime() > Date.now()
+                          ? "Идет"
+                          : "завершен"}
                         {!tender.finishedAt && "На модерации"}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between gap-2 text-sm font-medium">
-                      <span>Осталось дней:</span>
-                      <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
-                        {tender.finishedAt
-                          ? calcTime(tender.finishedAt) !== 0
-                            ? calcTime(tender.finishedAt)
-                            : "Завершен"
-                          : "---"}
-                      </span>
-                    </div>
+                    {tender.finishedAt && calcTime(tender.finishedAt) !== 0 && (
+                      <div className="flex items-center justify-between gap-2 text-sm font-medium">
+                        <span>Осталось дней:</span>
+                        <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
+                          {calcTime(tender.finishedAt)}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
