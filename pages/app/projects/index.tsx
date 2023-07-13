@@ -185,7 +185,6 @@ export default function All() {
       </div>
       <div className="min-h-screen bg-slate-50 pt-8 px-5">
         <div className="mx-auto max-w-screen-xl">
-          <p className="text-sm text-slate-300">Проекты</p>
           <div className="my-5 flex flex-col items-end justify-end gap-4 md:mb-12 md:flex-row md:items-center md:justify-between">
             <div>
               <div className="sm:hidden">

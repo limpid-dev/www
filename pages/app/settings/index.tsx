@@ -255,15 +255,10 @@ export default function Settings({ data }: Props) {
                         </DialogHeader>
                         <form className="grid gap-4">
                           <div className="grid grid-cols-4 items-baseline gap-4">
-                            <Label
-                              htmlFor="name"
-                              className="text-right col-span-1"
-                            >
-                              Почта
-                            </Label>
-                            <div className="col-span-3">
+                            <div className="col-span-4">
+                              <Label htmlFor="mail">Почта</Label>
                               <Input
-                                id="name"
+                                id="mail"
                                 type="email"
                                 value={inputValue}
                                 onChange={handleChange}

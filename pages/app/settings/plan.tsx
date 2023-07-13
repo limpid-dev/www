@@ -99,7 +99,8 @@ export default function Settings({ data }: Props) {
                 <TableBody>
                   <TableRow>
                     <TableCell className="font-medium">
-                      {data.userInfo.plan_id === null && "Start"}
+                      {data.userInfo.sub_plans_id === null && "Start"}
+                      {data.userInfo.subPlans.name.toUpperCase()}
                     </TableCell>
                     <TableCell>{data.userInfo.projects_attempts}</TableCell>
                     <TableCell>{data.userInfo.auctions_attempts}</TableCell>
