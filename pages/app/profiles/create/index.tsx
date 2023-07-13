@@ -251,7 +251,7 @@ export default function Test() {
                         minLength: 1,
                         maxLength: 1024,
                       })}
-                      placeholder="Какими навыками вы обладаете ? (Excel, логика, критическое мышление) "
+                      placeholder="Какими навыками вы обладаете ?"
                     />
                     {errors.owned_intellectual_resources &&
                       errors.owned_intellectual_resources.type ===

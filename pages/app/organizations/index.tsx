@@ -152,7 +152,7 @@ export default function All() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 type="search"
-                placeholder="Искать по проектам"
+                placeholder="Искать по организациям"
                 className="rounded-lg border-none"
               />
               <Button

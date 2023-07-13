@@ -162,7 +162,7 @@ export default function Tenders() {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   type="search"
-                  placeholder="Искать по проектам"
+                  placeholder="Искать по закупкам"
                   className="rounded-lg border-none"
                 />
                 <Button
