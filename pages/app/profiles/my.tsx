@@ -198,9 +198,10 @@ function Profiles({ data }: Props) {
                 //     </p>
                 //   </div>
                 // </Link>
-                <div
+                <Link
                   key={profile.id}
-                  className="rounded-lg border border-slate-200 bg-white p-4"
+                  href={`/app/profiles/${profile.id}`}
+                  className="rounded-lg bg-white p-4 border hover:border-slate-700"
                 >
                   <div className="grid grid-cols-10">
                     <div className="col-span-4 mr-3">
@@ -250,7 +251,7 @@ function Profiles({ data }: Props) {
                       </AlertDialog>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           ) : (
