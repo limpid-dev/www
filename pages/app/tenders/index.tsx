@@ -274,7 +274,9 @@ export default function Tenders() {
                       <span>Осталось дней:</span>
                       <span className="rounded-lg bg-sky-100 px-2 py-1 text-sky-500">
                         {tender.finishedAt
-                          ? calcTime(tender.finishedAt)
+                          ? calcTime(tender.finishedAt) !== 0
+                            ? calcTime(tender.finishedAt)
+                            : "Завершен"
                           : "---"}
                       </span>
                     </div>
